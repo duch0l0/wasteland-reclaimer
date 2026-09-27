@@ -1,0 +1,183 @@
+{
+  "gena": {
+    "start": [
+      {"if": {"flag": "gena_robbed"}, "node": "robbed"},
+      {"node": "greet"}
+    ],
+    "nodes": {
+      "greet": {
+        "text": "Ржавый Гена: О, живой! Редкий гость — обычно сюда заходит только ветер и мои долги.",
+        "options": [
+          {"label": "Кто ты такой?", "next": "who"},
+          {"label": "Давай поторгуем.", "next": null, "effects": [{"type": "trade"}]},
+          {"label": "Есть работа?", "next": "quest_offer", "if": {"not_flag": "q_scrap_taken"}},
+          {"label": "Вот твой лом. (отдать 3 лома)", "next": "scrap_thanks",
+           "if": {"flag": "q_scrap_taken", "not_flag": "q_scrap_done", "item": "лом", "count": 3},
+           "effects": [{"type": "take", "item": "лом", "count": 3}, {"type": "xp", "amount": 25},
+                       {"type": "give", "item": "патроны", "count": 6}, {"type": "set_flag", "flag": "q_scrap_done"}]},
+          {"label": "Лом — это пережиток, Гена. Ценность не в железе, а в том, как ты его держишь.", "next": "scrap_talked",
+           "if": {"flag": "q_scrap_taken", "not_flag": "q_scrap_done", "perk": "silver_tongue"},
+           "effects": [{"type": "xp", "amount": 35}, {"type": "give", "item": "патроны", "count": 6},
+                       {"type": "set_flag", "flag": "q_scrap_done"}]},
+          {"label": "Ещё работа найдётся?", "next": "gang_offer",
+           "if": {"flag": "q_scrap_done", "not_flag": "q_gang_taken"}},
+          {"label": "Насчёт Бензо-банды...", "next": "gang_report",
+           "if": {"flag": "q_gang_taken", "not_flag": "q_gang_done"}},
+          {"label": "Пока.", "next": null}
+        ]
+      },
+      "who": {
+        "text": "Гена: Бывший инженер, нынешний философ помойки. Учёная степень по выживанию, диплом сгорел вместе с офисом. Теперь торгую — что нашёл, то и продаю.",
+        "options": [
+          {"label": "Звучит солидно.", "next": "who2"},
+          {"label": "Ладно, вернёмся к делу.", "next": "greet"}
+        ]
+      },
+      "who2": {
+        "text": "Гена: Солидно — это когда крыша не течёт. У меня и крыши нет, зато обзор прекрасный.",
+        "options": [
+          {"label": "Вернёмся к делу.", "next": "greet"},
+          {"label": "Пойду я.", "next": null}
+        ]
+      },
+      "quest_offer": {
+        "text": "Гена: Притащи мне 3 куска лома — говорят, из него можно собрать что угодно, кроме моей мотивации. Заплачу патронами.",
+        "options": [
+          {"label": "Договорились.", "next": null, "effects": [{"type": "set_flag", "flag": "q_scrap_taken"}]},
+          {"label": "Пока нет.", "next": null}
+        ]
+      },
+      "scrap_thanks": {
+        "text": "Гена: О, целых три! Держи патроны и опыт — на большее моей благодарности не хватит.",
+        "options": [{"label": "Ещё что-нибудь есть?", "next": "greet"}, {"label": "Бывай.", "next": null}]
+      },
+      "scrap_talked": {
+        "text": "Гена: ...Знаешь, а ты прав. Я всё это время держал его не тем концом. Держи патроны — за просветление.",
+        "options": [{"label": "Ещё что-нибудь есть?", "next": "greet"}, {"label": "Обращайся.", "next": null}]
+      },
+      "gang_offer": {
+        "text": "Гена: На старой заправке засела Бензо-банда. Главарь — Шрам, характер как у ржавого гвоздя. Трясут с меня дань, а я и так беден, как философ. Разберись — хоть пулей, хоть словом, хоть кошельком.",
+        "options": [
+          {"label": "Разберусь. Где заправка?", "next": "gang_where",
+           "effects": [{"type": "set_flag", "flag": "q_gang_taken"}, {"type": "reveal", "location": "station"}]},
+          {"label": "Не моё дело.", "next": null}
+        ]
+      },
+      "gang_where": {
+        "text": "Гена: На северо-восток по трассе. Отметил тебе на карте. Выход из руин — на западе, там, где кончается забор и начинается оптимизм.",
+        "options": [{"label": "Понял.", "next": null}]
+      },
+      "gang_report": {
+        "text": "Гена: Ну что там с бандой? Только не говори, что они передают привет.",
+        "options": [
+          {"label": "Банды больше нет. Совсем.", "next": "gang_done_dead", "if": {"flag": "gang_dead"},
+           "effects": [{"type": "xp", "amount": 50}, {"type": "give", "item": "крышки", "count": 60},
+                       {"type": "set_flag", "flag": "q_gang_done"}]},
+          {"label": "Я уговорил их уйти. Навсегда.", "next": "gang_done_left", "if": {"flag": "gang_left"},
+           "effects": [{"type": "xp", "amount": 60}, {"type": "give", "item": "крышки", "count": 40},
+                       {"type": "set_flag", "flag": "q_gang_done"}]},
+          {"label": "Я им заплатил. Тебя больше не тронут.", "next": "gang_done_paid", "if": {"flag": "gang_paid"},
+           "effects": [{"type": "xp", "amount": 25}, {"type": "set_flag", "flag": "q_gang_done"}]},
+          {"label": "Работаю над этим.", "next": null}
+        ]
+      },
+      "gang_done_dead": {
+        "text": "Гена: Всех?.. Уважаю. И немного боюсь. Вот крышки — считай, я плачу дань тебе, но добровольно.",
+        "options": [{"label": "Бывай, Гена.", "next": null}]
+      },
+      "gang_done_left": {
+        "text": "Гена: Словами? Без единого выстрела? Ты либо философ, либо жулик. В нашем деле это одно и то же. Держи крышки.",
+        "options": [{"label": "Бывай, Гена.", "next": null}]
+      },
+      "gang_done_paid": {
+        "text": "Гена: Ты им заплатил? Ну... тоже вариант. Денег не верну — у меня их нет, это просто метафора.",
+        "options": [{"label": "Бывай, Гена.", "next": null}]
+      },
+      "robbed": {
+        "text": "Гена: Кто-то вынес мою заначку. И знаешь, что странно? От тебя пахнет моим тоником. Торговать с тобой не буду. И дел больше не веду.",
+        "options": [
+          {"label": "Гена, это ветер. Ты же сам говорил — сюда заходят только ветер и твои долги.", "next": "forgiven",
+           "if": {"perk": "silver_tongue"},
+           "effects": [{"type": "clear_flag", "flag": "gena_robbed"}, {"type": "xp", "amount": 15}]},
+          {"label": "Понятно.", "next": null}
+        ]
+      },
+      "forgiven": {
+        "text": "Гена: ...Ветер. Логично. Ветер вообще много чего у меня унёс. Ладно, живи.",
+        "options": [{"label": "Вернёмся к делу.", "next": "greet"}]
+      }
+    }
+  },
+
+  "boss": {
+    "start": [{"node": "greet"}],
+    "nodes": {
+      "greet": {
+        "text": "Шрам: Стоять. Это наша заправка, и воздух тут тоже наш. Дышишь — плати.",
+        "options": [
+          {"label": "Меня прислал Гена. Уходите по-хорошему.", "next": "laugh"},
+          {"label": "На юге нашли цистерну нетронутого бензина. Пока вы тут сидите, её приберут другие.", "next": "leaves",
+           "if": {"perk": "silver_tongue"},
+           "effects": [{"type": "set_flag", "flag": "gang_left"}, {"type": "gang_leave"}, {"type": "xp", "amount": 20}]},
+          {"label": "Посмотри на меня внимательно, Шрам. Ты правда хочешь проверить?", "next": "scared",
+           "if": {"min_level": 4},
+           "effects": [{"type": "set_flag", "flag": "gang_left"}, {"type": "gang_leave"}, {"type": "xp", "amount": 20}]},
+          {"label": "Сколько за то, чтобы вы оставили Гену в покое? (50 крышек)", "next": "paid",
+           "if": {"item": "крышки", "count": 50},
+           "effects": [{"type": "take", "item": "крышки", "count": 50}, {"type": "set_flag", "flag": "gang_paid"}]},
+          {"label": "Разговор окончен.", "next": null, "effects": [{"type": "fight"}]}
+        ]
+      },
+      "laugh": {
+        "text": "Шрам: Гена? Который философ? Ха! Уйдём, когда рак на горе свистнет. А у нас тут радиация — они свистят каждую неделю.",
+        "options": [
+          {"label": "Тогда поговорим иначе.", "next": null, "effects": [{"type": "fight"}]},
+          {"label": "Ладно-ладно. Я просто мимо шёл.", "next": null}
+        ]
+      },
+      "leaves": {
+        "text": "Шрам: ...Цистерна? Парни, собираемся! А ты — если соврал, найду. Хотя, пока доберёмся, я уже забуду, как ты выглядишь.",
+        "options": [{"label": "Счастливого пути.", "next": null}]
+      },
+      "scared": {
+        "text": "Шрам: ...Ладно. Ладно! Нам всё равно не нравилась эта заправка. Бензина нет, туалет без двери. Парни, уходим.",
+        "options": [{"label": "Правильное решение.", "next": null}]
+      },
+      "paid": {
+        "text": "Шрам: Вот это разговор. Гену не трогаем. Пока. Склад, кстати, не трогай тоже — он наш.",
+        "options": [{"label": "Договорились.", "next": null}]
+      }
+    }
+  },
+
+  "robot": {
+    "start": [{"if": {"flag": "robot_done"}, "node": "done"}, {"node": "greet"}],
+    "nodes": {
+      "greet": {
+        "text": "ПОЧТАЛЬОН-3000: БИП. ДОСТАВКА ПРОСРОЧЕНА НА 97 ЛЕТ. ПРИНОСИМ ИЗВИНЕНИЯ ЗА НЕУДОБСТВА. РАСПИШИТЕСЬ В ПОЛУЧЕНИИ.",
+        "options": [
+          {"label": "Расписаться.", "next": "signed",
+           "effects": [{"type": "give", "item": "письмо", "count": 1}, {"type": "give", "item": "крышки", "count": 10},
+                       {"type": "xp", "amount": 15}, {"type": "set_flag", "flag": "robot_done"}]},
+          {"label": "Вообще-то я и есть адресат. Посылка тоже мне.", "next": "parcel",
+           "if": {"perk": "silver_tongue"},
+           "effects": [{"type": "give", "item": "тоник", "count": 1}, {"type": "give", "item": "патроны", "count": 8},
+                       {"type": "xp", "amount": 25}, {"type": "set_flag", "flag": "robot_done"}]},
+          {"label": "Уйти, не расписавшись.", "next": null}
+        ]
+      },
+      "signed": {
+        "text": "ПОЧТАЛЬОН-3000: ПОДПИСЬ ПРИНЯТА. КОМПЕНСАЦИЯ ЗА ОЖИДАНИЕ: 10 КРЫШЕК. ХОРОШЕГО ДНЯ. ДЕНЬ НЕ ГАРАНТИРУЕТСЯ.",
+        "options": [{"label": "И тебе.", "next": null}]
+      },
+      "parcel": {
+        "text": "ПОЧТАЛЬОН-3000: ЛИЧНОСТЬ... ПОДТВЕРЖДЕНА. ВЫДАЮ ПОСЫЛКУ. ВНУТРИ: ТОНИК И ПАТРОНЫ. ОТПРАВИТЕЛЬ: «МАМА».",
+        "options": [{"label": "Спасибо, мама.", "next": null}]
+      },
+      "done": {
+        "text": "ПОЧТАЛЬОН-3000: ДЛЯ ВАС НОВЫХ ОТПРАВЛЕНИЙ НЕТ. СЛЕДУЮЩАЯ ДОСТАВКА — ЧЕРЕЗ 97 ЛЕТ.",
+        "options": [{"label": "Подожду.", "next": null}]
+      }
+    }
+  }
+}

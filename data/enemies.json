@@ -1,0 +1,238 @@
+{
+  "mutant": {
+    "name": "мутант-падальщик",
+    "hp": 18,
+    "damage": 4,
+    "ac": 5,
+    "ap": 6,
+    "skill": 55,
+    "sequence": 4,
+    "aggro": 220,
+    "xp": 15,
+    "loot": {
+      "лом": 1
+    },
+    "ai": "melee",
+    "hit_verb": "кусает вас",
+    "hitbox": [
+      30,
+      32
+    ],
+    "sprite_dir": "enemy",
+    "art": {
+      "kind": "mutant",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        110,
+        70,
+        60
+      ],
+      "accent": [
+        210,
+        90,
+        70
+      ]
+    }
+  },
+  "rat": {
+    "name": "крысюк",
+    "hp": 6,
+    "damage": 2,
+    "ac": 15,
+    "ap": 8,
+    "skill": 45,
+    "sequence": 8,
+    "aggro": 200,
+    "xp": 8,
+    "loot": {},
+    "ai": "melee",
+    "hit_verb": "цапает вас",
+    "hitbox": [
+      22,
+      18
+    ],
+    "art": {
+      "kind": "mutant",
+      "size": [
+        34,
+        30
+      ],
+      "base": [
+        95,
+        85,
+        75
+      ],
+      "accent": [
+        190,
+        160,
+        140
+      ]
+    }
+  },
+  "raider": {
+    "name": "рейдер",
+    "hp": 20,
+    "damage": 5,
+    "ac": 10,
+    "ap": 7,
+    "skill": 50,
+    "sequence": 5,
+    "aggro": 300,
+    "xp": 25,
+    "loot": {
+      "патроны": 3,
+      "химикаты": 1
+    },
+    "ai": "ranged",
+    "range": 6,
+    "hit_verb": "стреляет в вас",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        130,
+        60,
+        50
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    }
+  },
+  "beetle": {
+    "name": "панцирный жук",
+    "hp": 30,
+    "damage": 6,
+    "ac": 5,
+    "ap": 5,
+    "skill": 60,
+    "sequence": 2,
+    "aggro": 180,
+    "xp": 40,
+    "loot": {
+      "химикаты": 2,
+      "лом": 1
+    },
+    "ai": "melee",
+    "hit_verb": "бьёт вас клешнёй",
+    "armor": 6,
+    "weak_parts": [
+      "eyes",
+      "legs"
+    ],
+    "hitbox": [
+      34,
+      30
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        60,
+        48
+      ],
+      "base": [
+        60,
+        72,
+        84
+      ],
+      "accent": [
+        150,
+        200,
+        120
+      ]
+    }
+  },
+  "gang": {
+    "name": "бандит",
+    "hp": 20,
+    "damage": 5,
+    "ac": 10,
+    "ap": 7,
+    "skill": 50,
+    "sequence": 5,
+    "aggro": 300,
+    "xp": 25,
+    "loot": {
+      "патроны": 3,
+      "крышки": 8
+    },
+    "ai": "ranged",
+    "range": 6,
+    "hit_verb": "стреляет в вас",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        140,
+        110,
+        40
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "faction": "gang"
+  },
+  "boss": {
+    "name": "Шрам",
+    "hp": 35,
+    "damage": 7,
+    "ac": 15,
+    "ap": 8,
+    "skill": 60,
+    "sequence": 5,
+    "aggro": 260,
+    "xp": 60,
+    "loot": {
+      "крышки": 40,
+      "патроны": 6
+    },
+    "ai": "ranged",
+    "range": 7,
+    "hit_verb": "стреляет в вас",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        52,
+        68
+      ],
+      "base": [
+        160,
+        40,
+        40
+      ],
+      "accent": [
+        220,
+        190,
+        150
+      ]
+    },
+    "faction": "gang",
+    "talk": "boss"
+  }
+}

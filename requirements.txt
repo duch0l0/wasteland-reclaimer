@@ -1,0 +1,2 @@
+# pygame-ce — совместимый форк pygame (тот же import pygame), ставится на Python 3.14+
+pygame-ce>=2.5,<3
