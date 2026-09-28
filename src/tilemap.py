@@ -10,6 +10,7 @@
   'X'  контейнер (ящик/сейф/заначка; содержимое — в data/locations.json)
   'D'  запертая дверь (открывается отмычкой или выламывается ломом)
   '>'  выход на карту мира
+  '%'  терминал RobCo (какой — список terminals в data/locations.json)
 """
 import pygame
 
@@ -26,7 +27,7 @@ PICKUP_TILES = {
 }
 ENEMY_TILES = {"m": "mutant", "r": "rat", "R": "raider", "B": "beetle", "g": "gang", "S": "boss",
                "k": "ratman", "K": "ratman_boss", "z": "rad_mutant"}
-SOLID_TILES = "#XD"   # стена, контейнер и закрытая дверь непроходимы
+SOLID_TILES = "#XD%"   # стена, контейнер и закрытая дверь непроходимы
 
 
 def load_map_file(path):
@@ -82,6 +83,17 @@ class MapBase:
                 return t
         return None
 
+    terminals = ()  # [{"id": терминал, "tiles": клетки}]
+
+    def terminal_near(self, player_rect):
+        for t in self.terminals:
+            if self.adjacent(t["tiles"], player_rect):
+                return t
+        return None
+
+    def terminal_at(self, tile):
+        return next((t for t in self.terminals if tuple(tile) in t["tiles"]), None)
+
     def container_at(self, tile):
         """Закрытый контейнер, занимающий клетку."""
         return next((c for c in self.containers if not c["opened"] and tuple(tile) in c["tiles"]), None)
@@ -112,7 +124,7 @@ class MapBase:
 
 
 class TileMap(MapBase):
-    def __init__(self, rows, npc_ids=None, containers=None):
+    def __init__(self, rows, npc_ids=None, containers=None, terminals=None):
         self.rows = [list(r) for r in rows]
         self.height = len(rows)
         self.width = len(rows[0]) if rows else 0
@@ -124,6 +136,8 @@ class TileMap(MapBase):
         self.doors = []         # (x, y) запертых дверей
         npc_ids = list(npc_ids or [])
         container_defs = list(containers or [])
+        terminal_ids = list(terminals or [])
+        self.terminals = []
 
         self.tile_ground = loader.load_tile(S.TILE_DIR, "ground", "ground", (S.TILE, S.TILE), (70, 60, 46))
         self.tile_wall = loader.load_tile(S.TILE_DIR, "wall", "wall", (S.TILE, S.TILE), (52, 46, 40))
@@ -138,7 +152,9 @@ class TileMap(MapBase):
                     d = container_defs.pop(0) if container_defs else {}
                     self.containers.append({"tile": (x, y), "tiles": [(x, y)], "name": d.get("name", "ящик"),
                                             "loot": dict(d.get("loot", {})), "owner": d.get("owner"),
-                                            "opened": False})
+                                            "requires": d.get("requires"), "opened": False})
+                elif ch == "%":
+                    self.terminals.append({"id": terminal_ids.pop(0) if terminal_ids else None, "tiles": [(x, y)]})
                 elif ch == "D":
                     self.doors.append((x, y))
                 elif ch == "P":
@@ -178,7 +194,7 @@ class TileMap(MapBase):
                 px, py = x * S.TILE - cam_x, y * S.TILE - cam_y
                 ch = self.rows[y][x]
                 surf.blit(self.tile_wall if ch == "#" else self.tile_ground, (px, py))
-                if ch in "XD>":
+                if ch in "XD>%":
                     surf.blit(loader.special_tile(ch), (px, py))
         # предметы рисуем из списка, а не из карты — подобранные исчезают
         self.draw_pickups(surf, cam)

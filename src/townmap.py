@@ -94,7 +94,7 @@ class TownMap(MapBase):
         for c in d.get("containers", []):
             obj = self.objects[c["prop"]]
             box = {"tile": obj["foot"][0], "tiles": obj["foot"], "name": c["name"], "loot": dict(c["loot"]),
-                   "owner": c.get("owner"), "opened": False}
+                   "owner": c.get("owner"), "requires": c.get("requires"), "opened": False}
             obj["container"] = box
             self.containers.append(box)
 
@@ -125,6 +125,13 @@ class TownMap(MapBase):
         self._tiles["v"] = [line]
         self._tiles["h"] = [pygame.transform.rotate(line, 90)]
 
+        self.terminals = []
+        for t in d.get("terminals", []):
+            obj = self.objects[t["prop"]]
+            term = {"id": t["id"], "tiles": obj["foot"]}
+            obj["terminal"] = term
+            self.terminals.append(term)
+
     # ------------------------------------------------------------ клетки
     def is_wall(self, x, y):
         if not (0 <= x < self.width and 0 <= y < self.height):
@@ -141,6 +148,14 @@ class TownMap(MapBase):
         return "#" if self.is_wall(x, y) else "."
 
     # ------------------------------------------------------------ контейнеры
+    def terminal_sprite_at(self, world_pos):
+        for o in sorted(self.objects, key=lambda o: -o["sort_y"]):
+            if o.get("terminal") and o["rect"].collidepoint(world_pos):
+                img = P.image(o["name"])
+                if img.get_at((world_pos[0] - o["rect"].x, world_pos[1] - o["rect"].y)).a > 40:
+                    return o["terminal"]
+        return None
+
     def container_sprite_at(self, world_pos):
         """Закрытый контейнер, по картинке которого пришёлся клик (передний первым)."""
         hits = [o for o in self.objects if o["container"] and not o["container"]["opened"]

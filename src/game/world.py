@@ -5,6 +5,7 @@ from .. import settings as S
 from ..entities import _hitbox_in_tile
 from ..location import Location, LOCATION_DEFS
 from ..encounters import make_encounter
+from ..worldmap import to_screen
 from ..ui.common import PANEL_H
 
 
@@ -37,6 +38,11 @@ class WorldMixin:
         self.snap_camera()
 
     def enter_location(self, loc_id):
+        d = LOCATION_DEFS[loc_id]
+        if d.get("chapter_end"):  # следующий город ещё не построен — конец главы
+            self.mode = "world"
+            self.show_slides(d["chapter_end"])
+            return
         self.loc = self.get_location(loc_id)
         self.place_player(self.loc.entry)
         self.mode = "local"
@@ -50,7 +56,7 @@ class WorldMixin:
 
     def go_world_map(self):
         if self.loc.world_pos:  # из случайной встречи остаёмся там, где она случилась
-            self.worldmap.pos = pygame.Vector2(self.loc.world_pos)
+            self.worldmap.pos = to_screen(self.loc.world_pos)
         self.mode = "world"
         self.held_letters.clear()
         self.log("Вы выходите на просторы пустоши.")

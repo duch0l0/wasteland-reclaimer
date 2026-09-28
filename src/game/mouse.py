@@ -48,7 +48,12 @@ class MouseMixin:
         return next((e for e in people if tile_of(e) == tile), None)
 
     def object_at_screen(self, pos):
-        """Контейнер по картинке (высокий шкаф кликается и за верхнюю часть) или объект в клетке."""
+        """Терминал или контейнер по картинке (высокий шкаф кликается и за верхнюю часть),
+        иначе объект в клетке."""
+        if hasattr(self.level, "terminal_sprite_at"):
+            t = self.level.terminal_sprite_at(self.world_pos(pos))
+            if t:
+                return ("terminal", t)
         if hasattr(self.level, "container_sprite_at"):
             c = self.level.container_sprite_at(self.world_pos(pos))
             if c:
@@ -57,6 +62,9 @@ class MouseMixin:
 
     def object_at_tile(self, tile):
         """Закрытый контейнер или запертая дверь в клетке."""
+        t = self.level.terminal_at(tile)
+        if t and t["id"]:
+            return ("terminal", t)
         c = self.level.container_at(tile)
         if c:
             return ("container", c)
@@ -87,6 +95,9 @@ class MouseMixin:
         target = self.entity_at_screen(pos)
         if target in self.npcs:
             self._go_next_to(tile_of(target), lambda: self._talk_when_near(target))
+        elif target is not None and target.talk and not target.hostile:
+            self._go_next_to(tile_of(target), lambda: self.talk_to(target, target.talk)
+                             if self.player.rect.inflate(60, 60).colliderect(target.rect) else None)
         elif target is not None:
             self._attack_from_explore(target)
         else:
@@ -94,10 +105,11 @@ class MouseMixin:
             obj = self.object_at_screen(pos)
             if obj:
                 kind, what = obj
-                if kind == "container":
+                if kind in ("container", "terminal"):
                     tiles = what["tiles"]
-                    self._go_to(lambda c: c not in tiles and any(chebyshev(c, t) <= 1 for t in tiles),
-                                lambda: self.open_container(what))
+                    action = (lambda: self.open_container(what)) if kind == "container" else \
+                        (lambda: self.open_terminal(what["id"]))
+                    self._go_to(lambda c: c not in tiles and any(chebyshev(c, t) <= 1 for t in tiles), action)
                 else:
                     self._go_next_to(what, lambda: self.open_door(what))
             elif not self.level.is_wall(*tile):
@@ -281,11 +293,14 @@ class MouseMixin:
             return None
         if target in self.npcs:
             return (f"Говорить: {target.name}", (230, 220, 190), None, None)
+        if target is not None and target.talk and not target.hostile:
+            return (f"Говорить: {target.name}", (230, 220, 190), None, None)
         if target is not None:
             return (f"Напасть: {target.name}", (235, 120, 100), None, None)
         obj = self.object_at_screen(pos)
         if obj:
-            label = f"Обыскать: {obj[1]['name']}" if obj[0] == "container" else "Дверь: заперта"
+            label = {"container": f"Обыскать: {obj[1]['name']}", "terminal": "Терминал RobCo",
+                     "door": "Дверь: заперта"}[obj[0]]
             return (label, (230, 220, 190), None, None)
         if not self.level.is_wall(*tile):
             return ("", None, None, tile)

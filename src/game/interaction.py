@@ -2,7 +2,7 @@
 import pygame
 
 from .. import perks
-from ..weapons import WEAPONS
+from ..weapons import WEAPONS, available
 
 
 class InteractionMixin:
@@ -21,6 +21,14 @@ class InteractionMixin:
         for npc in self.npcs:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
                 return
+        term = self.level.terminal_near(self.player.rect)
+        if term and term["id"]:
+            self.open_terminal(term["id"])
+            return
+        talker = self._talker_near()
+        if talker:
+            self.talk_to(talker, talker.talk)
+            return
         box = self.level.container_near(self.player.rect)
         if box:
             self.open_container(box)
@@ -30,6 +38,12 @@ class InteractionMixin:
             self.open_door(door)
             return
         self.level.collect_pickups(self.player.rect.inflate(6, 6), self.inventory, log_fn=self.log)
+
+    def _talker_near(self):
+        """Мирный враг с диалогом (Шрам) рядом — с ним можно заговорить снова."""
+        reach = self.player.rect.inflate(60, 60)
+        return next((e for e in self.enemies if e.alive and e.talk and not e.hostile
+                     and reach.colliderect(e.rect)), None)
 
     def check_talkers(self):
         """Враги с диалогом (Шрам) сначала заговаривают, а не стреляют."""
@@ -43,6 +57,10 @@ class InteractionMixin:
                 return
 
     def open_container(self, c):
+        req = c.get("requires")
+        if req and not self.check_condition(req):
+            self.log(req.get("msg", f"{c['name'].capitalize()}: заперто."))
+            return
         c["opened"] = True
         loot = c["loot"]
         if loot:
@@ -57,7 +75,14 @@ class InteractionMixin:
             self.flags["gena_robbed"] = True
             self.log("Вы чувствуете на спине чей-то взгляд... Гена это так не оставит.")
         elif owner and self.loc.faction_members(owner):
-            self.log("Шрам: Эй! Я же сказал — склад наш!")
+            # как в Fallout: кражу замечают, только если вор на виду
+            p = self.player
+            seen = [e for e in self.loc.faction_members(owner)
+                    if pygame.Vector2(e.rect.center).distance_to(p.rect.center) <= e.aggro and self.combat.los(e, p)]
+            if not seen:
+                self.log("Кажется, никто не заметил.")
+                return
+            self.log(f"{seen[0].name.capitalize()}: Эй! Это наше!")
             self.make_hostile(owner)
             self.combat.start(player_first=False)
 
@@ -79,15 +104,17 @@ class InteractionMixin:
         else:
             self.log("Заперто. Нужна отмычка (у Гены) или хотя бы лом, чтобы выломать.")
 
-    def switch_weapon(self):
-        """Как «сменить руку» в Fallout: без затрат ОД."""
-        if self.player.weapon == "melee":
-            if not self.inventory.has(WEAPONS["pistol"]["item"]):
+    def switch_weapon(self, to=None):
+        """Как «сменить руку» в Fallout: без затрат ОД. Без аргумента — следующее по кругу."""
+        guns = available(self.inventory)
+        if to is None:
+            if len(guns) == 1:
                 self.log("Другого оружия нет. Говорят, где-то в развалинах на северо-западе спрятан самопал...")
                 return
-            self.player.weapon = "pistol"
-        else:
-            self.player.weapon = "melee"
+            to = guns[(guns.index(self.player.weapon) + 1) % len(guns)] if self.player.weapon in guns else "melee"
+        if to not in guns:
+            return
+        self.player.weapon = to
         self.log(f"В руках: {self.weapon_name()}.")
 
     def weapon_name(self):

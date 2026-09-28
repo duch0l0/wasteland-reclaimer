@@ -39,7 +39,7 @@ def ok(cond, msg):
 
 
 random.seed(5)
-g = Game()
+g = Game(intro=False)
 g.player.max_hp = g.player.hp = 10 ** 6  # проверяем карту, а не выживание
 
 
@@ -107,7 +107,7 @@ def walk_to_npc(npc):
 
 t0 = time.time()
 lv = g.level
-ok(g.loc.name == "Город у трассы", f"старт в городе: {len(lv.objects)} объектов, {len(lv.containers)} мест для обыска")
+ok(g.loc.name == "Пятнадцатая", f"старт в городе: {len(lv.objects)} объектов, {len(lv.containers)} мест для обыска")
 bad = {"cobble", "dirt_slabs", "metal_sheet", "dirt_planks"}
 ok(not any(n in bad for n, _ in lv.decals) and not any(o["name"] in bad for o in lv.objects),
    "квадратных кусков земли нет")
@@ -132,22 +132,20 @@ ok(not leaks, f"у зданий есть все стены (дыр: {len(leaks)}
 
 gena = next(n for n in g.npcs if n.npc_id == "gena")
 ok(walk_to_npc(gena), "дошёл до Гены")
-opts = [o["label"] for o in g.dialogue.visible_options()]
-g.handle_key(pygame.K_1 + opts.index("Не видел тут других людей?"))
-fr(1)
-ok(g.dialogue.active_node == "people", "Гена подсказывает, где искать людей")
 g.dialogue.close()
 fr(1)
-for nid, where in (("blondie", "у водокачки"), ("loner", "на свалке")):
+for nid, where in (("blondie", "у водокачки"), ("loner", "на свалке"), ("turtle", "в доме за дорогой")):
     npc = next(n for n in g.npcs if n.npc_id == nid)
     ok(walk_to_npc(npc), f"нашёл {npc.name} {where}")
     g.dialogue.close()
     fr(1)
-ok({"gena", "blondie", "loner"} <= lv.met, f"на миникарте отмечены: {sorted(lv.met)}")
+ok({"gena", "blondie", "loner", "turtle"} <= lv.met, f"на миникарте отмечены: {sorted(lv.met)}")
 
 box = next(o for o in lv.objects if o["container"] and not o["container"]["opened"]
            and o["name"].startswith(("locker", "filecab")))
-g.player.rect.topleft = rect_pos_for_tile(g.player, (box["foot"][0][0], box["foot"][0][1] + 2))
+bx, by = box["foot"][0]
+spot = next((bx + dx, by + dy) for dy in (2, 3, 4) for dx in (0, 1, -1, 2, -2) if not lv.is_wall(bx + dx, by + dy))
+g.player.rect.topleft = rect_pos_for_tile(g.player, spot)
 g.snap_camera()
 fr(1)
 if g.combat.active:

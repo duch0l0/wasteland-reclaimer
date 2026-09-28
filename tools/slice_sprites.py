@@ -31,6 +31,7 @@ SHEETS = {
     "npc_05_ratman.png": "ratman",           # враг: крысолюд
     "npc_05_ratman_boss.png": "ratman_boss", # враг: вожак крысолюдов
     "npc_06_mutant.png": "rad_mutant",       # враг: медленный радиоактивный мутант
+    "npc_07_mutant_turtle.png": "turtle",    # мирный: Черепан, мутант-черепаха
 }
 
 

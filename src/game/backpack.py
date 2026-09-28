@@ -4,9 +4,9 @@ import pygame
 from .. import settings as S
 from .. import items
 from .controls import number_key
-from ..weapons import WEAPONS
+from ..weapons import weapon_for_item
+from ..ui.inventory_ui import COLS as INV_COLS  # ячеек в ряду сетки рюкзака
 
-INV_COLS = 6  # ячеек в ряду сетки рюкзака (см. ui/inventory_ui.py)
 
 
 class BackpackMixin:
@@ -72,7 +72,10 @@ class BackpackMixin:
         self.log(f"Снято: {name}.")
 
     def on_item_added(self, name, count):
-        """Новая броня сама надевается в пустой слот (снять/поменять — в рюкзаке)."""
+        """Новая броня сама надевается в пустой слот (снять/поменять — в рюкзаке).
+        Сюжетные предметы двигают квесты."""
+        if hasattr(self, "quests"):
+            self.sync_story()
         slot = items.slot(name)
         if slot and not self.player.equipped(slot) and not self.combat.active:
             self.player.equipment[slot] = name
@@ -82,6 +85,11 @@ class BackpackMixin:
         """Главное действие с предметом: (подпись, функция) или None."""
         if name is None or not self.inventory.has(name):
             return None
+        doc = items.ITEMS.get(name, {}).get("read")
+        if doc:
+            from .terminals import DOCS
+            verb = "Прослушать" if DOCS[doc].get("kind") == "holotape" else "Читать"
+            return (verb, lambda: self.open_document(doc))
         slot = items.slot(name)
         if slot:
             worn = self.player.equipped(slot)
@@ -91,12 +99,13 @@ class BackpackMixin:
         if items.usable(name):
             cost = f" ({S.AP_CRAFT} ОД)" if self.combat.active else ""
             return (f"Использовать{cost}", lambda: self.use_item(name))
-        if name == WEAPONS["pistol"]["item"]:
-            if self.player.weapon == "pistol":
-                return ("Убрать (взять лом)", self.switch_weapon)
-            return ("Взять в руки", self.switch_weapon)
+        gun = weapon_for_item(name)
+        if gun:
+            if self.player.weapon == gun:
+                return ("Убрать (взять лом)", lambda: self.switch_weapon("melee"))
+            return ("Взять в руки", lambda: self.switch_weapon(gun))
         if name in ("лом", "заточенный лом") and self.player.weapon != "melee":
-            return ("Взять в руки", self.switch_weapon)
+            return ("Взять в руки", lambda: self.switch_weapon("melee"))
         return None
 
     def inv_click(self, name):

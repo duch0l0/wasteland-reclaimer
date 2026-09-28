@@ -357,6 +357,7 @@
     "vwall_metal_w": {"img": "p1_vwall_metal_w", "foot": [1, 1], "sight": true},
     "vwall_metal_e": {"img": "p1_vwall_metal_e", "foot": [1, 1], "sight": true},
     "vwall_planks_w": {"img": "p1_vwall_planks_w", "foot": [1, 1], "sight": true},
-    "vwall_planks_e": {"img": "p1_vwall_planks_e", "foot": [1, 1], "sight": true}
+    "vwall_planks_e": {"img": "p1_vwall_planks_e", "foot": [1, 1], "sight": true},
+    "terminal": {"img": "x_terminal", "scale": 0.75, "foot": [1, 1]}
   }
 }

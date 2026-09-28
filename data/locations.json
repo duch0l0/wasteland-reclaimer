@@ -1,12 +1,13 @@
 {
   "ruins": {
-    "name": "Город у трассы",
+    "name": "Пятнадцатая",
     "map": "data/maps/town.json",
     "world_pos": [
       230,
       330
     ],
-    "known": true
+    "known": true,
+    "terminals": []
   },
   "station": {
     "name": "Заправка «Последний шанс»",
@@ -21,6 +22,14 @@
           "бронежилет из дорожных знаков": 1,
           "тоник": 1
         }
+      },
+      {
+        "name": "тайник Панка",
+        "owner": "gang",
+        "loot": {
+          "доля Панка": 1,
+          "крышки": 15
+        }
       }
     ],
     "world_pos": [
@@ -31,6 +40,18 @@
       1,
       7
     ],
-    "known": false
+    "known": false,
+    "terminals": [
+      "station"
+    ]
+  },
+  "baker": {
+    "name": "Бейкер",
+    "world_pos": [
+      880,
+      250
+    ],
+    "known": false,
+    "chapter_end": "chapter1_end"
   }
 }

@@ -37,7 +37,8 @@ rnd = random.Random(SEED)
 ground = [["d"] * W for _ in range(H)]
 props = []          # [имя, x, y]
 decals = []         # [имя, px, py]
-containers = []     # {"prop": i, "name", "loot", "owner"}
+containers = []     # {"prop": i, "name", "loot", "owner", "requires"}
+terminals = []      # {"prop": i, "id": терминал из data/terminals.json}
 blocked = set()     # занятые загораживающими объектами клетки
 soft = set()        # клетки с незагораживающим декором (чтобы не громоздить)
 reserved = set()    # дороги и проходы: сюда не ставим ничего загораживающего
@@ -117,6 +118,18 @@ def put(name, x, y, check=True, allow_reserved=False, search_owner=None, force=F
         containers.append({"prop": len(props) - 1, "name": inf.get("title", "ящик"),
                            "loot": roll_loot(inf["search"]), "owner": search_owner})
     return True
+
+
+def terminal(x, y, tid):
+    """Терминал RobCo (стол с монитором) — содержимое в data/terminals.json."""
+    assert put("terminal", x, y, check=False), f"терминал {tid} не встал в {x, y}"
+    terminals.append({"prop": len(props) - 1, "id": tid})
+
+
+def box(name, x, y, title, loot, requires=None, owner=None):
+    """Контейнер с заданным содержимым (сюжетный, не случайный)."""
+    assert put(name, x, y, check=False, search_owner=owner), f"{title} не встал в {x, y}"
+    containers[-1].update({"name": title, "loot": loot, "requires": requires})
 
 
 def roll_loot(table):
@@ -267,7 +280,8 @@ pickups.append(["самопал", 1, 27, 7])           # тайник с сам�
 pickups.append(["патроны", 3, 25, 6])
 pickups.append(["лом", 1, 9, 20])
 pickups.append(["ткань", 1, 19, 10])
-enemies.append(["rad_mutant", 11, 11])
+enemies.append(["rad_mutant", 22, 10])
+pickups.append(["чей-то глаз", 1, 8, 18])        # в доме деда
 npcs.append(["gena", 44, 22])
 npcs.append(["blondie", 88, 4])
 enemies += [["rad_mutant", 68, 16], ["rad_mutant", 77, 19]]
@@ -277,6 +291,7 @@ pickups.append(["лом", 1, 30, 52])
 pickups.append(["патроны", 3, 5, 43])
 enemies.append(["beetle", 54, 46])
 npcs.append(["loner", 63, 59])
+npcs.append(["turtle", 14, 40])                 # Черепан — в кирпичном доме на юго-западе
 enemies += [["raider", 85, 45], ["raider", 87, 54]]
 pickups.append(["химикаты", 1, 76, 58])
 for _, x, y in enemies + npcs:
@@ -317,7 +332,17 @@ for x in range(18, W - 4, 12):                  # фонари вдоль ули
 
 
 # ------------------------------------------------------------ северо-запад: жилой квартал
-houses = [("house_a", 4, 3), ("house_b", 14, 3), ("ruin_facade_a", 24, 3), ("ruin_facade_b", 4, 15),
+# дом деда Эймоса — первый у въезда: разгром, чужой глаз на полу, включённый терминал, сейф
+building(3, 14, 10, 8, "brick", south=(4,))
+terminal(5, 15, "grandpa")
+box("metal_chest", 10, 15, "сейф деда",
+    {"10-мм пистолет": 1, "голозапись деда": 1, "медаль за Анкоридж": 1, "патроны": 12},
+    requires={"flag": "safe_code", "msg": "Сейф с кодовым замком: три колёсика по две цифры. Код должен быть где-то у деда."})
+for name, x, y in [("table_upside", 7, 16), ("chair_broken", 9, 17), ("bed_frame", 4, 19), ("bits", 6, 18),
+                   ("plank_floor", 10, 19), ("rag", 5, 17), ("wardrobe_broken", 11, 17)]:
+    put(name, x, y, check=False)
+
+houses = [("house_a", 4, 3), ("house_b", 14, 3), ("ruin_facade_a", 24, 3),
           ("house_a", 16, 15), ("house_b", 28, 15)]
 yard_fences = ["fence_picket", "fence_picket2", "fence_broken", "plank_fence_b", "post_fence_a"]
 for name, hx, hy in houses:
@@ -328,7 +353,8 @@ for name, hx, hy in houses:
         scatter(CLOTH_PILES + JUNK_PILES[:4], hx - 1, hy + 2, hx + 5, hy + 6, 1)
     scatter(GRASS, hx - 2, hy + 2, hx + 6, hy + 7, 5)
 put("locker_2", 26, 7)
-ix0, iy0, ix1, iy1 = building(32, 1, 10, 9, "brick", south=(4,))      # склад
+ix0, iy0, ix1, iy1 = building(32, 1, 10, 9, "brick", south=(4,))      # склад «Пасифик Фрейт»
+terminal(34, 2, "warehouse")
 scatter(LOCKERS + ["shelf_goods", "metal_shelf", "shelf_stuff_1"], ix0, iy0, ix1, iy0, 4)
 scatter(CRATES + ["ammo_box", "toolbox_blue", "pile_scrap"], ix0, iy0 + 2, ix1, iy1, 3)
 scatter(BARRELS + CRATES, 1, 1, 40, 26, 4)
@@ -366,6 +392,8 @@ put("water_tank_a", 64, 5, check=False)
 put("water_tank_b", 74, 5, check=False)
 put("water_tank_a", 86, 7, check=False)         # за этим баком прячется Блонди
 ix0, iy0, ix1, iy1 = building(81, 13, 12, 8, "metal", south=(4,), west=(4,))  # контора водокачки
+terminal(83, 14, "pump")
+box("locker_1", 88, 14, "шкафчик Уоллеса", {"записка техника": 1, "бинт": 1})
 scatter(LOCKERS + ["filecab_1", "filecab_4"], ix0, iy0, ix1, iy0, 4)
 scatter(["table_2", "table_6", "chair_wood", "chair_1", "toolbox_open_b"], ix0, iy0 + 2, ix1, iy1, 3)
 put("shelter_b", 61, 14)
@@ -382,6 +410,7 @@ scatter(["table_1", "table_chair", "sofa", "bed", "chair_wood", "armchair"], ix0
 put("ruin_facade_a", 22, 37, check=False)
 put("ruin_facade_b", 30, 37, check=False)
 building(2, 48, 22, 14, "concrete", south=(8,), east=(6,))            # большой склад — логово крысолюдов
+box("bag", 20, 50, "сумка культиста", {"листовка Единства": 1, "крышки": 12})     # обронили, таща деда
 ix0, iy0, ix1, iy1 = building(28, 50, 10, 9, "planks", south=(4,), west=(4,))  # мастерская
 scatter(["tool_rack", "shelf_stuff_5", "shelf_stuff_2"], ix0, iy0, ix1, iy0, 3)
 scatter(["toolbox_red", "toolbox_blue", "table_3", "canister"], ix0, iy0 + 2, ix1, iy1, 3)
@@ -412,6 +441,9 @@ hwall(["wall_corrugated", "wall_corrugated2", "wall_metal", "wall_metal2", "wall
 side_wall("metal", "e", 59, 38, 62, gaps=(45, 46, 58))                # западная ограда свалки
 put("shack_b", 62, 56, check=False)             # лачуга Панка
 ix0, iy0, ix1, iy1 = building(66, 40, 12, 8, "metal", south=(4,), west=(3,))  # контора свалки
+terminal(68, 41, "junk")
+box("metal_chest", 75, 41, "сейф конторы", {"крышки": 60, "патроны": 10, "тоник": 1},
+    requires={"flag": "junk_safe_open", "msg": "Сейф конторы. Электронный замок — открывается с терминала."})
 scatter(LOCKERS + ["filecab_2"], ix0, iy0, ix1, iy0, 3)
 scatter(["table_5", "chair_2", "sofa", "cardboard"], ix0, iy0 + 2, ix1, iy1, 3)
 ix0, iy0, ix1, iy1 = building(78, 55, 10, 6, "planks", south=(4,))     # сторожка
@@ -453,8 +485,14 @@ for kind, ex, ey in enemies:
     for nid, nx, ny in npcs:
         assert max(abs(ex - nx), abs(ey - ny)) >= 6, f"{kind} слишком близко к {nid}"
 
+for t in terminals:
+    foot = footprint(*props[t["prop"]])
+    assert any((fx + dx, fy + dy) in reach for fx, fy in foot for dx in (-1, 0, 1) for dy in (-1, 0, 1)), \
+        f"к терминалу {t['id']} не подойти"
+
 out = {"w": W, "h": H, "player": list(START), "exits": [list(t) for t in exits],
        "ground": ["".join(r) for r in ground], "decals": decals, "props": props, "containers": containers,
+       "terminals": terminals,
        "enemies": enemies, "npcs": npcs, "pickups": pickups}
 with open("data/maps/town.json", "w", encoding="utf-8") as f:
     json.dump(out, f, ensure_ascii=False, separators=(",", ":"))

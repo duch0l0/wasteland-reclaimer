@@ -1,5 +1,6 @@
 """Game: создание мира, главный цикл и обновление кадра."""
 import json
+import os
 
 import pygame
 
@@ -27,18 +28,25 @@ from .trade import TradeMixin
 from .render import RenderMixin
 from ..ui.minimap import Minimap
 from .mouse import MouseMixin
+from .terminals import TerminalMixin
+from .slides import SlidesMixin, SLIDES
 
 
-class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin, RenderMixin):
-    def __init__(self):
+class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
+           TerminalMixin, SlidesMixin, RenderMixin):
+    def __init__(self, intro=True):
+        """intro — показать пролог (для проверок без окна его пропускают)."""
         pygame.init()
         pygame.display.set_caption(S.TITLE)
-        self.screen = pygame.display.set_mode((S.SCREEN_W, S.SCREEN_H))
+        self.screen = self._open_window()
         self.clock = pygame.time.Clock()
         self.running = True
         self.log_lines = []
         self.game_over = False
-        self.flags = {}            # флаги квестов и последствий: q_scrap_done, gena_robbed, ...
+        self.flags = {}            # флаги сюжета и последствий: gena_robbed, bos_ally, ...
+        self.quests = {}           # стадии квестов (data/quests.json): id -> стадия
+        self.journal_open = False
+        self.journal_sel = None
 
         # мир
         self.parallax = Parallax()
@@ -76,6 +84,28 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.minimap = Minimap()
         self.autowalk = None       # путь по клику мыши вне боя
         self.combat_queue = None   # путь/атака по клику мыши в бою
+        self.term = None           # открытый терминал или документ
+        self.slides = None         # идущее слайд-шоу
+        if intro:
+            self.show_slides("prologue")
+        else:
+            for eff in SLIDES["prologue"].get("on_end", []):
+                self.apply_effect(eff)
+
+    @staticmethod
+    def _open_window():
+        """Окно с масштабированием: SCALED растягивает логический экран на окно
+        (мышь пересчитывается сама), RESIZABLE — окно можно тянуть за край."""
+        pygame.display.set_caption(S.TITLE)
+        if os.environ.get("SDL_VIDEODRIVER") == "dummy":  # проверки без окна
+            return pygame.display.set_mode((S.SCREEN_W, S.SCREEN_H))
+        return pygame.display.set_mode((S.SCREEN_W, S.SCREEN_H), pygame.SCALED | pygame.RESIZABLE)
+
+    def toggle_fullscreen(self):
+        try:
+            pygame.display.toggle_fullscreen()
+        except pygame.error:
+            self.log("Полный экран здесь не поддерживается.")
 
     def log(self, text):
         self.log_lines.append(text)
@@ -84,10 +114,13 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
 
     def modal_open(self):
         return bool(self.dialogue.is_active() or self.craft_open or self.inv_open or self.trade
-                    or self.game_over or self.perk_choices)
+                    or self.game_over or self.perk_choices or self.term or self.slides or self.journal_open)
 
     # --------------------------------------------------------------- кадр
     def update(self, dt_ms):
+        if self.slides:
+            self.update_slides(dt_ms)
+            return
         if self.mode == "world":
             self.update_world_map(dt_ms)
             return

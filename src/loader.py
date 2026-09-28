@@ -171,7 +171,7 @@ def load_parallax_layers(bg_dir, screen_size, layer_defs):
 
 
 # Клетки-объекты: контейнер, дверь, выход (assets/tiles/container.png и т.д.)
-SPECIAL_TILE_NAMES = {"X": "container", "D": "door", ">": "exit"}
+SPECIAL_TILE_NAMES = {"X": "container", "D": "door", ">": "exit", "%": "terminal"}
 _SPECIAL_CACHE = {}
 
 
@@ -185,5 +185,11 @@ def special_tile(ch, size=(48, 48)):
                 surf = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), size)
             except Exception:
                 surf = None
+        if surf is None and name == "terminal":  # терминал — тот же, что в городе
+            tpath = os.path.join("assets", "town", "props", "x_terminal.png")
+            if os.path.isfile(tpath):
+                img = pygame.image.load(tpath).convert_alpha()
+                sc = size[0] / img.get_width()
+                surf = pygame.transform.smoothscale(img, (size[0], int(img.get_height() * sc)))
         _SPECIAL_CACHE[ch] = surf or pa.make_special_tile(name, size)
     return _SPECIAL_CACHE[ch]

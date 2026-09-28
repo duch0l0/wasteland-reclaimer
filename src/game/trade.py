@@ -4,7 +4,7 @@ import math
 import pygame
 
 from .. import items
-from ..weapons import WEAPONS
+from ..weapons import weapon_for_item
 from .controls import number_key
 
 SELL_RATE = 0.5          # торговец покупает за полцены
@@ -74,6 +74,6 @@ class TradeMixin:
         tr["stock"][name] = tr["stock"].get(name, 0) + qty
         self.inventory.remove(name, qty)
         self.inventory.add("крышки", price)
-        if name == WEAPONS["pistol"]["item"] and not self.inventory.has(name):
+        if weapon_for_item(name) == self.player.weapon and not self.inventory.has(name):
             self.player.weapon = "melee"
         self.log(f"Продано: {name} ×{qty} за {price} кр.")

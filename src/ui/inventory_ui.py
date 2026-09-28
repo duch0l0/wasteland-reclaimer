@@ -18,7 +18,9 @@ from ..weapons import WEAPONS
 from .common import (fonts, font_tiny, wrap_text, panel, button, close_button, hotspot,
                      COLOR_TITLE, COLOR_DIM, COLOR_OK, COLOR_HOVER, PANEL_H)
 
-COLS, ROWS = 6, 4
+# сетка под размер экрана: на широком — 8×5, на маленьком — 6×4
+COLS = 8 if S.SCREEN_W >= 1200 else 6
+ROWS = 5 if S.SCREEN_H >= 700 else 4
 CELL, GAP = 58, 6
 CELL_BG = (36, 31, 25)
 CELL_BORDER = (88, 76, 54)
@@ -90,14 +92,17 @@ def _item_facts(game, name):
             facts.append((f"{d['ap']:+d} ОД в бою", (230, 110, 90) if d["ap"] < 0 else COLOR_OK))
         if d.get("guns"):
             facts.append((f"{d['guns']:+d}% к стрельбе", (230, 110, 90) if d["guns"] < 0 else COLOR_OK))
-    for w in WEAPONS.values():
+    for key, w in WEAPONS.items():
         if w.get("item") == name:
             facts.append((f"Урон {w['damage']}±2 · дальность {w['range']} кл.", (225, 150, 90)))
             facts.append((f"Выстрел: {w['ap']} ОД · патроны: {game.inventory.count(w['ammo'])}", COLOR_DIM))
-            if game.player.weapon == "pistol":
+            if game.player.weapon == key:
                 facts.append(("В руках", COLOR_HOVER))
-        if w.get("ammo") == name:
-            facts.append((f"Для оружия: {w['name']}", (220, 190, 100)))
+    guns = [w["name"] for w in WEAPONS.values() if w.get("ammo") == name]
+    if guns:
+        facts.append(("Для оружия: " + ", ".join(guns), (220, 190, 100)))
+    if d.get("read"):
+        facts.append(("Можно прочитать или прослушать", (140, 220, 140)))
     if name == "заточенный лом":
         facts.append(("+3 к урону в ближнем бою (уже учтено)", (225, 150, 90)))
     used_in = [r["name"] for r in game.inventory.recipes.values() if name in r["ingredients"]]
@@ -170,8 +175,8 @@ def draw_inventory(surf, game):
     # ---- слева: снаряжение и персонаж
     lx = box.x + 16
     surf.blit(font_small.render("Снаряжение", True, COLOR_TITLE), (lx, box.y + 44))
-    if p.weapon == "pistol":
-        w_item = WEAPONS["pistol"]["item"]
+    if WEAPONS[p.weapon].get("item"):
+        w_item = WEAPONS[p.weapon]["item"]
     else:
         w_item = "заточенный лом" if inv.has("заточенный лом") else "лом"
     def select(n):
@@ -238,7 +243,7 @@ def draw_inventory(surf, game):
         worn = bool(name) and items.slot(name) is not None and p.equipped(items.slot(name)) == name
         _cell(surf, r, name, inv.count(name) if name else 0, name == game.inv_sel, hover, worn)
     grid_bottom = gy + ROWS * (CELL + GAP)
-    info = f"Предметов: {len(visible)}" + (" (показаны первые 24)" if len(visible) > COLS * ROWS else "")
+    info = f"Предметов: {len(visible)}" + (f" (показаны первые {COLS * ROWS})" if len(visible) > COLS * ROWS else "")
     surf.blit(font_tiny().render(info, True, COLOR_DIM), (gx, grid_bottom + 2))
     for i, hint in enumerate(("Клик — выбрать · двойной клик или E — использовать",
                               "Стрелки — выбор · Tab — вкладки · I или Esc — закрыть")):

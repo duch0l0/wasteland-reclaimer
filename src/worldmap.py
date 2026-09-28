@@ -17,11 +17,17 @@ TRAVEL_SPEED = 140        # px/сек по карте
 ENCOUNTER_CHANCE = 0.45   # шанс встречи за переход
 
 
+def to_screen(p):
+    """Координаты карты мира (заданы для 960×540) -> текущий экран."""
+    rw, rh = S.WORLD_MAP_REF
+    return pygame.Vector2(p[0] * S.SCREEN_W / rw, p[1] * S.SCREEN_H / rh)
+
+
 class WorldMap:
     def __init__(self, location_defs, known):
         self.defs = location_defs
         self.known = known                  # множество id известных локаций
-        self.pos = pygame.Vector2(location_defs["ruins"]["world_pos"])
+        self.pos = to_screen(location_defs["ruins"]["world_pos"])
         self.target = None                  # id локации, куда идём
         self.encounter_at = None            # доля пути, на которой случится встреча
         self.progress = 0.0
@@ -35,7 +41,7 @@ class WorldMap:
 
     def location_here(self):
         for lid in self.known_list():
-            if self.pos.distance_to(self.defs[lid]["world_pos"]) < 6:
+            if self.pos.distance_to(to_screen(self.defs[lid]["world_pos"])) < 6:
                 return lid
         return None
 
@@ -65,7 +71,7 @@ class WorldMap:
     def _dest(self):
         if self.target == "__wander__":
             return self.wander_dest
-        return pygame.Vector2(self.defs[self.target]["world_pos"])
+        return to_screen(self.defs[self.target]["world_pos"])
 
     def update(self, dt_ms):
         """Возвращает событие: None, ("arrived", loc_id) или ("encounter", None)."""
@@ -99,7 +105,7 @@ class WorldMap:
                 x, y, r = rnd.randrange(S.SCREEN_W), rnd.randrange(S.SCREEN_H), rnd.randint(20, 70)
                 pygame.draw.circle(bg, (80, 67, 48), (x, y), r, 3)
             # старая трасса
-            pts = [(0, 420), (200, 350), (420, 300), (620, 190), (S.SCREEN_W, 120)]
+            pts = [tuple(to_screen(p)) for p in [(0, 420), (200, 350), (420, 300), (620, 190), (960, 120)]]
             pygame.draw.lines(bg, (60, 55, 50), False, pts, 10)
             pygame.draw.lines(bg, (150, 140, 90), False, pts, 1)
             self._bg = bg
@@ -111,7 +117,7 @@ class WorldMap:
         here = self.location_here()
         for i, lid in enumerate(self.known_list()):
             d = self.defs[lid]
-            p = d["world_pos"]
+            p = tuple(int(v) for v in to_screen(d["world_pos"]))
             label = font_small.render(f"[{i + 1}] {d['name']}", True, (240, 230, 200))
             lrect = label.get_rect(midtop=(p[0], p[1] + 16))
             # клик: по локации, у которой стоишь, — войти; по другой — идти к ней

@@ -192,6 +192,37 @@ def make_vwall(facade, side):
     return out
 
 
+def make_terminal(desk):
+    """Терминал RobCo на столе из набора: монитор рисуется пиксель-артом (пиксель 2×2),
+    чтобы совпасть по стилю с набором. Картинки терминала в наборе нет."""
+    px = pygame.Surface((22, 20), pygame.SRCALPHA)
+    d = pygame.draw
+    outline, body, shade, light = (38, 32, 26), (196, 184, 150), (150, 138, 108), (224, 214, 182)
+    d.rect(px, outline, (1, 0, 20, 17))                 # корпус
+    d.rect(px, body, (2, 1, 18, 15))
+    d.line(px, light, (2, 1), (19, 1))
+    d.line(px, shade, (19, 2), (19, 15))
+    d.rect(px, outline, (4, 3, 14, 10))                 # экран
+    d.rect(px, (22, 46, 28), (5, 4, 12, 8))
+    for y, w in ((5, 9), (7, 6), (9, 8)):               # строки текста
+        d.line(px, (110, 235, 130), (6, 6 + y - 5), (6 + w - 1, 6 + y - 5))
+    d.rect(px, (110, 235, 130), (6, 11, 1, 1))          # курсор
+    d.rect(px, shade, (15, 14, 3, 1))                   # кнопки
+    d.rect(px, outline, (3, 17, 17, 3))                 # клавиатура
+    d.rect(px, (170, 160, 130), (4, 17, 15, 2))
+    for x in range(5, 18, 2):
+        d.rect(px, shade, (x, 17, 1, 1))
+    mon = pygame.transform.scale(px, (44, 40))
+    glow = pygame.Surface((60, 50), pygame.SRCALPHA)   # зелёное свечение экрана
+    d.ellipse(glow, (90, 230, 120, 40), glow.get_rect())
+    w = max(desk.get_width(), 60)
+    out = pygame.Surface((w, desk.get_height() + 30), pygame.SRCALPHA)
+    out.blit(desk, ((w - desk.get_width()) // 2, 30))
+    out.blit(glow, (w // 2 - 30, 6))
+    out.blit(mon, (w // 2 - 22, 16))
+    return out
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
@@ -228,6 +259,12 @@ def main():
             pygame.image.save(img, os.path.join(OUT, "props", f"{pid}.png"))
             index[pid] = {"page": n, "rect": list(r), "size": list(img.get_size())}
         print(f"стр. {n}: {len(rects)} объектов")
+
+    # свои объекты, которых нет в наборе (рисуются после нарезки — нужен стол со стр. 2)
+    desk = pygame.image.load(os.path.join(OUT, "props", "p2_022.png"))
+    term = make_terminal(desk)
+    pygame.image.save(term, os.path.join(OUT, "props", "x_terminal.png"))
+    index["x_terminal"] = {"page": None, "rect": None, "size": list(term.get_size()), "made_from": "p2_022"}
 
     with open(os.path.join(OUT, "index.json"), "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, indent=1)

@@ -8,7 +8,7 @@ from .. import settings as S
 from ..weapons import WEAPONS
 from .common import fonts, font_tiny, wrap_text, button, PANEL_H
 
-LOG_W = 560
+LOG_W = S.SCREEN_W - 400  # слева лог, справа 400 px под состояние и кнопки
 LOG_GREEN = (140, 220, 120)
 DIM = (160, 150, 130)
 
@@ -98,7 +98,8 @@ def draw_panel(surf, game):
     enabled = not game.modal_open()
     weapon = weapon_label(game, short=True).replace("Заточенный лом", "Заточка")
     specs = [("Рюкзак", "I", pygame.K_i, enabled), ("Крафт", "C", pygame.K_c, enabled),
-             (weapon, "F", pygame.K_f, enabled), ("Карта", "M", pygame.K_m, enabled)]
+             (weapon, "F", pygame.K_f, enabled), ("Журнал", "J", pygame.K_j, enabled),
+             ("Карта", "M", pygame.K_m, enabled)]
     if combat.active:
         specs.append(("Конец хода", "R", pygame.K_r, enabled and combat.player_can_act()))
     avail, gap = right - x0, 4

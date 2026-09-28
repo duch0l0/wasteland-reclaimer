@@ -11,7 +11,7 @@ from .tilemap import TileMap, load_map_file
 from .townmap import TownMap
 from .entities import Enemy, NPC
 
-NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка"}
+NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка", "turtle": "Черепан"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)
@@ -61,7 +61,7 @@ class Location:
             self.level = TownMap(d["map"])  # карта из объектов (tools/build_town.py)
         else:
             self.level = TileMap(rows or load_map_file(d["map"]), npc_ids=d.get("npcs"),
-                                 containers=d.get("containers"))
+                                 containers=d.get("containers"), terminals=d.get("terminals"))
         entry = d.get("entry")
         self.entry = (entry[0] * S.TILE, entry[1] * S.TILE) if entry else self.level.player_spawn
         self.enemies = [make_enemy(pos, t) for pos, t in self.level.enemy_spawns]
