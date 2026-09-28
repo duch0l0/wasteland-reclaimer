@@ -2,6 +2,7 @@
 import pygame
 
 from . import settings as S
+from . import items
 from .animator import Animator
 from .leveling import LevelSystem
 
@@ -16,6 +17,12 @@ def _hitbox_in_tile(pos, size):
     """Хитбокс по центру тайла по горизонтали, прижатый к его низу."""
     w, h = size
     return pygame.Rect(pos[0] + (S.TILE - w) // 2, pos[1] + S.TILE - h - 2, w, h)
+
+
+def sprite_of(ent, cam):
+    """Текущий кадр персонажа и где он на экране: спрайт стоит «ногами» на хитбоксе."""
+    frame = ent.anim.current_frame(flip=getattr(ent, "facing_left", False))
+    return frame, frame.get_rect(midbottom=(ent.rect.centerx - cam.x, ent.rect.bottom - cam.y))
 
 
 class CombatStats:
@@ -53,6 +60,8 @@ class Player(CombatStats):
         self.hp = S.PLAYER_BASE_HP
         self.max_hp = S.PLAYER_BASE_HP
         self.base_damage = S.PLAYER_BASE_DMG
+        self.inventory = None  # рюкзак (ставит Game) — от него зависят бонусы предметов
+        self.equipment = {slot: None for slot in items.SLOTS}  # надетая броня по слотам
         self.level_sys = LevelSystem(S.XP_TO_LEVEL)
         self.attack_cd = 0
         self.attacking = False
@@ -66,6 +75,25 @@ class Player(CombatStats):
     def perk_rank(self, perk_id):
         return self.perks.get(perk_id, 0)
 
+    def equipped(self, slot):
+        """Что надето в слот. Если предмета больше нет в рюкзаке (продан, отдан) — слот пуст."""
+        name = self.equipment.get(slot)
+        if name and (self.inventory is None or not self.inventory.has(name)):
+            self.equipment[slot] = name = None
+        return name
+
+    def equip_mod(self, stat):
+        """Сумма бонусов надетого к характеристике (armor_ac, ap, guns)."""
+        return sum(items.mod(self.equipped(s), stat) for s in items.SLOTS if self.equipped(s))
+
+    @property
+    def armor_class(self):
+        return self.ac + self.equip_mod("armor_ac")
+
+    @property
+    def max_ap(self):
+        return max(2, self.base_ap + self.equip_mod("ap") - (3 if self.crippled_legs else 0))
+
     @property
     def melee_skill(self):
         return S.PLAYER_MELEE_SKILL + (self.level_sys.level - 1) * S.PLAYER_SKILL_PER_LEVEL
@@ -73,7 +101,7 @@ class Player(CombatStats):
     @property
     def guns_skill(self):
         return (S.PLAYER_GUNS_SKILL + (self.level_sys.level - 1) * S.PLAYER_SKILL_PER_LEVEL
-                + 15 * self.perk_rank("steady_hand"))
+                + 15 * self.perk_rank("steady_hand") + self.equip_mod("guns"))
 
     @property
     def crit_bonus(self):
@@ -81,8 +109,10 @@ class Player(CombatStats):
 
     @property
     def damage(self):
-        """Урон в ближнем бою (у самопала свой — см. src/weapons.py)."""
-        return self.base_damage + (self.level_sys.level - 1) * 2 + 3 * self.perk_rank("heavy_hand")
+        """Урон в ближнем бою (у самопала свой — см. src/weapons.py).
+        Заточенный лом даёт +3, пока лежит в рюкзаке."""
+        sharp = 3 if self.inventory is not None and self.inventory.has("заточенный лом") else 0
+        return self.base_damage + (self.level_sys.level - 1) * 2 + 3 * self.perk_rank("heavy_hand") + sharp
 
     def handle_input(self, keys, dt_ms, solid_rects):
         if not self.alive:
@@ -91,16 +121,20 @@ class Player(CombatStats):
         speed = S.PLAYER_SPEED * dt_ms / 1000
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             dx -= speed
-            self.facing_left = True
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             dx += speed
-            self.facing_left = False
         if keys[pygame.K_w] or keys[pygame.K_UP]:
             dy -= speed
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             dy += speed
+        self.walk(dx, dy, solid_rects)
 
+    def walk(self, dx, dy, solid_rects):
+        """Сдвиг на (dx, dy) пикселей со стенами; анимация и поворот — по движению."""
         moving = dx != 0 or dy != 0
+        if dx:
+            self.facing_left = dx < 0
+        self.anim.face(dx, dy)
 
         self._move_axis(dx, 0, solid_rects)
         self._move_axis(0, dy, solid_rects)
@@ -163,8 +197,7 @@ class Player(CombatStats):
         return msgs
 
     def draw(self, surf, cam):
-        frame = self.anim.current_frame(flip=self.facing_left)
-        r = frame.get_rect(midbottom=(self.rect.centerx - cam.x, self.rect.bottom - cam.y))
+        frame, r = sprite_of(self, cam)
         surf.blit(frame, r)
 
 
@@ -191,6 +224,7 @@ class Enemy(CombatStats):
         self.faction = d.get("faction")   # у фракции (банды) враги нейтральны, пока их не разозлить
         self.hostile = self.faction is None
         self.talk = d.get("talk")         # id диалога: такой враг сначала заговаривает
+        self.pack = d.get("pack")         # стая: вся стая рядом вступает в бой разом
         self.talked = False
         self.facing_left = False
         self.alive = True
@@ -202,15 +236,8 @@ class Enemy(CombatStats):
             self.anim.update(dt_ms)
 
     def draw(self, surf, cam):
-        frame = self.anim.current_frame(flip=self.facing_left)
-        r = frame.get_rect(midbottom=(self.rect.centerx - cam.x, self.rect.bottom - cam.y))
+        frame, r = sprite_of(self, cam)
         surf.blit(frame, r)
-        if self.alive and self.hp < self.max_hp:
-            bar_w = 30
-            x = r.centerx - bar_w // 2
-            y = r.top - 8
-            pygame.draw.rect(surf, S.COLOR_HP_BG, (x, y, bar_w, 4))
-            pygame.draw.rect(surf, S.COLOR_HP, (x, y, int(bar_w * self.hp / self.max_hp), 4))
 
 
 class NPC:
@@ -224,6 +251,5 @@ class NPC:
         self.anim.update(dt_ms)
 
     def draw(self, surf, cam):
-        frame = self.anim.current_frame()
-        r = frame.get_rect(midbottom=(self.rect.centerx - cam.x, self.rect.bottom - cam.y))
+        frame, r = sprite_of(self, cam)
         surf.blit(frame, r)

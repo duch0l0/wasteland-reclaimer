@@ -92,35 +92,99 @@ def make_beetle_frame(size, base_color, accent_color, phase):
     return surf
 
 
-def make_item_icon(item_id, size):
-    """Иконка предмета, лежащего на земле."""
-    w, h = size
-    s = _base_surface(size)
-    if item_id == "scrap":
-        pygame.draw.line(s, (150, 140, 130), (6, h - 8), (w - 6, 8), 6)
-        pygame.draw.line(s, (90, 80, 70), (w - 12, 6), (w - 4, 12), 4)
-    elif item_id == "chems":
-        pygame.draw.rect(s, (80, 170, 90), (w // 2 - 7, 10, 14, h - 14), border_radius=4)
-        pygame.draw.rect(s, (200, 200, 190), (w // 2 - 4, 4, 8, 7))
-    elif item_id == "cloth":
-        pygame.draw.polygon(s, (200, 185, 150), [(5, 10), (w - 6, 6), (w - 4, h - 8), (7, h - 5)])
-        pygame.draw.line(s, (150, 135, 105), (8, h // 2), (w - 6, h // 2 - 2), 2)
-    elif item_id == "ammo":
+def make_item_icon(item_id, size=(32, 32), halo=True):
+    """Иконка предмета на холсте 32×32 (масштабируется под нужный размер).
+    halo — тёмное пятно под предметом, чтобы он читался на земле."""
+    s = _base_surface((32, 32))
+    d = pygame.draw
+    if item_id == "scrap":            # ржавая труба
+        d.line(s, (95, 70, 55), (6, 26), (26, 6), 7)
+        d.line(s, (160, 120, 90), (6, 26), (26, 6), 3)
+        d.circle(s, (70, 50, 40), (26, 6), 4)
+    elif item_id == "sharp_scrap":    # заточенный лом с блестящим концом
+        d.line(s, (95, 70, 55), (5, 27), (22, 10), 7)
+        d.polygon(s, (215, 220, 225), [(20, 8), (29, 2), (25, 13)])
+        d.line(s, (240, 240, 245), (22, 9), (28, 3), 1)
+    elif item_id == "chems":          # склянка с зелёной жижей
+        d.rect(s, (200, 200, 190), (13, 3, 6, 5))
+        d.rect(s, (150, 190, 170), (9, 8, 14, 21), border_radius=4)
+        d.rect(s, (80, 200, 90), (10, 15, 12, 13), border_radius=3)
+        d.circle(s, (170, 250, 170), (14, 19), 2)
+    elif item_id == "cloth":          # сложенная тряпка
+        d.polygon(s, (190, 175, 140), [(4, 10), (27, 6), (28, 24), (6, 27)])
+        d.line(s, (140, 125, 95), (6, 16), (27, 13), 2)
+        d.line(s, (140, 125, 95), (7, 22), (27, 19), 1)
+    elif item_id == "ammo":           # три патрона
         for i in range(3):
-            x = 7 + i * 8
-            pygame.draw.rect(s, (200, 160, 70), (x, 12, 6, h - 18), border_radius=2)
-            pygame.draw.rect(s, (160, 90, 60), (x, 8, 6, 6), border_radius=3)
-    elif item_id == "pistol":
-        pygame.draw.rect(s, (70, 70, 75), (5, 10, w - 10, 8))
-        pygame.draw.rect(s, (90, 70, 50), (8, 16, 8, 12))
-        pygame.draw.rect(s, (40, 40, 45), (w - 9, 9, 5, 4))
+            x = 7 + i * 7
+            d.rect(s, (205, 165, 70), (x, 12, 5, 16), border_radius=1)
+            d.rect(s, (170, 100, 60), (x, 7, 5, 6), border_radius=2)
+    elif item_id == "pistol":         # самопал
+        d.rect(s, (75, 75, 80), (4, 10, 24, 7))
+        d.rect(s, (45, 45, 50), (24, 9, 5, 4))
+        d.rect(s, (110, 80, 50), (7, 16, 7, 12), border_radius=2)
+        d.line(s, (60, 60, 60), (14, 18), (17, 21), 2)
+    elif item_id == "caps":           # крышки
+        for cx, cy in ((12, 20), (20, 17), (15, 11)):
+            d.circle(s, (180, 160, 60), (cx, cy), 7)
+            d.circle(s, (230, 210, 110), (cx, cy), 5)
+            d.circle(s, (180, 160, 60), (cx, cy), 2)
+    elif item_id == "lockpick":       # отмычки
+        d.line(s, (190, 190, 200), (6, 26), (24, 8), 2)
+        d.line(s, (190, 190, 200), (24, 8), (28, 12), 2)
+        d.line(s, (150, 150, 165), (9, 27), (27, 16), 2)
+        d.rect(s, (120, 70, 50), (4, 23, 7, 6), border_radius=2)
+    elif item_id == "bandage":        # бинт
+        d.rect(s, (225, 220, 205), (6, 10, 20, 13), border_radius=5)
+        d.rect(s, (200, 60, 55), (13, 13, 6, 7))
+        d.line(s, (190, 185, 170), (8, 23), (26, 27), 3)
+    elif item_id == "kit":            # набор выжившего
+        d.rect(s, (120, 90, 55), (4, 9, 24, 18), border_radius=3)
+        d.rect(s, (80, 60, 35), (12, 5, 8, 5), 2)
+        d.rect(s, (225, 220, 205), (13, 13, 6, 10))
+        d.rect(s, (225, 220, 205), (11, 15, 10, 6))
+    elif item_id == "tonic":          # тоник
+        d.rect(s, (120, 80, 50), (13, 2, 6, 5))
+        d.rect(s, (110, 60, 130), (9, 7, 14, 22), border_radius=5)
+        d.rect(s, (200, 120, 230), (11, 13, 10, 13), border_radius=4)
+        d.rect(s, (240, 230, 200), (11, 16, 10, 5))
+    elif item_id == "jacket":         # куртка из покрышек
+        d.polygon(s, (50, 50, 55), [(8, 5), (24, 5), (29, 12), (26, 14), (25, 28), (7, 28), (6, 14), (3, 12)])
+        for y in (10, 16, 22):
+            d.line(s, (85, 85, 90), (8, y), (24, y), 2)
+        d.line(s, (150, 130, 80), (16, 6), (16, 27), 1)
+    elif item_id == "sign_vest":      # бронежилет из дорожных знаков
+        d.polygon(s, (60, 60, 65), [(8, 4), (24, 4), (29, 11), (26, 13), (25, 29), (7, 29), (6, 13), (3, 11)])
+        d.polygon(s, (200, 40, 40), [(11, 8), (16, 5), (21, 8), (21, 14), (16, 17), (11, 14)])  # «Стоп»
+        d.line(s, (240, 240, 240), (13, 11), (19, 11), 1)
+        d.polygon(s, (230, 200, 40), [(16, 18), (22, 27), (10, 27)])                        # «Осторожно»
+        d.line(s, (40, 40, 40), (16, 21), (16, 24), 1)
+        d.line(s, (150, 150, 160), (5, 17), (27, 17), 1)                                    # изолента
+    elif item_id == "hardhat":        # каска строителя
+        d.ellipse(s, (225, 190, 40), (6, 9, 20, 17))
+        d.rect(s, (225, 190, 40), (3, 20, 26, 5), border_radius=2)
+        d.line(s, (170, 140, 20), (16, 10), (16, 20), 2)
+        d.line(s, (120, 100, 20), (10, 12), (13, 17), 1)  # трещина
+    elif item_id == "moto_helmet":    # мотошлем
+        d.circle(s, (60, 70, 110), (16, 16), 12)
+        d.rect(s, (40, 45, 60), (7, 13, 18, 7), border_radius=3)   # визор
+        d.line(s, (150, 170, 200), (10, 15), (18, 15), 1)
+        d.line(s, (90, 100, 130), (8, 24), (24, 24), 2)
+    elif item_id == "letter":         # письмо
+        d.rect(s, (225, 215, 180), (4, 8, 24, 17))
+        d.lines(s, (160, 145, 110), False, [(4, 8), (16, 18), (28, 8)], 2)
+        d.circle(s, (170, 40, 40), (16, 18), 3)
     else:
-        pygame.draw.circle(s, (180, 170, 150), (w // 2, h // 2), w // 3)
-    # тёмный ореол — чтобы предмет читался на любом фоне
-    halo = _base_surface(size)
-    pygame.draw.circle(halo, (0, 0, 0, 70), (w // 2, h // 2 + 3), w // 2 - 1)
-    halo.blit(s, (0, 0))
-    return halo
+        d.circle(s, (180, 170, 150), (16, 16), 10)
+    if size != (32, 32):
+        s = pygame.transform.smoothscale(s, size) if size[0] % 32 else pygame.transform.scale(s, size)
+    if not halo:
+        return s
+    w, h = size
+    out = _base_surface(size)
+    pygame.draw.circle(out, (0, 0, 0, 70), (w // 2, h // 2 + 3), w // 2 - 1)
+    out.blit(s, (0, 0))
+    return out
 
 
 def make_special_tile(name, size):

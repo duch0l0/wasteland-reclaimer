@@ -2,12 +2,30 @@
   "ruins": {
     "name": "Руины у трассы",
     "map": "data/maps/ruins.txt",
-    "npcs": ["gena"],
-    "containers": [
-      {"name": "заначка Гены", "owner": "gena", "loot": {"крышки": 45, "тоник": 1, "патроны": 8}}
+    "npcs": [
+      "gena",
+      "loner",
+      "blondie"
     ],
-    "world_pos": [230, 330],
-    "entry": [1, 7],
+    "containers": [
+      {
+        "name": "заначка Гены",
+        "owner": "gena",
+        "loot": {
+          "крышки": 45,
+          "тоник": 1,
+          "патроны": 8
+        }
+      }
+    ],
+    "world_pos": [
+      230,
+      330
+    ],
+    "entry": [
+      1,
+      7
+    ],
     "known": true
   },
   "station": {
@@ -15,10 +33,24 @@
     "map": "data/maps/station.txt",
     "npcs": [],
     "containers": [
-      {"name": "сейф заправщика", "owner": "gang", "loot": {"крышки": 70, "куртка из покрышек": 1, "тоник": 1}}
+      {
+        "name": "сейф заправщика",
+        "owner": "gang",
+        "loot": {
+          "крышки": 70,
+          "бронежилет из дорожных знаков": 1,
+          "тоник": 1
+        }
+      }
     ],
-    "world_pos": [700, 150],
-    "entry": [1, 7],
+    "world_pos": [
+      700,
+      150
+    ],
+    "entry": [
+      1,
+      7
+    ],
     "known": false
   }
 }

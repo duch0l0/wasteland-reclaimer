@@ -3,6 +3,8 @@
 если настоящих файлов ещё нет в assets/.
 
 Ожидаемый формат реальных ассетов (см. README.md):
+  assets/sprites/<персонаж>/{down,left,right,up}/0.png..  — кадры по направлениям
+      (нарезаются из листов скриптом tools/slice_sprites.py), либо по-старому:
   assets/sprites/player/idle/0.png, 1.png, ...
   assets/sprites/player/walk/0.png, ...
   assets/sprites/player/attack/0.png, ...
@@ -20,16 +22,46 @@ from . import placeholder_art as pa
 
 FRAME_SIZE = (48, 64)
 TILE_SIZE = (48, 48)
+SPRITE_SCALE = 2  # пиксель-арт персонажей увеличиваем без сглаживания
+
+
+def _sorted_frames(folder):
+    return sorted(
+        (f for f in os.listdir(folder) if f.lower().endswith((".png", ".jpg", ".bmp"))),
+        # 2.png раньше 10.png: сортируем по номеру, а не по строке
+        key=lambda f: (int(os.path.splitext(f)[0]) if os.path.splitext(f)[0].isdigit() else 10**9, f),
+    )
+
+
+def load_directional_animations(root_dir):
+    """Кадры по четырём направлениям (root_dir/down, left, right, up) или None.
+    Фазы шага: 0 и 2 — шаг, 1 и 3 — стоит; стоячий кадр идёт в idle."""
+    result = {}
+    for d in ("down", "left", "right", "up"):
+        folder = os.path.join(root_dir, d)
+        if not os.path.isdir(folder):
+            return None
+        frames = []
+        for f in _sorted_frames(folder):
+            try:
+                img = pygame.image.load(os.path.join(folder, f)).convert_alpha()
+            except Exception:
+                continue
+            w, h = img.get_size()
+            frames.append(pygame.transform.scale(img, (w * SPRITE_SCALE, h * SPRITE_SCALE)))
+        if not frames:
+            return None
+        result[f"walk_{d}"] = frames
+        result[f"idle_{d}"] = [frames[1 % len(frames)]]
+        result[f"attack_{d}"] = frames  # отдельных кадров удара в листах нет — рывок шагом
+    result["idle"] = result["idle_down"]
+    return result
 
 
 def _load_frame_folder(folder, size):
     if not os.path.isdir(folder):
         return None
-    files = sorted(
-        (f for f in os.listdir(folder) if f.lower().endswith((".png", ".jpg", ".bmp"))),
-        # 2.png раньше 10.png: сортируем по номеру, а не по строке
-        key=lambda f: (int(os.path.splitext(f)[0]) if os.path.splitext(f)[0].isdigit() else 10**9, f),
-    )
+    files = _sorted_frames(folder)
     if not files:
         return None
     frames = []
@@ -43,7 +75,11 @@ def _load_frame_folder(folder, size):
 
 
 def load_humanoid_animations(root_dir, size, base_color, accent_color, frames_per_action=6):
-    """Возвращает dict {'idle': [surf,...], 'walk': [...], 'attack': [...]}."""
+    """Возвращает dict {'idle': [surf,...], 'walk': [...], 'attack': [...]}
+    или анимации по направлениям, если они нарезаны."""
+    directional = load_directional_animations(root_dir)
+    if directional:
+        return directional
     result = {}
     for action in ("idle", "walk", "attack"):
         real = _load_frame_folder(os.path.join(root_dir, action), size)
@@ -60,6 +96,9 @@ def load_humanoid_animations(root_dir, size, base_color, accent_color, frames_pe
 
 def load_creature_animations(root_dir, size, base_color, accent_color, kind="mutant", frames_per_action=6):
     """Анимации существа по типу плейсхолдера: humanoid / mutant / beetle."""
+    directional = load_directional_animations(root_dir)
+    if directional:
+        return directional
     if kind == "humanoid":
         return load_humanoid_animations(root_dir, size, base_color, accent_color, frames_per_action)
     if kind == "beetle":
@@ -75,23 +114,27 @@ def load_creature_animations(root_dir, size, base_color, accent_color, kind="mut
     return result
 
 
-# Иконки предметов на земле: assets/items/<id>.png или плейсхолдер
-ITEM_IDS = {"лом": "scrap", "химикаты": "chems", "ткань": "cloth", "патроны": "ammo", "самопал": "pistol"}
+# Иконки предметов: assets/items/<icon>.png (icon — поле в data/items.json) или плейсхолдер.
 _ITEM_CACHE = {}
 
 
-def item_icon(kind, size=(34, 34)):
-    if kind not in _ITEM_CACHE:
-        item_id = ITEM_IDS.get(kind, "misc")
-        path = os.path.join("assets", "items", f"{item_id}.png")
+def item_icon(kind, size=(34, 34), halo=True):
+    """halo — тёмное пятно под предметом (для лежащих на земле)."""
+    from . import items  # items читает data/ при импорте
+    key = (kind, size, halo)
+    if key not in _ITEM_CACHE:
+        icon_id = items.icon_id(kind)
+        path = os.path.join("assets", "items", f"{icon_id}.png")
         icon = None
         if os.path.isfile(path):
             try:
-                icon = pygame.transform.smoothscale(pygame.image.load(path).convert_alpha(), size)
+                img = pygame.image.load(path).convert_alpha()
+                icon = (pygame.transform.scale(img, size) if size[0] % img.get_width() == 0
+                        else pygame.transform.smoothscale(img, size))
             except Exception:
                 icon = None
-        _ITEM_CACHE[kind] = icon or pa.make_item_icon(item_id, size)
-    return _ITEM_CACHE[kind]
+        _ITEM_CACHE[key] = icon or pa.make_item_icon(icon_id, size, halo)
+    return _ITEM_CACHE[key]
 
 
 def load_tile(tile_dir, name, kind, size, base_color):

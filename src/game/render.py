@@ -2,12 +2,14 @@
 import pygame
 
 from .. import settings as S
-from ..ui import hud, menus, combat_ui
-from ..ui.common import fonts
+from ..ui import hud, menus, combat_ui, cursor, inventory_ui
+from ..ui.common import fonts, begin_frame, PANEL_H
+from ..entities import sprite_of
 
 
 class RenderMixin:
     def draw(self):
+        begin_frame()  # кликабельные зоны отмечаются заново каждый кадр
         if self.mode == "world":
             self._draw_world()
         else:
@@ -28,18 +30,22 @@ class RenderMixin:
 
         entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs
         entities.sort(key=lambda e: e.rect.bottom)  # кто ниже — тот ближе к камере
+        outlined = combat_ui.highlights(combat)
         for e in entities:
-            e.draw(surf, cam)
+            frame, r = sprite_of(e, cam)
+            if e in outlined:
+                combat_ui.draw_outline(surf, frame, r, outlined[e])
+            surf.blit(frame, r)
 
+        combat_ui.draw_health_bars(surf, self, cam)
         if combat.active:
             combat_ui.draw_combat_markers(surf, combat, cam)
         combat_ui.draw_tracers(surf, combat.tracers, cam)
         combat_ui.draw_floaters(surf, combat.floaters, cam)
-        hud.draw_hud(surf, self, show_log=not (combat.active or self.modal_open()))
-        if combat.active:
-            combat_ui.draw_combat_panel(surf, combat, self.log_lines)
-            if combat.aim_menu:
-                combat_ui.draw_aim_menu(surf, combat)
+        cursor.draw_cursor_hint(surf, self.cursor_hint(), cam)
+        hud.draw_panel(surf, self)
+        if combat.active and combat.aim_menu:
+            combat_ui.draw_aim_menu(surf, combat)
 
         if self.dialogue.is_active():
             name = getattr(self.dialogue_speaker, "name", "???")
@@ -48,10 +54,10 @@ class RenderMixin:
         if self.craft_open:
             menus.draw_craft_menu(surf, self.inventory)
         if self.inv_open:
-            menus.draw_inventory(surf, self)
+            inventory_ui.draw_inventory(surf, self)
         if self.trade:
             menus.draw_trade(surf, self)
 
         if self.game_over:
             txt = pygame.font.SysFont("dejavusans", 40).render("ВЫ ПОГИБЛИ", True, (220, 60, 50))
-            surf.blit(txt, txt.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H // 2)))
+            surf.blit(txt, txt.get_rect(center=(S.SCREEN_W // 2, (S.SCREEN_H - PANEL_H) // 2)))

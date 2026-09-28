@@ -3,9 +3,13 @@ import json
 
 import pygame
 
+MOVE_KEYS = (pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d,
+             pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT)
+
 from .. import settings as S
 from .. import loader
 from .. import perks
+from .. import wander
 from ..parallax import Parallax
 from ..entities import Player
 from ..location import LOCATION_DEFS
@@ -21,9 +25,10 @@ from .quests import QuestMixin
 from .backpack import BackpackMixin
 from .trade import TradeMixin
 from .render import RenderMixin
+from .mouse import MouseMixin
 
 
-class Game(ControlsMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin, RenderMixin):
+class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin, RenderMixin):
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(S.TITLE)
@@ -47,6 +52,8 @@ class Game(ControlsMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixi
             S.PLAYER_DIR, loader.FRAME_SIZE, base_color=(90, 110, 90), accent_color=(200, 190, 160))
         self.player = Player(self.level.player_spawn, player_anims)
         self.inventory = Inventory("data/recipes.json")
+        self.player.inventory = self.inventory
+        self.inventory.on_add = self.on_item_added
         self.regen_ms = 0
 
         # системы и открытые окна
@@ -58,10 +65,15 @@ class Game(ControlsMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixi
         self.perk_choices = None       # 3 перка, пока открыто окно выбора
         self.craft_open = False
         self.inv_open = False
+        self.inv_tab = "all"           # вкладка рюкзака
+        self.inv_sel = None            # выбранный в рюкзаке предмет
+        self.inv_last_click = -10**6   # для двойного клика по ячейке
         self.trade = None              # {"id": торговец, "tab": "buy"/"sell"}
 
         self.cam = pygame.Vector2(0, 0)
         self.held_letters = set()
+        self.autowalk = None       # путь по клику мыши вне боя
+        self.combat_queue = None   # путь/атака по клику мыши в бою
 
     def log(self, text):
         self.log_lines.append(text)
@@ -84,6 +96,12 @@ class Game(ControlsMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixi
         for npc in self.npcs:
             npc.update(dt_ms)
         self.combat.update(dt_ms)
+        busy = self.modal_open() or self.combat.active
+        wander.update(self, dt_ms, frozen=busy)
+        if busy:
+            self.autowalk = None
+            self._stand_still()
+        self.run_combat_queue()
 
         if not self.player.alive and not self.game_over:
             self.game_over = True
@@ -102,6 +120,12 @@ class Game(ControlsMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixi
 
         self.follow_camera(dt_ms)
 
+    def _stand_still(self):
+        """В бою и в окнах герой стоит, а не шагает на месте — кроме своего шага или удара."""
+        p = self.player
+        if not p.attacking and not any(tw["ent"] is p for tw in self.combat.tweens):
+            p.anim.set_action("idle")
+
     def _regen(self, dt_ms):
         """Вне боя раны понемногу заживают."""
         if self.combat.active or not self.player.alive or self.player.hp >= self.player.max_hp:
@@ -114,7 +138,13 @@ class Game(ControlsMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixi
 
     def _explore(self, dt_ms):
         """Режим исследования: ходьба, подбор, выходы, кто нас заметил."""
-        self.player.handle_input(self.held_keys(), dt_ms, self.level.solid_rects)
+        keys = self.held_keys()
+        if any(keys[k] for k in MOVE_KEYS):
+            self.autowalk = None  # клавиши перебивают ходьбу по клику
+        if not self.update_autowalk(dt_ms):
+            self.player.handle_input(keys, dt_ms, self.level.solid_rects)
+        if self.mode != "local" or self.modal_open() or self.combat.active:
+            return  # по клику дошли и заговорили / напали
         self.level.collect_pickups(self.player.rect.inflate(4, 4), self.inventory, log_fn=self.log)
         if self.level.is_exit(*tile_of(self.player)):
             self.go_world_map()

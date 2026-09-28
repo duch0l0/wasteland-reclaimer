@@ -10,7 +10,7 @@ from . import loader
 from .tilemap import TileMap, load_map_file
 from .entities import Enemy, NPC
 
-NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000"}
+NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)
@@ -36,14 +36,16 @@ def make_enemy(pos, type_id):
 
 
 def npc_animations(npc_id):
+    """Кадры NPC — assets/sprites/<npc_id>/ (см. tools/slice_sprites.py), иначе плейсхолдер."""
     key = f"npc:{npc_id}"
     if key not in _ANIM_CACHE:
+        folder = f"{S.ASSET_ROOT}/sprites/{npc_id}"
         if npc_id == "robot":
             _ANIM_CACHE[key] = loader.load_creature_animations(
-                f"{S.ASSET_ROOT}/sprites/robot", (44, 56), (120, 125, 135), (230, 190, 60), kind="humanoid")
+                folder, (44, 56), (120, 125, 135), (230, 190, 60), kind="humanoid")
         else:
             _ANIM_CACHE[key] = loader.load_humanoid_animations(
-                S.NPC_DIR, loader.FRAME_SIZE, base_color=(70, 90, 110), accent_color=(190, 180, 150))
+                folder, loader.FRAME_SIZE, base_color=(70, 90, 110), accent_color=(190, 180, 150))
     return _ANIM_CACHE[key]
 
 

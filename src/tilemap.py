@@ -24,7 +24,8 @@ PICKUP_TILES = {
     "A": ("патроны", 3),
     "G": ("самопал", 1),
 }
-ENEMY_TILES = {"m": "mutant", "r": "rat", "R": "raider", "B": "beetle", "g": "gang", "S": "boss"}
+ENEMY_TILES = {"m": "mutant", "r": "rat", "R": "raider", "B": "beetle", "g": "gang", "S": "boss",
+               "k": "ratman", "K": "ratman_boss", "z": "rad_mutant"}
 SOLID_TILES = "#XD"   # стена, контейнер и закрытая дверь непроходимы
 
 

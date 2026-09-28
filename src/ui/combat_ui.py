@@ -3,38 +3,88 @@
 import pygame
 
 from .. import settings as S
-from ..combat import BODY_PARTS, tile_of
-from .common import fonts, font_tiny, wrap_text, panel
-from .hud import weapon_label
+from ..combat import BODY_PARTS
+from ..entities import sprite_of
+from .common import fonts, panel, hotspot, close_button, digit_key, COLOR_HOVER
 
-COMBAT_PANEL_H = 104
+
+
+OUTLINE_PLAYER = (110, 230, 110)
+OUTLINE_TARGET = (235, 80, 60)
+OUTLINE_ACTING = (235, 190, 80)   # враг, который сейчас ходит
+_OUTLINE_CACHE = {}
+
+
+def highlights(combat):
+    """Кого обвести: {боец: цвет}."""
+    if not combat.active:
+        return {}
+    p = combat.game.player
+    hl = {}
+    cur = combat.current
+    if cur is p and not combat.tweens:
+        hl[p] = OUTLINE_PLAYER
+    elif cur is not None and cur is not p:
+        hl[cur] = OUTLINE_ACTING
+    t = combat.target
+    if t is not None and t.alive:
+        hl[t] = OUTLINE_TARGET
+    return hl
+
+
+def draw_outline(surf, frame, rect, color):
+    """Обводка по контуру спрайта: силуэт цвета color, сдвинутый на 2 px во все стороны."""
+    key = (id(frame), color)
+    sil = _OUTLINE_CACHE.get(key)
+    if sil is None:
+        if len(_OUTLINE_CACHE) > 400:
+            _OUTLINE_CACHE.clear()
+        sil = pygame.mask.from_surface(frame, 60).to_surface(setcolor=(*color, 255), unsetcolor=(0, 0, 0, 0))
+        _OUTLINE_CACHE[key] = sil
+    for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2)):
+        surf.blit(sil, (rect.x + dx, rect.y + dy))
+
+
+def _bar(surf, centerx, y, ratio, color, w=34, h=4):
+    pygame.draw.rect(surf, (15, 12, 10), (centerx - w // 2 - 1, y - 1, w + 2, h + 2))
+    pygame.draw.rect(surf, (60, 30, 28), (centerx - w // 2, y, w, h))
+    pygame.draw.rect(surf, color, (centerx - w // 2, y, max(0, int(w * ratio)), h))
+
+
+def health_bar_y(sprite_rect):
+    return sprite_rect.top - 8
+
+
+def draw_health_bars(surf, game, cam):
+    """Полоски HP над головами: в бою — у всех бойцов (герой зелёный, враги красные),
+    вне боя — только у раненых врагов."""
+    combat = game.combat
+    if combat.active:
+        fighters = [f for f in combat.order if f.alive]
+    else:
+        fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp]
+    for f in fighters:
+        _, r = sprite_of(f, cam)
+        color = (90, 210, 90) if f is game.player else (215, 60, 50)
+        _bar(surf, r.centerx, health_bar_y(r), f.hp / f.max_hp if f.max_hp else 0, color)
 
 
 def draw_combat_markers(surf, combat, cam):
-    """Клетка игрока, клетка цели и шанс попадания над целью."""
+    """Шанс попадания (или почему атаковать нельзя) над целью."""
     _, font_small = fonts()
-    T = S.TILE
-    p = combat.game.player
-
-    def tile_rect(ent):
-        tx, ty = tile_of(ent)
-        return pygame.Rect(tx * T - int(cam.x), ty * T - int(cam.y), T, T)
-
-    if not combat.tweens:
-        pygame.draw.rect(surf, (90, 200, 90), tile_rect(p), 2)
-    t = combat.target
-    if t is not None and t.alive:
-        r = tile_rect(t)
-        pygame.draw.rect(surf, (220, 70, 50), r, 2)
-        ok, reason = combat.can_attack(p, t)
-        if ok:
-            label = f"{combat.hit_chance(p, t)}%"
-            color = (240, 230, 200)
-        else:
-            label = reason
-            color = (170, 160, 140)
-        txt = font_small.render(label, True, color)
-        surf.blit(txt, txt.get_rect(midbottom=(r.centerx, r.top - 30)))
+    p, t = combat.game.player, combat.target
+    if t is None or not t.alive:
+        return
+    _, r = sprite_of(t, cam)
+    ok, reason = combat.can_attack(p, t)
+    label, color = (f"{combat.hit_chance(p, t)}%", (240, 230, 200)) if ok else (reason, (170, 160, 140))
+    txt = font_small.render(label, True, color)
+    # справа от полоски HP цели: над головой места мало — там полоски соседей
+    pos = txt.get_rect(midleft=(r.centerx + 21, health_bar_y(r) + 2))
+    bg = pygame.Surface(pos.inflate(6, 2).size, pygame.SRCALPHA)
+    bg.fill((15, 12, 10, 170))
+    surf.blit(bg, pos.inflate(6, 2))
+    surf.blit(txt, pos)
 
 
 def draw_floaters(surf, floaters, cam):
@@ -43,55 +93,6 @@ def draw_floaters(surf, floaters, cam):
         txt = font.render(f["text"], True, f["color"])
         txt.set_alpha(max(0, 255 - int(255 * f["t"] / 1100)))
         surf.blit(txt, txt.get_rect(center=(f["pos"].x - cam.x, f["pos"].y - cam.y)))
-
-
-def draw_combat_panel(surf, combat, log_lines):
-    """Нижняя панель в стиле интерфейса Fallout: лог, ОД-лампочки, чей ход, клавиши."""
-    font, font_small = fonts()
-    h = COMBAT_PANEL_H
-    box = pygame.Rect(0, S.SCREEN_H - h, S.SCREEN_W, h)
-    bg = pygame.Surface(box.size, pygame.SRCALPHA)
-    bg.fill((*S.COLOR_PANEL, 240))
-    pygame.draw.line(bg, S.COLOR_PANEL_BORDER, (0, 0), (box.w, 0), 2)
-    surf.blit(bg, box.topleft)
-
-    # лог — слева, как зелёный «монитор» Пип-боя
-    log_w = 560
-    lines = []
-    for line in log_lines[-6:]:
-        lines.extend(wrap_text(font_small, line, log_w - 20))
-    y = box.y + 8
-    for line in lines[-4:]:
-        surf.blit(font_small.render(line, True, (140, 220, 120)), (box.x + 12, y))
-        y += 19
-    pygame.draw.line(surf, S.COLOR_PANEL_BORDER, (log_w, box.y + 6), (log_w, box.bottom - 6), 1)
-
-    x0 = log_w + 14
-    p = combat.game.player
-    cur = combat.current
-    whose = "ВАШ ХОД" if cur is p else f"Ход: {cur.name}" if cur else ""
-    surf.blit(font.render(whose, True, (230, 200, 110) if cur is p else (220, 120, 90)), (x0, box.y + 6))
-    surf.blit(font_small.render(f"Раунд {combat.round}", True, (160, 150, 130)), (box.right - 90, box.y + 10))
-
-    # ОД — ряд лампочек
-    surf.blit(font_small.render("ОД", True, S.COLOR_TEXT), (x0, box.y + 36))
-    for i in range(p.max_ap):
-        lit = cur is p and i < p.ap
-        center = (x0 + 38 + i * 20, box.y + 46)
-        pygame.draw.circle(surf, (90, 230, 90) if lit else (40, 60, 40), center, 7)
-        pygame.draw.circle(surf, (20, 30, 20), center, 7, 1)
-
-    if p.free_steps > 0 and cur is p:
-        surf.blit(font_small.render(f"+{p.free_steps} беспл. шага", True, (140, 220, 140)),
-                  (x0 + 42 + p.max_ap * 20, box.y + 38))
-
-    surf.blit(font_small.render(f"{weapon_label(combat.game)} · F", True, (210, 200, 170)),
-              (x0, box.y + 62))
-    # полная строка клавиш — мелко под логом, на всю ширину
-    cost = combat.attack_cost(p)
-    keys = (f"WASD шаг 1 · Space атака {cost} · Q прицельно {cost + 1} · Tab цель · "
-            f"C крафт {S.AP_CRAFT} · R конец хода")
-    surf.blit(font_tiny().render(keys, True, (170, 160, 140)), (12, box.bottom - 18))
 
 
 def draw_aim_menu(surf, combat):
@@ -106,12 +107,17 @@ def draw_aim_menu(surf, combat):
     if t is not None and t.armor:
         note += f" · панцирь гасит {t.armor} урона"
     surf.blit(font_small.render(note, True, (170, 160, 145)), (box.x + 16, box.y + 36))
+    close_button(surf, box)
     y = box.y + 62
     for i, part in enumerate(BODY_PARTS):
         chance = combat.hit_chance(p, t, i) if t else 0
         crit = combat.crit_chance(p, i)
         weak = t is not None and t.armor and part["id"] in t.weak_parts
-        color = (140, 220, 140) if weak else (220, 210, 190)
+        row = pygame.Rect(box.x + 10, y - 3, box.w - 20, 24)
+        hover = hotspot(row, digit_key(i))
+        if hover:
+            pygame.draw.rect(surf, (70, 60, 40), row, border_radius=3)
+        color = COLOR_HOVER if hover else (140, 220, 140) if weak else (220, 210, 190)
         # шрифт пропорциональный — колонки выравниваем координатами, а не пробелами
         cols = [(f"[{i + 1}] {part['name']}", 0), (f"попасть {chance}%", 130), (f"крит {crit}%", 250)]
         if weak:

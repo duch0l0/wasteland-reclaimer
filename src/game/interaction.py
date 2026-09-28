@@ -9,6 +9,9 @@ class InteractionMixin:
     def talk_to(self, speaker, tree_id):
         if self.dialogue.start(tree_id):
             self.dialogue_speaker = speaker
+            # собеседник поворачивается к игроку
+            speaker.anim.face(self.player.rect.centerx - speaker.rect.centerx,
+                              self.player.rect.centery - speaker.rect.centery)
             return True
         return False
 

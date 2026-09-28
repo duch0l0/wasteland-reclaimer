@@ -20,8 +20,7 @@ COLOR_PANEL_BORDER = (110, 96, 60)
 
 # --- Пути к ассетам (сюда можно подложить настоящие спрайты) ---
 ASSET_ROOT = "assets"
-PLAYER_DIR = f"{ASSET_ROOT}/sprites/player"   # player/idle, player/walk, player/attack — папки с кадрами 0.png,1.png,...
-NPC_DIR = f"{ASSET_ROOT}/sprites/npc"         # npc/idle
+PLAYER_DIR = f"{ASSET_ROOT}/sprites/player"   # кадры по направлениям: player/{down,left,right,up}/0.png..
 TILE_DIR = f"{ASSET_ROOT}/tiles"              # ground.png, wall.png, scrap.png
 BG_DIR = f"{ASSET_ROOT}/bg"                   # layer0.png (дальний план) ... layerN.png (ближний)
 

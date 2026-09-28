@@ -1,4 +1,5 @@
-"""Общее для всего интерфейса: шрифты, перенос строк, подложка окон."""
+"""Общее для всего интерфейса: шрифты, перенос строк, подложка окон,
+кликабельные зоны для мыши."""
 import pygame
 
 from .. import settings as S
@@ -10,6 +11,78 @@ COLOR_TITLE = (210, 190, 120)
 COLOR_DIM = (170, 160, 145)
 COLOR_OK = (140, 220, 140)
 COLOR_BAD = (150, 130, 110)
+COLOR_HOVER = (255, 240, 170)
+
+PANEL_H = 104  # нижняя панель интерфейса (лог, HP, ОД, кнопки) — всегда на экране
+
+# ------------------------------------------------------------ мышь
+# Окна при отрисовке отмечают кликабельные зоны и клавишу, которой равен клик
+# (строка ответа [2] = клавиша 2, кнопка «Конец хода» = R и т.д.), —
+# поэтому мышь идёт через ту же логику, что и клавиатура.
+_hotspots = []
+
+
+def begin_frame():
+    _hotspots.clear()
+
+
+def mouse_pos():
+    return pygame.mouse.get_pos()
+
+
+def hotspot(rect, key):
+    """Отметить зону; key — клавиша, которой равен клик, или функция, которую вызвать.
+    Возвращает True, если мышь сейчас над зоной (для подсветки)."""
+    rect = pygame.Rect(rect)
+    _hotspots.append((rect, key))
+    return rect.collidepoint(mouse_pos())
+
+
+def hotspot_at(pos):
+    """Клавиша под курсором (верхняя из отмеченных) или None."""
+    for rect, key in reversed(_hotspots):
+        if rect.collidepoint(pos):
+            return key
+    return None
+
+
+def over_ui(pos):
+    """Курсор над интерфейсом (панель или отмеченная зона), а не над миром."""
+    return pos[1] >= S.SCREEN_H - PANEL_H or hotspot_at(pos) is not None
+
+
+def button(surf, rect, label, key, enabled=True):
+    """Кнопка в стиле панели Fallout. Кликабельна, подсвечивается под курсором."""
+    rect = pygame.Rect(rect)
+    hover = hotspot(rect, key) if enabled else False
+    fill = (70, 60, 40) if hover else (45, 38, 30)
+    pygame.draw.rect(surf, fill, rect, border_radius=3)
+    pygame.draw.rect(surf, S.COLOR_PANEL_BORDER if enabled else (70, 62, 45), rect, 1, border_radius=3)
+    color = COLOR_HOVER if hover else ((220, 205, 160) if enabled else (110, 100, 85))
+    while font_tiny().size(label)[0] > rect.w - 6 and len(label) > 4:
+        label = label[:-2].rstrip() + "…"  # длинная подпись — обрезаем с многоточием
+    txt = font_tiny().render(label, True, color)
+    surf.blit(txt, txt.get_rect(center=rect.center))
+
+
+def close_button(surf, box):
+    """[×] в правом верхнем углу окна — то же, что Esc."""
+    button(surf, (box.right - 30, box.y + 8, 22, 22), "×", pygame.K_ESCAPE)
+
+
+def option_row(surf, font, text, pos, key, color, width):
+    """Строка-вариант (ответ в диалоге, рецепт, товар): кликабельна, подсвечивается."""
+    rect = pygame.Rect(pos[0] - 4, pos[1] - 1, width + 8, font.get_linesize())
+    hover = hotspot(rect, key)
+    if hover:
+        pygame.draw.rect(surf, (70, 60, 40), rect, border_radius=3)
+    surf.blit(font.render(text, True, COLOR_HOVER if hover else color), pos)
+    return hover
+
+
+def digit_key(i):
+    """Номер пункта 0..9 -> клавиша 1..9, 0 (как в controls.number_key)."""
+    return pygame.K_1 + i if i < 9 else pygame.K_0
 
 
 def _font(size):
@@ -54,7 +127,10 @@ def panel(surf, rect, alpha=240):
 
 
 def centered_box(w, h):
-    return pygame.Rect(S.SCREEN_W // 2 - w // 2, S.SCREEN_H // 2 - h // 2, w, h)
+    """Окно по центру области над нижней панелью (если влезает)."""
+    area_h = S.SCREEN_H - PANEL_H
+    y = max(8, (area_h - h) // 2)
+    return pygame.Rect(S.SCREEN_W // 2 - w // 2, y, w, h)
 
 
 def draw_rows(surf, rows, x, y, font, line_h=20, gap=8):

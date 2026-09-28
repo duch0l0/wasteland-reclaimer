@@ -46,6 +46,8 @@ class ControlsMixin:
                 self.handle_key(key)
             elif event.type == pygame.KEYUP:
                 self.held_letters.discard(SCANCODE_TO_KEY.get(event.scancode, event.key))
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button in (1, 3):
+                self.handle_click(event.pos, event.button)
 
     def handle_key(self, key):
         """Одно нажатие. Открытое окно перехватывает ввод — как модальное."""
@@ -70,7 +72,7 @@ class ControlsMixin:
             self.switch_weapon()
         elif key == pygame.K_i:
             if not self.combat.active or self.combat.player_can_act():
-                self.inv_open = True
+                self.open_inventory()
         elif self.combat.active:
             self._combat_key(key)
         else:

@@ -5,7 +5,7 @@ from .. import settings as S
 from ..entities import _hitbox_in_tile
 from ..location import Location, LOCATION_DEFS
 from ..encounters import make_encounter
-from ..ui.combat_ui import COMBAT_PANEL_H
+from ..ui.common import PANEL_H
 
 
 def clamp(v, lo, hi):
@@ -73,9 +73,9 @@ class WorldMixin:
     def _camera_target(self):
         lvl_w, lvl_h = self.level.pixel_size
         target_x = clamp(self.player.rect.centerx - S.SCREEN_W // 2, 0, max(0, lvl_w - S.SCREEN_W))
-        # в бою низ экрана занят панелью — центрируем игрока в видимой части
+        # низ экрана занят панелью — центрируем игрока в видимой части
         # и позволяем камере опуститься, чтобы нижний ряд карты не прятался под панелью
-        view_h = S.SCREEN_H - (COMBAT_PANEL_H if self.combat.active else 0)
+        view_h = S.SCREEN_H - PANEL_H
         target_y = clamp(self.player.rect.centery - view_h // 2, 0, max(0, lvl_h - view_h))
         return target_x, target_y
 

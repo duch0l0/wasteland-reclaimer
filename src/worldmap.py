@@ -11,6 +11,7 @@ import random
 import pygame
 
 from . import settings as S
+from .ui.common import hotspot, digit_key
 
 TRAVEL_SPEED = 140        # px/сек по карте
 ENCOUNTER_CHANCE = 0.45   # шанс встречи за переход
@@ -111,10 +112,17 @@ class WorldMap:
         for i, lid in enumerate(self.known_list()):
             d = self.defs[lid]
             p = d["world_pos"]
-            pygame.draw.circle(surf, (40, 30, 20), p, 13)
-            pygame.draw.circle(surf, (230, 190, 90) if lid == here else (190, 160, 100), p, 10)
             label = font_small.render(f"[{i + 1}] {d['name']}", True, (240, 230, 200))
-            surf.blit(label, label.get_rect(midtop=(p[0], p[1] + 16)))
+            lrect = label.get_rect(midtop=(p[0], p[1] + 16))
+            # клик: по локации, у которой стоишь, — войти; по другой — идти к ней
+            key = pygame.K_e if lid == here and not self.target else digit_key(i)
+            hover = hotspot(pygame.Rect(p[0] - 14, p[1] - 14, 28, 28).union(lrect), key)
+            pygame.draw.circle(surf, (40, 30, 20), p, 13)
+            pygame.draw.circle(surf, (230, 190, 90) if lid == here or hover else (190, 160, 100), p, 10)
+            if hover:
+                pygame.draw.circle(surf, (255, 240, 170), p, 15, 2)
+                label = font_small.render(f"[{i + 1}] {d['name']}", True, (255, 240, 170))
+            surf.blit(label, lrect)
         if self.target:
             pygame.draw.line(surf, (230, 90, 60), self.pos, self._dest(), 1)
         pygame.draw.circle(surf, (230, 60, 50), (int(self.pos.x), int(self.pos.y)), 6)
@@ -132,5 +140,5 @@ class WorldMap:
         else:
             status = "Вы посреди пустоши."
         surf.blit(font_small.render(status, True, (220, 210, 190)), (220, S.SCREEN_H - 60))
-        surf.blit(font_small.render("1–9 — идти к локации · 0 — бродить (встреча) · E — войти · " + player_hint,
+        surf.blit(font_small.render("Клик/1–9 — идти к локации · 0 — бродить · клик/E — войти · " + player_hint,
                                     True, (170, 160, 140)), (14, S.SCREEN_H - 30))

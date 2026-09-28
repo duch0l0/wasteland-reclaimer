@@ -18,7 +18,6 @@ from collections import deque
 import pygame
 
 from . import settings as S
-from . import items
 from .weapons import WEAPONS, RANGE_PENALTY_PER_TILE
 
 T = S.TILE
@@ -159,6 +158,8 @@ class Combat:
             self.order = sorted([p] + enemies, key=lambda f: -f.sequence)
         for f in self.order:
             self._snap_to_grid(f)
+            if f is not p:
+                f.anim.set_action("idle")
         g.log("— БОЙ! —" if player_first else f"{_cap(enemies[0].name)} замечает вас. — БОЙ! —")
         self.target = None
         self.turn_idx = 0
@@ -166,10 +167,11 @@ class Combat:
         return True
 
     def _pack_of(self, enemy):
-        """Сородичи рядом (крысюки, рейдеры одного лагеря) поднимаются вместе."""
+        """Сородичи рядом (стая, рейдеры одного лагеря) поднимаются вместе."""
         return [e for e in self.game.enemies
                 if e.alive and e is not enemy and e.hostile
-                and (e.type_id == enemy.type_id or (e.faction and e.faction == enemy.faction))
+                and (e.type_id == enemy.type_id or (e.faction and e.faction == enemy.faction)
+                     or (e.pack and e.pack == enemy.pack))
                 and chebyshev(tile_of(e), tile_of(enemy)) <= 5]
 
     def end(self, reason):
@@ -278,6 +280,7 @@ class Combat:
             return False
         if dx:
             ent.facing_left = dx < 0
+        ent.anim.face(dx, dy)
         cur = tile_of(ent)
         nxt = (cur[0] + dx, cur[1] + dy)
         if not self._walkable(nxt) or nxt in self._occupied(except_ent=ent):
@@ -291,25 +294,36 @@ class Combat:
         ent.anim.set_action("walk")
         return True
 
-    def _path_next_step(self, ent, goal_ent, done=None):
-        """BFS по клеткам; done(tile) — «сюда достаточно дойти» (по умолчанию —
-        вплотную к цели). Возвращает первый шаг (dx, dy) или None."""
-        start, goal = tile_of(ent), tile_of(goal_ent)
-        done = done or (lambda c: chebyshev(c, goal) == 1)
+    def find_path(self, ent, done):
+        """BFS по свободным клеткам до первой, где done(tile) истинно.
+        Список клеток пути без стартовой ([] — уже на месте, None — не дойти)."""
+        start = tile_of(ent)
         blocked = self._occupied(except_ent=ent)
         q, prev = deque([start]), {start: None}
         while q:
             c = q.popleft()
             if done(c):
-                while prev[c] is not None and prev[c] != start:
+                path = []
+                while c != start:
+                    path.append(c)
                     c = prev[c]
-                return (c[0] - start[0], c[1] - start[1]) if c != start else None
+                return path[::-1]
             for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 n = (c[0] + d[0], c[1] + d[1])
                 if n not in prev and self._walkable(n) and n not in blocked:
                     prev[n] = c
                     q.append(n)
         return None
+
+    def _path_next_step(self, ent, goal_ent, done=None):
+        """Первый шаг (dx, dy) к цели; done(tile) — «сюда достаточно дойти»
+        (по умолчанию — вплотную к цели). None — идти некуда."""
+        goal = tile_of(goal_ent)
+        path = self.find_path(ent, done or (lambda c: chebyshev(c, goal) == 1))
+        if not path:
+            return None
+        start = tile_of(ent)
+        return (path[0][0] - start[0], path[0][1] - start[1])
 
     # --------------------------------------------------------------- атака
     def profile(self, ent):
@@ -354,9 +368,9 @@ class Combat:
         return max(S.HIT_CHANCE_MIN, min(S.HIT_CHANCE_MAX, chance))
 
     def defense(self, ent):
-        """КБ бойца; у игрока плюс надетая броня (лучшая из рюкзака)."""
+        """КБ бойца; у игрока — с надетой бронёй."""
         if ent is self.game.player:
-            return ent.ac + items.armor_ac(self.game.inventory)
+            return ent.armor_class
         return ent.ac
 
     def crit_chance(self, attacker, part_idx=0):
@@ -373,6 +387,8 @@ class Combat:
             return False
         attacker.ap -= cost
         attacker.facing_left = defender.rect.centerx < attacker.rect.centerx
+        attacker.anim.face(defender.rect.centerx - attacker.rect.centerx,
+                           defender.rect.centery - attacker.rect.centery)
         if attacker is self.game.player:
             attacker.play_attack()
         else:

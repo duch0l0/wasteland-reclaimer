@@ -5,11 +5,14 @@ import json
 class Inventory:
     def __init__(self, recipes_path):
         self.items = {}  # name -> count
+        self.on_add = None  # колбэк (имя, сколько) — игра так узнаёт о новых вещах
         with open(recipes_path, "r", encoding="utf-8") as f:
             self.recipes = json.load(f)
 
     def add(self, name, count=1):
         self.items[name] = self.items.get(name, 0) + count
+        if self.on_add:
+            self.on_add(name, count)
 
     def has(self, name, count=1):
         return self.items.get(name, 0) >= count
