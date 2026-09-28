@@ -111,16 +111,29 @@ class MapBase:
             icon = loader.item_icon(p["kind"])
             surf.blit(icon, icon.get_rect(center=(p["rect"].centerx - cam_x, p["rect"].centery - cam_y)))
 
-    def collect_pickups(self, player_rect, inventory, log_fn=None):
-        remaining = []
+    def pickup_icon_rect(self, p):
+        """Где на земле нарисована иконка предмета (в координатах мира)."""
+        icon = loader.item_icon(p["kind"])
+        return icon.get_rect(center=p["rect"].center)
+
+    def pickup_at(self, world_pos):
+        return next((p for p in self.pickups if self.pickup_icon_rect(p).inflate(8, 8).collidepoint(world_pos)), None)
+
+    def pickup_near(self, player_rect):
+        """Предмет под ногами или на соседней клетке."""
         for p in self.pickups:
-            if p["rect"].colliderect(player_rect):
-                inventory.add(p["kind"], p["count"])
-                if log_fn:
-                    log_fn(f"Подобрано: {p['kind']}" + (f" ×{p['count']}" if p["count"] > 1 else ""))
-            else:
-                remaining.append(p)
-        self.pickups = remaining
+            if self.adjacent([(p["rect"].x // S.TILE, p["rect"].y // S.TILE)], player_rect):
+                return p
+        return None
+
+    def take_pickup(self, p, inventory, log_fn=None):
+        """Подобрать предмет — только вручную (E или клик), автоподбора нет."""
+        if p not in self.pickups:
+            return
+        self.pickups.remove(p)
+        inventory.add(p["kind"], p["count"])
+        if log_fn:
+            log_fn(f"Подобрано: {p['kind']}" + (f" ×{p['count']}" if p["count"] > 1 else ""))
 
 
 class TileMap(MapBase):

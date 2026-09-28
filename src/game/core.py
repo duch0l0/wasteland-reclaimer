@@ -181,7 +181,6 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.player.handle_input(keys, dt_ms, self.level.solids_near(self.player.rect))
         if self.mode != "local" or self.modal_open() or self.combat.active:
             return  # по клику дошли и заговорили / напали
-        self.level.collect_pickups(self.player.rect.inflate(4, 4), self.inventory, log_fn=self.log)
         if self.level.is_exit(*tile_of(self.player)):
             self.go_world_map()
             return

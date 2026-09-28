@@ -130,6 +130,8 @@ def grandpa_house(g):
     eye = next(p for p in g.level.pickups if p["kind"] == "чей-то глаз")
     g.player.rect.topleft = rect_pos_for_tile(g.player, (eye["rect"].x // 48, eye["rect"].y // 48))
     fr(g)
+    assert not g.inventory.has("чей-то глаз"), "автоподбора быть не должно"
+    g.handle_key(pygame.K_e)  # подобрать вручную
     use_terminal(g, "grandpa")
     open_entry(g, "ПОСЛЕДНЯЯ ЗАПИСЬ")
     g.term_back()

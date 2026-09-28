@@ -18,6 +18,8 @@ import pygame
 from .. import settings as S
 from ..combat import tile_of, rect_pos_for_tile, chebyshev
 from ..entities import sprite_of
+from .. import loader
+from .. import props as P
 from ..ui.common import hotspot_at, over_ui
 
 T = S.TILE
@@ -49,7 +51,10 @@ class MouseMixin:
 
     def object_at_screen(self, pos):
         """Терминал или контейнер по картинке (высокий шкаф кликается и за верхнюю часть),
-        иначе объект в клетке."""
+        иначе объект в клетке. Предметы на земле — по иконке."""
+        item = self.level.pickup_at(self.world_pos(pos))
+        if item:
+            return ("pickup", item)
         if hasattr(self.level, "terminal_sprite_at"):
             t = self.level.terminal_sprite_at(self.world_pos(pos))
             if t:
@@ -105,7 +110,11 @@ class MouseMixin:
             obj = self.object_at_screen(pos)
             if obj:
                 kind, what = obj
-                if kind in ("container", "terminal"):
+                if kind == "pickup":
+                    t = (what["rect"].x // T, what["rect"].y // T)
+                    self._go_to(lambda c: chebyshev(c, t) <= 1,
+                                lambda: self.level.take_pickup(what, self.inventory, log_fn=self.log))
+                elif kind in ("container", "terminal"):
                     tiles = what["tiles"]
                     action = (lambda: self.open_container(what)) if kind == "container" else \
                         (lambda: self.open_terminal(what["id"]))
@@ -263,6 +272,34 @@ class MouseMixin:
             self.combat_queue = None
 
     # ---------------------------------------------------- подсказка курсора
+    def hover_highlight(self):
+        """Что обвести контуром под курсором: [(картинка, rect на экране)]."""
+        pos = pygame.mouse.get_pos()
+        if (self.mode != "local" or self.modal_open() or self.game_over or self.combat.active
+                or over_ui(pos) or not pygame.mouse.get_focused()):
+            return []
+        cam_x, cam_y = int(self.cam.x), int(self.cam.y)
+        target = self.entity_at_screen(pos)
+        if target is not None and (target in self.npcs or (target.talk and not target.hostile)):
+            frame, r = sprite_of(target, self.cam)
+            return [(frame, r)]
+        obj = self.object_at_screen(pos)
+        if not obj:
+            return []
+        kind, what = obj
+        if kind == "pickup":
+            icon = loader.item_icon(what["kind"])
+            r = self.level.pickup_icon_rect(what).move(-cam_x, -cam_y)
+            return [(icon, r)]
+        if kind in ("container", "terminal") and what.get("obj"):
+            o = what["obj"]
+            img = P.image(o["name"])
+            return [(img, o["rect"].move(-cam_x, -cam_y))]
+        tile = what["tiles"][0] if kind in ("container", "terminal") else what
+        ch = {"container": "X", "terminal": "%", "door": "D"}[kind]
+        img = loader.special_tile(ch)
+        return [(img, img.get_rect(topleft=(tile[0] * T - cam_x, tile[1] * T - cam_y)))]
+
     def cursor_hint(self):
         """Что показать у курсора: (текст, цвет, путь [клетки] или None, клетка под курсором)."""
         pos = pygame.mouse.get_pos()
@@ -299,8 +336,15 @@ class MouseMixin:
             return (f"Напасть: {target.name}", (235, 120, 100), None, None)
         obj = self.object_at_screen(pos)
         if obj:
-            label = {"container": f"Обыскать: {obj[1]['name']}", "terminal": "Терминал RobCo",
-                     "door": "Дверь: заперта"}[obj[0]]
+            kind, what = obj
+            if kind == "container":
+                label = f"Обыскать: {what['name']}"
+            elif kind == "pickup":
+                label = f"Подобрать: {what['kind']}" + (f" ×{what['count']}" if what["count"] > 1 else "")
+            elif kind == "terminal":
+                label = "Терминал RobCo"
+            else:
+                label = "Дверь: заперта"
             return (label, (230, 220, 190), None, None)
         if not self.level.is_wall(*tile):
             return ("", None, None, tile)

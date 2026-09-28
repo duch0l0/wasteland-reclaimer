@@ -16,7 +16,7 @@ class InteractionMixin:
         return False
 
     def interact(self):
-        """E: поговорить с NPC рядом, иначе обыскать контейнер, открыть дверь, подобрать."""
+        """E: поговорить с NPC рядом, иначе терминал, контейнер, дверь, предмет на земле."""
         reach = self.player.rect.inflate(60, 60)  # хитбокс узкий, достаём NPC с соседнего тайла
         for npc in self.npcs:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
@@ -37,7 +37,9 @@ class InteractionMixin:
         if door:
             self.open_door(door)
             return
-        self.level.collect_pickups(self.player.rect.inflate(6, 6), self.inventory, log_fn=self.log)
+        item = self.level.pickup_near(self.player.rect)
+        if item:
+            self.level.take_pickup(item, self.inventory, log_fn=self.log)
 
     def _talker_near(self):
         """Мирный враг с диалогом (Шрам) рядом — с ним можно заговорить снова."""

@@ -94,7 +94,7 @@ class TownMap(MapBase):
         for c in d.get("containers", []):
             obj = self.objects[c["prop"]]
             box = {"tile": obj["foot"][0], "tiles": obj["foot"], "name": c["name"], "loot": dict(c["loot"]),
-                   "owner": c.get("owner"), "requires": c.get("requires"), "opened": False}
+                   "owner": c.get("owner"), "requires": c.get("requires"), "opened": False, "obj": obj}
             obj["container"] = box
             self.containers.append(box)
 
@@ -128,7 +128,7 @@ class TownMap(MapBase):
         self.terminals = []
         for t in d.get("terminals", []):
             obj = self.objects[t["prop"]]
-            term = {"id": t["id"], "tiles": obj["foot"]}
+            term = {"id": t["id"], "tiles": obj["foot"], "obj": obj}
             obj["terminal"] = term
             self.terminals.append(term)
 

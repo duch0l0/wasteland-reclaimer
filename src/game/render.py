@@ -53,6 +53,11 @@ class RenderMixin:
                 combat_ui.draw_outline(surf, frame, r, outlined[thing])
             surf.blit(frame, r)
 
+        # под курсором — то, с чем можно взаимодействовать, обведено контуром
+        for img, r in self.hover_highlight():
+            combat_ui.draw_outline(surf, img, r, (245, 215, 110))
+            surf.blit(img, r)
+
         combat_ui.draw_health_bars(surf, self, cam)
         if combat.active:
             combat_ui.draw_combat_markers(surf, combat, cam)
