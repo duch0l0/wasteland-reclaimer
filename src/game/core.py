@@ -25,6 +25,7 @@ from .quests import QuestMixin
 from .backpack import BackpackMixin
 from .trade import TradeMixin
 from .render import RenderMixin
+from ..ui.minimap import Minimap
 from .mouse import MouseMixin
 
 
@@ -72,6 +73,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
 
         self.cam = pygame.Vector2(0, 0)
         self.held_letters = set()
+        self.minimap = Minimap()
         self.autowalk = None       # путь по клику мыши вне боя
         self.combat_queue = None   # путь/атака по клику мыши в бою
 
@@ -90,6 +92,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.update_world_map(dt_ms)
             return
 
+        Minimap.reveal(self)  # туман войны: открыть клетки вокруг героя
         self.player.update(dt_ms)
         for e in self.enemies:
             e.update(dt_ms)

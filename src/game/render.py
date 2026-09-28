@@ -51,6 +51,7 @@ class RenderMixin:
         combat_ui.draw_tracers(surf, combat.tracers, cam)
         combat_ui.draw_floaters(surf, combat.floaters, cam)
         cursor.draw_cursor_hint(surf, self.cursor_hint(), cam)
+        self.minimap.draw(surf, self)
         hud.draw_panel(surf, self)
         if combat.active and combat.aim_menu:
             combat_ui.draw_aim_menu(surf, combat)

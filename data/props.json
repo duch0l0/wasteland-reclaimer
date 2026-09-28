@@ -349,6 +349,14 @@
     "stones_62": {"img": "p5_062", "block": false, "layer": "floor"},
     "stones_63": {"img": "p5_063", "block": false, "layer": "floor"},
     "clods_67": {"img": "p5_067", "block": false, "layer": "floor"},
-    "clods_81": {"img": "p5_081", "block": false, "layer": "floor"}
+    "clods_81": {"img": "p5_081", "block": false, "layer": "floor"},
+    "vwall_brick_w": {"img": "p1_vwall_brick_w", "foot": [1, 1], "sight": true},
+    "vwall_brick_e": {"img": "p1_vwall_brick_e", "foot": [1, 1], "sight": true},
+    "vwall_concrete_w": {"img": "p1_vwall_concrete_w", "foot": [1, 1], "sight": true},
+    "vwall_concrete_e": {"img": "p1_vwall_concrete_e", "foot": [1, 1], "sight": true},
+    "vwall_metal_w": {"img": "p1_vwall_metal_w", "foot": [1, 1], "sight": true},
+    "vwall_metal_e": {"img": "p1_vwall_metal_e", "foot": [1, 1], "sight": true},
+    "vwall_planks_w": {"img": "p1_vwall_planks_w", "foot": [1, 1], "sight": true},
+    "vwall_planks_e": {"img": "p1_vwall_planks_e", "foot": [1, 1], "sight": true}
   }
 }

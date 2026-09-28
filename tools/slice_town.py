@@ -3,6 +3,7 @@
 
   страница 1 — земля (клетки 48×48 по сетке), стены, заборы, дома, пятна земли:
                куски стоят вплотную, поэтому режем по координатам (PAGE1 ниже);
+               боковых стен в наборе нет — собираем их из фасадов (make_vwall);
   страницы 2–5 — мебель, хлам, бочки, палатки, знаки, трава: объекты стоят
                порознь на прозрачном фоне — находим их автоматически по альфе.
 
@@ -162,6 +163,35 @@ def split_vertical(rect, im):
             pygame.Rect(rect.x, best_y, rect.w, rect.bottom - best_y)]
 
 
+# боковые стены (идут с севера на юг): в наборе их нет — собираем из фасадов
+VWALL_FROM = {"brick": "wall_brick_long", "concrete": "wall_concrete", "metal": "wall_metal", "planks": "wall_planks"}
+VWALL_W = 20  # толщина стены в пикселях
+
+
+def make_vwall(facade, side):
+    """Кусок боковой стены на одну клетку, картинка 48×96 (как фасад высотой в 2 клетки).
+    Верхняя половина — верх стены (кромка фасада, повёрнутая вдоль стены),
+    нижняя — торец (кладка фасада, в тени). Куски, стоящие друг под другом,
+    перекрываются так, что торец виден только у самого южного."""
+    fw, fh = facade.get_size()
+    cap_src = facade.subsurface((fw // 2 - 24, 1, 48, 14)).copy()
+    cap = pygame.transform.rotate(cap_src, 90)                 # 14×48
+    cap = pygame.transform.scale(cap, (VWALL_W, 48))
+    cap.fill((16, 14, 12, 0), special_flags=pygame.BLEND_RGBA_ADD)  # верх стены на свету — чуть светлее
+    face = facade.subsurface((fw // 2 - VWALL_W // 2, fh - 48, VWALL_W, 48)).copy()
+    face.fill((170, 160, 150, 255), special_flags=pygame.BLEND_RGBA_MULT)  # торец в тени
+    strip = pygame.Surface((VWALL_W, 96), pygame.SRCALPHA)
+    strip.blit(cap, (0, 0))
+    strip.blit(face, (0, 48))
+    edge = (45, 36, 28)
+    pygame.draw.line(strip, edge, (0, 0), (0, 95))
+    pygame.draw.line(strip, edge, (VWALL_W - 1, 0), (VWALL_W - 1, 95))
+    pygame.draw.line(strip, edge, (0, 48), (VWALL_W - 1, 48))
+    out = pygame.Surface((48, 96), pygame.SRCALPHA)
+    out.blit(strip, (0 if side == "w" else 48 - VWALL_W, 0))  # западная стена — у левого края клетки
+    return out
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
@@ -178,6 +208,12 @@ def main():
         pid = f"p1_{name}"
         pygame.image.save(img, os.path.join(OUT, "props", f"{pid}.png"))
         index[pid] = {"page": 1, "rect": list(rect), "size": list(img.get_size())}
+    for style, facade in VWALL_FROM.items():
+        src = pygame.image.load(os.path.join(OUT, "props", f"p1_{facade}.png"))
+        for side in ("w", "e"):
+            pid = f"p1_vwall_{style}_{side}"
+            pygame.image.save(make_vwall(src, side), os.path.join(OUT, "props", f"{pid}.png"))
+            index[pid] = {"page": 1, "rect": None, "size": [48, 96], "made_from": facade}
 
     for n in range(2, 6):
         im = pygame.image.load(os.path.join(SRC, f"page_0{n}.png"))

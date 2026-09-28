@@ -6,7 +6,7 @@ from ..combat import BODY_PARTS
 # Буквенные клавиши определяем по физическому положению (scancode), а не по
 # символу: иначе при русской раскладке C печатает «с» и игра её не узнаёт.
 SCANCODE_TO_KEY = {getattr(pygame, f"KSCAN_{ch.upper()}"): getattr(pygame, f"K_{ch}")
-                   for ch in "wasdceqrfi"}
+                   for ch in "wasdceqrfim"}
 
 COMBAT_STEPS = {pygame.K_w: (0, -1), pygame.K_UP: (0, -1), pygame.K_s: (0, 1), pygame.K_DOWN: (0, 1),
                 pygame.K_a: (-1, 0), pygame.K_LEFT: (-1, 0), pygame.K_d: (1, 0), pygame.K_RIGHT: (1, 0)}
@@ -52,7 +52,13 @@ class ControlsMixin:
     def handle_key(self, key):
         """Одно нажатие. Открытое окно перехватывает ввод — как модальное."""
         if key == pygame.K_ESCAPE:
+            if self.minimap.mode == "big":
+                self.minimap.mode = "small"
+                return
             self._escape()
+            return
+        if key == pygame.K_m and self.mode == "local" and not self.modal_open():
+            self.minimap.cycle()
             return
         if self.game_over:
             return

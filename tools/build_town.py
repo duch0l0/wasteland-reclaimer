@@ -80,12 +80,21 @@ def reachable_count(extra_blocked=()):
 _reach = [None]
 
 
-def put(name, x, y, check=True, allow_reserved=False, search_owner=None):
-    """Поставить объект; False — не влез или перекрыл бы проход."""
+def put(name, x, y, check=True, allow_reserved=False, search_owner=None, force=False):
+    """Поставить объект; False — не влез или перекрыл бы проход.
+    force — без проверок (угловой кусок боковой стены поверх фасада)."""
     inf = P.info(name)
     foot = footprint(name, x, y)
+    if force:
+        props.append([name, x, y])
+        if inf["block"]:
+            blocked.update(foot)
+            _reach[0] = None
+        return True
     if any(not (1 <= fx < W - 1 and 1 <= fy < H - 1) for fx, fy in foot):
         return False
+    if name in OUTDOOR and any(ground[fy][fx] == "c" for fx, fy in foot):
+        return False  # трава, кусты, знаки и камни — только снаружи зданий
     if inf["block"]:
         if any(t in blocked for t in foot):
             return False
@@ -131,6 +140,8 @@ def scatter(names, x0, y0, x1, y1, n, tries=40):
 def decal(names, x0, y0, x1, y1, n):
     for _ in range(n):
         x, y = rnd.randint(x0, x1), rnd.randint(y0, y1)
+        if ground[y][x] == "c":
+            continue  # пятна земли — не на полу зданий
         decals.append([rnd.choice(names), x * T + rnd.randint(8, 40), y * T + rnd.randint(8, 40)])
 
 
@@ -156,38 +167,71 @@ def vline(names, x, y0, y1, gaps=()):
             put(rnd.choice(names), x, y, check=False)
 
 
-WALL_STYLES = {
-    "brick": ["wall_brick_long", "wall_brick_crumble", "wall_brick_frag_l", "wall_brick_frag_r"],
-    "concrete": ["wall_concrete", "wall_concrete_broken", "wall_concrete_brick", "wall_concrete_broken2",
-                 "wall_grey_broken"],
-    "metal": ["wall_metal", "wall_metal2", "wall_corrugated", "wall_corrugated2", "wall_corrugated_rust"],
-    "planks": ["wall_planks", "wall_planks_blue", "wall_planks_dark", "wall_corrugated_small"],
+# стили зданий: целые фасады для северной стены (по ширине в клетках),
+# для южной — вперемешку целые и обветшалые; боковые стены — vwall_<стиль>_w/e
+WALLS_INTACT = {
+    "brick": {4: ["wall_brick_long"], 2: ["wall_concrete_brick"]},
+    "concrete": {2: ["wall_concrete", "wall_concrete_brick"]},
+    "metal": {2: ["wall_metal", "wall_metal2", "wall_corrugated"]},
+    "planks": {2: ["wall_planks", "wall_planks_blue", "wall_planks_dark"]},
 }
-RUINED_EDGE = ["brick_pile_a", "brick_pile_b", "rubble_a", "rubble_b", "concrete_block", "cinder_a", "rubble_heap"]
+WALLS_WORN = {
+    "brick": {4: ["wall_brick_long", "wall_brick_crumble"], 2: ["wall_concrete_brick"]},
+    "concrete": {4: ["wall_grey_broken"], 2: ["wall_concrete", "wall_concrete_broken", "wall_concrete_broken2"]},
+    "metal": {2: ["wall_metal", "wall_metal2", "wall_corrugated", "wall_corrugated2", "wall_corrugated_rust"]},
+    "planks": {2: ["wall_planks", "wall_planks_blue", "wall_planks_dark", "wall_corrugated_small"]},
+}
 
 
-def building(x0, y0, w, h, style, doors=2):
-    """Разрушенное здание: бетонный пол, северная стена целиком (закрывает обзор),
-    южная сторона обвалена — обломки с проходами, боковые стены осыпались."""
-    paint("c", x0, y0 + 1, x0 + w - 1, y0 + h - 2)
-    hwall(WALL_STYLES[style], x0, x0 + w - 1, y0)
-    gaps = sorted(rnd.sample(range(x0 + 2, x0 + w - 2), min(doors, max(1, w - 4))))
-    door_tiles = set()
-    for g in gaps:
-        door_tiles.update((g, g + 1))
+def wall_row(pieces, x0, x1, y, gaps=()):
+    """Сплошной ряд фасадов от x0 до x1 по строке y, кроме клеток-проёмов gaps.
+    Отрезки между проёмами должны быть чётной длины (фасады — по 2 и 4 клетки)."""
     x = x0
-    while x < x0 + w - 1:
-        if x in door_tiles or x + 1 in door_tiles:
+    while x <= x1:
+        if x in gaps:
             x += 1
             continue
-        if rnd.random() < 0.7:
-            put(rnd.choice(RUINED_EDGE), x, y0 + h - 1, check=False)
-        x += 2
-    for side in (x0, x0 + w - 1):  # от боковых стен остались куски
-        for y in range(y0 + 1, y0 + h - 1, 3):
-            if rnd.random() < 0.5:
-                put(rnd.choice(["concrete_block", "cinder_c", "brick_pile_a"]), min(side, x0 + w - 2), y, check=False)
-    return (x0 + 1, y0 + 1, x0 + w - 2, y0 + h - 3)  # внутренность для обстановки
+        end = x
+        while end + 1 <= x1 and end + 1 not in gaps:
+            end += 1
+        left = end - x + 1
+        while left > 0:
+            w = 4 if left >= 4 and 4 in pieces and rnd.random() < 0.6 else 2
+            if w not in pieces or left < w:
+                w = 2
+            put(rnd.choice(pieces[w]), x, y, check=False, allow_reserved=True)
+            x += w
+            left -= w
+        x = end + 1
+
+
+def side_wall(style, side, x, y0, y1, gaps=()):
+    """Отдельно стоящая стена с севера на юг (ограда) от y0 до y1, с проходами gaps."""
+    for y in range(y0, y1 + 1):
+        if y not in gaps:
+            put(f"vwall_{style}_{side}", x, y, check=False, allow_reserved=True)
+
+
+def building(x0, y0, w, h, style, south=(), west=(), east=()):
+    """Здание со всеми стенами: северная — целая, южная — с проёмами дверей
+    (south: смещения от x0, чётные, проём 2 клетки), боковые — с проёмами в
+    строках west/east (смещения от y0). Пол бетонный. w — чётное.
+    Возвращает внутренность (x0, y0, x1, y1) для обстановки."""
+    assert w % 2 == 0, "ширина здания — чётная (фасады по 2 клетки)"
+    x1, y1 = x0 + w - 1, y0 + h - 1
+    paint("c", x0, y0 + 1, x1, y1)
+    wall_row(WALLS_INTACT[style], x0, x1, y0)
+    doors = set()
+    for off in south:
+        assert off % 2 == 0, "дверь на южной стене — с чётного смещения"
+        doors.update((x0 + off, x0 + off + 1))
+    wall_row(WALLS_WORN[style], x0, x1, y1, gaps=doors)
+    for side, x, gaps in (("w", x0, west), ("e", x1, east)):
+        put(f"vwall_{style}_{side}", x, y0, force=True, allow_reserved=True)  # угол: верх стены над фасадом
+        for y in range(y0 + 1, y1):
+            if y - y0 not in gaps:
+                put(f"vwall_{style}_{side}", x, y, check=False, allow_reserved=True)
+    return (x0 + 1, y0 + 1, x1 - 1, y1 - 1)
 
 
 BARRELS = [f"barrel_{i}" for i in (0, 1, 2, 3, 4, 5, 9, 10, 11, 12, 13, 18)]
@@ -197,7 +241,9 @@ BUSHES = ["bush_11", "bush_37", "bush_79", "grass_big"]
 STONES = ["stones_12", "stones_19", "stones_21", "stones_62", "stones_63", "clods_67", "clods_81"]
 FLOOR_BITS = ["bricks_a", "brick_b", "bricks_c", "brick_d", "bricks_e", "concrete_bit", "concrete_bit_b",
               "concrete_bits", "plank_floor", "log", "rebar_bits", "cloth_bit", "cloth_bit_b", "sock", "rag", "bits"]
-DIRT_DECALS = ["dirt_patch", "dirt_slabs", "dirt_planks", "cobble"]
+# только пятна с рваными краями: квадратные куски (cobble, dirt_slabs, dirt_planks,
+# metal_sheet) выглядят вырезанными и вставленными — их на карту не кладём
+DIRT_DECALS = ["dirt_patch"]
 JUNK_PILES = ["pile_cans", "pile_tires", "pile_scrap", "pile_electronics", "pile_bottles", "pile_tech_tire",
               "pile_barrel_junk", "pile_tires_pc", "pile_junk", "pile_bottles_b", "pile_tires_cans",
               "pile_appliances", "pile_computers", "pile_electronics_b", "pile_sink_junk"]
@@ -211,6 +257,7 @@ FURNITURE = ["table_1", "table_2", "table_3", "table_4", "table_5", "chair_wood"
 LOCKERS = ["locker_1", "locker_2", "locker_3", "locker_4", "filecab_1", "filecab_2", "filecab_3", "locker_double"]
 POLES = [f"pole_{i}" for i in (8, 9, 17, 25, 38, 49, 51, 52, 76, 77)]
 SIGNS = ["sign_stop"] + [f"sign_{i}" for i in (43, 44, 50, 70, 71, 72, 73, 74)]
+OUTDOOR = set(GRASS + BUSHES + POLES + SIGNS + STONES + ["rock_grass", "rock_grass_b", "dead_tree", "lamp_post"])
 SEATS = [f"seat_{i}" for i in (14, 15, 22, 23, 32, 33, 39, 40, 46, 47)]
 BENCHES = [f"bench_{i}" for i in (7, 16, 24, 34, 48)]
 
@@ -227,7 +274,7 @@ enemies += [["rad_mutant", 68, 16], ["rad_mutant", 77, 19]]
 pickups.append(["химикаты", 1, 72, 13])
 enemies += [["ratman", 12, 52], ["ratman", 16, 56], ["ratman", 8, 57], ["ratman_boss", 13, 59]]
 pickups.append(["лом", 1, 30, 52])
-pickups.append(["патроны", 3, 5, 44])
+pickups.append(["патроны", 3, 5, 43])
 enemies.append(["beetle", 54, 46])
 npcs.append(["loner", 63, 59])
 enemies += [["raider", 85, 45], ["raider", 87, 54]]
@@ -276,15 +323,16 @@ yard_fences = ["fence_picket", "fence_picket2", "fence_broken", "plank_fence_b",
 for name, hx, hy in houses:
     put(name, hx, hy, check=False)
     hwall(yard_fences, hx - 1, hx + 6, hy + 8, gaps=(hx + 2, hx + 3))
-    scatter(FURNITURE, hx - 1, hy + 2, hx + 5, hy + 6, 4)
-    scatter(CLOTH_PILES + JUNK_PILES[:4], hx - 1, hy + 2, hx + 5, hy + 6, 1)
+    scatter(FURNITURE, hx - 1, hy + 2, hx + 5, hy + 6, 2)
+    if rnd.random() < 0.4:
+        scatter(CLOTH_PILES + JUNK_PILES[:4], hx - 1, hy + 2, hx + 5, hy + 6, 1)
     scatter(GRASS, hx - 2, hy + 2, hx + 6, hy + 7, 5)
 put("locker_2", 26, 7)
-ix0, iy0, ix1, iy1 = building(32, 1, 9, 9, "brick")                   # склад
-scatter(LOCKERS + ["shelf_goods", "metal_shelf", "shelf_stuff_1", "shelf_stuff_3"], ix0, iy0, ix1, iy0 + 1, 5)
-scatter(CRATES + JUNK_PILES[:5] + ["ammo_box", "toolbox_blue"], ix0, iy0 + 2, ix1, iy1, 6)
-scatter(BARRELS + CRATES, 1, 1, 40, 26, 12)
-scatter(JUNK_PILES + CLOTH_PILES, 1, 1, 40, 26, 8)
+ix0, iy0, ix1, iy1 = building(32, 1, 10, 9, "brick", south=(4,))      # склад
+scatter(LOCKERS + ["shelf_goods", "metal_shelf", "shelf_stuff_1"], ix0, iy0, ix1, iy0, 4)
+scatter(CRATES + ["ammo_box", "toolbox_blue", "pile_scrap"], ix0, iy0 + 2, ix1, iy1, 3)
+scatter(BARRELS + CRATES, 1, 1, 40, 26, 4)
+scatter(JUNK_PILES + CLOTH_PILES, 1, 1, 40, 26, 3)
 
 
 # ------------------------------------------------------------ рынок
@@ -305,48 +353,47 @@ put("tent_round_tan", 40, 13)
 put("shack_a", 55, 19)                          # лачуга, за ней — заначка Гены
 put("metal_chest", 56, 17, search_owner="gena")
 containers[-1].update({"name": "заначка Гены", "loot": {"крышки": 45, "тоник": 1, "патроны": 8}})
-scatter(BARRELS + CRATES + ["firewood", "canister", "bucket", "round_table_42", "stool_round_41",
-                            "chair_0", "chair_4", "armchair"], 35, 15, 57, 28, 22)
-scatter(["lantern", "candles", "backpack", "canteen", "junk_small_1", "junk_small_2"], 35, 15, 57, 28, 6)
+scatter(BARRELS + CRATES + ["firewood", "round_table_42", "stool_round_41", "chair_0", "chair_4"],
+        35, 15, 57, 28, 8)
+scatter(["lantern", "candles", "backpack"], 35, 15, 57, 28, 3)
 
 
 # ------------------------------------------------------------ северо-восток: водокачка
 hwall(["chain_a", "chain_b", "chain_c", "chain_d", "chain_e", "chain_broken_a", "chain_broken_d"],
       60, 94, 24, gaps=(70, 71, 72))
-vline(BARRELS + CRATES, 59, 3, 23, gaps=(11, 12))
+side_wall("metal", "e", 59, 2, 23, gaps=(11, 12))                     # западная ограда водокачки
 put("water_tank_a", 64, 5, check=False)
 put("water_tank_b", 74, 5, check=False)
 put("water_tank_a", 86, 7, check=False)         # за этим баком прячется Блонди
-ix0, iy0, ix1, iy1 = building(81, 13, 12, 8, "metal")                 # контора водокачки
-scatter(LOCKERS + ["filecab_1", "filecab_4", "metal_shelf"], ix0, iy0, ix1, iy0, 5)
-scatter(["table_2", "table_6", "chair_wood", "chair_1", "sink", "toolbox_open_b", "bag"], ix0, iy0 + 1, ix1, iy1, 6)
+ix0, iy0, ix1, iy1 = building(81, 13, 12, 8, "metal", south=(4,), west=(4,))  # контора водокачки
+scatter(LOCKERS + ["filecab_1", "filecab_4"], ix0, iy0, ix1, iy0, 4)
+scatter(["table_2", "table_6", "chair_wood", "chair_1", "toolbox_open_b"], ix0, iy0 + 2, ix1, iy1, 3)
 put("shelter_b", 61, 14)
 for x in (64, 65, 66, 67):
     put(rnd.choice(LOCKERS), x, 10)
-scatter(BARRELS, 62, 12, 93, 22, 18)
-scatter(["tool_rack", "sink", "metal_sheets", "metal_sheets_b", "toolbox_red", "toolbox_blue", "ammo_box",
-         "rust_shelf", "metal_shelf", "canister"], 61, 12, 93, 22, 10)
+scatter(BARRELS, 62, 12, 80, 22, 7)
+scatter(["tool_rack", "metal_sheets", "toolbox_red", "ammo_box", "canister"], 61, 12, 80, 22, 4)
 
 
 # ------------------------------------------------------------ юго-запад: развалины и логово крысолюдов
-ix0, iy0, ix1, iy1 = building(3, 37, 15, 8, "brick", doors=3)         # жилой дом без крыши
-scatter(FURNITURE, ix0, iy0, ix1, iy1, 7)
-scatter(CLOTH_PILES, ix0, iy0, ix1, iy1, 2)
+ix0, iy0, ix1, iy1 = building(3, 37, 16, 8, "brick", south=(4, 10))   # жилой дом без крыши
+scatter(["wardrobe", "shelf_goods", "cabinet_small", "nightstand"], ix0, iy0, ix1, iy0, 3)
+scatter(["table_1", "table_chair", "sofa", "bed", "chair_wood", "armchair"], ix0, iy0 + 2, ix1, iy1, 4)
 put("ruin_facade_a", 22, 37, check=False)
 put("ruin_facade_b", 30, 37, check=False)
-building(2, 48, 23, 14, "concrete", doors=3)                           # большой склад — логово крысолюдов
-ix0, iy0, ix1, iy1 = building(28, 50, 10, 9, "planks")                 # мастерская
-scatter(["tool_rack", "toolbox_red", "toolbox_blue", "toolbox_open_b", "shelf_stuff_5", "shelf_stuff_2",
-         "sink", "canister", "table_3"], ix0, iy0, ix1, iy1, 7)
-ix0, iy0, ix1, iy1 = building(33, 40, 9, 7, "concrete")                # лавка у дороги
-scatter(["display_case_a", "display_case_b", "counter", "shelf_goods", "shelf_stuff_4", "cardboard"],
-        ix0, iy0, ix1, iy1, 5)
-scatter(RUBBLE, 1, 39, 42, 62, 24)
+building(2, 48, 22, 14, "concrete", south=(8,), east=(6,))            # большой склад — логово крысолюдов
+ix0, iy0, ix1, iy1 = building(28, 50, 10, 9, "planks", south=(4,), west=(4,))  # мастерская
+scatter(["tool_rack", "shelf_stuff_5", "shelf_stuff_2"], ix0, iy0, ix1, iy0, 3)
+scatter(["toolbox_red", "toolbox_blue", "table_3", "canister"], ix0, iy0 + 2, ix1, iy1, 3)
+ix0, iy0, ix1, iy1 = building(33, 40, 8, 7, "concrete", south=(2,))    # лавка у дороги
+scatter(["shelf_goods", "shelf_stuff_4"], ix0, iy0, ix1, iy0, 2)
+scatter(["display_case_a", "counter", "cardboard"], ix0, iy0 + 2, ix1, iy1, 2)
+scatter(RUBBLE, 1, 39, 42, 62, 8)
 # логово: гнёзда из тряпья, старые кровати
 for name, x, y in [("bed_frame", 9, 54), ("sofa_frame", 17, 53), ("pile_rags", 12, 57), ("clothes_74", 6, 58),
                    ("clothes_76", 18, 59), ("pile_bags", 14, 51)]:
     put(name, x, y)
-scatter(JUNK_PILES + CLOTH_PILES, 2, 49, 24, 62, 6)
+scatter(JUNK_PILES + CLOTH_PILES, 3, 49, 22, 60, 3)
 
 
 # ------------------------------------------------------------ сквер
@@ -362,15 +409,15 @@ scatter(GRASS + BUSHES, 49, 36, 58, 52, 30)
 # ------------------------------------------------------------ юго-восток: свалка
 hwall(["wall_corrugated", "wall_corrugated2", "wall_metal", "wall_metal2", "wall_corrugated_rust",
        "corrugated_panel", "corrugated_b"], 60, 94, 37, gaps=(60, 61, 62))
-vline(BARRELS + ["pile_tires"], 59, 38, 62, gaps=(45, 46, 58))
+side_wall("metal", "e", 59, 38, 62, gaps=(45, 46, 58))                # западная ограда свалки
 put("shack_b", 62, 56, check=False)             # лачуга Панка
-ix0, iy0, ix1, iy1 = building(66, 40, 12, 8, "metal")                 # контора свалки
-scatter(LOCKERS + ["filecab_2", "shelf_stuff_1"], ix0, iy0, ix1, iy0, 4)
-scatter(["table_5", "chair_2", "sofa", "cardboard", "bag", "crate"], ix0, iy0 + 1, ix1, iy1, 5)
-ix0, iy0, ix1, iy1 = building(78, 56, 9, 6, "planks", doors=1)        # сторожка
-scatter(["bed", "chair_3", "table_4", "backpack", "locker_3"], ix0, iy0, ix1, iy1, 3)
-scatter(JUNK_PILES, 63, 39, 93, 62, 45)
-scatter(SEATS + ["metal_sheets", "metal_sheets_b", "barrel_lying_a", "barrel_lying_b"], 64, 39, 93, 62, 12)
+ix0, iy0, ix1, iy1 = building(66, 40, 12, 8, "metal", south=(4,), west=(3,))  # контора свалки
+scatter(LOCKERS + ["filecab_2"], ix0, iy0, ix1, iy0, 3)
+scatter(["table_5", "chair_2", "sofa", "cardboard"], ix0, iy0 + 2, ix1, iy1, 3)
+ix0, iy0, ix1, iy1 = building(78, 55, 10, 6, "planks", south=(4,))     # сторожка
+scatter(["bed", "chair_3", "table_4", "locker_3"], ix0, iy0, ix1, iy1, 3)
+scatter(JUNK_PILES, 63, 39, 93, 62, 18)
+scatter(SEATS + ["metal_sheets", "barrel_lying_a"], 64, 39, 93, 62, 4)
 for name, x, y in [("tent_green", 84, 41), ("tent_tan", 88, 49), ("firewood", 86, 46), ("ammo_box", 90, 45),
                    ("crate", 83, 46), ("crate_b", 91, 53)]:
     put(name, x, y)
@@ -382,13 +429,12 @@ for _ in range(40):                                                    # тра�
     scatter(GRASS + BUSHES[:2], cx - 3, cy - 2, cx + 3, cy + 2, rnd.randint(3, 7), tries=8)
 scatter(GRASS, 1, 1, W - 2, H - 2, 220)
 scatter(BUSHES, 1, 1, W - 2, H - 2, 30)
-scatter(POLES + SIGNS, 1, 1, W - 2, H - 2, 16)
-scatter(FLOOR_BITS + STONES, 1, 1, W - 2, H - 2, 200)
-scatter(BARRELS + CRATES + ["pile_tires", "pile_cans", "rock_grass", "rock_grass_b"], 1, 1, W - 2, H - 2, 40)
-decal(DIRT_DECALS, 1, 1, W - 2, H - 2, 110)
-decal(["cobble", "dirt_slabs"], 0, 30, W - 1, 33, 12)                 # выбоины на асфальте
-scatter(RUBBLE + BARRELS, 1, 1, W - 2, 3, 10)                          # по краям — завалы
-scatter(RUBBLE + BARRELS, 1, H - 4, W - 2, H - 2, 10)
+scatter(POLES + SIGNS, 1, 1, W - 2, H - 2, 6)
+scatter(STONES + FLOOR_BITS[:5], 1, 1, W - 2, H - 2, 45)
+scatter(["rock_grass", "rock_grass_b", "barrel_0", "barrel_9"], 1, 1, W - 2, H - 2, 8)
+decal(DIRT_DECALS, 1, 1, W - 2, H - 2, 70)
+scatter(RUBBLE, 1, 1, W - 2, 3, 3)                                     # по краям — немного завалов
+scatter(RUBBLE, 1, H - 4, W - 2, H - 2, 3)
 
 
 # ------------------------------------------------------------ проверки

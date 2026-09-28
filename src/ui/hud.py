@@ -98,7 +98,7 @@ def draw_panel(surf, game):
     enabled = not game.modal_open()
     weapon = weapon_label(game, short=True).replace("Заточенный лом", "Заточка")
     specs = [("Рюкзак", "I", pygame.K_i, enabled), ("Крафт", "C", pygame.K_c, enabled),
-             (weapon, "F", pygame.K_f, enabled)]
+             (weapon, "F", pygame.K_f, enabled), ("Карта", "M", pygame.K_m, enabled)]
     if combat.active:
         specs.append(("Конец хода", "R", pygame.K_r, enabled and combat.player_can_act()))
     avail, gap = right - x0, 4

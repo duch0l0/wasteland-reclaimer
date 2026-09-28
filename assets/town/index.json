@@ -662,6 +662,78 @@
    48
   ]
  },
+ "p1_vwall_brick_w": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_brick_long"
+ },
+ "p1_vwall_brick_e": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_brick_long"
+ },
+ "p1_vwall_concrete_w": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_concrete"
+ },
+ "p1_vwall_concrete_e": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_concrete"
+ },
+ "p1_vwall_metal_w": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_metal"
+ },
+ "p1_vwall_metal_e": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_metal"
+ },
+ "p1_vwall_planks_w": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_planks"
+ },
+ "p1_vwall_planks_e": {
+  "page": 1,
+  "rect": null,
+  "size": [
+   48,
+   96
+  ],
+  "made_from": "wall_planks"
+ },
  "p2_000": {
   "page": 2,
   "rect": [
