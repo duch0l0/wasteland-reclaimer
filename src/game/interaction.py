@@ -21,10 +21,9 @@ class InteractionMixin:
         for npc in self.npcs:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
                 return
-        closed = [c["tile"] for c in self.level.containers if not c["opened"]]
-        box = self.level.adjacent(closed, self.player.rect)
+        box = self.level.container_near(self.player.rect)
         if box:
-            self.open_container(next(c for c in self.level.containers if c["tile"] == box))
+            self.open_container(box)
             return
         door = self.level.adjacent(self.level.doors, self.player.rect)
         if door:
@@ -84,7 +83,7 @@ class InteractionMixin:
         """Как «сменить руку» в Fallout: без затрат ОД."""
         if self.player.weapon == "melee":
             if not self.inventory.has(WEAPONS["pistol"]["item"]):
-                self.log("Другого оружия нет. Говорят, где-то в руинах лежит самопал...")
+                self.log("Другого оружия нет. Говорят, где-то в развалинах на северо-западе спрятан самопал...")
                 return
             self.player.weapon = "pistol"
         else:

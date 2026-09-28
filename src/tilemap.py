@@ -36,17 +36,91 @@ def load_map_file(path):
     return [r.ljust(width, "#") for r in rows]
 
 
-class TileMap:
+class MapBase:
+    """Общее для карт любого вида (текстовая сетка — TileMap, город из объектов — TownMap).
+    Остальной код игры общается с картой только через эти методы."""
+    width = height = 0
+    parallax = True  # под полупрозрачной землёй виден параллакс-фон
+
+    @property
+    def pixel_size(self):
+        return self.width * S.TILE, self.height * S.TILE
+
+    def is_wall(self, x, y):
+        raise NotImplementedError
+
+    def blocks_sight(self, x, y):
+        """Закрывает ли клетка обзор (для линии огня)."""
+        return self.is_wall(x, y)
+
+    def is_exit(self, x, y):
+        return False
+
+    def solids_near(self, rect, margin=S.TILE):
+        """Прямоугольники непроходимых клеток рядом с rect — для столкновений при ходьбе."""
+        r = rect.inflate(margin * 2, margin * 2)
+        out = []
+        for ty in range(r.top // S.TILE, r.bottom // S.TILE + 1):
+            for tx in range(r.left // S.TILE, r.right // S.TILE + 1):
+                if self.is_wall(tx, ty):
+                    out.append(pygame.Rect(tx * S.TILE, ty * S.TILE, S.TILE, S.TILE))
+        return out
+
+    def drawables(self, cam):
+        """Объекты, которые рисуются вперемешку с персонажами: [(y для сортировки, картинка, позиция)]."""
+        return []
+
+    def add_pickup(self, pos, kind, count):
+        self.pickups.append({"rect": pygame.Rect(pos[0], pos[1], S.TILE, S.TILE),
+                             "kind": kind, "count": count})
+
+    def adjacent(self, tiles, player_rect, reach=1):
+        """Первая из клеток tiles рядом с игроком (по соседству, включая диагональ)."""
+        px, py = player_rect.centerx // S.TILE, player_rect.centery // S.TILE
+        for t in tiles:
+            if max(abs(t[0] - px), abs(t[1] - py)) <= reach:
+                return t
+        return None
+
+    def container_at(self, tile):
+        """Закрытый контейнер, занимающий клетку."""
+        return next((c for c in self.containers if not c["opened"] and tuple(tile) in c["tiles"]), None)
+
+    def container_near(self, player_rect):
+        """Закрытый контейнер вплотную к игроку (любой его клеткой)."""
+        for c in self.containers:
+            if not c["opened"] and self.adjacent(c["tiles"], player_rect):
+                return c
+        return None
+
+    def draw_pickups(self, surf, cam):
+        cam_x, cam_y = int(cam.x), int(cam.y)
+        for p in self.pickups:
+            icon = loader.item_icon(p["kind"])
+            surf.blit(icon, icon.get_rect(center=(p["rect"].centerx - cam_x, p["rect"].centery - cam_y)))
+
+    def collect_pickups(self, player_rect, inventory, log_fn=None):
+        remaining = []
+        for p in self.pickups:
+            if p["rect"].colliderect(player_rect):
+                inventory.add(p["kind"], p["count"])
+                if log_fn:
+                    log_fn(f"Подобрано: {p['kind']}" + (f" ×{p['count']}" if p["count"] > 1 else ""))
+            else:
+                remaining.append(p)
+        self.pickups = remaining
+
+
+class TileMap(MapBase):
     def __init__(self, rows, npc_ids=None, containers=None):
         self.rows = [list(r) for r in rows]
         self.height = len(rows)
         self.width = len(rows[0]) if rows else 0
-        self.solid_rects = []
         self.pickups = []       # dict(rect, kind, count)
         self.player_spawn = (S.TILE, S.TILE)
         self.enemy_spawns = []  # (pos, enemy_type)
         self.npc_spawns = []    # (pos, npc_id)
-        self.containers = []    # dict(tile, name, loot, owner, opened)
+        self.containers = []    # dict(tile, tiles, name, loot, owner, opened)
         self.doors = []         # (x, y) запертых дверей
         npc_ids = list(npc_ids or [])
         container_defs = list(containers or [])
@@ -60,11 +134,9 @@ class TileMap:
         for y, row in enumerate(rows):
             for x, ch in enumerate(row):
                 px, py = x * S.TILE, y * S.TILE
-                if ch in SOLID_TILES:
-                    self.solid_rects.append(pygame.Rect(px, py, S.TILE, S.TILE))
                 if ch == "X":
                     d = container_defs.pop(0) if container_defs else {}
-                    self.containers.append({"tile": (x, y), "name": d.get("name", "ящик"),
+                    self.containers.append({"tile": (x, y), "tiles": [(x, y)], "name": d.get("name", "ящик"),
                                             "loot": dict(d.get("loot", {})), "owner": d.get("owner"),
                                             "opened": False})
                 elif ch == "D":
@@ -78,14 +150,6 @@ class TileMap:
                 elif ch in PICKUP_TILES:
                     kind, count = PICKUP_TILES[ch]
                     self.add_pickup((px, py), kind, count)
-
-    def add_pickup(self, pos, kind, count):
-        self.pickups.append({"rect": pygame.Rect(pos[0], pos[1], S.TILE, S.TILE),
-                             "kind": kind, "count": count})
-
-    @property
-    def pixel_size(self):
-        return self.width * S.TILE, self.height * S.TILE
 
     def tile_at(self, x, y):
         if 0 <= y < self.height and 0 <= x < self.width:
@@ -102,16 +166,6 @@ class TileMap:
         x, y = tile
         self.rows[y][x] = "."
         self.doors.remove(tile)
-        r = pygame.Rect(x * S.TILE, y * S.TILE, S.TILE, S.TILE)
-        self.solid_rects = [w for w in self.solid_rects if w != r]
-
-    def adjacent(self, tiles, player_rect, reach=1):
-        """Первая из клеток tiles рядом с игроком (по соседству, включая диагональ)."""
-        px, py = player_rect.centerx // S.TILE, player_rect.centery // S.TILE
-        for t in tiles:
-            if max(abs(t[0] - px), abs(t[1] - py)) <= reach:
-                return t
-        return None
 
     def draw(self, surf, cam):
         cam_x, cam_y = int(cam.x), int(cam.y)
@@ -127,17 +181,4 @@ class TileMap:
                 if ch in "XD>":
                     surf.blit(loader.special_tile(ch), (px, py))
         # предметы рисуем из списка, а не из карты — подобранные исчезают
-        for p in self.pickups:
-            icon = loader.item_icon(p["kind"])
-            surf.blit(icon, icon.get_rect(center=(p["rect"].centerx - cam_x, p["rect"].centery - cam_y)))
-
-    def collect_pickups(self, player_rect, inventory, log_fn=None):
-        remaining = []
-        for p in self.pickups:
-            if p["rect"].colliderect(player_rect):
-                inventory.add(p["kind"], p["count"])
-                if log_fn:
-                    log_fn(f"Подобрано: {p['kind']}" + (f" ×{p['count']}" if p["count"] > 1 else ""))
-            else:
-                remaining.append(p)
-        self.pickups = remaining
+        self.draw_pickups(surf, cam)

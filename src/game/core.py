@@ -142,7 +142,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         if any(keys[k] for k in MOVE_KEYS):
             self.autowalk = None  # клавиши перебивают ходьбу по клику
         if not self.update_autowalk(dt_ms):
-            self.player.handle_input(keys, dt_ms, self.level.solid_rects)
+            self.player.handle_input(keys, dt_ms, self.level.solids_near(self.player.rect))
         if self.mode != "local" or self.modal_open() or self.combat.active:
             return  # по клику дошли и заговорили / напали
         self.level.collect_pickups(self.player.rect.inflate(4, 4), self.inventory, log_fn=self.log)

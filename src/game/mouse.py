@@ -47,11 +47,19 @@ class MouseMixin:
         tile = self.tile_at_screen(pos)
         return next((e for e in people if tile_of(e) == tile), None)
 
+    def object_at_screen(self, pos):
+        """Контейнер по картинке (высокий шкаф кликается и за верхнюю часть) или объект в клетке."""
+        if hasattr(self.level, "container_sprite_at"):
+            c = self.level.container_sprite_at(self.world_pos(pos))
+            if c:
+                return ("container", c)
+        return self.object_at_tile(self.tile_at_screen(pos))
+
     def object_at_tile(self, tile):
         """Закрытый контейнер или запертая дверь в клетке."""
-        for c in self.level.containers:
-            if c["tile"] == tile and not c["opened"]:
-                return ("container", c)
+        c = self.level.container_at(tile)
+        if c:
+            return ("container", c)
         if tile in self.level.doors:
             return ("door", tile)
         return None
@@ -83,11 +91,15 @@ class MouseMixin:
             self._attack_from_explore(target)
         else:
             tile = self.tile_at_screen(pos)
-            obj = self.object_at_tile(tile)
+            obj = self.object_at_screen(pos)
             if obj:
                 kind, what = obj
-                action = (lambda: self.open_container(what)) if kind == "container" else (lambda: self.open_door(what))
-                self._go_next_to(tile, action)
+                if kind == "container":
+                    tiles = what["tiles"]
+                    self._go_to(lambda c: c not in tiles and any(chebyshev(c, t) <= 1 for t in tiles),
+                                lambda: self.open_container(what))
+                else:
+                    self._go_next_to(what, lambda: self.open_door(what))
             elif not self.level.is_wall(*tile):
                 self._go_to(lambda c: c == tile)
 
@@ -165,7 +177,7 @@ class MouseMixin:
             return int(round(step)) * (1 if d > 0 else -1)
 
         before = p.rect.topleft
-        p.walk(axis(delta.x), axis(delta.y), self.level.solid_rects)
+        p.walk(axis(delta.x), axis(delta.y), self.level.solids_near(p.rect))
         if p.rect.topleft == tuple(int(v) for v in target):
             aw["path"].pop(0)
             aw["stuck_ms"] = 0
@@ -271,10 +283,10 @@ class MouseMixin:
             return (f"Говорить: {target.name}", (230, 220, 190), None, None)
         if target is not None:
             return (f"Напасть: {target.name}", (235, 120, 100), None, None)
-        obj = self.object_at_tile(tile)
+        obj = self.object_at_screen(pos)
         if obj:
             label = f"Обыскать: {obj[1]['name']}" if obj[0] == "container" else "Дверь: заперта"
-            return (label, (230, 220, 190), None, tile)
+            return (label, (230, 220, 190), None, None)
         if not self.level.is_wall(*tile):
             return ("", None, None, tile)
         return None

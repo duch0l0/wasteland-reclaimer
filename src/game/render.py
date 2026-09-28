@@ -25,16 +25,24 @@ class RenderMixin:
 
     def _draw_local(self):
         surf, cam, combat = self.screen, self.cam, self.combat
-        self.parallax.draw(surf, cam.x)
+        if self.level.parallax:
+            self.parallax.draw(surf, cam.x)
+        else:
+            surf.fill((20, 17, 14))  # за краем карты
         self.level.draw(surf, cam)
 
+        # персонажи и объекты карты — вперемешку, кто ниже, тот ближе к камере
         entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs
-        entities.sort(key=lambda e: e.rect.bottom)  # кто ниже — тот ближе к камере
+        layers = [(e.rect.bottom, e) for e in entities] + [(y, (img, pos)) for y, img, pos in self.level.drawables(cam)]
+        layers.sort(key=lambda item: item[0])
         outlined = combat_ui.highlights(combat)
-        for e in entities:
-            frame, r = sprite_of(e, cam)
-            if e in outlined:
-                combat_ui.draw_outline(surf, frame, r, outlined[e])
+        for _, thing in layers:
+            if isinstance(thing, tuple):
+                surf.blit(*thing)
+                continue
+            frame, r = sprite_of(thing, cam)
+            if thing in outlined:
+                combat_ui.draw_outline(surf, frame, r, outlined[thing])
             surf.blit(frame, r)
 
         combat_ui.draw_health_bars(surf, self, cam)

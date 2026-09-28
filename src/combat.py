@@ -80,10 +80,19 @@ def tile_center(tile):
 
 
 def has_los(level, a, b):
-    """Прямая видимость между двумя точками: отрезок не пересекает стены."""
-    for wall in level.solid_rects:
-        # стена чуть ужата: линия, чиркнувшая точно по углу, взгляд не перекрывает
-        if wall.inflate(-2, -2).clipline(a, b):
+    """Прямая видимость между двумя точками: вдоль отрезка (шаг 6 px) нет клеток,
+    закрывающих обзор. Клетки самих концов не считаются — стоящий у стены видит."""
+    ax, ay = a
+    bx, by = b
+    ends = {(int(ax) // T, int(ay) // T), (int(bx) // T, int(by) // T)}
+    steps = int(max(abs(bx - ax), abs(by - ay)) / 6) + 1
+    checked = set()
+    for i in range(1, steps):
+        t = (int(ax + (bx - ax) * i / steps) // T, int(ay + (by - ay) * i / steps) // T)
+        if t in ends or t in checked:
+            continue
+        checked.add(t)
+        if level.blocks_sight(*t):
             return False
     return True
 
