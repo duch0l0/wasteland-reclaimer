@@ -67,7 +67,7 @@ class MapBase:
                     out.append(pygame.Rect(tx * S.TILE, ty * S.TILE, S.TILE, S.TILE))
         return out
 
-    def drawables(self, cam):
+    def drawables(self, cam, size=None):
         """Объекты, которые рисуются вперемешку с персонажами: [(y для сортировки, картинка, позиция)]."""
         return []
 
@@ -230,8 +230,9 @@ class TileMap(MapBase):
         cam_x, cam_y = int(cam.x), int(cam.y)
         start_col = max(0, cam_x // S.TILE)
         start_row = max(0, cam_y // S.TILE)
-        end_col = min(self.width, (cam_x + S.SCREEN_W) // S.TILE + 2)
-        end_row = min(self.height, (cam_y + S.SCREEN_H) // S.TILE + 2)
+        sw, sh = surf.get_size()
+        end_col = min(self.width, (cam_x + sw) // S.TILE + 2)
+        end_row = min(self.height, (cam_y + sh) // S.TILE + 2)
         for y in range(start_row, end_row):
             for x in range(start_col, end_col):
                 px, py = x * S.TILE - cam_x, y * S.TILE - cam_y

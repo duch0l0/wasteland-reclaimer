@@ -30,6 +30,10 @@ JUNK = "!@#$%^&*()-_=+[]{};:'\",.<>/?|\\"
 class TerminalMixin:
     # ------------------------------------------------------------ открыть
     def open_terminal(self, tid):
+        if tid.startswith("doc:"):   # доска объявлений и прочее, что просто читается
+            self.autowalk = None
+            self.open_document(tid[4:])
+            return
         t = TERMINALS[tid]
         self.term = {"id": tid, "view": "menu", "sel": 0, "entry": None, "scroll": 0, "hack": None}
         self.autowalk = None

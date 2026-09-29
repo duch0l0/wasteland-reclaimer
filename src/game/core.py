@@ -1,6 +1,7 @@
 """Game: создание мира, главный цикл и обновление кадра."""
 import json
 import os
+import random
 
 import pygame
 
@@ -30,6 +31,9 @@ from ..ui.minimap import Minimap
 from ..gore import Gore
 from ..audio import Audio
 from .. import companion
+
+with open("data/barks.json", "r", encoding="utf-8") as _f:
+    BARKS = {k: v for k, v in json.load(_f).items() if not k.startswith("_")}
 from .mouse import MouseMixin
 from .terminals import TerminalMixin
 from .slides import SlidesMixin, SLIDES
@@ -91,7 +95,9 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.minimap = Minimap()
         self.gore = Gore()
         self.companion = None      # спутник (пёс) — появляется по квесту
+        self.zoom = S.ZOOM_DEFAULT  # масштаб мира, колёсико мыши — ближе/дальше
         self.speech = None         # реплика над головой: {"ent", "text", "t"}
+        self.bark_ms = 4000        # до следующей реплики жителя
         self.audio = Audio()
         self.audio.start_music()
         self.autowalk = None       # путь по клику мыши вне боя
@@ -161,6 +167,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.speech["t"] -= dt_ms
             if self.speech["t"] <= 0:
                 self.speech = None
+        self._barks(dt_ms)
         busy = self.modal_open() or self.combat.active
         wander.update(self, dt_ms, frozen=busy)
         if busy:
@@ -191,9 +198,23 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         if not p.attacking and not p.anim.busy and not any(tw["ent"] is p for tw in self.combat.tweens):
             p.anim.set_action("idle")
 
+    def _barks(self, dt_ms):
+        """Жители иногда говорят что-нибудь, когда герой проходит рядом (data/barks.json)."""
+        self.bark_ms -= dt_ms
+        if self.bark_ms > 0 or self.speech or self.mode != "local" or self.combat.active or self.modal_open():
+            return
+        near = [n for n in self.npcs if n.npc_id in BARKS
+                and pygame.Vector2(n.rect.center).distance_to(self.player.rect.center) < 4 * S.TILE]
+        if not near:
+            self.bark_ms = 1500
+            return
+        n = random.choice(near)
+        self.speech = {"ent": n, "text": random.choice(BARKS[n.npc_id]), "t": 2600}
+        self.bark_ms = random.randint(9000, 16000)
+
     def _regen(self, dt_ms):
         """Вне боя раны понемногу заживают."""
-        if self.combat.active or not self.player.alive or self.player.hp >= self.player.max_hp:
+        if self.combat.active or not self.player.alive or self.player.hp >= self.player.hp_cap:
             self.regen_ms = 0
             return
         self.regen_ms += dt_ms
@@ -212,6 +233,10 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             return  # по клику дошли и заговорили / напали
         if self.level.is_exit(*tile_of(self.player)):
             self.go_world_map()
+            return
+        portal = getattr(self.level, "portal_at", lambda *_: None)(*tile_of(self.player))
+        if portal:
+            self.enter_location(portal["to"], at=portal["at"])
             return
         self.check_talkers()
         if not self.dialogue.is_active() and any(

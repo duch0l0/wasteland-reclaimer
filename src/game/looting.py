@@ -68,6 +68,12 @@ class LootingMixin:
         if weapon_for_item(name) == self.player.weapon and not self.inventory.has(name):
             self.player.weapon = "melee"
         self.log(f"Положено: {name}" + (f" ×{n}" if n > 1 else "") + f" ({box['name']})")
+        hook = box.get("on_put")
+        if hook and hook["item"] == name:   # сюжетный тайник: положил нужное — что-то случилось
+            box["on_put"] = None
+            self.close_loot()
+            for eff in hook["effects"]:
+                self.apply_effect(eff)
 
     def loot_take_all(self):
         for name in list(self.loot_list("box")):
@@ -87,9 +93,16 @@ class LootingMixin:
             return True
         self.loot["stolen_checked"] = True
         owner = box.get("owner")
-        if owner == "gena" and any(n.npc_id == "gena" for n in self.npcs):
-            self.flags["gena_robbed"] = True
-            self.log("Вы чувствуете на спине чей-то взгляд... Гена это так не оставит.")
+        npc = next((n for n in self.npcs if n.npc_id == owner), None) if owner else None
+        if npc is not None:
+            p = self.player
+            sees = (pygame.Vector2(npc.rect.center).distance_to(p.rect.center) <= 6 * 48
+                    and self.combat.los(npc, p))
+            if owner == "gena" or sees:   # Гена всё видит — у него на всё свои глаза
+                self.flags[f"{owner}_robbed"] = True
+                self.log(f"Вы чувствуете на спине чей-то взгляд... {npc.name} это так не оставит.")
+            else:
+                self.log("Кажется, никто не заметил.")
         elif owner and self.loc.faction_members(owner):
             p = self.player
             seen = [e for e in self.loc.faction_members(owner)

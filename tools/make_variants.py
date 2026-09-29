@@ -313,14 +313,14 @@ GLOW = (190, 255, 120)
 SHELL = [(30, 34, 58), (44, 58, 86), (58, 92, 104), (84, 132, 118), (132, 186, 150), (196, 236, 190)]
 
 
-def make_beetle():
+def make_beetle(height=32):
     base = load("dog")
     out = {}
     for d, frames in base.items():
         out[d] = []
         for i, f in enumerate(frames):
             w, h = f.get_size()
-            small = pygame.transform.smoothscale(f, (w * 32 // h, 32))
+            small = pygame.transform.smoothscale(f, (w * height // h, height))
             img = pad(small, 5, 4)
             # хитин: цвет по яркости, полупрозрачная тень пса — долой
             for y in range(img.get_height()):
@@ -413,9 +413,256 @@ def make_beetle():
     return out
 
 
+# ---------------------------------------------------------------- жители Пятнадцатой
+
+BLONDE = [(212, 188, 63), (141, 119, 31), (248, 252, 148), (85, 68, 23), (194, 171, 53)]
+BLONDIE_TOP = [(67, 31, 25), (69, 52, 29), (147, 68, 61), (175, 89, 87), (180, 60, 60), (213, 110, 134),
+               (252, 135, 111)]
+HERO_HAIR = [(12, 13, 40), (32, 37, 58), (60, 66, 77), (86, 43, 45), (46, 27, 34)]
+HERO_CLOTHES = [(60, 66, 77), (77, 82, 81), (88, 95, 91), (108, 115, 113)]
+HERO_PANTS = [(180, 171, 128), (153, 152, 127), (210, 190, 143), (135, 137, 121), (190, 185, 153)]
+LONER_SKIN = [(249, 197, 164), (187, 135, 94), (168, 112, 76), (129, 77, 57), (94, 46, 29)]
+
+
+def variant(base_id, fn, dx=2, dy=2):
+    """Кадры base_id, пропущенные через fn(img, direction, top)."""
+    out = {}
+    for d, frames in load(base_id).items():
+        out[d] = []
+        for f in frames:
+            img = pad(f, dx, dy)
+            fn(img, d, top_row(img))
+            out[d].append(img)
+    return out
+
+
+def rows_from(t, a, b=None):
+    return range(t + a, t + b if b is not None else 200)
+
+
+def shave(img, t):
+    """Ирокез Панка долой — бритая голова со щетиной (как у Шрама)."""
+    for y in range(0, t + 9):
+        for x in range(img.get_width()):
+            if rgb(img, x, y) in MOHAWK:
+                below = rgb(img, x, y + 1)
+                img.set_at((x, y), (150, 110, 84) if below in SKIN else (0, 0, 0, 0))
+    for _ in range(2):
+        for y in range(0, t + 9):
+            for x in range(img.get_width()):
+                c = rgb(img, x, y)
+                if c in ((129, 77, 57), (94, 46, 29), INK) and not any(
+                        rgb(img, x + dx, y + 1) in SKIN | {(150, 110, 84)} for dx in (-1, 0, 1)):
+                    img.set_at((x, y), (0, 0, 0, 0))
+
+
+def hat(img, t, d, crown=((70, 46, 30), (104, 70, 44)), band=(40, 28, 20)):
+    """Шляпа с полями поверх волос героя."""
+    hair = row_span(img, t + 3)
+    if not hair:
+        return
+    x0, x1 = hair
+    for y in range(t - 2, t + 4):          # тулья
+        for x in range(x0 + 2, x1 - 1):
+            put(img, x, y, crown[1] if y < t + 1 else crown[0])
+    for x in range(x0 + 2, x1 - 1):
+        put(img, x, t - 3, INK)
+        put(img, x, t + 2, band)
+    for x in range(x0 - 2, x1 + 3):        # поля
+        put(img, x, t + 4, crown[0])
+        put(img, x, t + 5, INK)
+    put(img, x0 - 3, t + 4, INK)
+    put(img, x1 + 3, t + 4, INK)
+
+
+def make_ada():
+    """Смотрительница Ада Кросс: седые волосы, комбинезон Vault-Tec — синий с жёлтым."""
+    def fn(img, d, t):
+        recolor(img, ramp(BLONDE, [(196, 198, 206), (120, 122, 134), (236, 238, 244), (74, 76, 88), (166, 168, 180)]))
+        recolor(img, ramp(BLONDIE_TOP, [(24, 44, 96), (30, 54, 112), (44, 80, 156), (60, 104, 190), (226, 190, 60),
+                                        (232, 198, 70), (244, 214, 96)]), rows_from(t, 12))
+        recolor(img, {(38, 40, 59): (22, 34, 74), (61, 66, 92): (40, 70, 140), (86, 100, 111): (52, 88, 168),
+                      (117, 134, 159): (70, 110, 196)})
+        # жёлтая полоса на поясе и цифры «57» не влезут — хватит полосы
+        y = t + 21
+        sp = row_span(img, y)
+        if sp:
+            for x in range(sp[0] + 1, sp[1]):
+                if rgb(img, x, y) not in (None, (13, 13, 26)):
+                    img.set_at((x, y), (232, 200, 64))
+    return variant("blondie", fn)
+
+
+def make_doc():
+    """Док Мира Сол: тёмные волосы, белый халат с красным крестом."""
+    def fn(img, d, t):
+        recolor(img, ramp(BLONDE, [(92, 58, 42), (58, 36, 26), (134, 90, 62), (38, 24, 18), (78, 50, 36)]))
+        recolor(img, ramp(BLONDIE_TOP, [(150, 152, 162), (170, 172, 180), (212, 214, 222), (236, 238, 242),
+                                        (204, 40, 40), (220, 60, 60), (236, 236, 240)]), rows_from(t, 12))
+        recolor(img, {(38, 40, 59): (178, 180, 190), (61, 66, 92): (206, 208, 216)}, rows_from(t, 14, 27))
+        if d == "down":
+            sp = row_span(img, t + 17)
+            if sp:
+                cx = sp[0] + 3
+                for p in ((cx, t + 16), (cx - 1, t + 17), (cx, t + 17), (cx + 1, t + 17), (cx, t + 18)):
+                    put(img, *p, (210, 36, 36))
+    return variant("blondie", fn)
+
+
+def make_sheriff():
+    """Шериф Коул Брэддок: шляпа, пыльник, звезда на груди."""
+    def fn(img, d, t):
+        recolor(img, ramp(HERO_CLOTHES, [(118, 88, 54), (136, 104, 64), (156, 120, 78), (184, 148, 98)]),
+                rows_from(t, 12))
+        hat(img, t, d)
+        if d in ("down", "right", "left"):
+            sp = row_span(img, t + 17)
+            if sp:
+                x = sp[0] + 4 if d != "left" else sp[1] - 4
+                if d == "right":
+                    x = (sp[0] + sp[1]) // 2 + 1
+                put(img, x, t + 16, (255, 220, 80))
+                put(img, x, t + 17, (200, 160, 40))
+    return variant("player", fn, dy=4)
+
+
+def make_silas():
+    """Брат Сайлас: балахон «Детей Единства» с капюшоном."""
+    robe = [(110, 104, 92), (150, 142, 124), (182, 174, 154), (212, 204, 184)]
+    def fn(img, d, t):
+        recolor(img, ramp(HERO_HAIR[1:3], [robe[0], robe[1]]), rows_from(t, 0, 13))    # капюшон
+        recolor(img, ramp(HERO_CLOTHES, robe), rows_from(t, 12))
+        recolor(img, ramp(HERO_PANTS, [robe[2], robe[1], robe[3], robe[0], robe[2]]))
+        recolor(img, {(32, 37, 58): robe[0]}, rows_from(t, 13))
+        if d == "down":   # знак Единства — круг на груди
+            sp = row_span(img, t + 18)
+            if sp:
+                cx = (sp[0] + sp[1]) // 2
+                for p in ((cx, t + 17), (cx - 1, t + 18), (cx + 1, t + 18), (cx, t + 19)):
+                    put(img, *p, (200, 150, 60))
+    return variant("player", fn)
+
+
+def make_mo():
+    """Мо «Ведро», хозяин салуна: бритый, борода, фартук поверх рубахи."""
+    def fn(img, d, t):
+        shave(img, t)
+        recolor(img, {(53, 61, 47): (104, 34, 30)})
+        recolor(img, ramp(PANTS_BLUE, [(150, 146, 136), (206, 202, 190), (236, 234, 226)]))
+        if d != "up":
+            cover_skin(img, face_rows(img, t, 14 if d == "down" else 16, 17), [(110, 66, 36), (86, 50, 28)])
+    return variant("loner", fn)
+
+
+def make_lenny():
+    """Пьяница Лен: лохматый рыжий, зелёная куртка, красный нос."""
+    def fn(img, d, t):
+        recolor(img, ramp(MOHAWK, [(214, 120, 50), (180, 90, 40), (150, 70, 30), (100, 48, 24)]), range(0, t + 9))
+        recolor(img, ramp(MOHAWK, [(90, 60, 30), (70, 46, 24), (60, 40, 20), (40, 28, 16)]), rows_from(t, 9))
+        recolor(img, {(53, 61, 47): (64, 84, 40)})
+        recolor(img, ramp(PANTS_BLUE, [(62, 46, 34), (104, 80, 56), (150, 120, 86)]))
+        if d == "down":
+            sp = row_span(img, t + 13)
+            if sp:
+                put(img, (sp[0] + sp[1]) // 2, t + 13, (220, 70, 60))
+    return variant("loner", fn)
+
+
+def make_folk_a():
+    """Жительница: рыжие волосы, зелёное платье."""
+    def fn(img, d, t):
+        recolor(img, ramp(BLONDE, [(190, 90, 40), (130, 56, 24), (230, 140, 70), (80, 34, 16), (170, 76, 34)]))
+        recolor(img, ramp(BLONDIE_TOP, [(36, 60, 30), (44, 72, 36), (70, 110, 56), (96, 140, 74), (180, 60, 60),
+                                        (120, 160, 90), (150, 190, 110)]), rows_from(t, 12))
+    return variant("blondie", fn)
+
+
+def make_folk_b():
+    """Житель: светлые волосы, коричневая куртка, серые штаны."""
+    def fn(img, d, t):
+        recolor(img, ramp(HERO_HAIR[1:3], [(170, 140, 70), (220, 190, 110)]), rows_from(t, 0, 13))
+        recolor(img, ramp(HERO_CLOTHES, [(80, 56, 36), (96, 68, 44), (112, 82, 54), (134, 100, 66)]), rows_from(t, 12))
+        recolor(img, ramp(HERO_PANTS, [(110, 110, 116), (88, 88, 96), (136, 136, 142), (70, 70, 78), (150, 150, 156)]))
+    return variant("player", fn)
+
+
+# ---------------------------------------------------------------- новые враги
+
+def make_feral():
+    """Дикий гуль: гнилая кожа, клочья одежды, горящие глаза."""
+    rot = [(150, 138, 96), (112, 98, 66), (98, 82, 54), (80, 60, 40), (60, 42, 30)]
+    def fn(img, d, t):
+        shave(img, t)
+        recolor(img, {(150, 110, 84): (84, 70, 48)})
+        recolor(img, ramp(LONER_SKIN, rot))
+        recolor(img, {(254, 254, 254): (250, 230, 90)})
+        recolor(img, {(53, 61, 47): (58, 50, 40)})
+        recolor(img, ramp(PANTS_BLUE, [(52, 46, 40), (76, 68, 58), (104, 94, 80)]))
+        recolor(img, ramp(MOHAWK, [(90, 80, 50)] * 4))
+        # дыры в одежде — сквозь них видна кожа
+        import random
+        r = random.Random(d)
+        for _ in range(9):
+            x, y = r.randrange(img.get_width()), r.randrange(t + 16, img.get_height() - 4)
+            if rgb(img, x, y) not in (None, INK):
+                img.set_at((x, y), rot[r.randrange(3)])
+    return variant("loner", fn)
+
+
+ROACH = [(20, 12, 10), (56, 28, 18), (96, 48, 26), (140, 74, 36), (186, 110, 56), (230, 160, 90)]
+
+
+def make_roach():
+    """Радтаракан: тот же приём, что у жука, только мельче, рыжий и с длинными усами."""
+    global CHITIN, SHELL, GLOW
+    saved = CHITIN, SHELL, GLOW
+    CHITIN, SHELL, GLOW = ROACH, [ROACH[1], ROACH[2], ROACH[3], ROACH[4], ROACH[5], (250, 200, 140)], (255, 120, 80)
+    try:
+        return make_beetle(height=18)
+    finally:
+        CHITIN, SHELL, GLOW = saved
+
+
+def make_turret():
+    """Турель Vault-Tec на треноге: корпус, ствол по направлению, мигающий огонёк."""
+    W_, H_ = 26, 30
+    body, body_hi, dark = (88, 96, 104), (140, 150, 158), (40, 44, 50)
+    out = {}
+    for d in DIRS:
+        out[d] = []
+        for i in range(4):
+            img = pygame.Surface((W_, H_), pygame.SRCALPHA)
+            cx = W_ // 2
+            for lx in (-6, 0, 6):                           # тренога
+                for k in range(7):
+                    put(img, cx + lx * k // 6, H_ - 1 - (6 - k), dark)
+            outline_px(img, [(cx - 5 + a, 12 + b) for a in range(11) for b in range(8)], body)
+            for a in range(11):
+                put(img, cx - 5 + a, 12, body_hi)
+            put(img, cx - 3, 15, (40, 90, 170))             # эмблема Vault-Tec — синий квадратик
+            put(img, cx - 2, 15, (230, 190, 60))
+            blink = (255, 60, 40) if i % 2 == 0 else (120, 20, 16)
+            if d == "down":
+                outline_px(img, [(cx, 20 + k) for k in range(5)], dark)
+                put(img, cx + 3, 14, blink)
+            elif d == "up":
+                outline_px(img, [(cx, 7 + k) for k in range(5)], dark)
+                put(img, cx + 3, 17, blink)
+            else:
+                s = 1 if d == "right" else -1
+                outline_px(img, [(cx + s * (6 + k), 15) for k in range(7)] +
+                           [(cx + s * (6 + k), 16) for k in range(7)], dark)
+                put(img, cx - s * 3, 14, blink)
+            out[d].append(img)
+    return out
+
+
 # ----------------------------------------------------------------
 
-MAKERS = {"raider": make_raider, "gang": make_gang, "boss": make_boss, "beetle": make_beetle}
+MAKERS = {"raider": make_raider, "gang": make_gang, "boss": make_boss, "beetle": make_beetle,
+          "ada": make_ada, "doc": make_doc, "sheriff": make_sheriff, "silas": make_silas, "mo": make_mo,
+          "lenny": make_lenny, "folk_a": make_folk_a, "folk_b": make_folk_b,
+          "feral": make_feral, "radroach": make_roach, "turret": make_turret}
 
 
 def preview(ids, path):

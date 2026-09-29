@@ -56,7 +56,14 @@ def health_bar_y(sprite_rect):
     return sprite_rect.top - 8
 
 
-def draw_health_bars(surf, game, cam):
+def _z(r, zoom):
+    """Прямоугольник с холста мира -> на экран."""
+    if zoom == 1:
+        return r
+    return pygame.Rect(round(r.x * zoom), round(r.y * zoom), round(r.w * zoom), round(r.h * zoom))
+
+
+def draw_health_bars(surf, game, cam, zoom=1):
     """Полоски HP над головами: в бою — у всех бойцов (герой зелёный, враги красные),
     вне боя — только у раненых врагов."""
     combat = game.combat
@@ -65,18 +72,18 @@ def draw_health_bars(surf, game, cam):
     else:
         fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp]
     for f in fighters:
-        _, r = sprite_of(f, cam)
+        r = _z(sprite_of(f, cam)[1], zoom)
         color = (90, 210, 90) if f is game.player or getattr(f, "ally", False) else (215, 60, 50)
         _bar(surf, r.centerx, health_bar_y(r), f.hp / f.max_hp if f.max_hp else 0, color)
 
 
-def draw_combat_markers(surf, combat, cam):
+def draw_combat_markers(surf, combat, cam, zoom=1):
     """Шанс попадания (или почему атаковать нельзя) над целью."""
     _, font_small = fonts()
     p, t = combat.game.player, combat.target
     if t is None or not t.alive:
         return
-    _, r = sprite_of(t, cam)
+    r = _z(sprite_of(t, cam)[1], zoom)
     ok, reason = combat.can_attack(p, t)
     label, color = (f"{combat.hit_chance(p, t)}%", (240, 230, 200)) if ok else (reason, (170, 160, 140))
     txt = font_small.render(label, True, color)
@@ -88,12 +95,12 @@ def draw_combat_markers(surf, combat, cam):
     surf.blit(txt, pos)
 
 
-def draw_floaters(surf, floaters, cam):
+def draw_floaters(surf, floaters, cam, zoom=1):
     font, _ = fonts()
     for f in floaters:
         txt = font.render(f["text"], True, f["color"])
         txt.set_alpha(max(0, 255 - int(255 * f["t"] / 1100)))
-        surf.blit(txt, txt.get_rect(center=(f["pos"].x - cam.x, f["pos"].y - cam.y)))
+        surf.blit(txt, txt.get_rect(center=((f["pos"].x - cam.x) * zoom, (f["pos"].y - cam.y) * zoom)))
 
 
 def draw_aim_menu(surf, combat):
@@ -147,12 +154,12 @@ def draw_tracers(surf, tracers, cam):
         pygame.draw.circle(surf, (255, 250, 220), head, 2)
 
 
-def draw_speech(surf, speech, cam):
+def draw_speech(surf, speech, cam, zoom=1):
     """Реплика облачком над головой персонажа."""
     from .common import fonts
     _, font_small = fonts()
     ent = speech["ent"]
-    _, r = sprite_of(ent, cam)
+    r = _z(sprite_of(ent, cam)[1], zoom)
     txt = font_small.render(speech["text"], True, (30, 24, 18))
     box = txt.get_rect(midbottom=(r.centerx, r.top - 18)).inflate(20, 12)
     alpha = min(255, speech["t"] // 2)
@@ -164,3 +171,56 @@ def draw_speech(surf, speech, cam):
     txt.set_alpha(alpha)
     bubble.blit(txt, txt.get_rect(center=(box.w // 2, box.h // 2)))
     surf.blit(bubble, box.topleft)
+
+
+def draw_throws(surf, combat, cam):
+    """Летящая граната/бутылка — дугой, с тенью на земле."""
+    for th in combat.throws:
+        k = min(1.0, th["t"] / th["dur"])
+        pos = th["from"].lerp(th["to"], k)
+        lift = 4 * 60 * k * (1 - k)
+        x, y = int(pos.x - cam.x), int(pos.y - cam.y)
+        pygame.draw.ellipse(surf, (0, 0, 0), (x - 5, y - 2, 10, 5))
+        color = (80, 100, 60) if th["kind"] == "grenade" else (150, 190, 110)
+        pygame.draw.circle(surf, (20, 18, 14), (x, int(y - lift)), 6)
+        pygame.draw.circle(surf, color, (x, int(y - lift)), 4)
+        if th["kind"] == "molotov":
+            pygame.draw.circle(surf, (255, 170, 60), (x + 3, int(y - lift) - 5), 3)
+
+
+def draw_blasts(surf, combat, cam):
+    """Взрыв: вспышка, огненный шар, кольцо дыма."""
+    for b in combat.blasts:
+        k = b["t"] / 700
+        x, y = int(b["pos"].x - cam.x), int(b["pos"].y - cam.y)
+        r = int(20 + 70 * k)
+        layer = pygame.Surface((r * 2 + 4, r * 2 + 4), pygame.SRCALPHA)
+        c = (r + 2, r + 2)
+        a = max(0, int(255 * (1 - k)))
+        fire = (255, 140, 40) if b["kind"] != "molotov" else (255, 110, 30)
+        pygame.draw.circle(layer, (70, 60, 50, a // 2), c, r)
+        pygame.draw.circle(layer, (*fire, a), c, max(4, int(r * (0.8 - 0.5 * k))))
+        if k < 0.35:
+            pygame.draw.circle(layer, (255, 245, 200, a), c, max(3, int(r * 0.35)))
+        surf.blit(layer, (x - c[0], y - c[1] - 10))
+
+
+_DARK = {}
+
+
+def draw_darkness(surf, center, dark=200, radius=420):
+    """Под землёй светло только рядом с героем — фонарик, как в Fallout 3.
+    dark — насколько темно вдали (0..255, у каждой карты своё)."""
+    dark = 200 if dark is True else int(dark)
+    size = surf.get_size()
+    key = (size, radius, dark)
+    if key not in _DARK:
+        w, h = size
+        mask = pygame.Surface((w * 2, h * 2), pygame.SRCALPHA)
+        mask.fill((6, 5, 8, dark))
+        for i in range(radius, 0, -6):
+            a = int(dark * (i / radius) ** 1.6)
+            pygame.draw.circle(mask, (6, 5, 8, a), (w, h), i)
+        _DARK[key] = mask
+    mask = _DARK[key]
+    surf.blit(mask, (center[0] - mask.get_width() // 2, center[1] - mask.get_height() // 2))

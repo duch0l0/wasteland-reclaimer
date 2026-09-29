@@ -93,6 +93,7 @@ def walk_to_npc(npc):
         g.snap_camera()
         fr(1)
         _, r = sprite_of(npc, g.cam)
+        r = pygame.Rect(int(r.x * g.zoom), int(r.y * g.zoom), int(r.w * g.zoom), int(r.h * g.zoom))  # холст мира -> экран
         from src.ui.common import hotspot_at
         covered = hotspot_at(r.center) is not None  # под миникартой или другим окном
         if covered or not pygame.Rect(0, 0, S.SCREEN_W, S.SCREEN_H - 104).collidepoint(r.center):
@@ -129,8 +130,8 @@ indoor_grass = [o["name"] for o in lv.objects
                 any(lv.ground[y][x] == "c" for x, y in o["foot"])]
 ok(not indoor_grass, f"в зданиях нет травы и знаков ({len(indoor_grass)})")
 
-# здания замкнуты: из проходимого пола нельзя выйти на север, запад и восток мимо стены
-# (на юг — только через двери, они в южной стене)
+# здания замкнуты: из проходимого пола нельзя выйти мимо стены — только через двери
+# (у домов к северу от улицы двери в южной стене, к югу от улицы — в северной)
 floor = {(x, y) for y in range(lv.height) for x in range(lv.width) if lv.ground[y][x] == "c"}
 leaks = []
 for x, y in floor:
@@ -139,7 +140,8 @@ for x, y in floor:
     for dx, dy in ((0, -1), (-1, 0), (1, 0)):
         n = (x + dx, y + dy)
         side_door = dx != 0 and lv.is_wall(x, y - 1) and lv.is_wall(x, y + 1)  # проём в боковой стене
-        if n not in floor and not lv.is_wall(*n) and not side_door:
+        north_door = dy == -1 and (lv.is_wall(n[0] - 1, n[1]) or lv.is_wall(n[0] + 1, n[1]))  # проём в северной
+        if n not in floor and not lv.is_wall(*n) and not side_door and not north_door:
             leaks.append(n)
 ok(not leaks, f"у зданий есть все стены (дыр: {len(leaks)}{', напр. ' + str(leaks[:3]) if leaks else ''})")
 
@@ -165,7 +167,7 @@ if g.combat.active:
     fight()
 top = (box["rect"].centerx - int(g.cam.x), box["rect"].y + 12 - int(g.cam.y))
 for attempt in range(5):  # рядом бродят мутанты — если начался бой, довоевать и кликнуть снова
-    top = (box["rect"].centerx - int(g.cam.x), box["rect"].y + 12 - int(g.cam.y))
+    top = (int((box["rect"].centerx - int(g.cam.x)) * g.zoom), int((box["rect"].y + 12 - int(g.cam.y)) * g.zoom))
     click(top)
     for _ in range(900):
         fr(1)

@@ -51,6 +51,7 @@ class QuestMixin:
             return
         self._apply_effect(eff)
         self.sync_story()
+        self.sync_gates()
 
     def sync_story(self):
         """Одни и те же факты можно узнать разными путями — здесь они сводятся в стадии квестов."""
@@ -61,13 +62,24 @@ class QuestMixin:
             self.set_stage("mq_grandpa", 50)
         if st("mq_grandpa") >= 50 and "baker" not in self.worldmap.known:
             self.reveal_location("baker")
-        if any(f.get(k) for k in ("route_caravan", "route_lira", "route_loner")):
+        if any(f.get(k) for k in ("route_caravan", "route_lira", "route_loner", "route_silas")):
             f["route_any"] = True
             self.set_stage("mq_grandpa", 60)
         if any(f.get(k) for k in ("gang_dead", "gang_left", "gang_paid")) and 0 < st("sq_gang") < 50:
             self.set_stage("sq_gang", 50)
         if f.get("raiders_dead") and 0 < st("sq_dog") < 50:
             self.set_stage("sq_dog", 50)
+        # побочные квесты Пятнадцатой
+        if f.get("rats_cleared") and 10 <= st("sq_rats") < 50:
+            self.set_stage("sq_rats", 50)
+        if self.inventory.has("жетон Эймоса") and st("sq_kolbasa") < 100:
+            self.set_stage("sq_kolbasa", 100)
+        if f.get("vault_b_open") and st("sq_vault") < 30:
+            self.set_stage("sq_vault", 30)
+        if self.inventory.has("журнал «Проект Панцирь»") and st("sq_vault") < 50:
+            self.set_stage("sq_vault", 50)
+        if self.inventory.has("святая вода") and 10 <= st("sq_holywater") < 30:
+            self.set_stage("sq_holywater", 30)
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 
@@ -87,7 +99,18 @@ class QuestMixin:
             self.log(f"+{eff['amount']} опыта.")
             self.gain_xp(eff["amount"])
         elif t == "trade":
-            self.open_trade("gena")
+            self.open_trade(eff.get("id", "gena"))
+        elif t == "heal":   # врач лечит (за крышки — отдельным эффектом take)
+            p = self.player
+            p.hp = p.hp_cap if not eff.get("rads") else p.hp
+            if eff.get("rads"):
+                p.add_rads(-p.rads)
+            p.dots = []
+            self.log("Док обрабатывает раны. HP восстановлено." if not eff.get("rads")
+                     else "Док ставит капельницу антирадина. Радиация выведена.")
+        elif t == "caps":
+            self.inventory.add("крышки", eff["count"])
+            self.log(f"Получено: {eff['count']} крышек.")
         elif t == "reveal":
             self.reveal_location(eff["location"])
         elif t == "fight":
@@ -109,6 +132,14 @@ class QuestMixin:
             self.log(f"Вы: «{eff['text']}»")
         elif t == "join_dog":
             self.join_dog()
+        elif t == "kill_pack":   # отравили кормушку — стая гибнет в своих норах
+            dead = [e for e in self.enemies if e.alive and e.pack == eff["pack"]]
+            for e in dead:
+                e.hp, e.alive = 0, False
+                self.level.add_corpse(e, dict(e.loot or {}))
+            if dead:
+                self.log("Из глубины тоннелей доносится визг, возня... потом тишина.")
+            self._check_cleared()
         elif t == "gang_leave":
             self.loc.enemies[:] = [e for e in self.enemies if e.faction != "gang"]
             self.log("Бензо-банда собирает пожитки и уходит. Заправка свободна.")

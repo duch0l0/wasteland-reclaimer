@@ -76,6 +76,8 @@ def _item_facts(game, name):
     d = items.ITEMS.get(name, {})
     facts = []
     use = d.get("use", {})
+    if use.get("rads"):
+        facts.append((f"Выводит {-use['rads']} рад", COLOR_OK))
     if use.get("heal_full"):
         facts.append(("Лечит полностью", COLOR_OK))
     elif use.get("heal"):

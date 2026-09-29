@@ -39,14 +39,18 @@ class WorldMixin:
         from .. import companion
         companion.place_near_player(self)  # спутник входит в локацию вместе с героем
 
-    def enter_location(self, loc_id):
+    def enter_location(self, loc_id, at=None):
+        """at — клетка появления (переход через люк/дверь), иначе вход локации."""
         d = LOCATION_DEFS[loc_id]
         if d.get("chapter_end"):  # следующий город ещё не построен — конец главы
             self.mode = "world"
             self.show_slides(d["chapter_end"])
             return
         self.loc = self.get_location(loc_id)
-        self.place_player(self.loc.entry)
+        self.autowalk = None
+        self.speech = None
+        self.place_player((at[0] * S.TILE, at[1] * S.TILE) if at else self.loc.entry)
+        self.sync_gates()
         self.mode = "local"
         self.log(f"Вы входите: {self.loc.name}.")
 
@@ -78,13 +82,25 @@ class WorldMixin:
         self.log(f"На карте отмечено: {LOCATION_DEFS[loc_id]['name']}.")
 
     # ------------------------------------------------------------ камера
+    def view_size(self):
+        """Сколько мира видно (в пикселях мира): область над панелью, делённая на масштаб."""
+        return int(S.SCREEN_W / self.zoom), int((S.SCREEN_H - PANEL_H) / self.zoom)
+
+    def set_zoom(self, step):
+        """Колёсико: step > 0 — ближе, < 0 — дальше."""
+        zs = sorted(S.ZOOMS)
+        i = min(range(len(zs)), key=lambda k: abs(zs[k] - self.zoom))
+        self.zoom = zs[max(0, min(len(zs) - 1, i + step))]
+        self.snap_camera()
+
     def _camera_target(self):
         lvl_w, lvl_h = self.level.pixel_size
-        target_x = clamp(self.player.rect.centerx - S.SCREEN_W // 2, 0, max(0, lvl_w - S.SCREEN_W))
-        # низ экрана занят панелью — центрируем игрока в видимой части
-        # и позволяем камере опуститься, чтобы нижний ряд карты не прятался под панелью
-        view_h = S.SCREEN_H - PANEL_H
-        target_y = clamp(self.player.rect.centery - view_h // 2, 0, max(0, lvl_h - view_h))
+        view_w, view_h = self.view_size()
+        # карта меньше экрана — по центру, иначе герой в центре видимой части над панелью
+        target_x = (lvl_w - view_w) / 2 if lvl_w <= view_w else \
+            clamp(self.player.rect.centerx - view_w // 2, 0, lvl_w - view_w)
+        target_y = (lvl_h - view_h) / 2 if lvl_h <= view_h else \
+            clamp(self.player.rect.centery - view_h // 2, 0, lvl_h - view_h)
         return target_x, target_y
 
     def follow_camera(self, dt_ms):

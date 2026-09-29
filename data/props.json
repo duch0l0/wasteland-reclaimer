@@ -9,7 +9,8 @@
     "crate": {"лом": [1, 1, 35], "патроны": [2, 3, 25], "химикаты": [1, 1, 25], "ткань": [1, 1, 20]},
     "military": {"патроны": [4, 8, 100], "бинт": [1, 1, 50]},
     "shelf": {"химикаты": [1, 1, 40], "бинт": [1, 1, 20], "крышки": [2, 6, 30], "патроны": [1, 3, 25]},
-    "bag": {"крышки": [4, 12, 60], "бинт": [1, 1, 35], "патроны": [2, 4, 35], "отмычка": [1, 1, 20]}
+    "bag": {"крышки": [4, 12, 60], "бинт": [1, 1, 35], "патроны": [2, 4, 35], "отмычка": [1, 1, 20]},
+    "grave": {"крышки": [3, 15, 60], "бинт": [1, 1, 20], "патроны": [2, 5, 25], "ткань": [1, 2, 40]}
   },
   "props": {
     "wall_brick_long": {"img": "p1_wall_brick_long", "sight": true},
@@ -358,6 +359,21 @@
     "vwall_metal_e": {"img": "p1_vwall_metal_e", "foot": [1, 1], "sight": true},
     "vwall_planks_w": {"img": "p1_vwall_planks_w", "foot": [1, 1], "sight": true},
     "vwall_planks_e": {"img": "p1_vwall_planks_e", "foot": [1, 1], "sight": true},
-    "terminal": {"img": "x_terminal", "scale": 0.75, "foot": [1, 1]}
+    "terminal": {"img": "x_terminal", "scale": 0.75, "foot": [1, 1]},
+    "x_grave": {"img": "x_grave", "foot": [1, 1], "search": "grave", "title": "могила"},
+    "x_cross": {"img": "x_cross", "foot": [1, 1]},
+    "x_tombstone": {"img": "x_tombstone", "foot": [1, 1]},
+    "x_vault_door": {"img": "x_vault_door", "foot": [4, 2], "sight": true},
+    "x_vault_gear": {"img": "x_vault_gear", "foot": [2, 1], "sight": true},
+    "x_manhole": {"img": "x_manhole", "block": false, "layer": "floor"},
+    "x_ladder": {"img": "x_ladder", "block": false, "layer": "floor"},
+    "x_board": {"img": "x_board", "foot": [2, 1]},
+    "x_sandbags": {"img": "x_sandbags", "foot": [2, 1]},
+    "x_cliff": {"img": "x_cliff", "foot": [2, 1], "sight": true},
+    "x_pipe": {"img": "x_pipe", "foot": [1, 1]},
+    "x_puddle": {"img": "x_puddle", "block": false, "layer": "floor"},
+    "x_vault_sign": {"img": "x_vault_sign", "foot": [1, 1]},
+    "x_barrel_boom": {"img": "x_barrel_boom", "foot": [1, 1], "explosive": true},
+    "x_mesa_vault": {"img": "x_mesa_vault", "foot": [14, 3], "sight": true}
   }
 }

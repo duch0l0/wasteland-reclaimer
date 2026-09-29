@@ -49,7 +49,7 @@ def draw_panel(surf, game):
         y += 19
     if combat.active:
         cost = combat.attack_cost(p)
-        hint = f"ЛКМ: клетка — идти, враг — атака ({cost} ОД) · ПКМ — прицельно ({cost + 1}) · Tab — цель"
+        hint = f"ЛКМ — идти/атака ({cost} ОД) · ПКМ — прицельно ({cost + 1}) · Tab — цель · G — бросок · бочка — выстрел"
     else:
         hint = "ЛКМ — идти, говорить, обыскать, напасть · E — действие · Esc — выход"
     parts = hint.split(" · ")
@@ -75,8 +75,15 @@ def draw_panel(surf, game):
         t = font_small.render(title, True, tcolor)
     surf.blit(t, (x0, box.y + 5))
 
-    _bar(surf, pygame.Rect(x0, box.y + 32, 180, 15), p.hp / p.max_hp if p.max_hp else 0,
-         S.COLOR_HP, S.COLOR_HP_BG, f"HP {p.hp}/{p.max_hp}")
+    hp_rect = pygame.Rect(x0, box.y + 32, 180, 15)
+    rad_note = f" · РАД {p.rads}" if p.rads else ""
+    _bar(surf, hp_rect, p.hp / p.max_hp if p.max_hp else 0,
+         S.COLOR_HP, S.COLOR_HP_BG, f"HP {p.hp}/{p.hp_cap}{rad_note}")
+    if p.rads:   # радиация съедает правый край полоски
+        eaten = int(hp_rect.w * (p.max_hp - p.hp_cap) / p.max_hp)
+        rad = pygame.Surface((eaten, hp_rect.h), pygame.SRCALPHA)
+        rad.fill((110, 200, 60, 150))
+        surf.blit(rad, (hp_rect.right - eaten, hp_rect.y))
     _bar(surf, pygame.Rect(x0 + 190, box.y + 32, right - x0 - 190, 15), lv.xp / lv.xp_needed,
          S.COLOR_XP, S.COLOR_XP_BG, f"XP {lv.xp}/{lv.xp_needed}")
 

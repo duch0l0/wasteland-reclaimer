@@ -7,20 +7,22 @@ from .common import fonts
 T = S.TILE
 
 
-def draw_cursor_hint(surf, hint, cam):
+def draw_cursor_hint(surf, hint, cam, text_surf=None):
+    """Путь и клетка — на холсте мира (surf), подпись — у курсора на экране (text_surf)."""
     if not hint:
         return
     text, color, path, tile = hint
+    surf_world, surf = surf, text_surf or surf
     if path:
         for i, (tx, ty) in enumerate(path):
             center = (tx * T + T // 2 - int(cam.x), ty * T + T // 2 - int(cam.y))
-            pygame.draw.circle(surf, (20, 16, 12), center, 5)
-            pygame.draw.circle(surf, color, center, 3)
+            pygame.draw.circle(surf_world, (20, 16, 12), center, 5)
+            pygame.draw.circle(surf_world, color, center, 3)
     if tile:
         r = pygame.Rect(tile[0] * T - int(cam.x), tile[1] * T - int(cam.y), T, T)
         frame = pygame.Surface(r.size, pygame.SRCALPHA)
         pygame.draw.rect(frame, (*(color or (230, 220, 190)), 150), frame.get_rect(), 1, border_radius=4)
-        surf.blit(frame, r)
+        surf_world.blit(frame, r)
     if text:
         _, font_small = fonts()
         mx, my = pygame.mouse.get_pos()

@@ -1,7 +1,10 @@
 """
 Карта из объектов (data/maps/*.json, собирается tools/build_town.py).
 
-  ground   — строки кодов земли: d земля, a асфальт, h/v разметка, g гравий, c бетонный пол;
+  ground   — строки кодов земли: d земля, a асфальт, h/v разметка, g гравий, c бетонный пол,
+             m стальной пол убежища, w мокрый бетон ливнёвки, x скала/толща стены (непроходимо,
+             у края над полом рисуется стена — её вид задаёт style: vault / drain);
+  portals  — переходы в другую локацию: {"tiles": [[x, y]...], "to": id, "at": [x, y], "label"};
   decals   — плоские пятна на земле [имя, px, py] (центр в пикселях мира);
   props    — объекты [имя, x, y]: x, y — левая верхняя клетка пятна на земле;
   containers — какие объекты обыскиваются и что в них лежит;
@@ -52,6 +55,71 @@ def _dirt_tiles(n=6):
     return tiles
 
 
+def _pixel_tile(palette, seed, detail=None):
+    rnd = random.Random(seed)
+    t = pygame.Surface((T, T))
+    for y in range(0, T, 2):
+        for x in range(0, T, 2):
+            t.fill(rnd.choice(palette), (x, y, 2, 2))
+    if detail:
+        detail(t, rnd)
+    return t
+
+
+def _vault_floor():
+    """Стальные плиты пола убежища: сетка швов, заклёпки по углам."""
+    def plates(t, rnd):
+        pygame.draw.rect(t, (52, 58, 66), (0, 0, T, T), 2)
+        for cx, cy in ((5, 5), (T - 6, 5), (5, T - 6), (T - 6, T - 6)):
+            t.fill((150, 156, 164), (cx, cy, 2, 2))
+        if rnd.random() < 0.3:
+            t.fill((70, 76, 84), (rnd.randrange(8, T - 16), rnd.randrange(8, T - 8), 10, 2))
+    return [_pixel_tile([(96, 102, 110), (100, 106, 114), (92, 98, 106), (104, 110, 118)], s, plates) for s in range(4)]
+
+
+def _drain_floor():
+    """Мокрый бетон ливнёвки: тёмный, с зеленцой и потёками."""
+    def wet(t, rnd):
+        for _ in range(3):
+            x, y = rnd.randrange(0, T - 8, 2), rnd.randrange(0, T - 4, 2)
+            t.fill((44, 58, 46), (x, y, rnd.choice((6, 8, 10)), 2))
+    return [_pixel_tile([(62, 66, 60), (58, 62, 56), (66, 70, 62), (54, 60, 54)], s, wet) for s in range(4)]
+
+
+def _rock_tiles():
+    """Толща скалы/стены — почти чёрная, чтобы коридоры читались сверху."""
+    return [_pixel_tile([(18, 16, 16), (22, 20, 19), (16, 14, 14), (26, 23, 21)], s) for s in range(3)]
+
+
+def _wall_faces(style):
+    """Лицевая сторона стены над полом (вид три четверти)."""
+    out = []
+    for seed in range(3):
+        rnd = random.Random(seed + 7)
+        t = pygame.Surface((T, T))
+        if style == "vault":
+            t.fill((70, 78, 90))
+            pygame.draw.rect(t, (86, 96, 110), (0, 0, T, 14))
+            for x in range(0, T, 12):                           # панели с рёбрами
+                t.fill((56, 62, 72), (x, 14, 2, T - 14))
+            for x in range(0, T, 8):                            # жёлто-синяя полоса Vault-Tec
+                t.fill((226, 186, 52) if (x // 8) % 2 == 0 else (44, 80, 150), (x, 30, 8, 5))
+            t.fill((30, 32, 38), (0, T - 4, T, 4))
+        elif style == "drain":
+            t.fill((78, 78, 72))
+            for y in range(0, T, 12):                           # бетонные кольца
+                t.fill((64, 64, 60), (0, y, T, 2))
+            for _ in range(4):
+                x = rnd.randrange(0, T - 2, 2)
+                t.fill((54, 74, 52), (x, rnd.randrange(16, 30), 2, rnd.randrange(8, 18)))  # тина
+            t.fill((34, 34, 32), (0, T - 4, T, 4))
+        else:
+            t.fill((100, 84, 62))
+            t.fill((70, 56, 42), (0, T - 4, T, 4))
+        out.append(t)
+    return out
+
+
 class TownMap(MapBase):
     parallax = False  # земля сплошная — фон под ней не нужен
 
@@ -60,7 +128,18 @@ class TownMap(MapBase):
             d = json.load(f)
         self.width, self.height = d["w"], d["h"]
         self.ground = d["ground"]
+        self.style = d.get("style", "town")
+        self.dark = d.get("dark", False)          # под землёй: тьма по краям экрана
         self.blocked, self.sight = set(), set()
+        for y, row in enumerate(self.ground):
+            for x, code in enumerate(row):
+                if code == "x":
+                    self.blocked.add((x, y))
+                    self.sight.add((x, y))
+        self.portals = []
+        for p in d.get("portals", []):
+            self.portals.append({"tiles": {tuple(t) for t in p["tiles"]}, "to": p["to"],
+                                 "at": tuple(p["at"]), "label": p.get("label", "")})
         self.exits = {tuple(t) for t in d.get("exits", [])}
         self.doors = []
         self.pickups = []
@@ -94,7 +173,8 @@ class TownMap(MapBase):
         for c in d.get("containers", []):
             obj = self.objects[c["prop"]]
             box = {"tile": obj["foot"][0], "tiles": obj["foot"], "name": c["name"], "loot": dict(c["loot"]),
-                   "owner": c.get("owner"), "requires": c.get("requires"), "opened": False, "obj": obj}
+                   "owner": c.get("owner"), "requires": c.get("requires"), "opened": False, "obj": obj,
+                   "on_put": c.get("on_put")}
             obj["container"] = box
             self.containers.append(box)
 
@@ -121,9 +201,23 @@ class TownMap(MapBase):
                 c.fill(mul, special_flags=pygame.BLEND_RGB_MULT)
                 shade.append(c)
             self._dirt_shades.append(shade)
+        self._tiles["m"] = _vault_floor()
+        self._tiles["w"] = _drain_floor()
+        self._rock = _rock_tiles()
+        self._face = _wall_faces(self.style)
         line = pygame.image.load(os.path.join(GROUND_DIR, "asphalt_line.png")).convert()
         self._tiles["v"] = [line]
         self._tiles["h"] = [pygame.transform.rotate(line, 90)]
+
+        # гермодвери: объект-дверь, закрытый, пока не поставлен флаг (ключ-карта или терминал)
+        self.gates = []
+        for g in d.get("gates", []):
+            obj = self.objects[g["prop"]]
+            gate = {"tiles": list(obj["foot"]), "flag": g["flag"], "key": g.get("key"), "msg": g.get("msg", ""),
+                    "obj": obj, "open": False}
+            obj["gate"] = gate
+            self.gates.append(gate)
+            self.doors += gate["tiles"]
 
         self.terminals = []
         for t in d.get("terminals", []):
@@ -143,6 +237,33 @@ class TownMap(MapBase):
 
     def is_exit(self, x, y):
         return (x, y) in self.exits
+
+    def gate_at(self, tile):
+        return next((g for g in self.gates if tuple(tile) in g["tiles"]), None)
+
+    def open_door(self, tile):
+        gate = self.gate_at(tile)
+        if gate:
+            self.open_gate(gate)
+
+    def remove_object(self, obj):
+        """Объект исчез (взорвалась бочка): не рисуется и не мешает."""
+        obj["hidden"] = True
+        for t in obj["foot"]:
+            self.blocked.discard(t)
+            self.sight.discard(t)
+
+    def open_gate(self, gate):
+        gate["open"] = True
+        gate["obj"]["hidden"] = True
+        for t in gate["tiles"]:
+            self.blocked.discard(t)
+            self.sight.discard(t)
+            if t in self.doors:
+                self.doors.remove(t)
+
+    def portal_at(self, x, y):
+        return next((p for p in self.portals if (x, y) in p["tiles"]), None)
 
     def tile_at(self, x, y):
         return "#" if self.is_wall(x, y) else "."
@@ -170,6 +291,11 @@ class TownMap(MapBase):
     def _ground_tile(self, x, y):
         code = self.ground[y][x]
         h = (x * 73856093) ^ (y * 19349663)  # один и тот же вариант клетки при каждом кадре
+        if code == "x":
+            below = self.ground[y + 1][x] if y + 1 < self.height else "x"
+            if below != "x":
+                return self._face[h % len(self._face)]   # стена, обращённая к нам
+            return self._rock[h % len(self._rock)]
         if code in self._tiles and self._tiles[code]:
             variants = self._tiles[code]
         else:
@@ -193,10 +319,11 @@ class TownMap(MapBase):
 
     def draw(self, surf, cam):
         cam_x, cam_y = int(cam.x), int(cam.y)
-        view = pygame.Rect(cam_x, cam_y, S.SCREEN_W, S.SCREEN_H)
+        sw, sh = surf.get_size()
+        view = pygame.Rect(cam_x, cam_y, sw, sh)
         x0, y0 = max(0, cam_x // T), max(0, cam_y // T)
-        x1 = min(self.width, (cam_x + S.SCREEN_W) // T + 1)
-        y1 = min(self.height, (cam_y + S.SCREEN_H) // T + 1)
+        x1 = min(self.width, (cam_x + sw) // T + 1)
+        y1 = min(self.height, (cam_y + sh) // T + 1)
         for y in range(y0, y1):
             for x in range(x0, x1):
                 surf.blit(self._ground_tile(x, y), (x * T - cam_x, y * T - cam_y))
@@ -204,7 +331,7 @@ class TownMap(MapBase):
             if rect.colliderect(view):
                 surf.blit(P.image(name), (rect.x - cam_x, rect.y - cam_y))
         for o in self.objects:
-            if o["floor"] and o["rect"].colliderect(view):
+            if o["floor"] and o["rect"].colliderect(view) and not o.get("hidden"):
                 surf.blit(P.image(o["name"]), (o["rect"].x - cam_x, o["rect"].y - cam_y))
         for (x, y) in self.exits:
             if x0 <= x < x1 and y0 <= y < y1:
@@ -222,12 +349,12 @@ class TownMap(MapBase):
             return pygame.transform.rotate(arrow, 90)
         return arrow
 
-    def drawables(self, cam):
+    def drawables(self, cam, size=(S.SCREEN_W, S.SCREEN_H)):
         cam_x, cam_y = int(cam.x), int(cam.y)
-        view = pygame.Rect(cam_x, cam_y, S.SCREEN_W, S.SCREEN_H)
+        view = pygame.Rect(cam_x, cam_y, *size)
         out = []
         for o in self.objects:
-            if o["floor"] or not o["rect"].colliderect(view):
+            if o["floor"] or o.get("hidden") or not o["rect"].colliderect(view):
                 continue
             c = o["container"]
             opened = c is not None and c["opened"] and not c["loot"]  # пустой — темнее

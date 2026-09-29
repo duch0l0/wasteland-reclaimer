@@ -9,6 +9,10 @@ SCREEN_W, SCREEN_H = 1280, 720
 WORLD_MAP_REF = (960, 540)
 FPS = 60
 TILE = 48
+# Масштаб мира (колёсико мыши): меньше — дальше камера, больше видно, как в Fallout.
+# Интерфейс не масштабируется.
+ZOOMS = (1.0, 0.85, 0.72, 0.6)
+ZOOM_DEFAULT = 0.72
 
 TITLE = "Wasteland Reclaimer (прототип)"
 

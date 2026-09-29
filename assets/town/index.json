@@ -4512,5 +4512,140 @@
    104
   ],
   "made_from": "p2_022"
+ },
+ "x_grave": {
+  "page": null,
+  "rect": null,
+  "size": [
+   48,
+   32
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_cross": {
+  "page": null,
+  "rect": null,
+  "size": [
+   28,
+   52
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_tombstone": {
+  "page": null,
+  "rect": null,
+  "size": [
+   32,
+   40
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_door": {
+  "page": null,
+  "rect": null,
+  "size": [
+   192,
+   144
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_gear": {
+  "page": null,
+  "rect": null,
+  "size": [
+   128,
+   128
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_manhole": {
+  "page": null,
+  "rect": null,
+  "size": [
+   44,
+   32
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_ladder": {
+  "page": null,
+  "rect": null,
+  "size": [
+   48,
+   80
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_board": {
+  "page": null,
+  "rect": null,
+  "size": [
+   80,
+   60
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_sandbags": {
+  "page": null,
+  "rect": null,
+  "size": [
+   96,
+   36
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_cliff": {
+  "page": null,
+  "rect": null,
+  "size": [
+   96,
+   80
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_pipe": {
+  "page": null,
+  "rect": null,
+  "size": [
+   32,
+   72
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_puddle": {
+  "page": null,
+  "rect": null,
+  "size": [
+   68,
+   32
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_sign": {
+  "page": null,
+  "rect": null,
+  "size": [
+   52,
+   40
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_barrel_boom": {
+  "page": null,
+  "rect": null,
+  "size": [
+   32,
+   44
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_mesa_vault": {
+  "page": null,
+  "rect": null,
+  "size": [
+   672,
+   352
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

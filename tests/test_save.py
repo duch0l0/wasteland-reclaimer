@@ -70,7 +70,7 @@ g.handle_key(pygame.K_e)
 g.open_terminal("grandpa")
 g.term_open_entry(4)
 g.close_terminal()
-rats = [e for e in g.enemies if e.pack == "ratmen"]
+rats = [e for e in g.enemies if e.type_id == "rat"]
 for e in rats[:2]:
     e.apply_damage(999)
     g.on_enemy_killed(e)

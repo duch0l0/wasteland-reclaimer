@@ -46,6 +46,11 @@ class ControlsMixin:
                 self.handle_key(key)
             elif event.type == pygame.KEYUP:
                 self.held_letters.discard(SCANCODE_TO_KEY.get(event.scancode, event.key))
+            elif event.type == pygame.MOUSEWHEEL:
+                if self.mode == "local" and not (self.menu or self.term or self.slides or self.inv_open
+                                                 or self.loot or self.trade or self.journal_open
+                                                 or self.dialogue.is_active()):
+                    self.set_zoom(1 if event.y > 0 else -1)
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button in (1, 3):
                 self.handle_click(event.pos, event.button)
 
@@ -171,6 +176,8 @@ class ControlsMixin:
                 c.aim_menu = True
         elif key == pygame.K_TAB:
             c.cycle_target()
+        elif key == pygame.K_g:
+            c.player_throw()
         elif key in (pygame.K_r, pygame.K_RETURN):
             if c.player_can_act():
                 c.end_turn()

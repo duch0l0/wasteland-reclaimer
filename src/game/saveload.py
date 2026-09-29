@@ -83,7 +83,8 @@ class SaveMixin:
             "player": {"pos": list(p.rect.topleft), "hp": p.hp, "max_hp": p.max_hp, "base_ap": p.base_ap,
                        "ac": p.ac, "base_damage": p.base_damage, "level": p.level_sys.level,
                        "xp": p.level_sys.xp, "perks": p.perks, "pending_perks": p.pending_perks,
-                       "weapon": p.weapon, "equipment": p.equipment, "dir": p.anim.direction},
+                       "weapon": p.weapon, "equipment": p.equipment, "dir": p.anim.direction,
+                       "rads": p.rads},
             "inventory": dict(self.inventory.items),
             "flags": self.flags, "quests": self.quests, "traders": self.traders,
             "world": {"pos": list(self.worldmap.pos), "known": sorted(self.worldmap.known)},
@@ -103,7 +104,9 @@ class SaveMixin:
             "enemies": [{"alive": e.alive, "hp": e.hp, "pos": list(e.rect.topleft), "hostile": e.hostile,
                          "talked": e.talked, "present": e in loc.enemies} for e in loc.enemies_all],
             "npcs": [{"id": n.npc_id, "pos": list(n.rect.topleft)} for n in loc.npcs],
-            "containers": [{"loot": c["loot"], "opened": c["opened"]} for c in base],
+            "containers": [{"loot": c["loot"], "opened": c["opened"], "hook_used": c.get("on_put") is None}
+                           for c in base],
+            "removed": [i for i, o in enumerate(getattr(lv, "objects", [])) if o.get("hidden") and not o.get("gate")],
             "corpses": [{"enemy": loc.enemies_all.index(c["enemy"]), "loot": c["loot"], "opened": c["opened"]}
                         for c in lv.corpses if c.get("enemy") in loc.enemies_all],
             "pickups": [[p["kind"], p["count"], p["rect"].x, p["rect"].y] for p in lv.pickups],
@@ -157,6 +160,8 @@ class SaveMixin:
         p.ap = p.max_ap
         p.blinded = p.crippled_arms = p.crippled_legs = False
         p.skip_turns = 0
+        p.rads = ps.get("rads", 0)
+        p.dots = []
         p.anim.direction = ps.get("dir", "down")
         p.anim.set_action("idle")
 
@@ -188,6 +193,7 @@ class SaveMixin:
             self.snap_camera()
         from .. import companion
         companion.place_near_player(self)
+        self.sync_gates()
 
     @staticmethod
     def _restore_loc(loc, ls):
@@ -204,6 +210,10 @@ class SaveMixin:
         base = [c for c in lv.containers if not c.get("corpse")]
         for c, cs in zip(base, ls["containers"]):
             c["loot"], c["opened"] = dict(cs["loot"]), cs["opened"]
+            if cs.get("hook_used"):
+                c["on_put"] = None
+        for i in ls.get("removed", []):
+            lv.remove_object(lv.objects[i])
         for cs in ls["corpses"]:
             enemy = loc.enemies_all[cs["enemy"]]
             box = lv.add_corpse(enemy, cs["loot"])

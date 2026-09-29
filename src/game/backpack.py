@@ -153,19 +153,32 @@ class BackpackMixin:
             self.use_item(usable[idx])
 
     def use_item(self, name):
-        if self.player.hp >= self.player.max_hp:
-            self.log("Вы и так целы. Не переводите добро.")
+        use = items.ITEMS[name]["use"]
+        p = self.player
+        if "rads" in use:
+            if p.rads <= 0:
+                self.log("Радиации в вас нет. Пока.")
+                return
+        elif p.hp >= p.hp_cap:
+            self.log("Вы и так целы. Не переводите добро." if p.hp_cap == p.max_hp else
+                     "Раны затянуты, но радиация съела часть здоровья — тут поможет антирадин у Дока.")
             return
         if not self.combat.spend_player_ap(S.AP_CRAFT):
             return
-        use = items.ITEMS[name]["use"]
-        before = self.player.hp
-        if use.get("heal_full"):
-            self.player.hp = self.player.max_hp
+        before = p.hp
+        if "rads" in use:
+            was = p.rads
+            p.add_rads(use["rads"])
+            self.inventory.remove(name)
+            self.log(f"Использовано: {name} (−{was - p.rads} рад).")
         else:
-            self.player.hp = min(self.player.max_hp, self.player.hp + use.get("heal", 0))
-        self.inventory.remove(name)
-        self.log(f"Использовано: {name} (+{self.player.hp - before} HP).")
+            if use.get("heal_full"):
+                p.hp = p.hp_cap
+            else:
+                p.hp = min(p.hp_cap, p.hp + use.get("heal", 0))
+            p.dots = [d for d in p.dots if d["kind"] != "poison"]   # лекарство снимает яд
+            self.inventory.remove(name)
+            self.log(f"Использовано: {name} (+{p.hp - before} HP).")
         if not self.inventory.has(name):
             visible = self.inventory_items()
             self.inv_sel = visible[0] if visible else None

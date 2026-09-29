@@ -14,7 +14,7 @@ LAYER_DEFS = [
 
 class Parallax:
     def __init__(self):
-        self.layers = loader.load_parallax_layers(S.BG_DIR, (S.SCREEN_W, S.SCREEN_H), LAYER_DEFS)
+        self.layers = loader.load_parallax_layers(S.BG_DIR, (int(S.SCREEN_W / min(S.ZOOMS)) + 2, int(S.SCREEN_H / min(S.ZOOMS)) + 2), LAYER_DEFS)
 
     def draw(self, surf, cam_x):
         for layer in self.layers:

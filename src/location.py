@@ -11,7 +11,12 @@ from .tilemap import TileMap, load_map_file
 from .townmap import TownMap
 from .entities import Enemy, NPC
 
-NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка", "turtle": "Черепан", "dog": "Рыжий пёс"}
+NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка",
+             "turtle": "Черепан", "dog": "Рыжий пёс", "silas": "Брат Сайлас", "mo": "Мо «Ведро»", "lenny": "Лен",
+             "marta": "Марта", "sheriff": "Шериф Брэддок", "doc": "Док Мира", "ada": "Смотрительница Ада",
+             "dale": "Дейл"}
+# у кого кадры лежат в чужой папке (жители из tools/make_variants.py)
+NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)
@@ -40,7 +45,7 @@ def npc_animations(npc_id):
     """Кадры NPC — assets/sprites/<npc_id>/ (см. tools/slice_sprites.py), иначе плейсхолдер."""
     key = f"npc:{npc_id}"
     if key not in _ANIM_CACHE:
-        folder = f"{S.ASSET_ROOT}/sprites/{npc_id}"
+        folder = f"{S.ASSET_ROOT}/sprites/{NPC_SPRITES.get(npc_id, npc_id)}"
         if npc_id == "robot":
             _ANIM_CACHE[key] = loader.load_creature_animations(
                 folder, (44, 56), (120, 125, 135), (230, 190, 60), kind="humanoid")

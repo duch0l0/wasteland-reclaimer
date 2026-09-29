@@ -59,6 +59,10 @@ class InteractionMixin:
                 return
 
     def open_door(self, tile):
+        gate = getattr(self.level, "gate_at", lambda t: None)(tile)
+        if gate:
+            self.use_gate(gate)
+            return
         if self.inventory.has("отмычка"):
             self.inventory.remove("отмычка")
             self.level.open_door(tile)
@@ -75,6 +79,35 @@ class InteractionMixin:
                 self.combat.start(player_first=False)
         else:
             self.log("Заперто. Нужна отмычка (у Гены) или хотя бы лом, чтобы выломать.")
+
+    def _check_cleared(self):
+        """Стая крысолюдов в ливнёвке перебита (или отравлена) — шерифу будет что рассказать."""
+        if self.loc.id == "drain" and not any(e.alive and e.pack == "ratmen" for e in self.enemies):
+            if not self.flags.get("rats_cleared"):
+                self.flags["rats_cleared"] = True
+                self.log("Крысолюдов в ливнёвке больше нет. Шериф Брэддок будет рад это услышать.")
+                self.sync_story()
+        if self.loc.id == "vault57" and not any(e.alive for e in self.enemies):
+            self.flags["vault_cleared"] = True
+
+    def use_gate(self, gate):
+        """Гермодверь: открыта флагом (терминал) или ключ-картой из рюкзака."""
+        if self.flags.get(gate["flag"]):
+            self.level.open_gate(gate)
+        elif gate.get("key") and self.inventory.has(gate["key"]):
+            self.flags[gate["flag"]] = True
+            self.level.open_gate(gate)
+            self.log(f"Карта «{gate['key']}» пищит в замке. Гермодверь с рёвом откатывается в сторону.")
+            self.audio.play("hit")
+            self.sync_story()
+        else:
+            self.log(gate["msg"])
+
+    def sync_gates(self):
+        """Двери, открытые флагом (терминал, загрузка сохранения), — открыть на карте."""
+        for g in getattr(self.level, "gates", []):
+            if not g["open"] and self.flags.get(g["flag"]):
+                self.level.open_gate(g)
 
     def join_dog(self):
         """Пёс с цепи у лагеря рейдеров становится спутником."""
@@ -93,7 +126,7 @@ class InteractionMixin:
         guns = available(self.inventory)
         if to is None:
             if len(guns) == 1:
-                self.log("Другого оружия нет. Говорят, где-то в развалинах на северо-западе спрятан самопал...")
+                self.log("Огнестрела нет. Шериф Брэддок, говорят, платит оружием за работу.")
                 return
             to = guns[(guns.index(self.player.weapon) + 1) % len(guns)] if self.player.weapon in guns else "melee"
         if to not in guns:
@@ -133,6 +166,7 @@ class InteractionMixin:
             if any(n.npc_id == "dog" for n in self.npcs):
                 self.log("Лагерь рейдеров пуст. Где-то у палаток скулит пёс на цепи.")
             self.sync_story()
+        self._check_cleared()
         if enemy.faction == "gang" and not self.loc.faction_members("gang"):
             self.flags["gang_dead"] = True
             self.log("Бензо-банды больше нет. Гена будет рад. Наверное.")

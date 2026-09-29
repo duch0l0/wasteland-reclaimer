@@ -40,8 +40,18 @@ class RenderMixin:
         self.worldmap.draw(self.screen, fonts(), status)
         hud.draw_log_overlay(self.screen, self.log_lines)
 
+    def _world_canvas(self):
+        """Холст мира: при масштабе < 1 он больше экрана и потом ужимается."""
+        if self.zoom == 1:
+            return self.screen
+        size = self.view_size()
+        if getattr(self, "_canvas", None) is None or self._canvas.get_size() != size:
+            self._canvas = pygame.Surface(size).convert()
+        return self._canvas
+
     def _draw_local(self):
-        surf, cam, combat = self.screen, self.cam, self.combat
+        screen, cam, combat, z = self.screen, self.cam, self.combat, self.zoom
+        surf = self._world_canvas()
         if self.level.parallax:
             self.parallax.draw(surf, cam.x)
         else:
@@ -58,7 +68,8 @@ class RenderMixin:
             img = corpse_image(self.companion)
             surf.blit(img, img.get_rect(center=(self.companion.rect.centerx - int(cam.x),
                                                 self.companion.rect.bottom - 6 - int(cam.y))))
-        layers = [(e.rect.bottom, e) for e in entities] + [(y, (img, pos)) for y, img, pos in self.level.drawables(cam)]
+        layers = [(e.rect.bottom, e) for e in entities] + \
+            [(y, (img, pos)) for y, img, pos in self.level.drawables(cam, surf.get_size())]
         layers.sort(key=lambda item: item[0])
         outlined = combat_ui.highlights(combat)
         for _, thing in layers:
@@ -71,20 +82,32 @@ class RenderMixin:
             surf.blit(frame, r)
 
         self.gore.draw_air(surf, self.level, cam)
-        if self.speech:
-            combat_ui.draw_speech(surf, self.speech, cam)
 
         # под курсором — то, с чем можно взаимодействовать, обведено контуром
         for img, r in self.hover_highlight():
             combat_ui.draw_outline(surf, img, r, (245, 215, 110))
             surf.blit(img, r)
-
-        combat_ui.draw_health_bars(surf, self, cam)
-        if combat.active:
-            combat_ui.draw_combat_markers(surf, combat, cam)
         combat_ui.draw_tracers(surf, combat.tracers, cam)
-        combat_ui.draw_floaters(surf, combat.floaters, cam)
-        cursor.draw_cursor_hint(surf, self.cursor_hint(), cam)
+        combat_ui.draw_throws(surf, combat, cam)
+        combat_ui.draw_blasts(surf, combat, cam)
+        if getattr(self.level, "dark", False):
+            me = self.player.rect
+            combat_ui.draw_darkness(surf, (me.centerx - int(cam.x), me.centery - 30 - int(cam.y)), self.level.dark)
+        hint = self.cursor_hint()
+        cursor.draw_cursor_hint(surf, hint and (None, *hint[1:]), cam)
+        if surf is not screen:  # мир — на экран с масштабом; подписи дальше — в размер экрана
+            view = pygame.Rect(0, 0, S.SCREEN_W, S.SCREEN_H - PANEL_H)
+            screen.blit(pygame.transform.smoothscale(surf, view.size), view)
+        surf = screen
+
+        if self.speech and (self.speech["ent"] in self.npcs or self.speech["ent"] is self.player):
+            combat_ui.draw_speech(surf, self.speech, cam, z)
+        combat_ui.draw_health_bars(surf, self, cam, z)
+        if combat.active:
+            combat_ui.draw_combat_markers(surf, combat, cam, z)
+        combat_ui.draw_floaters(surf, combat.floaters, cam, z)
+        if hint and hint[0]:
+            cursor.draw_cursor_hint(surf, (hint[0], hint[1], None, None), cam)
         self.minimap.draw(surf, self)
         hud.draw_panel(surf, self)
         if combat.active and combat.aim_menu:

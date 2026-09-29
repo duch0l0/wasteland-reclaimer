@@ -53,5 +53,17 @@
     ],
     "known": false,
     "chapter_end": "chapter1_end"
+  },
+  "vault57": {
+    "name": "Убежище 57",
+    "map": "data/maps/vault57.json",
+    "known": false,
+    "underground": true
+  },
+  "drain": {
+    "name": "Ливнёвка",
+    "map": "data/maps/drain.json",
+    "known": false,
+    "underground": true
   }
 }

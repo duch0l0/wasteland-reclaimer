@@ -39,6 +39,7 @@ class CombatStats:
         self.crippled_legs = False    # крит в ноги: -3 ОД каждый ход
         self.crippled_arms = False    # крит в руки: урон вдвое меньше
         self.skip_turns = 0           # крит в пах: пропуск хода
+        self.dots = []                # урон со временем: [{"kind": "poison"/"fire", "dmg", "turns"}]
 
     @property
     def max_ap(self):
@@ -71,6 +72,16 @@ class Player(CombatStats):
         self.perks = {}         # id перка -> ранг
         self.free_steps = 0     # перк «Бонус движения»: бесплатные шаги в этом ходу
         self.pending_perks = 0  # сколько перков ждут выбора
+        self.rads = 0           # радиация: каждые 10 рад отъедают 1 HP от максимума (как в Fallout 4)
+
+    @property
+    def hp_cap(self):
+        """Сколько HP можно иметь при текущей радиации."""
+        return max(5, self.max_hp - self.rads // 10)
+
+    def add_rads(self, n):
+        self.rads = max(0, min(self.max_hp * 10 - 50, self.rads + n))
+        self.hp = min(self.hp, self.hp_cap)
 
     def perk_rank(self, perk_id):
         return self.perks.get(perk_id, 0)
@@ -222,6 +233,13 @@ class Enemy(CombatStats):
         self.hit_verb = d.get("hit_verb", "бьёт вас")
         self.armor = d.get("armor", 0)                 # сколько урона гасит панцирь
         self.weak_parts = set(d.get("weak_parts", []))  # куда броня не прикрывает
+        # особенности для разнообразия боя (см. src/combat.py)
+        self.poison = d.get("poison", 0)       # ядовитые когти: урон за ход, 3 хода
+        self.rads = d.get("rads", 0)           # облучает при попадании
+        self.coward = d.get("coward", False)   # при малом HP убегает
+        self.grenades = d.get("grenades", 0)   # сколько гранат бросит
+        self.stims = d.get("stims", 0)         # сколько раз уколется стимулятором
+        self.robot = d.get("robot", False)     # не кровоточит, яд не берёт
         self.faction = d.get("faction")   # у фракции (банды) враги нейтральны, пока их не разозлить
         self.hostile = self.faction is None
         self.talk = d.get("talk")         # id диалога: такой враг сначала заговаривает

@@ -13,8 +13,8 @@ SILVER_TONGUE_BONUS = 0.2
 
 class TradeMixin:
     def open_trade(self, trader_id):
-        if trader_id == "gena" and self.flags.get("gena_robbed"):
-            self.log("Гена демонстративно прячет товар за спину.")
+        if self.flags.get(f"{trader_id}_robbed"):
+            self.log(f"{self.traders[trader_id]['name']} демонстративно прячет товар за спину.")
             return
         self.trade = {"id": trader_id, "tab": "buy"}
 
@@ -57,7 +57,7 @@ class TradeMixin:
     def _buy(self, name, qty, price):
         tr = self.traders[self.trade["id"]]
         if not self.inventory.has("крышки", price):
-            self.log("Не хватает крышек. Гена сочувственно кивает, но скидку не даёт.")
+            self.log(f"Не хватает крышек. {tr['name']} сочувственно кивает, но скидку не даёт.")
             return
         self.inventory.remove("крышки", price)
         tr["cash"] += price
@@ -68,7 +68,7 @@ class TradeMixin:
     def _sell(self, name, qty, price):
         tr = self.traders[self.trade["id"]]
         if tr["cash"] < price:
-            self.log("У Гены кончились крышки. Он предлагает расписку. Вы отказываетесь.")
+            self.log(f"У торговца ({tr['name']}) кончились крышки. Предлагает расписку. Вы отказываетесь.")
             return
         tr["cash"] -= price
         tr["stock"][name] = tr["stock"].get(name, 0) + qty

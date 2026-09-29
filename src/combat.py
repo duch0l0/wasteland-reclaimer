@@ -114,6 +114,8 @@ class Combat:
         self.tracers = []   # вспышки выстрелов
         self.target = None
         self.aim_menu = False
+        self.throws = []    # летящие гранаты/бутылки: взрываются по прилёте
+        self.blasts = []    # вспышки взрывов (для картинки)
 
     # ------------------------------------------------------------ состояние
     @property
@@ -224,6 +226,11 @@ class Combat:
     def _begin_turn(self):
         ent = self.current
         ent.ap = ent.max_ap
+        if self._tick_dots(ent):   # яд или огонь добили — ход следующему
+            self.busy_ms = S.COMBAT_ATTACK_MS
+            if self.active and self.game.player.alive:
+                self._advance()
+            return
         if ent is self.game.player:
             ent.free_steps = 2 if ent.perk_rank("bonus_move") else 0
             self._check_new_enemies()
@@ -247,6 +254,12 @@ class Combat:
         self.aim_menu = False
         if not self.active:
             return
+        if not self.enemies_in_combat():
+            self.end("Бой окончен. Пустошь снова тиха.")
+            return
+        self._advance()
+
+    def _advance(self):
         if not self.enemies_in_combat():
             self.end("Бой окончен. Пустошь снова тиха.")
             return
@@ -358,7 +371,7 @@ class Combat:
                         "skill": p.guns_skill, "damage": w["damage"], "ammo": w["ammo"]}
             return {"ranged": False, "range": 1, "ap": w["ap"], "skill": p.melee_skill,
                     "damage": p.damage, "ammo": None}
-        ranged = ent.ai == "ranged"
+        ranged = ent.ai in ("ranged", "turret")
         return {"ranged": ranged, "range": ent.range if ranged else 1,
                 "ap": S.AP_ATTACK + (1 if ranged else 0), "skill": ent.skill,
                 "damage": ent.damage, "ammo": None}
@@ -387,7 +400,25 @@ class Combat:
         if prof["ranged"]:
             dist = chebyshev(tile_of(attacker), tile_of(defender))
             chance -= RANGE_PENALTY_PER_TILE * max(0, dist - 1)
+            if self.in_cover(attacker, defender):
+                chance -= self.COVER_PENALTY
         return max(S.HIT_CHANCE_MIN, min(S.HIT_CHANCE_MAX, chance))
+
+    COVER_PENALTY = 25
+
+    def in_cover(self, attacker, defender):
+        """Цель за низким укрытием (мешки, ящики, бочки) со стороны стрелка: клетка рядом
+        с целью в сторону стрелка непроходима, но обзор не закрывает."""
+        (ax, ay), (dx, dy) = tile_of(attacker), tile_of(defender)
+        if chebyshev((ax, ay), (dx, dy)) <= 1:
+            return False
+        sx = (ax > dx) - (ax < dx)
+        sy = (ay > dy) - (ay < dy)
+        lv = self.game.level
+        for t in {(dx + sx, dy + sy), (dx + sx, dy), (dx, dy + sy)} - {(dx, dy)}:
+            if lv.is_wall(*t) and not lv.blocks_sight(*t) and not lv.is_exit(*t):
+                return True
+        return False
 
     def defense(self, ent):
         """КБ бойца; у игрока — с надетой бронёй."""
@@ -466,10 +497,16 @@ class Combat:
             self._react(defender, attacker, "hit", impact_ms)
         if dmg > 0:  # звук попадания — вместе с вздрагиванием цели
             self.game.audio.play("hit", defender.rect.centerx - self.game.cam.x, delay_ms=impact_ms)
-        if dmg > 0:  # кровь; от выстрела — ещё и ошмётки
+        if dmg > 0 and not getattr(defender, "robot", False):  # кровь; от выстрела — ещё и ошмётки
             self.game.gore.hit(self.game.level, defender.rect, attacker.rect.center,
                                "ranged" if prof["ranged"] else "melee", crit=crit, kill=not defender.alive,
                                delay_ms=impact_ms)
+        if dmg > 0 and defender.alive and not getattr(defender, "robot", False):
+            if getattr(attacker, "poison", 0):
+                self._add_dot(defender, "poison", attacker.poison, 3)
+            if getattr(attacker, "rads", 0) and defender is self.game.player:
+                defender.add_rads(attacker.rads)
+                self._float(defender, f"+{attacker.rads} рад", (140, 230, 90))
         if dmg == 0:
             self._float(defender, "броня", (150, 170, 200))
         else:
@@ -595,6 +632,9 @@ class Combat:
 
     # -------------------------------------------------------------- кадр
     def update(self, dt_ms):
+        for b in self.blasts:
+            b["t"] += dt_ms
+        self.blasts = [b for b in self.blasts if b["t"] < 700]
         for f in self.floaters:
             f["t"] += dt_ms
             f["pos"].y -= dt_ms * 0.03
@@ -616,10 +656,11 @@ class Combat:
                 tw["ent"].anim.set_action("idle")
         self.tweens = [tw for tw in self.tweens if tw["t"] < 1.0]
 
+        self._update_throws(dt_ms)
         if self.busy_ms > 0:
             self.busy_ms -= dt_ms
             return
-        if self.tweens:
+        if self.tweens or self.throws:
             return
         for e in self.order:
             if e is not self.game.player and e.alive and e.anim.action == "attack" and not e.anim.busy:
@@ -638,6 +679,10 @@ class Combat:
                 self.end_turn()  # как в Fallout с автозавершением: ОД кончились — ход врага
         elif self.is_ally(ent):
             self._ally_turn(ent)
+        elif self._enemy_special(ent):
+            return
+        elif ent.ai == "turret":
+            self._enemy_turret(ent)
         elif ent.ai == "ranged":
             self._enemy_ranged(ent)
         else:
@@ -712,3 +757,248 @@ class Combat:
                 best = d
                 break
         return bool(best) and self.try_step(enemy, *best)
+
+    # ------------------------------------------------------ урон вне атаки
+    def _add_dot(self, ent, kind, dmg, turns):
+        for d in ent.dots:
+            if d["kind"] == kind:
+                d["turns"] = max(d["turns"], turns)
+                d["dmg"] = max(d["dmg"], dmg)
+                return
+        ent.dots.append({"kind": kind, "dmg": dmg, "turns": turns})
+        who = "Вы" if ent is self.game.player else _cap(ent.name)
+        self.game.log(f"{who}: {'яд в крови' if kind == 'poison' else 'горит'}!")
+
+    def _tick_dots(self, ent):
+        """Яд и огонь в начале хода. True — боец от этого погиб."""
+        if not ent.dots or not ent.alive:
+            return False
+        total = 0
+        for d in ent.dots:
+            total += d["dmg"]
+            d["turns"] -= 1
+        kinds = {d["kind"] for d in ent.dots}
+        ent.dots = [d for d in ent.dots if d["turns"] > 0]
+        what = " и ".join(k for k in (("яд" if "poison" in kinds else ""), ("огонь" if "fire" in kinds else "")) if k)
+        who = "Вас" if ent is self.game.player else _cap(ent.name)
+        self.game.log(f"{what.capitalize()} жжёт: {who.lower() if ent is self.game.player else who} −{total} HP.")
+        self.hurt(ent, total, (150, 220, 90) if "poison" in kinds else (255, 150, 60))
+        return not ent.alive
+
+    def hurt(self, ent, dmg, color=(230, 120, 60), source=None):
+        """Урон не от удара (взрыв, яд, огонь): число над головой, вздрагивание, смерть."""
+        if dmg <= 0 or not ent.alive:
+            return
+        ent.apply_damage(dmg)
+        self._float(ent, f"-{dmg}", color)
+        if ent.alive:
+            ent.anim.play_once("hit")
+            return
+        g = self.game
+        if ent is g.player:
+            return
+        if self.is_ally(ent):
+            ent.down = True
+            ent.anim.set_action("idle")
+            g.log(f"{ent.name} скулит и отползает — выбыл из боя.")
+            return
+        if ent in g.enemies:
+            g.on_enemy_killed(ent)
+            if self.target is ent:
+                self.target = self._nearest_enemy()
+
+    # ------------------------------------------------------ броски и взрывы
+    THROW_AP = 4
+    THROW_RANGE = 6
+    THROW_MS = 520
+
+    def throw(self, thrower, tile, kind):
+        """Бросок гранаты/бутылки в клетку: летит дугой, по прилёте взрывается."""
+        thrower.ap -= self.THROW_AP
+        thrower.anim.face(tile[0] * T - thrower.rect.centerx, tile[1] * T - thrower.rect.centery)
+        thrower.anim.play_once("attack_ranged") or thrower.anim.play_once("attack")
+        a = pygame.Vector2(thrower.rect.centerx, thrower.rect.top + 10)
+        b = pygame.Vector2(tile_center(tile))
+        self.throws.append({"from": a, "to": b, "tile": tile, "t": 0, "kind": kind, "by": thrower,
+                            "dur": self.THROW_MS + int(a.distance_to(b) * 0.4)})
+        self.busy_ms = S.COMBAT_ATTACK_MS
+
+    def _update_throws(self, dt_ms):
+        for th in self.throws:
+            th["t"] += dt_ms
+        landed = [th for th in self.throws if th["t"] >= th["dur"]]
+        self.throws = [th for th in self.throws if th["t"] < th["dur"]]
+        for th in landed:
+            self.explode(th["tile"], th["kind"], th["by"])
+
+    def explode(self, tile, kind, by=None):
+        """Взрыв гранаты/бочки (урон всем в радиусе 1) или вспышка коктейля (поджигает)."""
+        g = self.game
+        cx, cy = tile_center(tile)
+        self.blasts.append({"pos": pygame.Vector2(cx, cy), "t": 0, "kind": kind})
+        g.audio.play("shot", cx - g.cam.x, volume=1.0)
+        g.audio.play("hit", cx - g.cam.x, delay_ms=60)
+        fighters = [g.player] + [e for e in g.enemies if e.alive] + \
+            [c for c in (g.companion,) if c is not None and c.alive and not c.down]
+        hit = [e for e in fighters if e.alive and chebyshev(tile_of(e), tile) <= 1]
+        if kind == "molotov":
+            g.log("Бутылка разбивается — пламя разливается по земле!")
+            for e in hit:
+                self.hurt(e, random.randint(3, 5), (255, 150, 60))
+                if e.alive:
+                    self._add_dot(e, "fire", 3, 3)
+        else:
+            g.log("БУМ! " + ("Бочка взрывается!" if kind == "barrel" else "Граната рвётся!"))
+            lo, hi = (12, 18) if kind == "barrel" else (7, 12)
+            for e in hit:
+                dmg = random.randint(lo, hi) if tile_of(e) == tile else random.randint(lo // 2, hi // 2)
+                if e is not g.player and e.alive:
+                    g.gore.hit(g.level, e.rect, (cx, cy), "ranged", crit=True, kill=dmg >= e.hp, delay_ms=0)
+                self.hurt(e, dmg, (255, 200, 80))
+        # рядом с бочкой — цепная реакция
+        for b in self.barrels_near(tile, 1):
+            self.blow_barrel(b)
+        # бой мог начаться со взрыва — например, герой подорвал бочку рядом с врагами
+        if not self.active and any(e.alive for e in hit if e in g.enemies):
+            for e in hit:
+                if e in g.enemies and e.alive and not e.hostile:
+                    g.make_hostile(e.faction)
+            self.start(player_first=True)
+
+    def barrels_near(self, tile, r):
+        objs = getattr(self.game.level, "objects", [])
+        from . import props as P
+        return [o for o in objs if not o.get("hidden") and P.info(o["name"]).get("explosive")
+                and any(chebyshev(t, tile) <= r for t in o["foot"])]
+
+    def blow_barrel(self, obj):
+        if obj.get("hidden"):
+            return
+        self.game.level.remove_object(obj)
+        self.explode(obj["foot"][0], "barrel")
+
+    def player_throw(self):
+        """G: бросить гранату (или коктейль Молотова) в текущую цель."""
+        if not self.player_can_act():
+            return
+        g, p, t = self.game, self.game.player, self.target
+        kind = "grenade" if g.inventory.has("граната") else "molotov" if g.inventory.has("коктейль Молотова") else None
+        if kind is None:
+            g.log("Бросать нечего. Гранаты бывают у бандитов, коктейль Молотова — в крафте (C).")
+            return
+        if t is None or not t.alive:
+            g.log("Некуда бросать — нет цели (Tab).")
+            return
+        dist = chebyshev(tile_of(p), tile_of(t))
+        if dist > self.THROW_RANGE or not self.los(p, t):
+            g.log("Не докинуть: цель далеко или за стеной.")
+            return
+        if dist <= 1:
+            g.log("Слишком близко — заденет и вас. Отойдите хотя бы на клетку.")
+            return
+        if p.ap < self.THROW_AP:
+            g.log(f"Бросок стоит {self.THROW_AP} ОД — не хватает.")
+            return
+        g.inventory.remove("граната" if kind == "grenade" else "коктейль Молотова")
+        tile = tile_of(t)
+        if random.randint(1, 100) > 75:  # недолёт/перелёт на клетку
+            tile = (tile[0] + random.choice((-1, 0, 1)), tile[1] + random.choice((-1, 0, 1)))
+        g.log("Вы бросаете " + ("гранату." if kind == "grenade" else "коктейль Молотова."))
+        self.throw(p, tile, kind)
+
+    def player_shoot_barrel(self, obj):
+        """Выстрел по красной бочке: попал — взрыв."""
+        if not self.player_can_act():
+            return
+        g, p = self.game, self.game.player
+        prof = self.profile(p)
+        tile = obj["foot"][0]
+        dist = chebyshev(tile_of(p), tile)
+        if not prof["ranged"] and dist > 1:
+            g.log("Бочку ломом? Только вплотную. И лучше не надо.")
+            return
+        if prof["ranged"] and (dist > prof["range"] or
+                               not has_los(g.level, p.rect.center, tile_center(tile))):
+            g.log("Не достать: далеко или нет линии огня.")
+            return
+        if prof["ammo"] and not g.inventory.has(prof["ammo"]):
+            g.log("Нет патронов.")
+            return
+        if p.ap < prof["ap"]:
+            g.log(f"Не хватает ОД: выстрел стоит {prof['ap']}.")
+            return
+        p.ap -= prof["ap"]
+        p.play_attack("shoot" if prof["ranged"] else "melee")
+        self.busy_ms = S.COMBAT_ATTACK_MS
+        if prof["ammo"]:
+            g.inventory.remove(prof["ammo"], 1)
+        chance = max(S.HIT_CHANCE_MIN, 95 - RANGE_PENALTY_PER_TILE * max(0, dist - 1))
+        if prof["ranged"]:
+            g.audio.play("shot", p.rect.centerx - g.cam.x)
+            a = pygame.Vector2(p.rect.centerx, p.rect.bottom - 40)
+            self.tracers.append({"from": a, "to": pygame.Vector2(tile_center(tile)), "t": -self.BULLET_DELAY})
+        if random.randint(1, 100) <= chance:
+            self.blow_barrel(obj)
+        else:
+            g.log("Мимо бочки. Она облегчённо булькает.")
+
+    # ------------------------------------------------------ особые приёмы врагов
+    def _enemy_special(self, enemy):
+        """Трус бежит, главарь колется стимулятором, бандит бросает гранату.
+        True — действие сделано (или ход закончен)."""
+        g = self.game
+        low = enemy.hp <= enemy.max_hp * 0.3
+        if enemy.stims and enemy.hp <= enemy.max_hp * 0.4 and enemy.ap >= 2:
+            enemy.stims -= 1
+            enemy.ap -= 2
+            heal = min(enemy.max_hp - enemy.hp, 15)
+            enemy.hp += heal
+            self._float(enemy, f"+{heal}", (120, 230, 120))
+            g.log(f"{_cap(enemy.name)} всаживает себе стимулятор в бедро. +{heal} HP.")
+            self.busy_ms = S.COMBAT_ATTACK_MS
+            return True
+        if enemy.coward and low:
+            p = self._enemy_target(enemy)
+            if chebyshev(tile_of(enemy), tile_of(p)) >= 7 and not self.los(enemy, p):
+                g.log(f"{_cap(enemy.name)} удирает, поджав хвост.")
+                g.loc.enemies[:] = [e for e in g.enemies if e is not enemy]
+                self.order.remove(enemy)
+                self.turn_idx = (self.turn_idx - 1) % max(1, len(self.order))
+                self.end_turn()
+                return True
+            if enemy.ap >= S.AP_MOVE and self._flee_step(enemy, p):
+                if not getattr(enemy, "fleeing", False):
+                    enemy.fleeing = True
+                    g.log(f"{_cap(enemy.name)} в панике бросается бежать!")
+                return True
+        if enemy.grenades and enemy.ap >= self.THROW_AP:
+            p = self._enemy_target(enemy)
+            dist = chebyshev(tile_of(enemy), tile_of(p))
+            near_allies = [e for e in self.enemies_in_combat() if e is not enemy
+                           and chebyshev(tile_of(e), tile_of(p)) <= 1]
+            if 2 <= dist <= 5 and self.los(enemy, p) and not near_allies and random.random() < 0.6:
+                enemy.grenades -= 1
+                g.log(f"{_cap(enemy.name)} выдёргивает чеку и бросает гранату!")
+                self.throw(enemy, tile_of(p), "grenade")
+                return True
+        return False
+
+    def _flee_step(self, enemy, p):
+        here, goal = tile_of(enemy), tile_of(p)
+        options = []
+        for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            n = (here[0] + d[0], here[1] + d[1])
+            if self._walkable(n) and n not in self._occupied(except_ent=enemy):
+                options.append((chebyshev(n, goal), d))
+        options = [o for o in options if o[0] > chebyshev(here, goal) or o[0] >= 7]
+        if not options:
+            return False
+        return self.try_step(enemy, *max(options)[1])
+
+    def _enemy_turret(self, enemy):
+        """Турель: не двигается, стреляет, пока хватает ОД (очередь)."""
+        p = self._enemy_target(enemy)
+        if self.can_attack(enemy, p)[0] and enemy.ap >= self.attack_cost(enemy):
+            self.attack(enemy, p)
+            return
+        self.end_turn()

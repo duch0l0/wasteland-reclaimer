@@ -28,8 +28,13 @@ NEIGHBORS = ((1, 0), (-1, 0), (0, 1), (0, -1))
 
 class MouseMixin:
     # ------------------------------------------------------ что под курсором
+    def view_pos(self, pos):
+        """Точка экрана -> точка на холсте мира (он нарисован с масштабом self.zoom)."""
+        return int(pos[0] / self.zoom), int(pos[1] / self.zoom)
+
     def world_pos(self, pos):
-        return pos[0] + int(self.cam.x), pos[1] + int(self.cam.y)
+        vx, vy = self.view_pos(pos)
+        return vx + int(self.cam.x), vy + int(self.cam.y)
 
     def tile_at_screen(self, pos):
         wx, wy = self.world_pos(pos)
@@ -39,6 +44,7 @@ class MouseMixin:
         """Персонаж под курсором — по непрозрачным пикселям спрайта, передний первым."""
         people = [e for e in self.enemies if e.alive] + list(self.npcs)
         people.sort(key=lambda e: e.rect.bottom, reverse=True)
+        screen_pos, pos = pos, self.view_pos(pos)
         for e in people:
             frame, r = sprite_of(e, self.cam)
             if r.collidepoint(pos):
@@ -46,7 +52,7 @@ class MouseMixin:
                 if frame.get_at((x, y)).a > 40:
                     return e
         # промахнулся мимо силуэта — считаем кликом по клетке, где стоит персонаж
-        tile = self.tile_at_screen(pos)
+        tile = self.tile_at_screen(screen_pos)
         return next((e for e in people if tile_of(e) == tile), None)
 
     def object_at_screen(self, pos):
@@ -67,6 +73,14 @@ class MouseMixin:
             if c:
                 return ("container", c)
         return self.object_at_tile(self.tile_at_screen(pos))
+
+    def barrel_at_screen(self, pos):
+        """Красная бочка под курсором (в неё можно выстрелить)."""
+        wx, wy = self.world_pos(pos)
+        for o in getattr(self.level, "objects", []):
+            if not o.get("hidden") and P.info(o["name"]).get("explosive") and o["rect"].collidepoint(wx, wy):
+                return o
+        return None
 
     def object_at_tile(self, tile):
         """Закрытый контейнер или запертая дверь в клетке."""
@@ -221,6 +235,10 @@ class MouseMixin:
         if not c.player_can_act():
             return
         target = self.entity_at_screen(pos)
+        barrel = self.barrel_at_screen(pos) if target is None else None
+        if barrel is not None and button == 1:
+            c.player_shoot_barrel(barrel)
+            return
         if target in self.enemies and target.alive:
             if target not in c.enemies_in_combat():
                 return
@@ -352,7 +370,7 @@ class MouseMixin:
             elif kind == "pickup":
                 label = f"Подобрать: {what['kind']}" + (f" ×{what['count']}" if what["count"] > 1 else "")
             elif kind == "terminal":
-                label = "Терминал RobCo"
+                label = "Читать: доска объявлений" if what["id"].startswith("doc:") else "Терминал RobCo"
             else:
                 label = "Дверь: заперта"
             return (label, (230, 220, 190), None, None)
