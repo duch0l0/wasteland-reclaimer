@@ -43,6 +43,7 @@ FURNITURE = ["table_1", "table_2", "table_3", "table_4", "table_5", "chair_wood"
 LOCKERS = ["locker_1", "locker_2", "locker_3", "locker_4", "filecab_1", "filecab_2", "filecab_3", "locker_double"]
 POLES = [f"pole_{i}" for i in (8, 9, 17, 25, 38, 49, 51, 52, 76, 77)]
 SIGNS = ["sign_stop"] + [f"sign_{i}" for i in (43, 44, 50, 70, 71, 72, 73, 74)]
+PLANTS = set(GRASS + BUSHES)
 OUTDOOR = set(GRASS + BUSHES + POLES + SIGNS + STONES + ["rock_grass", "rock_grass_b", "dead_tree", "lamp_post",
                                                          "x_cross", "x_tombstone", "x_grave"])
 SEATS = [f"seat_{i}" for i in (14, 15, 22, 23, 32, 33, 39, 40, 46, 47)]
@@ -125,6 +126,8 @@ class MapKit:
             return False
         if name in OUTDOOR and any(self.ground[fy][fx] in "cmw" for fx, fy in foot):
             return False  # трава, кусты, знаки и камни — только снаружи зданий
+        if name in PLANTS and any(self.ground[fy][fx] != "d" for fx, fy in foot):
+            return False  # трава и кусты не растут на асфальте и гравии
         if inf["block"]:
             if any(t in self.blocked for t in foot):
                 return False
@@ -142,7 +145,10 @@ class MapKit:
             if any(t in self.soft or t in self.blocked for t in foot):
                 return False
             self.soft.update(foot)
-        self.props.append([name, x, y])
+        if name in PLANTS or name in STONES:   # живое и мелкое — не по сетке
+            self.props.append([name, x, y, self.rnd.randint(-14, 14), self.rnd.randint(-10, 8)])
+        else:
+            self.props.append([name, x, y])
         if inf.get("search"):
             self.containers.append({"prop": len(self.props) - 1, "name": inf.get("title", "ящик"),
                                     "loot": self.roll_loot(inf["search"]), "owner": owner})
@@ -174,6 +180,37 @@ class MapKit:
                 break
             if self.put(self.rnd.choice(names), self.rnd.randint(x0, x1), self.rnd.randint(y0, y1)):
                 placed += 1
+        return placed
+
+    def grow(self, x0, y0, x1, y1, clumps, names=None):
+        """Растительность куртинами, как растёт на самом деле: у стен, заборов, обочин
+        (где есть тень и сток воды) гуще, на открытом месте — редкие кустики.
+        В куртине 3–8 растений, к краю реже; соседние — разные."""
+        names = names or GRASS + BUSHES
+        rnd = self.rnd
+        cand = [(x, y) for y in range(y0, y1 + 1) for x in range(x0, x1 + 1)
+                if 0 < x < self.W - 1 and 0 < y < self.H - 1 and self.ground[y][x] == "d"
+                and (x, y) not in self.blocked]
+        if not cand:
+            return
+        def shelter(t):  # рядом стена, забор, дорога или объект — тут растёт гуще
+            return sum(1 for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                       if (t[0] + dx, t[1] + dy) in self.blocked
+                       or self.ground[min(self.H - 1, t[1] + dy)][min(self.W - 1, t[0] + dx)] in "ag")
+        weighted = [t for t in cand if shelter(t)] * 3 + cand
+        placed = 0
+        for _ in range(clumps):
+            cx, cy = rnd.choice(weighted)
+            size = rnd.randint(3, 8)
+            last = None
+            for _ in range(size * 4):
+                if size <= 0:
+                    break
+                r = rnd.choice((0, 0, 1, 1, 1, 2))   # плотная куртина, редкие побеги по краю
+                t = (cx + rnd.randint(-r, r), cy + rnd.randint(-r, r))
+                name = rnd.choice([n for n in names if n != last] or names)
+                if self.put(name, *t):
+                    last, size, placed = name, size - 1, placed + 1
         return placed
 
     def decal(self, names, x0, y0, x1, y1, n, floor_ok=False):

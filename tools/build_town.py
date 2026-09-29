@@ -114,7 +114,7 @@ for name, hx, hy in [("house_a", 3, 2), ("house_b", 14, 2), ("ruin_facade_a", 24
     put(name, hx, hy, check=False)
     m.hwall(yard_fences, hx - 1, hx + 6, hy + 9, gaps=(hx + 2, hx + 3))
     scatter(FURNITURE[:6], hx - 1, hy + 3, hx + 5, hy + 7, 1)
-    scatter(GRASS, hx - 2, hy + 3, hx + 6, hy + 8, 4)
+    m.grow(hx - 2, hy + 3, hx + 6, hy + 8, 1)
 box("wardrobe", 4, 7, "шкаф Марты", {"ткань": 2, "бинт": 1, "крышки": 6}, owner="marta")
 box("metal_box_open", 12, 7, "ящик с бельём", {"ткань": 1})
 put("clothes_73", 6, 8)
@@ -267,7 +267,7 @@ box("x_grave", 38, 56, "могила «Колбаса»", {"жетон Эймо�
 put("shack_b", 22, 58, check=False)                # сторожка кладбища (лопата — рядом)
 for x, y in ((34, 60), (26, 49)):
     put("dead_tree", x, y)
-scatter(GRASS, 21, 48, 40, 61, 14)
+m.grow(21, 48, 40, 61, 4, GRASS)
 
 
 # ------------------------------------------------------------ юг-центр: сквер и Убежище 57
@@ -276,7 +276,7 @@ for x, y in [(50, 37), (55, 37), (58, 41)]:
 for x, y in [(49, 39), (52, 41)]:
     put(rnd.choice(BENCHES), x, y)
 scatter(["round_table_45", "stool_round_55", "stone_table", "rock_grass", "rock_grass_b"], 49, 36, 58, 42, 3)
-scatter(GRASS + BUSHES, 49, 36, 58, 42, 14)
+m.grow(49, 36, 58, 42, 2)
 # столовая гора, в южном склоне — дверь-шестерня; перед ней площадка с часовым
 put("x_mesa_vault", 49, 48, check=False, allow_reserved=True)
 m.portal([(55, 51), (56, 51)], "vault57", (19, 5), "Убежище 57")
@@ -311,14 +311,11 @@ scatter(JUNK_PILES[:6] + RUBBLE[:4], 59, 38, 63, 62, 5)
 
 
 # ------------------------------------------------------------ по всему городу
-for _ in range(34):                                                    # трава растёт куртинами
-    cx, cy = rnd.randint(2, W - 3), rnd.randint(2, H - 3)
-    scatter(GRASS + BUSHES[:2], cx - 3, cy - 2, cx + 3, cy + 2, rnd.randint(3, 6), tries=8)
-scatter(GRASS, 1, 1, W - 2, H - 2, 180)
-scatter(BUSHES, 1, 1, W - 2, H - 2, 24)
+m.grow(1, 1, W - 2, H - 2, 38)                                         # трава и кусты — куртинами
+m.grow(1, 1, W - 2, H - 2, 10, GRASS)                                  # и небольшие пучки у стен
 scatter(POLES + SIGNS, 1, 1, W - 2, H - 2, 5)
-scatter(STONES + FLOOR_BITS[:5], 1, 1, W - 2, H - 2, 40)
-m.decal(DIRT_DECALS, 1, 1, W - 2, H - 2, 60)
+scatter(STONES + FLOOR_BITS[:5], 1, 1, W - 2, H - 2, 30)
+# пятен земли (dirt_patch) на карте нет: у них квадратные края, а земля и так пятнистая
 scatter(RUBBLE, 1, 1, W - 2, 3, 2)
 
 

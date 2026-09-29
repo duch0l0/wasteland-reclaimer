@@ -77,6 +77,132 @@ def slice_special(src, dst, spec):
     return size
 
 
+# картинки из интернета: фон — нарисованная «шахматка» прозрачности (белый и светло-серый)
+CHECKER = {(255, 255, 255), (230, 230, 230)}
+
+# лист кадров вразброс (без сетки): кадры ищутся как отдельные фигуры
+LOOSE = {
+    # ящер-мутант, 13 кадров: 10 в профиль (смотрит вправо) — шаг, 2 в профиль стоя, 1 анфас.
+    # В игре — крысюк: мелкая злобная тварь из руин (раньше рисовался заглушкой)
+    "rat_boss.png": {"name": "rat", "height": 24, "walk": [0, 2, 4, 6], "front": 11, "stand": 10},
+    # шагающий мех с пилотом, один кадр (пушкой влево) — враг для станции Анклава «Посейдон-7»
+    "warrior.png": {"name": "mech", "height": 52, "single": True},
+}
+
+
+def clean_checker(img):
+    """Фон-шахматку — в прозрачность: заливка от краёв по цветам шахматки, потом
+    закрытые «окна» шахматки внутри (между лап, под рукой), если в них оба цвета."""
+    src = img
+    img = pygame.Surface(src.get_size(), pygame.SRCALPHA)
+    img.blit(src, (0, 0))
+    w, h = img.get_size()
+    bg = [[tuple(img.get_at((x, y)))[:3] in CHECKER for x in range(w)] for y in range(h)]
+    seen = [[False] * w for _ in range(h)]
+
+    def region(sx, sy):
+        stack, out = [(sx, sy)], []
+        seen[sy][sx] = True
+        while stack:
+            x, y = stack.pop()
+            out.append((x, y))
+            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if 0 <= nx < w and 0 <= ny < h and not seen[ny][nx] and bg[ny][nx]:
+                    seen[ny][nx] = True
+                    stack.append((nx, ny))
+        return out
+
+    for y in range(h):
+        for x in range(w):
+            if bg[y][x] and not seen[y][x]:
+                reg = region(x, y)
+                border = any(px in (0, w - 1) or py in (0, h - 1) for px, py in reg)
+                colors = {tuple(img.get_at(p))[:3] for p in reg[:400]}
+                if border or (len(reg) >= 24 and len(colors) == 2):
+                    for p in reg:
+                        img.set_at(p, (0, 0, 0, 0))
+    return img
+
+
+def figures(img, min_px=400):
+    """Отдельные фигуры на листе (8-связность) — прямоугольники, по строкам сверху вниз."""
+    w, h = img.get_size()
+    solid = [[img.get_at((x, y)).a > 10 for x in range(w)] for y in range(h)]
+    seen = [[False] * w for _ in range(h)]
+    boxes = []
+    for y in range(h):
+        for x in range(w):
+            if solid[y][x] and not seen[y][x]:
+                stack, n = [(x, y)], 0
+                seen[y][x] = True
+                x0 = x1 = x
+                y0 = y1 = y
+                while stack:
+                    cx, cy = stack.pop()
+                    n += 1
+                    x0, x1, y0, y1 = min(x0, cx), max(x1, cx), min(y0, cy), max(y1, cy)
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            nx, ny = cx + dx, cy + dy
+                            if 0 <= nx < w and 0 <= ny < h and solid[ny][nx] and not seen[ny][nx]:
+                                seen[ny][nx] = True
+                                stack.append((nx, ny))
+                if n >= min_px:
+                    boxes.append(pygame.Rect(x0, y0, x1 - x0 + 1, y1 - y0 + 1))
+    boxes.sort(key=lambda r: (r.centery // 120, r.x))
+    return boxes
+
+
+def slice_loose(src, dst, spec):
+    """Кадры с листа «вразброс» — в пиксельный размер игры (игра увеличит их вдвое).
+    Нет вида со спины — вверх идёт профиль; нет шага анфас — анфас покачивается."""
+    import shutil
+    sheet = clean_checker(pygame.image.load(src))
+    boxes = figures(sheet)
+    frames = [sheet.subsurface(b).copy() for b in boxes]
+    k = spec["height"] / max(f.get_height() for f in frames)
+
+    def small(f):
+        return pygame.transform.smoothscale(f, (max(1, round(f.get_width() * k)), max(1, round(f.get_height() * k))))
+
+    def canvas(fs):
+        """Все кадры одного размера, ноги на нижнем крае, по центру."""
+        cw, ch = max(f.get_width() for f in fs), max(f.get_height() for f in fs)
+        out = []
+        for f in fs:
+            c = pygame.Surface((cw, ch), pygame.SRCALPHA)
+            c.blit(f, ((cw - f.get_width()) // 2, ch - f.get_height()))
+            out.append(c)
+        return out
+
+    if spec.get("single"):
+        base = small(frames[0])
+        left = [base] * 4
+        right = [pygame.transform.flip(base, True, False)] * 4
+        down = up = [base] * 4
+    else:
+        side = [small(frames[i]) for i in spec["walk"]]
+        stand = small(frames[spec["stand"]])
+        front = small(frames[spec["front"]])
+        right = side[:4]
+        left = [pygame.transform.flip(f, True, False) for f in right]
+        up = right
+        down = [front, front, front, front]
+    shutil.rmtree(dst, ignore_errors=True)
+    allf = canvas(right + left + up + down)
+    for n, d in enumerate(("right", "left", "up", "down")):
+        folder = os.path.join(dst, d)
+        os.makedirs(folder, exist_ok=True)
+        for i in range(4):
+            f = allf[n * 4 + i]
+            if d == "down" and not spec.get("single") and i % 2:   # анфас дышит: чуть ниже на пиксель
+                g = pygame.Surface(f.get_size(), pygame.SRCALPHA)
+                g.blit(f, (0, 1))
+                f = g
+            pygame.image.save(f, os.path.join(folder, f"{i}.png"))
+    return allf[0].get_size(), len(frames)
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
@@ -94,6 +220,11 @@ def main():
         if os.path.isfile(path):
             size = slice_special(path, os.path.join("assets", "sprites", spec["name"]), spec)
             print(f"npc/{f} -> assets/sprites/{spec['name']}/  (кадр {size[0]}×{size[1]}, без увеличения)")
+    for f, spec in LOOSE.items():
+        path = os.path.join("npc", f)
+        if os.path.isfile(path):
+            size, n = slice_loose(path, os.path.join("assets", "sprites", spec["name"]), spec)
+            print(f"npc/{f} -> assets/sprites/{spec['name']}/  (фигур на листе: {n}, кадр {size[0]}×{size[1]})")
     return 1 if missing else 0
 
 

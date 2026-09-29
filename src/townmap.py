@@ -120,6 +120,33 @@ def _wall_faces(style):
     return out
 
 
+_EDGE_MASKS = {}
+
+
+def _edge_mask(mask, variant):
+    """Белая маска с альфой: 255 у сторон клетки из mask (биты: верх, право, низ, лево),
+    к центру спадает до 0; кромка неровная. 4 варианта шума на каждую комбинацию сторон."""
+    key = (mask, variant)
+    if key not in _EDGE_MASKS:
+        rnd = random.Random(mask * 31 + variant)
+        m = pygame.Surface((T, T), pygame.SRCALPHA)
+        depth = 20
+        wobble = {}
+        for bit in range(4):
+            pts = [rnd.uniform(-7, 9) for _ in range(6)]
+            wobble[bit] = [pts[i * 5 // T] + (pts[i * 5 // T + 1] - pts[i * 5 // T]) * ((i * 5 / T) % 1) for i in range(T)]
+        for py in range(0, T, 2):
+            for px in range(0, T, 2):
+                a = 0.0
+                for bit, (dist, along) in enumerate(((py, px), (T - 1 - px, py), (T - 1 - py, px), (px, py))):
+                    if mask & (1 << bit):
+                        a = max(a, 1 - dist / max(1.0, depth + wobble[bit][along]))
+                a = max(0.0, min(1.0, a * 1.15 + rnd.uniform(-0.12, 0.12)))
+                m.fill((255, 255, 255, int(255 * a ** 1.3)), (px, py, 2, 2))
+        _EDGE_MASKS[key] = m
+    return _EDGE_MASKS[key]
+
+
 class TownMap(MapBase):
     parallax = False  # земля сплошная — фон под ней не нужен
 
@@ -155,7 +182,9 @@ class TownMap(MapBase):
             self.decals.append((name, img.get_rect(center=(px, py))))
 
         self.objects = []  # dict(name, rect картинки в мире, sort_y, container)
-        for name, x, y in d["props"]:
+        for entry in d["props"]:
+            name, x, y = entry[:3]
+            ox, oy = entry[3:5] if len(entry) >= 5 else (0, 0)   # сдвиг картинки травы/кустов в пикселях
             inf = P.info(name)
             fw, fh = inf["foot"]
             foot = [(x + i, y + j) for i in range(fw) for j in range(fh)]
@@ -165,8 +194,8 @@ class TownMap(MapBase):
                 self.sight.update(foot)
             bottom = (y + fh) * T
             rect = pygame.Rect(0, 0, *inf["size"])
-            rect.midbottom = ((x + fw / 2) * T, bottom)
-            self.objects.append({"name": name, "rect": rect, "sort_y": bottom, "foot": foot,
+            rect.midbottom = ((x + fw / 2) * T + ox, bottom + oy)
+            self.objects.append({"name": name, "rect": rect, "sort_y": bottom + oy, "foot": foot,
                                  "container": None, "floor": inf["layer"] == "floor"})
 
         self.containers = []
@@ -204,6 +233,7 @@ class TownMap(MapBase):
         self._tiles["m"] = _vault_floor()
         self._tiles["w"] = _drain_floor()
         self._rock = _rock_tiles()
+        self._edge_cache = {}
         self._face = _wall_faces(self.style)
         line = pygame.image.load(os.path.join(GROUND_DIR, "asphalt_line.png")).convert()
         self._tiles["v"] = [line]
@@ -289,6 +319,33 @@ class TownMap(MapBase):
 
     # ------------------------------------------------------------ отрисовка
     def _ground_tile(self, x, y):
+        """Клетка земли; у асфальта и гравия, граничащих с землёй, край размыт рваной кромкой."""
+        code = self.ground[y][x]
+        if code in "aghv":
+            mask = 0
+            for bit, (dx, dy) in enumerate(((0, -1), (1, 0), (0, 1), (-1, 0))):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.width and 0 <= ny < self.height and self.ground[ny][nx] == "d":
+                    mask |= 1 << bit
+            if mask:
+                key = (x, y)
+                tile = self._edge_cache.get(key)
+                if tile is None:
+                    tile = self._edge_cache[key] = self._blend_edge(x, y, self._raw_tile(x, y), mask)
+                return tile
+        return self._raw_tile(x, y)
+
+    def _blend_edge(self, x, y, base, mask):
+        """Поверх клетки — земля, прозрачность которой плавно спадает от граничащих сторон
+        (маска с неровной кромкой, как стёртая обочина)."""
+        dirt = self._dirt_shades[self._shade(x, y)][((x * 131) ^ (y * 71)) % len(self._dirt)]
+        over = dirt.convert_alpha()
+        over.blit(_edge_mask(mask, (x * 7 + y * 13) % 4), (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        out = base.copy()
+        out.blit(over, (0, 0))
+        return out
+
+    def _raw_tile(self, x, y):
         code = self.ground[y][x]
         h = (x * 73856093) ^ (y * 19349663)  # один и тот же вариант клетки при каждом кадре
         if code == "x":
