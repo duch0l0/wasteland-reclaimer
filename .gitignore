@@ -1,3 +1,6 @@
 .venv/
 __pycache__/
 *.pyc
+saves/
+# исходник музыки (32 МБ) — в игре используется сжатый assets/music/*.ogg
+sounds/music/*.wav

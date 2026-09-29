@@ -104,7 +104,8 @@ class MapBase:
         img = corpse_image(enemy)
         rect = img.get_rect(center=(enemy.rect.centerx, enemy.rect.bottom - 6))
         tile = (enemy.rect.centerx // S.TILE, enemy.rect.centery // S.TILE)
-        box = {"tile": tile, "tiles": [tile], "name": f"тело: {enemy.name}", "who": enemy.name, "loot": dict(loot),
+        box = {"tile": tile, "tiles": [tile], "name": f"тело: {enemy.name}", "who": enemy.name, "enemy": enemy,
+               "loot": dict(loot),
                "owner": None, "requires": None, "opened": False, "corpse": {"img": img, "rect": rect}}
         self.corpses.append(box)
         self.containers.append(box)

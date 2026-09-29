@@ -2,7 +2,7 @@
 import pygame
 
 from .. import settings as S
-from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui, loot_ui
+from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui, loot_ui, menu_ui
 from ..ui.common import fonts, begin_frame, PANEL_H
 from ..entities import sprite_of
 
@@ -10,6 +10,10 @@ from ..entities import sprite_of
 class RenderMixin:
     def draw(self):
         begin_frame()  # кликабельные зоны отмечаются заново каждый кадр
+        if self.menu and menu_ui._root(self.menu) == "main":  # титульный экран — без игры за ним
+            menu_ui.draw_menu(self.screen, self)
+            pygame.display.flip()
+            return
         if self.slides:
             slides_ui.draw_slides(self.screen, self)
             pygame.display.flip()
@@ -24,6 +28,10 @@ class RenderMixin:
             journal_ui.draw_journal(self.screen, self)
         if self.term:
             terminal_ui.draw_terminal(self.screen, self)
+        if self.menu:  # пауза — поверх игры; клики по игре под меню не проходят
+            self.last_frame = self.screen.copy()  # кадр игры без меню — миниатюра сохранения
+            begin_frame()
+            menu_ui.draw_menu(self.screen, self)
         pygame.display.flip()
 
     def _draw_world(self):

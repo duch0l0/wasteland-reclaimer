@@ -28,19 +28,23 @@ from .trade import TradeMixin
 from .render import RenderMixin
 from ..ui.minimap import Minimap
 from ..gore import Gore
+from ..audio import Audio
 from .mouse import MouseMixin
 from .terminals import TerminalMixin
 from .slides import SlidesMixin, SLIDES
 from .looting import LootingMixin
+from .menu import MenuMixin
+from .saveload import SaveMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, RenderMixin):
-    def __init__(self, intro=True):
-        """intro — показать пролог (для проверок без окна его пропускают)."""
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, RenderMixin):
+    def __init__(self, intro=True, _screen=None, _prologue=False):
+        """intro — начать с главного меню (для проверок без окна его пропускают).
+        _screen, _prologue — для «Новой игры» из меню: то же окно, сразу пролог."""
         pygame.init()
         pygame.display.set_caption(S.TITLE)
-        self.screen = self._open_window()
+        self.screen = _screen or self._open_window()
         self.clock = pygame.time.Clock()
         self.running = True
         self.log_lines = []
@@ -85,13 +89,20 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.held_letters = set()
         self.minimap = Minimap()
         self.gore = Gore()
+        self.audio = Audio()
+        self.audio.start_music()
         self.autowalk = None       # путь по клику мыши вне боя
         self.combat_queue = None   # путь/атака по клику мыши в бою
         self.term = None           # открытый терминал или документ
         self.loot = None           # открытый обыск: {"box": контейнер, "side", "sel"}
         self.slides = None         # идущее слайд-шоу
-        if intro:
+        self.menu = None           # открытое меню (main / pause / save / load / confirm)
+        self.last_frame = None     # кадр игры без меню — миниатюра сохранения
+        self.play_ms = 0           # время в игре — для сохранений
+        if _prologue:
             self.show_slides("prologue")
+        elif intro:
+            self.open_menu("main")
         else:
             for eff in SLIDES["prologue"].get("on_end", []):
                 self.apply_effect(eff)
@@ -119,10 +130,14 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
     def modal_open(self):
         return bool(self.dialogue.is_active() or self.craft_open or self.inv_open or self.trade
                     or self.game_over or self.perk_choices or self.term or self.slides or self.journal_open
-                    or self.loot)
+                    or self.loot or self.menu)
 
     # --------------------------------------------------------------- кадр
     def update(self, dt_ms):
+        self.audio.update(dt_ms)
+        if self.menu:  # пауза: мир стоит
+            return
+        self.play_ms += dt_ms
         if self.slides:
             self.update_slides(dt_ms)
             return

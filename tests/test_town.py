@@ -78,6 +78,12 @@ def fight():
                 c.end_turn()
         fr(1)
         n += 1
+        if n == 39000:
+            cur = c.current
+            print("  ЗАВИС:", "ход:", cur and cur.name, "busy", c.busy_ms, "tweens", len(c.tweens),
+                  "герой ОД", g.player.ap, "can_act", c.player_can_act(), "anim", g.player.anim.action, g.player.anim.once,
+                  "attacking", g.player.attacking, [(e.name, tile_of(e), e.ap, e.anim.once) for e in c.enemies_in_combat()],
+                  "герой", tile_of(g.player), "модалки", dict(dlg=g.dialogue.is_active(), craft=g.craft_open, inv=g.inv_open, trade=bool(g.trade), perk=bool(g.perk_choices), term=bool(g.term), slides=bool(g.slides), journal=g.journal_open, loot=bool(g.loot), menu=g.menu and g.menu["screen"]), g.log_lines[-3:])
         assert n < 40000, "бой завис"
 
 
@@ -158,14 +164,23 @@ fr(1)
 if g.combat.active:
     fight()
 top = (box["rect"].centerx - int(g.cam.x), box["rect"].y + 12 - int(g.cam.y))
-click(top)
-for _ in range(900):
-    fr(1)
+for attempt in range(5):  # рядом бродят мутанты — если начался бой, довоевать и кликнуть снова
+    top = (box["rect"].centerx - int(g.cam.x), box["rect"].y + 12 - int(g.cam.y))
+    click(top)
+    for _ in range(900):
+        fr(1)
+        if box["container"]["opened"] or g.combat.active:
+            break
+    if g.combat.active:
+        fight()
+        g.snap_camera()
+        continue
     if box["container"]["opened"]:
         break
 ok(box["container"]["opened"] and g.loot, "клик по верху шкафчика — подошёл и открыл обыск")
-g.handle_key(pygame.K_r)
-g.handle_key(pygame.K_ESCAPE)
+if g.loot:
+    g.handle_key(pygame.K_r)
+    g.handle_key(pygame.K_ESCAPE)
 
 wall = next(o for o in lv.objects if o["name"].startswith("wall_"))
 wx, wy = wall["foot"][0]

@@ -51,6 +51,15 @@ class ControlsMixin:
 
     def handle_key(self, key):
         """Одно нажатие. Открытое окно перехватывает ввод — как модальное."""
+        if self.menu:
+            self.menu_key(key)
+            return
+        if key == pygame.K_F5:
+            self.quick_save()
+            return
+        if key == pygame.K_F9:
+            self.quick_load()
+            return
         if self.slides:
             self.slides_key(key)
             return
@@ -114,8 +123,8 @@ class ControlsMixin:
             self.craft_open = False
         elif self.combat.aim_menu:
             self.combat.aim_menu = False
-        elif not self.combat.active:  # посреди боя из игры по Esc не выходим
-            self.running = False
+        elif self.mode == "local" or self.mode == "world":
+            self.open_menu("pause")  # Esc, когда закрывать нечего, — меню паузы (и в бою тоже)
 
     def _explore_key(self, key):
         if key == pygame.K_c:

@@ -29,7 +29,8 @@ def highlights(combat):
     t = combat.target
     if t is not None and t.alive:
         hl[t] = OUTLINE_TARGET
-    return hl
+    # во время удара, выстрела, вздрагивания контур не рисуем — иначе он обводит вспышку и дым
+    return {e: c for e, c in hl.items() if not e.anim.busy}
 
 
 def draw_outline(surf, frame, rect, color):
@@ -128,9 +129,19 @@ def draw_aim_menu(surf, combat):
 
 
 def draw_tracers(surf, tracers, cam):
+    """Летящие пули: яркая головка и короткий гаснущий хвост."""
+    from ..combat import Combat
     for tr in tracers:
-        alpha = max(0.0, 1 - tr["t"] / 180)
-        color = (255, int(200 * alpha + 40), 80)
-        a = (tr["from"].x - cam.x, tr["from"].y - cam.y)
-        b = (tr["to"].x - cam.x, tr["to"].y - cam.y)
-        pygame.draw.line(surf, color, a, b, 2)
+        if tr["t"] < 0:
+            continue
+        d = tr["to"] - tr["from"]
+        length = d.length()
+        if not length:
+            continue
+        u = d / length
+        pos = tr["from"] + u * min(length, tr["t"] / 1000 * Combat.BULLET_SPEED)
+        head = (pos.x - cam.x, pos.y - cam.y)
+        for ln, color, w in ((26, (120, 95, 60), 1), (14, (200, 160, 90), 2), (6, (255, 225, 140), 2)):
+            tail = (head[0] - u.x * ln, head[1] - u.y * ln)  # хвост: дальний конец тусклее
+            pygame.draw.line(surf, color, tail, head, w)
+        pygame.draw.circle(surf, (255, 250, 220), head, 2)

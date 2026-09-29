@@ -90,7 +90,7 @@ class MouseMixin:
             elif button == 1:
                 self.handle_key(key)  # зона, равная клавише
             return
-        if self.game_over or self.mode != "local":
+        if self.game_over or self.mode != "local" or self.menu:
             return
         if self.combat.aim_menu:  # клик мимо меню прицеливания — закрыть его
             self.combat.aim_menu = False

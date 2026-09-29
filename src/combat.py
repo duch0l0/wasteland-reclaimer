@@ -404,13 +404,16 @@ class Combat:
             attacker.anim.play_once("attack_ranged" if prof["ranged"] else "attack_melee") \
                 or attacker.anim.play_once("attack")
         self.busy_ms = S.COMBAT_ATTACK_MS
+        sx = attacker.rect.centerx - self.game.cam.x
+        if prof["ranged"]:
+            self.game.audio.play("shot", sx)
+        else:  # удар звучит в момент удара, а не замаха
+            self.game.audio.play("melee", sx, delay_ms=100, volume=1.0 if attacker is self.game.player else 0.7)
         if prof["ammo"]:
             self.game.inventory.remove(prof["ammo"], 1)
+        impact_ms = 140  # когда удар «доходит» до цели: вздрагивание, кровь, звук попадания
         if prof["ranged"]:
-            # след пули — от дула (на уровне груди, чуть впереди) к груди цели
-            side = 1 if defender.rect.centerx >= attacker.rect.centerx else -1
-            self.tracers.append({"from": pygame.Vector2(attacker.rect.centerx + side * 26, attacker.rect.bottom - 40),
-                                 "to": pygame.Vector2(defender.rect.centerx, defender.rect.bottom - 36), "t": 0})
+            impact_ms = self._fire_bullet(attacker, defender)
 
         part = BODY_PARTS[part_idx]
         is_player = attacker is self.game.player
@@ -422,7 +425,12 @@ class Combat:
                 text = random.choice(ENEMY_MISS_RANGED if prof["ranged"] else ENEMY_MISS_MELEE)
             self.game.log(text.format(name=name))
             self._float(defender, "мимо", (200, 200, 190))
-            self._react(defender, attacker, "dodge")
+            if prof["ranged"]:  # промах — пуля пролетает мимо цели
+                b = self.tracers[-1]
+                d = (b["to"] - b["from"])
+                perp = pygame.Vector2(-d.y, d.x).normalize() * random.choice((-18, 18))
+                b["to"] = b["to"] + d.normalize() * 170 + perp
+            self._react(defender, attacker, "dodge", impact_ms)
             return True
 
         dmg = random.randint(max(1, prof["damage"] - 2), prof["damage"] + 2)
@@ -436,10 +444,13 @@ class Combat:
         dmg -= absorbed
         defender.apply_damage(dmg)
         if dmg > 0 and defender.alive:
-            self._react(defender, attacker, "hit")
+            self._react(defender, attacker, "hit", impact_ms)
+        if dmg > 0:  # звук попадания — вместе с вздрагиванием цели
+            self.game.audio.play("hit", defender.rect.centerx - self.game.cam.x, delay_ms=impact_ms)
         if dmg > 0:  # кровь; от выстрела — ещё и ошмётки
             self.game.gore.hit(self.game.level, defender.rect, attacker.rect.center,
-                               "ranged" if prof["ranged"] else "melee", crit=crit, kill=not defender.alive)
+                               "ranged" if prof["ranged"] else "melee", crit=crit, kill=not defender.alive,
+                               delay_ms=impact_ms)
         if dmg == 0:
             self._float(defender, "броня", (150, 170, 200))
         else:
@@ -467,13 +478,24 @@ class Combat:
             self.game.log(f"{name} {attacker.hit_verb}{crit_note}: {dmg} урона.")
         return True
 
-    def _react(self, defender, attacker, kind):
+    BULLET_SPEED = 2600   # px/с — пуля видна, но пролетает за доли секунды
+    BULLET_DELAY = 90     # мс — вылет в момент вспышки в анимации выстрела
+
+    def _fire_bullet(self, attacker, defender):
+        """Пуля от дула (уровень груди, чуть впереди) к груди цели. Возвращает, через сколько мс она долетит."""
+        side = 1 if defender.rect.centerx >= attacker.rect.centerx else -1
+        a = pygame.Vector2(attacker.rect.centerx + side * 26, attacker.rect.bottom - 40)
+        b = pygame.Vector2(defender.rect.centerx, defender.rect.bottom - 36)
+        self.tracers.append({"from": a, "to": b, "t": -self.BULLET_DELAY})
+        return self.BULLET_DELAY + int(a.distance_to(b) / self.BULLET_SPEED * 1000)
+
+    def _react(self, defender, attacker, kind, delay_ms=140):
         """Цель поворачивается к нападающему и вздрагивает (hit) или уворачивается (dodge) —
         чуть позже замаха, чтобы реакция шла за ударом."""
         defender.anim.face(attacker.rect.centerx - defender.rect.centerx,
                            attacker.rect.centery - defender.rect.centery)
         defender.facing_left = attacker.rect.centerx < defender.rect.centerx
-        defender.anim.play_once(kind, delay_ms=140)
+        defender.anim.play_once(kind, delay_ms=delay_ms)
 
     def _apply_crit_effect(self, ent, effect):
         if effect == "blinded":
@@ -545,9 +567,10 @@ class Combat:
             f["t"] += dt_ms
             f["pos"].y -= dt_ms * 0.03
         self.floaters = [f for f in self.floaters if f["t"] < 1100]
-        for tr in self.tracers:
+        for tr in self.tracers:  # пули: летят, пока не пройдут весь путь
             tr["t"] += dt_ms
-        self.tracers = [tr for tr in self.tracers if tr["t"] < 180]
+        self.tracers = [tr for tr in self.tracers
+                        if tr["t"] < tr["from"].distance_to(tr["to"]) / self.BULLET_SPEED * 1000]
         if not self.active:
             return
 

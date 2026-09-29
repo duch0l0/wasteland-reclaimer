@@ -65,6 +65,7 @@ class Location:
         entry = d.get("entry")
         self.entry = (entry[0] * S.TILE, entry[1] * S.TILE) if entry else self.level.player_spawn
         self.enemies = [make_enemy(pos, t) for pos, t in self.level.enemy_spawns]
+        self.enemies_all = list(self.enemies)  # исходный порядок — для сохранений (ушедшие исчезают из enemies)
         self.npcs = [NPC(pos, npc_animations(nid), npc_id=nid, name=NPC_NAMES.get(nid, nid))
                      for pos, nid in self.level.npc_spawns]
 
