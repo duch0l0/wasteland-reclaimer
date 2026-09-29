@@ -7,6 +7,7 @@ import pygame
 
 from .. import settings as S
 from .common import hotspot, wrap_text, PANEL_H
+from .. import fonts as fontlib
 
 GREEN = (110, 235, 130)
 GREEN_DIM = (60, 150, 75)
@@ -20,8 +21,7 @@ _OVERLAY = {}
 
 def _mono(size):
     if size not in _FONTS:
-        path = pygame.font.match_font("dejavusansmono") or pygame.font.match_font("liberationmono")
-        _FONTS[size] = pygame.font.Font(path, size) if path else pygame.font.Font(None, size + 4)
+        _FONTS[size] = fontlib.get("dejavusansmono", size)
     return _FONTS[size]
 
 
@@ -201,8 +201,8 @@ def _draw_doc(surf, game, rect):
     r = rect.inflate(-180, 0) if paper else rect
     _frame(surf, r, paper=paper)
     color = PAPER_INK if paper else GREEN
-    title_font = pygame.font.SysFont("dejavuserif", 24) if paper else _mono(20)
-    body = pygame.font.SysFont("dejavuserif", 19) if paper else _mono(17)
+    title_font = fontlib.get("dejavuserif", 24) if paper else _mono(20)
+    body = fontlib.get("dejavuserif", 19) if paper else _mono(17)
     x, y = r.x + 34, r.y + 26
     prefix = "" if paper else "ГОЛОЗАПИСЬ ▶ "
     surf.blit(title_font.render(prefix + d["title"], True, color), (x, y))

@@ -3,6 +3,7 @@
 import pygame
 
 from .. import settings as S
+from .. import fonts as fontlib
 
 pygame.font.init()
 _FONTS = {}
@@ -88,7 +89,7 @@ def digit_key(i):
 def _font(size):
     if size not in _FONTS:
         try:
-            _FONTS[size] = pygame.font.SysFont("dejavusans", size)
+            _FONTS[size] = fontlib.get("dejavusans", size)
         except Exception:
             _FONTS[size] = pygame.font.Font(None, size + 2)
     return _FONTS[size]

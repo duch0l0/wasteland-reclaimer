@@ -5,6 +5,7 @@ from .. import settings as S
 from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui, loot_ui, menu_ui
 from ..ui.common import fonts, begin_frame, PANEL_H
 from ..entities import sprite_of
+from .. import fonts as fontlib
 
 
 class RenderMixin:
@@ -95,5 +96,5 @@ class RenderMixin:
             loot_ui.draw_loot(surf, self)
 
         if self.game_over:
-            txt = pygame.font.SysFont("dejavusans", 40).render("ВЫ ПОГИБЛИ", True, (220, 60, 50))
+            txt = fontlib.get("dejavusans", 40).render("ВЫ ПОГИБЛИ", True, (220, 60, 50))
             surf.blit(txt, txt.get_rect(center=(S.SCREEN_W // 2, (S.SCREEN_H - PANEL_H) // 2)))

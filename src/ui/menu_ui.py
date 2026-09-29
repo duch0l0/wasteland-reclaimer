@@ -5,6 +5,7 @@ import pygame
 
 from .. import settings as S
 from .common import hotspot, font_tiny
+from .. import fonts as fontlib
 from .slide_art import slide_image, W as ART_W, H as ART_H
 from ..game.saveload import slot_info, QUICK
 
@@ -19,7 +20,7 @@ _THUMBS = {}
 def _font(name, size, bold=False):
     key = (name, size, bold)
     if key not in _F:
-        _F[key] = pygame.font.SysFont(name, size, bold=bold)
+        _F[key] = fontlib.get(name, size, bold=bold)
     return _F[key]
 
 

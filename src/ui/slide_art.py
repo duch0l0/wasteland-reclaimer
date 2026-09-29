@@ -11,6 +11,8 @@ import random
 
 import pygame
 
+from .. import fonts as fontlib
+
 W, H = 880, 380
 _CACHE = {}
 
@@ -138,7 +140,7 @@ def art_vault(s, rnd, game):
     pygame.draw.circle(s, (170, 160, 130), (cx, cy), r)
     pygame.draw.circle(s, (140, 130, 105), (cx, cy), r - 24)
     pygame.draw.circle(s, (170, 160, 130), (cx, cy), r - 60)
-    font = pygame.font.SysFont("dejavusans", 110, bold=True)
+    font = fontlib.get("dejavusans", 110, bold=True)
     t = font.render("57", True, (60, 55, 45))
     s.blit(t, t.get_rect(center=(cx, cy)))
     for i in range(6):
@@ -170,7 +172,7 @@ def art_letter(s, rnd, game):
     paper = pygame.Rect(W // 2 - 230, 30, 460, H - 50)
     pygame.draw.rect(s, (20, 15, 10), paper.move(8, 8))
     pygame.draw.rect(s, (225, 210, 170), paper)
-    font = pygame.font.SysFont("dejavuserif", 24, italic=True)
+    font = fontlib.get("dejavuserif", 24, italic=True)
     lines = ["Внук.", "", "Приезжай в Пятнадцатую.", "Есть разговор, который", "я откладывал", "сорок четыре года.",
              "", "Твой дед, сержант Э. Рид"]
     y = paper.y + 30

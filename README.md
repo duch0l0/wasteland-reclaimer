@@ -262,6 +262,7 @@ src/items.py            — описания предметов: категор�
 src/wander.py           — блуждание NPC и врагов вне боя
 src/gore.py             — кровь и ошмётки при попаданиях, пятна на полу
 src/audio.py            — звуки боя, музыка, громкость (saves/settings.json)
+src/fonts.py            — шрифты из assets/fonts (DejaVu), одинаковые на любой системе
 src/corpse.py           — картинка тела убитого
 src/location.py         — локация: карта + враги + NPC + контейнеры
 src/tilemap.py          — тайловая карта из текстового файла (заправка, случайные встречи) и общая основа карт
@@ -274,6 +275,8 @@ src/inventory.py, leveling.py, animator.py, parallax.py, loader.py, placeholder_
 tools/slice_sprites.py  — нарезка спрайт-листов из npc/ в assets/sprites/
 tools/make_hero_anims.py — боевые анимации героя: удар ломом, выстрел
 tools/prepare_sounds.py — подготовка звуков и музыки из sounds/ (ffmpeg)
+WastelandReclaimer.spec — сборка exe (PyInstaller); build_tools/ — иконка
+.github/workflows/      — сборка Windows-exe на GitHub Actions
 tools/slice_town.py     — нарезка набора «wasteland town» в assets/town/
 tools/build_town.py     — генератор карты города data/maps/town.json
 tests/test_town.py      — проверка города ботом без окна
@@ -327,6 +330,28 @@ data/                   — весь контент, правится без к�
   бесшовным пиксельным шумом в цветах набора, с пятнами светлее и темнее.
 - Здание в генераторе: `building(x, y, ширина, высота, стиль, south=..., west=..., east=...)`,
   стили `brick`, `concrete`, `metal`, `planks`; ширина чётная (фасады по 2 клетки).
+
+## Сборка exe
+
+Игра собирается в один исполняемый файл PyInstaller'ом (`WastelandReclaimer.spec`).
+В файл попадают только `assets/` и `data/`, шрифты — внутри, так что
+кириллица есть и там, где DejaVu не установлен. Сохранения игра пишет в
+`saves/` рядом с exe, ошибки — в `crash.log` там же.
+
+**Windows (.exe)** собирается на GitHub: вкладка **Actions → «Сборка exe для
+Windows» → Run workflow**. Через несколько минут внизу страницы запуска, в
+Artifacts, появится `WastelandReclaimer-windows` с exe внутри. Если поставить
+тег (`git tag v0.1 && git push --tags`), exe ещё и прикрепится к релизу.
+Собрать .exe на Linux нельзя: PyInstaller собирает только под ту систему, на
+которой запущен.
+
+**Linux** — локально:
+
+```
+.venv/bin/pip install pyinstaller
+.venv/bin/pyinstaller WastelandReclaimer.spec     # -> dist/WastelandReclaimer
+dist/WastelandReclaimer --smoke                   # проверка: город, кадры, сохранение
+```
 
 ## Проверка
 
