@@ -23,6 +23,7 @@ def _init(ent):
     ent.wander_wait = random.randint(*WAIT_MS)
 
 
+TIED = {"dog"}  # на цепи — не бродят
 NPC_KEEP_AWAY = 4  # враги и мирные NPC не забредают ближе стольких клеток друг к другу
 
 
@@ -61,7 +62,7 @@ def _stop(ent):
 
 def update(game, dt_ms, frozen):
     """frozen — бой/диалог/окно: все стоят (и заканчивают шаг на клетке позже)."""
-    walkers = [e for e in game.enemies if e.alive] + list(game.npcs)
+    walkers = [e for e in game.enemies if e.alive] + [n for n in game.npcs if n.npc_id not in TIED]
     if frozen:
         for e in walkers:
             if getattr(e, "wander_path", None):

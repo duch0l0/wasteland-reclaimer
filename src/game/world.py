@@ -36,6 +36,8 @@ class WorldMixin:
     def place_player(self, pos):
         self.player.rect = _hitbox_in_tile(pos, self.player.rect.size)
         self.snap_camera()
+        from .. import companion
+        companion.place_near_player(self)  # спутник входит в локацию вместе с героем
 
     def enter_location(self, loc_id):
         d = LOCATION_DEFS[loc_id]

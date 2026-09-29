@@ -66,6 +66,8 @@ class QuestMixin:
             self.set_stage("mq_grandpa", 60)
         if any(f.get(k) for k in ("gang_dead", "gang_left", "gang_paid")) and 0 < st("sq_gang") < 50:
             self.set_stage("sq_gang", 50)
+        if f.get("raiders_dead") and 0 < st("sq_dog") < 50:
+            self.set_stage("sq_dog", 50)
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 
@@ -102,6 +104,11 @@ class QuestMixin:
         elif t == "npc_leave":
             self.loc.npcs[:] = [n for n in self.npcs if n.npc_id != eff["npc"]]
             self.flags[f"{eff['npc']}_left"] = True
+        elif t == "say":  # герой говорит вслух — облачко над головой
+            self.speech = {"ent": self.player, "text": eff["text"], "t": eff.get("ms", 3500)}
+            self.log(f"Вы: «{eff['text']}»")
+        elif t == "join_dog":
+            self.join_dog()
         elif t == "gang_leave":
             self.loc.enemies[:] = [e for e in self.enemies if e.faction != "gang"]
             self.log("Бензо-банда собирает пожитки и уходит. Заправка свободна.")

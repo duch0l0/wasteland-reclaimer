@@ -291,6 +291,7 @@ pickups.append(["лом", 1, 30, 52])
 pickups.append(["патроны", 3, 5, 43])
 enemies.append(["beetle", 54, 46])
 npcs.append(["loner", 63, 59])
+npcs.append(["dog", 89, 47])                    # пёс на цепи у палаток рейдеров
 npcs.append(["turtle", 14, 40])                 # Черепан — в кирпичном доме на юго-западе
 enemies += [["raider", 85, 45], ["raider", 87, 54]]
 pickups.append(["химикаты", 1, 76, 58])
@@ -483,6 +484,8 @@ for t in exits:
     assert t in reach, f"выход {t} недоступен"
 for kind, ex, ey in enemies:
     for nid, nx, ny in npcs:
+        if nid == "dog":
+            continue  # пёс на цепи в самом лагере рейдеров — так задумано
         assert max(abs(ex - nx), abs(ey - ny)) >= 6, f"{kind} слишком близко к {nid}"
 
 for t in terminals:

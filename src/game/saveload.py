@@ -91,6 +91,8 @@ class SaveMixin:
             "loc": None if encounter else self.loc.id,
             "locations": {lid: self._loc_state(loc) for lid, loc in self.locations.items()},
             "log": self.log_lines[-6:], "played_ms": self.play_ms,
+            "companion": None if self.companion is None else {
+                "hp": self.companion.hp, "max_hp": self.companion.max_hp, "down": self.companion.down},
         }
 
     @staticmethod
@@ -167,6 +169,13 @@ class SaveMixin:
             if lid in LOCATION_DEFS:
                 self._restore_loc(self.get_location(lid), ls)
         self.play_ms = st.get("played_ms", 0)
+        self.companion = None
+        cs = st.get("companion")
+        if cs:
+            from ..entities import Companion
+            from ..location import npc_animations
+            self.companion = Companion((0, 0), npc_animations("dog"))
+            self.companion.hp, self.companion.max_hp = max(1, cs["hp"]), cs["max_hp"]
         self.log_lines = list(st.get("log", []))
 
         if st["mode"] == "world" or not st["loc"]:
@@ -177,6 +186,8 @@ class SaveMixin:
             self.mode = "local"
             p.rect.topleft = tuple(ps["pos"])
             self.snap_camera()
+        from .. import companion
+        companion.place_near_player(self)
 
     @staticmethod
     def _restore_loc(loc, ls):

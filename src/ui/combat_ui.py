@@ -66,7 +66,7 @@ def draw_health_bars(surf, game, cam):
         fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp]
     for f in fighters:
         _, r = sprite_of(f, cam)
-        color = (90, 210, 90) if f is game.player else (215, 60, 50)
+        color = (90, 210, 90) if f is game.player or getattr(f, "ally", False) else (215, 60, 50)
         _bar(surf, r.centerx, health_bar_y(r), f.hp / f.max_hp if f.max_hp else 0, color)
 
 
@@ -145,3 +145,22 @@ def draw_tracers(surf, tracers, cam):
             tail = (head[0] - u.x * ln, head[1] - u.y * ln)  # хвост: дальний конец тусклее
             pygame.draw.line(surf, color, tail, head, w)
         pygame.draw.circle(surf, (255, 250, 220), head, 2)
+
+
+def draw_speech(surf, speech, cam):
+    """Реплика облачком над головой персонажа."""
+    from .common import fonts
+    _, font_small = fonts()
+    ent = speech["ent"]
+    _, r = sprite_of(ent, cam)
+    txt = font_small.render(speech["text"], True, (30, 24, 18))
+    box = txt.get_rect(midbottom=(r.centerx, r.top - 18)).inflate(20, 12)
+    alpha = min(255, speech["t"] // 2)
+    bubble = pygame.Surface((box.w, box.h + 10), pygame.SRCALPHA)
+    pygame.draw.rect(bubble, (245, 235, 210, alpha), (0, 0, box.w, box.h), border_radius=10)
+    pygame.draw.polygon(bubble, (245, 235, 210, alpha), [(box.w // 2 - 8, box.h - 1), (box.w // 2 + 8, box.h - 1),
+                                                         (box.w // 2, box.h + 9)])
+    pygame.draw.rect(bubble, (60, 45, 30, alpha), (0, 0, box.w, box.h), 2, border_radius=10)
+    txt.set_alpha(alpha)
+    bubble.blit(txt, txt.get_rect(center=(box.w // 2, box.h // 2)))
+    surf.blit(bubble, box.topleft)

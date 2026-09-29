@@ -51,7 +51,13 @@ class RenderMixin:
         self.level.draw_corpses(surf, cam)
 
         # персонажи и объекты карты — вперемешку, кто ниже, тот ближе к камере
-        entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs
+        pal = self.companion if self.companion is not None and not self.companion.down else None
+        entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs + ([pal] if pal else [])
+        if self.companion is not None and self.companion.down:  # выбитый из боя спутник лежит
+            from ..corpse import corpse_image
+            img = corpse_image(self.companion)
+            surf.blit(img, img.get_rect(center=(self.companion.rect.centerx - int(cam.x),
+                                                self.companion.rect.bottom - 6 - int(cam.y))))
         layers = [(e.rect.bottom, e) for e in entities] + [(y, (img, pos)) for y, img, pos in self.level.drawables(cam)]
         layers.sort(key=lambda item: item[0])
         outlined = combat_ui.highlights(combat)
@@ -65,6 +71,8 @@ class RenderMixin:
             surf.blit(frame, r)
 
         self.gore.draw_air(surf, self.level, cam)
+        if self.speech:
+            combat_ui.draw_speech(surf, self.speech, cam)
 
         # под курсором — то, с чем можно взаимодействовать, обведено контуром
         for img, r in self.hover_highlight():

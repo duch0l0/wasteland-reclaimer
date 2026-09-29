@@ -126,8 +126,19 @@ class Combat:
     def player_can_act(self):
         return self.is_player_turn() and self.busy_ms <= 0 and not self.tweens
 
+    @staticmethod
+    def is_ally(e):
+        return getattr(e, "ally", False)
+
     def enemies_in_combat(self):
-        return [e for e in self.order if e is not self.game.player and e.alive]
+        return [e for e in self.order if e is not self.game.player and not self.is_ally(e) and e.alive]
+
+    def allies_in_combat(self):
+        return [e for e in self.order if self.is_ally(e) and e.alive]
+
+    def _companion_here(self):
+        c = self.game.companion
+        return c if c is not None and c.alive and not c.down else None
 
     def _dist(self, a, b):
         return pygame.Vector2(a.rect.center).distance_to(b.rect.center)
@@ -161,10 +172,11 @@ class Combat:
         self.busy_ms = 0
         self.aim_menu = False
         g.craft_open = False
-        if player_first:  # напал сам — ходишь первым
-            self.order = [p] + enemies
+        allies = [c for c in (self._companion_here(),) if c]
+        if player_first:  # напал сам — ходишь первым, спутник сразу за тобой
+            self.order = [p] + allies + enemies
         else:             # заметили тебя — очередь по Реакции
-            self.order = sorted([p] + enemies, key=lambda f: -f.sequence)
+            self.order = sorted([p] + allies + enemies, key=lambda f: -f.sequence)
         for f in self.order:
             self._snap_to_grid(f)
             if f is not p:
@@ -276,7 +288,8 @@ class Combat:
 
     def _obstacles(self):
         g = self.game
-        return [g.player] + [e for e in g.enemies if e.alive] + list(g.npcs)
+        return ([g.player] + [e for e in g.enemies if e.alive] + list(g.npcs)
+                + [c for c in (g.companion,) if c is not None and c.alive])
 
     def _occupied(self, except_ent=None):
         return {tile_of(o) for o in self._obstacles() if o is not except_ent}
@@ -417,8 +430,14 @@ class Combat:
 
         part = BODY_PARTS[part_idx]
         is_player = attacker is self.game.player
+        ally_attacks = self.is_ally(attacker)
         name = _cap(attacker.name)
         if random.randint(1, 100) > self.hit_chance(attacker, defender, part_idx):
+            if ally_attacks:
+                self.game.log(f"{name} щёлкает зубами — мимо.")
+                self._float(defender, "мимо", (200, 200, 190))
+                self._react(defender, attacker, "dodge", impact_ms)
+                return True
             if is_player:
                 text = random.choice(PLAYER_MISS_RANGED if prof["ranged"] else PLAYER_MISS_MELEE)
             else:
@@ -457,7 +476,20 @@ class Combat:
             self._float(defender, f"-{dmg}" + ("!" if crit else ""),
                         (255, 220, 90) if crit else (230, 80, 60))
 
-        if is_player:
+        if ally_attacks:
+            self.game.log(f"{name} {attacker.hit_verb} ({defender.name}): {dmg} урона" + (" — КРИТ!" if crit else "."))
+            if not defender.alive:
+                self.game.on_enemy_killed(defender)
+                if self.target is defender:
+                    self.target = self._nearest_enemy()
+        elif self.is_ally(defender):
+            crit_note = " — КРИТ!" if crit else ""
+            self.game.log(f"{name} бьёт: {defender.name} получает {dmg} урона{crit_note}.")
+            if not defender.alive:
+                defender.down = True
+                defender.anim.set_action("idle")
+                self.game.log(f"{defender.name} скулит и отползает — выбыл из боя.")
+        elif is_player:
             where = "" if part_idx == 0 else f" ({part['name']})"
             dname = _cap(defender.name)
             if crit:
@@ -604,13 +636,38 @@ class Combat:
         if ent is self.game.player:
             if ent.ap <= 0 and ent.free_steps <= 0:
                 self.end_turn()  # как в Fallout с автозавершением: ОД кончились — ход врага
+        elif self.is_ally(ent):
+            self._ally_turn(ent)
         elif ent.ai == "ranged":
             self._enemy_ranged(ent)
         else:
             self._enemy_melee(ent)
 
+    def _enemy_target(self, enemy):
+        """Кого бить: ближайшего из героя и спутника (при равенстве — героя)."""
+        here = tile_of(enemy)
+        cands = [self.game.player] + self.allies_in_combat()
+        return min(cands, key=lambda c: (chebyshev(here, tile_of(c)), c is not self.game.player))
+
+    def _ally_turn(self, ally):
+        """Спутник: к ближайшему врагу и кусать, пока хватает ОД."""
+        enemies = self.enemies_in_combat()
+        if not enemies:
+            self.end_turn()
+            return
+        here = tile_of(ally)
+        t = min(enemies, key=lambda e: chebyshev(here, tile_of(e)))
+        if chebyshev(here, tile_of(t)) == 1:
+            if ally.ap >= self.attack_cost(ally) and self.attack(ally, t):
+                return
+        elif ally.ap >= S.AP_MOVE:
+            step = self._path_next_step(ally, t)
+            if step and self.try_step(ally, *step):
+                return
+        self.end_turn()
+
     def _enemy_melee(self, enemy):
-        p = self.game.player
+        p = self._enemy_target(enemy)
         if chebyshev(tile_of(enemy), tile_of(p)) == 1:
             if enemy.ap >= self.attack_cost(enemy):
                 self.attack(enemy, p)
@@ -623,7 +680,7 @@ class Combat:
 
     def _enemy_ranged(self, enemy):
         """Стрелок: держит дистанцию, стреляет по линии огня, ищет позицию, если её нет."""
-        p = self.game.player
+        p = self._enemy_target(enemy)
         cost = self.attack_cost(enemy)
         here = tile_of(enemy)
         # игрок вплотную — один раз за ход отступает, если после этого хватит ОД на выстрел

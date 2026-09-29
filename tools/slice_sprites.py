@@ -48,6 +48,35 @@ def slice_sheet(src, dst):
     return crop
 
 
+# листы другого формата: крупные кадры, свой порядок строк, свой масштаб
+SPECIAL = {
+    "dog.png": {"name": "dog", "cell": 128, "cols": 4,
+                "rows": {"down": 0, "right": 1, "up": 2, "left": 3},  # дальше — позы сидя/лёжа
+                "height": 40},  # пёс — примерно по колено человеку (герой в игре 74 px)
+}
+
+
+def slice_special(src, dst, spec):
+    """Кадры в игровом размере (игра их больше не увеличивает — файл native)."""
+    sheet = pygame.image.load(src)
+    cell = spec["cell"]
+    cells = {d: [sheet.subsurface((c * cell, r * cell, cell, cell)) for c in range(spec["cols"])]
+             for d, r in spec["rows"].items()}
+    boxes = [f.get_bounding_rect(min_alpha=10) for fr in cells.values() for f in fr]
+    crop = boxes[0].unionall(boxes[1:])
+    k = spec["height"] / crop.h
+    size = (max(1, round(crop.w * k)), spec["height"])
+    for d, frames in cells.items():
+        folder = os.path.join(dst, d)
+        os.makedirs(folder, exist_ok=True)
+        for i, f in enumerate(frames):
+            pygame.image.save(pygame.transform.smoothscale(f.subsurface(crop).copy(), size),
+                              os.path.join(folder, f"{i}.png"))
+    with open(os.path.join(dst, "native"), "w") as fh:
+        fh.write("кадры уже в игровом размере\n")
+    return size
+
+
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
@@ -60,6 +89,11 @@ def main():
             continue
         crop = slice_sheet(os.path.join("npc", f), os.path.join("assets", "sprites", name))
         print(f"npc/{f} -> assets/sprites/{name}/  (кадр {crop.w}×{crop.h})")
+    for f, spec in SPECIAL.items():
+        path = os.path.join("npc", f)
+        if os.path.isfile(path):
+            size = slice_special(path, os.path.join("assets", "sprites", spec["name"]), spec)
+            print(f"npc/{f} -> assets/sprites/{spec['name']}/  (кадр {size[0]}×{size[1]}, без увеличения)")
     return 1 if missing else 0
 
 

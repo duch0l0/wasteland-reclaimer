@@ -29,6 +29,7 @@ from .render import RenderMixin
 from ..ui.minimap import Minimap
 from ..gore import Gore
 from ..audio import Audio
+from .. import companion
 from .mouse import MouseMixin
 from .terminals import TerminalMixin
 from .slides import SlidesMixin, SLIDES
@@ -89,6 +90,8 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.held_letters = set()
         self.minimap = Minimap()
         self.gore = Gore()
+        self.companion = None      # спутник (пёс) — появляется по квесту
+        self.speech = None         # реплика над головой: {"ent", "text", "t"}
         self.audio = Audio()
         self.audio.start_music()
         self.autowalk = None       # путь по клику мыши вне боя
@@ -153,6 +156,11 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             npc.update(dt_ms)
         self.combat.update(dt_ms)
         self.gore.update(dt_ms)
+        companion.update(self, dt_ms)
+        if self.speech:
+            self.speech["t"] -= dt_ms
+            if self.speech["t"] <= 0:
+                self.speech = None
         busy = self.modal_open() or self.combat.active
         wander.update(self, dt_ms, frozen=busy)
         if busy:

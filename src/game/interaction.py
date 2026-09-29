@@ -76,6 +76,18 @@ class InteractionMixin:
         else:
             self.log("Заперто. Нужна отмычка (у Гены) или хотя бы лом, чтобы выломать.")
 
+    def join_dog(self):
+        """Пёс с цепи у лагеря рейдеров становится спутником."""
+        from ..entities import Companion
+        from ..location import npc_animations
+        dog = next((n for n in self.npcs if n.npc_id == "dog"), None)
+        pos = dog.rect.topleft if dog else self.player.rect.topleft
+        self.companion = Companion((0, 0), npc_animations("dog"))
+        self.companion.rect.topleft = pos
+        self.loc.npcs[:] = [n for n in self.npcs if n.npc_id != "dog"]
+        self.flags["dog_joined"] = True
+        self.log(f"{self.companion.name} теперь с вами. В бою он кусает ближайшего врага сам.")
+
     def switch_weapon(self, to=None):
         """Как «сменить руку» в Fallout: без затрат ОД. Без аргумента — следующее по кругу."""
         guns = available(self.inventory)
@@ -116,6 +128,11 @@ class InteractionMixin:
             self.player.hp = min(self.player.max_hp, self.player.hp + 5)
             self.log("Падальщик: +5 HP.")
         self.gain_xp(enemy.xp_reward)
+        if enemy.type_id == "raider" and not any(e.alive and e.type_id == "raider" for e in self.enemies):
+            self.flags["raiders_dead"] = True
+            if any(n.npc_id == "dog" for n in self.npcs):
+                self.log("Лагерь рейдеров пуст. Где-то у палаток скулит пёс на цепи.")
+            self.sync_story()
         if enemy.faction == "gang" and not self.loc.faction_members("gang"):
             self.flags["gang_dead"] = True
             self.log("Бензо-банды больше нет. Гена будет рад. Наверное.")

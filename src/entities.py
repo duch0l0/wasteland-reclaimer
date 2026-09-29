@@ -254,3 +254,36 @@ class NPC:
     def draw(self, surf, cam):
         frame, r = sprite_of(self, cam)
         surf.blit(frame, r)
+
+
+class Companion(CombatStats):
+    """Спутник героя (пёс). В бою ходит сам: бежит к ближайшему врагу и кусает.
+    Выбитый из боя (down) лежит до конца боя, потом поднимается с 1 HP."""
+    ally = True
+    crit_bonus = 0
+    talk = None
+    hostile = False
+    faction = "ally"
+    pack = None
+    loot = {}
+    ai = "melee"
+    range = 1
+    aggro = 0
+
+    def __init__(self, pos, animations, name="Псина"):
+        self.type_id = "dog"
+        self.rect = _hitbox_in_tile(pos, (24, 20))
+        self.anim = Animator(animations, frame_ms=S.ANIM_FRAME_MS)
+        self.name = name
+        self.hp = self.max_hp = 30
+        self.damage = 5
+        self.skill = 60
+        self.hit_verb = "вцепляется в противника"
+        self.facing_left = False
+        self.alive = True
+        self.down = False
+        self.regen_ms = 0
+        self.init_combat_stats(8, 15, 7)
+
+    def update(self, dt_ms):
+        self.anim.update(dt_ms)

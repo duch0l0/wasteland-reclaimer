@@ -11,7 +11,7 @@ from .tilemap import TileMap, load_map_file
 from .townmap import TownMap
 from .entities import Enemy, NPC
 
-NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка", "turtle": "Черепан"}
+NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка", "turtle": "Черепан", "dog": "Рыжий пёс"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)

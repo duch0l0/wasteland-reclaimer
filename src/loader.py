@@ -37,6 +37,7 @@ def load_directional_animations(root_dir):
     """Кадры по четырём направлениям (root_dir/down, left, right, up) или None.
     Фазы шага: 0 и 2 — шаг, 1 и 3 — стоит; стоячий кадр идёт в idle."""
     result = {}
+    scale = 1 if os.path.isfile(os.path.join(root_dir, "native")) else SPRITE_SCALE  # крупные листы (пёс)
     for d in ("down", "left", "right", "up"):
         folder = os.path.join(root_dir, d)
         if not os.path.isdir(folder):
@@ -48,7 +49,7 @@ def load_directional_animations(root_dir):
             except Exception:
                 continue
             w, h = img.get_size()
-            frames.append(pygame.transform.scale(img, (w * SPRITE_SCALE, h * SPRITE_SCALE)))
+            frames.append(pygame.transform.scale(img, (w * scale, h * scale)) if scale != 1 else img)
         if not frames:
             return None
         result[f"walk_{d}"] = frames
