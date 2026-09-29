@@ -281,6 +281,7 @@ src/dialogue.py         — движок диалогов с условиями
 src/inventory.py, leveling.py, animator.py, parallax.py, loader.py, placeholder_art.py, settings.py
 tools/slice_sprites.py  — нарезка спрайт-листов из npc/ в assets/sprites/
 tools/make_hero_anims.py — боевые анимации героя: удар ломом, выстрел
+tools/make_variants.py  — дорисованные враги: рейдер, бандит, Шрам (из людей), жук (из пса)
 tools/prepare_sounds.py — подготовка звуков и музыки из sounds/ (ffmpeg)
 WastelandReclaimer.spec — сборка exe (PyInstaller); build_tools/ — иконка
 .github/workflows/      — сборка Windows-exe на GitHub Actions
@@ -385,6 +386,13 @@ dist/WastelandReclaimer --smoke                   # проверка: город
 (512×512, клетки 128×128, строки вниз/вправо/вверх/влево) режется в
 `assets/sprites/dog/` уже в игровом размере (файл-метка `native` — без
 увеличения).
+
+Часть врагов нарисована поверх уже нарезанных персонажей —
+`tools/make_variants.py` (после нарезки; `preview` — лист-превью):
+рейдер — из Панка (красный ирокез, бандана, наплечник с шипами), бандит
+Бензо-банды — из героя (противогаз, промасленная кожанка с жёлтой полосой),
+Шрам — из Панка (бритый, шрам через лицо, светящийся глаз, два наплечника),
+панцирный жук — из пса (хитин, надкрылья, усики, жвалы, лишние лапы).
 
 Нарезка в кадры игры:
 

@@ -291,7 +291,7 @@ pickups.append(["лом", 1, 30, 52])
 pickups.append(["патроны", 3, 5, 43])
 enemies.append(["beetle", 54, 46])
 npcs.append(["loner", 63, 59])
-npcs.append(["dog", 89, 47])                    # пёс на цепи у палаток рейдеров
+npcs.append(["dog", 90, 46])                    # пёс на цепи у ящика с патронами в лагере рейдеров
 npcs.append(["turtle", 14, 40])                 # Черепан — в кирпичном доме на юго-западе
 enemies += [["raider", 85, 45], ["raider", 87, 54]]
 pickups.append(["химикаты", 1, 76, 58])
