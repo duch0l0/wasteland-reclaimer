@@ -57,6 +57,9 @@ class ControlsMixin:
         if self.term:
             self.terminal_key(key)
             return
+        if self.loot:
+            self.loot_key(key)
+            return
         if self.journal_open:
             if key in (pygame.K_ESCAPE, pygame.K_j):
                 self.journal_open = False

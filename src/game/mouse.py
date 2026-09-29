@@ -55,6 +55,9 @@ class MouseMixin:
         item = self.level.pickup_at(self.world_pos(pos))
         if item:
             return ("pickup", item)
+        body = self.level.corpse_at(self.world_pos(pos))
+        if body:
+            return ("container", body)
         if hasattr(self.level, "terminal_sprite_at"):
             t = self.level.terminal_sprite_at(self.world_pos(pos))
             if t:
@@ -81,8 +84,11 @@ class MouseMixin:
     def handle_click(self, pos, button):
         key = hotspot_at(pos)
         if key is not None:
-            if button == 1:
-                key() if callable(key) else self.handle_key(key)  # зона: действие или клавиша
+            self.last_button = button  # обыск: ЛКМ — вся стопка, ПКМ — одна штука
+            if callable(key):
+                key()
+            elif button == 1:
+                self.handle_key(key)  # зона, равная клавише
             return
         if self.game_over or self.mode != "local":
             return
@@ -291,6 +297,8 @@ class MouseMixin:
             icon = loader.item_icon(what["kind"])
             r = self.level.pickup_icon_rect(what).move(-cam_x, -cam_y)
             return [(icon, r)]
+        if kind == "container" and what.get("corpse"):
+            return [(what["corpse"]["img"], what["corpse"]["rect"].move(-cam_x, -cam_y))]
         if kind in ("container", "terminal") and what.get("obj"):
             o = what["obj"]
             img = P.image(o["name"])
@@ -337,7 +345,9 @@ class MouseMixin:
         obj = self.object_at_screen(pos)
         if obj:
             kind, what = obj
-            if kind == "container":
+            if kind == "container" and what.get("corpse"):
+                label = f"Обыскать тело: {what['who']}"
+            elif kind == "container":
                 label = f"Обыскать: {what['name']}"
             elif kind == "pickup":
                 label = f"Подобрать: {what['kind']}" + (f" ×{what['count']}" if what["count"] > 1 else "")

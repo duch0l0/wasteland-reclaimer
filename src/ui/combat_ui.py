@@ -131,6 +131,6 @@ def draw_tracers(surf, tracers, cam):
     for tr in tracers:
         alpha = max(0.0, 1 - tr["t"] / 180)
         color = (255, int(200 * alpha + 40), 80)
-        a = (tr["from"].x - cam.x, tr["from"].y - cam.y - 10)
-        b = (tr["to"].x - cam.x, tr["to"].y - cam.y - 10)
+        a = (tr["from"].x - cam.x, tr["from"].y - cam.y)
+        b = (tr["to"].x - cam.x, tr["to"].y - cam.y)
         pygame.draw.line(surf, color, a, b, 2)

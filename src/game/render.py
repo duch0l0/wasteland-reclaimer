@@ -2,7 +2,7 @@
 import pygame
 
 from .. import settings as S
-from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui
+from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui, loot_ui
 from ..ui.common import fonts, begin_frame, PANEL_H
 from ..entities import sprite_of
 
@@ -38,6 +38,8 @@ class RenderMixin:
         else:
             surf.fill((20, 17, 14))  # за краем карты
         self.level.draw(surf, cam)
+        self.gore.draw_ground(surf, self.level, cam)
+        self.level.draw_corpses(surf, cam)
 
         # персонажи и объекты карты — вперемешку, кто ниже, тот ближе к камере
         entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs
@@ -52,6 +54,8 @@ class RenderMixin:
             if thing in outlined:
                 combat_ui.draw_outline(surf, frame, r, outlined[thing])
             surf.blit(frame, r)
+
+        self.gore.draw_air(surf, self.level, cam)
 
         # под курсором — то, с чем можно взаимодействовать, обведено контуром
         for img, r in self.hover_highlight():
@@ -79,6 +83,8 @@ class RenderMixin:
             inventory_ui.draw_inventory(surf, self)
         if self.trade:
             menus.draw_trade(surf, self)
+        if self.loot:
+            loot_ui.draw_loot(surf, self)
 
         if self.game_over:
             txt = pygame.font.SysFont("dejavusans", 40).render("ВЫ ПОГИБЛИ", True, (220, 60, 50))

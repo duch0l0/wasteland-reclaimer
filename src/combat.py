@@ -399,15 +399,18 @@ class Combat:
         attacker.anim.face(defender.rect.centerx - attacker.rect.centerx,
                            defender.rect.centery - attacker.rect.centery)
         if attacker is self.game.player:
-            attacker.play_attack()
+            attacker.play_attack("shoot" if prof["ranged"] else "melee")
         else:
-            attacker.anim.set_action("attack")
+            attacker.anim.play_once("attack_ranged" if prof["ranged"] else "attack_melee") \
+                or attacker.anim.play_once("attack")
         self.busy_ms = S.COMBAT_ATTACK_MS
         if prof["ammo"]:
             self.game.inventory.remove(prof["ammo"], 1)
         if prof["ranged"]:
-            self.tracers.append({"from": pygame.Vector2(attacker.rect.center),
-                                 "to": pygame.Vector2(defender.rect.center), "t": 0})
+            # след пули — от дула (на уровне груди, чуть впереди) к груди цели
+            side = 1 if defender.rect.centerx >= attacker.rect.centerx else -1
+            self.tracers.append({"from": pygame.Vector2(attacker.rect.centerx + side * 26, attacker.rect.bottom - 40),
+                                 "to": pygame.Vector2(defender.rect.centerx, defender.rect.bottom - 36), "t": 0})
 
         part = BODY_PARTS[part_idx]
         is_player = attacker is self.game.player
@@ -419,6 +422,7 @@ class Combat:
                 text = random.choice(ENEMY_MISS_RANGED if prof["ranged"] else ENEMY_MISS_MELEE)
             self.game.log(text.format(name=name))
             self._float(defender, "мимо", (200, 200, 190))
+            self._react(defender, attacker, "dodge")
             return True
 
         dmg = random.randint(max(1, prof["damage"] - 2), prof["damage"] + 2)
@@ -431,6 +435,11 @@ class Combat:
         absorbed = min(dmg, armor)
         dmg -= absorbed
         defender.apply_damage(dmg)
+        if dmg > 0 and defender.alive:
+            self._react(defender, attacker, "hit")
+        if dmg > 0:  # кровь; от выстрела — ещё и ошмётки
+            self.game.gore.hit(self.game.level, defender.rect, attacker.rect.center,
+                               "ranged" if prof["ranged"] else "melee", crit=crit, kill=not defender.alive)
         if dmg == 0:
             self._float(defender, "броня", (150, 170, 200))
         else:
@@ -457,6 +466,14 @@ class Combat:
             crit_note = " — КРИТ!" if crit else ""
             self.game.log(f"{name} {attacker.hit_verb}{crit_note}: {dmg} урона.")
         return True
+
+    def _react(self, defender, attacker, kind):
+        """Цель поворачивается к нападающему и вздрагивает (hit) или уворачивается (dodge) —
+        чуть позже замаха, чтобы реакция шла за ударом."""
+        defender.anim.face(attacker.rect.centerx - defender.rect.centerx,
+                           attacker.rect.centery - defender.rect.centery)
+        defender.facing_left = attacker.rect.centerx < defender.rect.centerx
+        defender.anim.play_once(kind, delay_ms=140)
 
     def _apply_crit_effect(self, ent, effect):
         if effect == "blinded":
@@ -550,7 +567,7 @@ class Combat:
         if self.tweens:
             return
         for e in self.order:
-            if e is not self.game.player and e.alive and e.anim.action == "attack":
+            if e is not self.game.player and e.alive and e.anim.action == "attack" and not e.anim.busy:
                 e.anim.set_action("idle")
 
         if not self.game.player.alive:

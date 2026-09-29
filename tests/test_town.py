@@ -87,13 +87,20 @@ def walk_to_npc(npc):
         g.snap_camera()
         fr(1)
         _, r = sprite_of(npc, g.cam)
-        if not pygame.Rect(0, 0, S.SCREEN_W, S.SCREEN_H - 104).collidepoint(r.center):
+        from src.ui.common import hotspot_at
+        covered = hotspot_at(r.center) is not None  # под миникартой или другим окном
+        if covered or not pygame.Rect(0, 0, S.SCREEN_W, S.SCREEN_H - 104).collidepoint(r.center):
             px, py = tile_of(g.player)
             nx, ny = tile_of(npc)
             step = (px + max(-8, min(8, nx - px)), py + max(-4, min(4, ny - py)))
+            if covered:  # подойти вплотную — камера сдвинется, NPC выйдет из-под миникарты
+                step = (nx, ny + 2)
             g._go_to(lambda c, s=step: chebyshev(c, s) <= 1)
         else:
             click(r.center)
+            if os.environ.get("DEBUG_WALK"):
+                print("  клик по", npc.npc_id, "hint:", g.cursor_hint() and g.cursor_hint()[0], "autowalk:", bool(g.autowalk),
+                      "герой", tile_of(g.player), "npc", tile_of(npc), g.log_lines[-1][:60])
         for _ in range(700):
             fr(1)
             if g.combat.active:
@@ -156,7 +163,9 @@ for _ in range(900):
     fr(1)
     if box["container"]["opened"]:
         break
-ok(box["container"]["opened"], "клик по верху шкафчика — подошёл через дверь и обыскал")
+ok(box["container"]["opened"] and g.loot, "клик по верху шкафчика — подошёл и открыл обыск")
+g.handle_key(pygame.K_r)
+g.handle_key(pygame.K_ESCAPE)
 
 wall = next(o for o in lv.objects if o["name"].startswith("wall_"))
 wx, wy = wall["foot"][0]

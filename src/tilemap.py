@@ -94,14 +94,43 @@ class MapBase:
     def terminal_at(self, tile):
         return next((t for t in self.terminals if tuple(tile) in t["tiles"]), None)
 
+    corpses = ()  # трупы — тоже контейнеры (с картинкой лежащего тела)
+
+    def add_corpse(self, enemy, loot):
+        """Тело врага остаётся на земле, добыча — на нём (обыскать)."""
+        from .corpse import corpse_image
+        if not isinstance(self.corpses, list):
+            self.corpses = []
+        img = corpse_image(enemy)
+        rect = img.get_rect(center=(enemy.rect.centerx, enemy.rect.bottom - 6))
+        tile = (enemy.rect.centerx // S.TILE, enemy.rect.centery // S.TILE)
+        box = {"tile": tile, "tiles": [tile], "name": f"тело: {enemy.name}", "who": enemy.name, "loot": dict(loot),
+               "owner": None, "requires": None, "opened": False, "corpse": {"img": img, "rect": rect}}
+        self.corpses.append(box)
+        self.containers.append(box)
+        return box
+
+    def corpse_at(self, world_pos):
+        for c in reversed(self.corpses):
+            r = c["corpse"]["rect"]
+            if r.collidepoint(world_pos) and c["corpse"]["img"].get_at(
+                    (world_pos[0] - r.x, world_pos[1] - r.y)).a > 40:
+                return c
+        return None
+
+    def draw_corpses(self, surf, cam):
+        for c in self.corpses:
+            r = c["corpse"]["rect"]
+            surf.blit(c["corpse"]["img"], (r.x - int(cam.x), r.y - int(cam.y)))
+
     def container_at(self, tile):
-        """Закрытый контейнер, занимающий клетку."""
-        return next((c for c in self.containers if not c["opened"] and tuple(tile) in c["tiles"]), None)
+        """Контейнер, занимающий клетку (открыть можно и повторно — положить или добрать)."""
+        return next((c for c in self.containers if tuple(tile) in c["tiles"]), None)
 
     def container_near(self, player_rect):
-        """Закрытый контейнер вплотную к игроку (любой его клеткой)."""
-        for c in self.containers:
-            if not c["opened"] and self.adjacent(c["tiles"], player_rect):
+        """Контейнер вплотную к игроку (любой его клеткой); сначала — ещё не осмотренные."""
+        for c in sorted(self.containers, key=lambda c: c["opened"]):
+            if self.adjacent(c["tiles"], player_rect):
                 return c
         return None
 

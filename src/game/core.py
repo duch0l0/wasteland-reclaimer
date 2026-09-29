@@ -27,13 +27,15 @@ from .backpack import BackpackMixin
 from .trade import TradeMixin
 from .render import RenderMixin
 from ..ui.minimap import Minimap
+from ..gore import Gore
 from .mouse import MouseMixin
 from .terminals import TerminalMixin
 from .slides import SlidesMixin, SLIDES
+from .looting import LootingMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, RenderMixin):
+           TerminalMixin, SlidesMixin, LootingMixin, RenderMixin):
     def __init__(self, intro=True):
         """intro — показать пролог (для проверок без окна его пропускают)."""
         pygame.init()
@@ -82,9 +84,11 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.cam = pygame.Vector2(0, 0)
         self.held_letters = set()
         self.minimap = Minimap()
+        self.gore = Gore()
         self.autowalk = None       # путь по клику мыши вне боя
         self.combat_queue = None   # путь/атака по клику мыши в бою
         self.term = None           # открытый терминал или документ
+        self.loot = None           # открытый обыск: {"box": контейнер, "side", "sel"}
         self.slides = None         # идущее слайд-шоу
         if intro:
             self.show_slides("prologue")
@@ -114,7 +118,8 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
 
     def modal_open(self):
         return bool(self.dialogue.is_active() or self.craft_open or self.inv_open or self.trade
-                    or self.game_over or self.perk_choices or self.term or self.slides or self.journal_open)
+                    or self.game_over or self.perk_choices or self.term or self.slides or self.journal_open
+                    or self.loot)
 
     # --------------------------------------------------------------- кадр
     def update(self, dt_ms):
@@ -132,6 +137,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         for npc in self.npcs:
             npc.update(dt_ms)
         self.combat.update(dt_ms)
+        self.gore.update(dt_ms)
         busy = self.modal_open() or self.combat.active
         wander.update(self, dt_ms, frozen=busy)
         if busy:
@@ -159,7 +165,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
     def _stand_still(self):
         """В бою и в окнах герой стоит, а не шагает на месте — кроме своего шага или удара."""
         p = self.player
-        if not p.attacking and not any(tw["ent"] is p for tw in self.combat.tweens):
+        if not p.attacking and not p.anim.busy and not any(tw["ent"] is p for tw in self.combat.tweens):
             p.anim.set_action("idle")
 
     def _regen(self, dt_ms):

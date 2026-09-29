@@ -54,8 +54,136 @@ def load_directional_animations(root_dir):
         result[f"walk_{d}"] = frames
         result[f"idle_{d}"] = [frames[1 % len(frames)]]
         result[f"attack_{d}"] = frames  # отдельных кадров удара в листах нет — рывок шагом
+        # боевые кадры, если нарисованы (tools/make_hero_anims.py): root/melee/<сторона>/, root/shoot/<сторона>/
+        for action in ("melee", "shoot"):
+            extra = _load_scaled(os.path.join(root_dir, action, d))
+            if extra:
+                result[f"{action}_{d}"] = extra
+        if f"melee_{d}" in result:
+            result[f"attack_{d}"] = result[f"melee_{d}"]
+        result[f"hit_{d}"], result[f"dodge_{d}"] = make_reactions(result[f"idle_{d}"][0], d)
+        result[f"attack_melee_{d}"], result[f"attack_ranged_{d}"] = make_attacks(result[f"idle_{d}"][0], d)
     result["idle"] = result["idle_down"]
     return result
+
+
+def add_flat_combat_frames(result):
+    """Плейсхолдерам без сторон — те же боевые кадры, нарисованные «вправо»
+    (влево аниматор их отражает)."""
+    idle = result["idle"][0]
+    result["hit"], result["dodge"] = make_reactions(idle, "right")
+    result["attack_melee"], result["attack_ranged"] = make_attacks(idle, "right")
+    return result
+
+
+def _load_scaled(folder):
+    if not os.path.isdir(folder):
+        return None
+    frames = []
+    for f in _sorted_frames(folder):
+        img = pygame.image.load(os.path.join(folder, f)).convert_alpha()
+        w, h = img.get_size()
+        frames.append(pygame.transform.scale(img, (w * SPRITE_SCALE, h * SPRITE_SCALE)))
+    return frames or None
+
+
+# куда отшатывается персонаж, смотрящий в сторону d (от удара — назад)
+_BACK = {"right": (-1, 0), "left": (1, 0), "down": (0, -1), "up": (0, 1)}
+_SIDE = {"right": (0, 0), "left": (0, 0), "down": (1, 0), "up": (-1, 0)}
+
+
+def make_reactions(idle, d):
+    """Реакции для любого персонажа из его стоячего кадра:
+    hit — отброс назад и красная вспышка, dodge — отскок (враг промахнулся)."""
+    w, h = idle.get_size()
+    pad = 8 * SPRITE_SCALE
+    bx, by = _BACK[d]
+    sx, sy = _SIDE[d]
+
+    def frame(dx, dy, tint=None):
+        s = pygame.Surface((w + pad * 2, h + pad), pygame.SRCALPHA)
+        img = idle
+        if tint:
+            img = idle.copy()
+            img.fill(tint[0], special_flags=pygame.BLEND_RGBA_MULT)
+            img.fill(tint[1], special_flags=pygame.BLEND_RGB_ADD)
+        s.blit(img, (pad + dx, pad + dy))
+        return s
+
+    k = SPRITE_SCALE
+    red = ((255, 150, 140, 255), (90, 0, 0))
+    pale = ((255, 210, 200, 255), (40, 0, 0))
+    hit = [frame(bx * 3 * k, by * 2 * k, red), frame(bx * 2 * k, by * k, pale), frame(bx * k, 0)]
+    if sx or sy:  # анфас/спиной — уворот вбок
+        dodge = [frame(sx * 3 * k, k), frame(sx * 4 * k, k), frame(sx * 2 * k, 0)]
+    else:         # в профиль — отскок назад с приседанием
+        dodge = [frame(bx * 3 * k, k), frame(bx * 4 * k, 2 * k), frame(bx * 2 * k, 0)]
+    return hit, dodge
+
+
+def make_attacks(idle, d):
+    """Атака для любого персонажа из стоячего кадра:
+    attack_melee — замах, рывок вперёд со следом когтей, возврат;
+    attack_ranged — вскинуть оружие, выстрел со вспышкой и отдачей, дымок."""
+    w, h = idle.get_size()
+    k = SPRITE_SCALE
+    pad = 14 * k
+    bx, by = _BACK[d]
+    fx, fy = -bx, -by                     # куда смотрит
+    cw, ch = w + pad * 2, h + pad
+    cx, chest = pad + w // 2, pad + int(h * 0.45)
+
+    def frame(dx, dy, draw=None):
+        s = pygame.Surface((cw, ch), pygame.SRCALPHA)
+        if draw and fy < 0:   # со спины оружие и когти за телом — рисуем до него
+            draw(s, dx, dy)
+        s.blit(idle, (pad + dx, pad + dy))
+        if draw and fy >= 0:
+            draw(s, dx, dy)
+        return s
+
+    def front(dx, dy, dist):
+        return (cx + dx + fx * (w // 2 + dist), chest + dy + fy * (h // 3 + dist))
+
+    def claws(s, dx, dy):
+        x, y = front(dx, dy, 4 * k)
+        layer = pygame.Surface((cw, ch), pygame.SRCALPHA)
+        for i in (-1, 0, 1):  # три следа когтей дугой
+            ox, oy = (fy * i * 5 * k, fx * i * 5 * k) if fx else (i * 5 * k, 0)
+            a = (x + ox - fy * 6 * k - fx * 2 * k, y + oy - fx * 6 * k - fy * 2 * k)
+            b = (x + ox + fy * 6 * k + fx * 3 * k, y + oy + fx * 6 * k + fy * 3 * k)
+            pygame.draw.line(layer, (255, 235, 220, 200), a, b, 2 * k)
+            pygame.draw.line(layer, (210, 40, 30, 150), (a[0] + 1, a[1] + 1), (b[0] + 1, b[1] + 1), k)
+        s.blit(layer, (0, 0))
+
+    def gun(s, dx, dy, fire=False, smoke=False):
+        x, y = front(dx, dy, 0)
+        if fx:
+            body = pygame.Rect(0, 0, 9 * k, 3 * k)
+            body.center = (x + fx * 3 * k, y)
+        else:
+            body = pygame.Rect(0, 0, 3 * k, 7 * k)
+            body.center = (x, y + fy * 3 * k)
+        pygame.draw.rect(s, (20, 18, 22), body.inflate(2 * k, 2 * k))
+        pygame.draw.rect(s, (70, 72, 80), body)
+        mx = body.right + k if fx > 0 else body.left - k if fx < 0 else body.centerx
+        my = body.centery if fx else (body.bottom + k if fy > 0 else body.top - k)
+        if fire:
+            for ddx, ddy in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)):
+                pygame.draw.line(s, (255, 236, 140), (mx, my), (mx + ddx * 4 * k, my + ddy * 4 * k), k)
+            pygame.draw.circle(s, (255, 255, 230), (mx, my), 2 * k)
+        if smoke:
+            layer = pygame.Surface((cw, ch), pygame.SRCALPHA)
+            pygame.draw.circle(layer, (200, 200, 195, 110), (mx + fx * 3 * k, my - 3 * k), 3 * k)
+            s.blit(layer, (0, 0))
+
+    melee = [frame(bx * 3 * k, by * 2 * k),
+             frame(fx * 6 * k, fy * 4 * k, claws),
+             frame(fx * 2 * k, fy * k)]
+    ranged = [frame(0, 0, lambda s, dx, dy: gun(s, dx, dy)),
+              frame(bx * 2 * k, by * k, lambda s, dx, dy: gun(s, dx, dy, fire=True)),
+              frame(0, 0, lambda s, dx, dy: gun(s, dx, dy, smoke=True))]
+    return melee, ranged
 
 
 def _load_frame_folder(folder, size):
@@ -91,7 +219,7 @@ def load_humanoid_animations(root_dir, size, base_color, accent_color, frames_pe
                 pa.make_humanoid_frame(size, base_color, accent_color, i / n, action=action)
                 for i in range(n)
             ]
-    return result
+    return add_flat_combat_frames(result)
 
 
 def load_creature_animations(root_dir, size, base_color, accent_color, kind="mutant", frames_per_action=6):
@@ -111,7 +239,7 @@ def load_creature_animations(root_dir, size, base_color, accent_color, kind="mut
         result[action] = real or [make(size, base_color, accent_color, i / frames_per_action)
                                   for i in range(frames_per_action)]
     result["attack"] = _load_frame_folder(os.path.join(root_dir, "attack"), size) or result["walk"]
-    return result
+    return add_flat_combat_frames(result)
 
 
 # Иконки предметов: assets/items/<icon>.png (icon — поле в data/items.json) или плейсхолдер.

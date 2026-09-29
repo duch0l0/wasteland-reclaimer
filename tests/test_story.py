@@ -96,9 +96,14 @@ def open_entry(g, label_part):
 
 
 def search(g, title):
-    box = next(c for c in g.level.containers if c["name"] == title)
+    """Обыскать: откроется окно рюкзак/контейнер — забрать всё и закрыть."""
+    box = next(c for c in g.level.containers if c["name"].startswith(title))
     stand_near(g, box["tiles"])
     g.handle_key(pygame.K_e)
+    if g.loot:
+        g.handle_key(pygame.K_r)   # взять всё
+        if g.loot:
+            g.handle_key(pygame.K_ESCAPE)
     return box
 
 
@@ -291,7 +296,11 @@ while any(e.alive for e in g.enemies):
         g.combat.start(player_first=True)
     fight(g)
 ok(g.flags.get("gang_dead"), "банда перебита, Шрам тоже")
-ok(g.inventory.has("контракт Единства"), "у Шрама нашёлся контракт")
+ok(not g.inventory.has("контракт Единства"), "добыча не падает в рюкзак сама")
+body = next(c for c in g.level.containers if c["name"] == "тело: Шрам")
+ok("контракт Единства" in body["loot"], "тело Шрама лежит на заправке, контракт на нём")
+search(g, "тело: Шрам")
+ok(g.inventory.has("контракт Единства"), "обыскал тело Шрама — контракт в рюкзаке")
 go_home(g)
 talk(g, "loner")
 say(g, "Вот твоя доля")
@@ -362,6 +371,31 @@ g.open_journal = None
 g.journal_open = True
 g.draw()
 ok(True, "журнал рисуется")
+
+# ============================================================ обыск в два окна
+print("— обыск: взять, положить, одну штуку")
+g = new_game()
+box = next(c for c in g.level.containers if c["name"] == "сейф конторы")
+g.flags["junk_safe_open"] = True
+stand_near(g, box["tiles"])
+g.handle_key(pygame.K_e)
+ok(g.loot and g.loot["box"] is box, "открылось окно обыска: рюкзак и сейф")
+caps = box["loot"]["крышки"]
+g.last_button = 3
+g.loot_click("box", "крышки")
+ok(g.inventory.count("крышки") == 1 and box["loot"]["крышки"] == caps - 1, "ПКМ — взять одну крышку")
+g.last_button = 1
+g.loot_click("box", "патроны")
+ok(g.inventory.count("патроны") == 10 and "патроны" not in box["loot"], "ЛКМ — взять всю стопку")
+g.loot_click("me", "письмо деда")
+ok(not g.inventory.has("письмо деда") and box["loot"].get("письмо деда") == 1, "положить своё в сейф")
+g.handle_key(pygame.K_r)
+ok(not box["loot"] and g.inventory.has("письмо деда"), "R — забрать всё обратно")
+g.handle_key(pygame.K_ESCAPE)
+g.handle_key(pygame.K_e)
+ok(g.loot is not None, "пустой контейнер можно открыть снова — положить вещи")
+g.draw()
+g.close_loot()
 
 print(f"не прошло: {len(failed)}")
 sys.exit(1 if failed else 0)

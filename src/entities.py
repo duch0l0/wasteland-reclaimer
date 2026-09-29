@@ -168,10 +168,11 @@ class Player(CombatStats):
             return True
         return False
 
-    def play_attack(self):
-        """Анимация удара без кулдауна — в пошаговом бою темп задаёт ОД."""
+    def play_attack(self, kind="melee"):
+        """Анимация удара (melee) или выстрела (shoot) — в пошаговом бою темп задаёт ОД."""
         self.attacking = True
-        self.anim.set_action("attack")
+        if not self.anim.play_once(kind):
+            self.anim.play_once("attack")
 
     def attack_hitbox(self):
         w = S.PLAYER_ATTACK_RANGE
@@ -185,7 +186,7 @@ class Player(CombatStats):
         self.anim.update(dt_ms)
         if self.attack_cd > 0:
             self.attack_cd -= dt_ms
-        if self.attacking and self.anim.action == "attack" and self.anim.is_finished_once():
+        if self.attacking and not self.anim.busy and (self.anim.action != "attack" or self.anim.is_finished_once()):
             self.attacking = False
 
     def gain_xp(self, amount):

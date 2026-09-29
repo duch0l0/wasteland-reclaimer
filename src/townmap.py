@@ -158,7 +158,7 @@ class TownMap(MapBase):
 
     def container_sprite_at(self, world_pos):
         """Закрытый контейнер, по картинке которого пришёлся клик (передний первым)."""
-        hits = [o for o in self.objects if o["container"] and not o["container"]["opened"]
+        hits = [o for o in self.objects if o["container"]
                 and o["rect"].collidepoint(world_pos)]
         for o in sorted(hits, key=lambda o: -o["sort_y"]):
             img = P.image(o["name"])
@@ -229,6 +229,7 @@ class TownMap(MapBase):
         for o in self.objects:
             if o["floor"] or not o["rect"].colliderect(view):
                 continue
-            opened = o["container"] is not None and o["container"]["opened"]
+            c = o["container"]
+            opened = c is not None and c["opened"] and not c["loot"]  # пустой — темнее
             out.append((o["sort_y"], P.image(o["name"], darken=opened), (o["rect"].x - cam_x, o["rect"].y - cam_y)))
         return out

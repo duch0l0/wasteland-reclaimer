@@ -58,36 +58,6 @@ class InteractionMixin:
                 self.talk_to(e, e.talk)
                 return
 
-    def open_container(self, c):
-        req = c.get("requires")
-        if req and not self.check_condition(req):
-            self.log(req.get("msg", f"{c['name'].capitalize()}: заперто."))
-            return
-        c["opened"] = True
-        loot = c["loot"]
-        if loot:
-            self.log(f"Вы обыскиваете: {c['name']}. " + ", ".join(f"{k} ×{v}" for k, v in loot.items()))
-            for k, v in loot.items():
-                self.inventory.add(k, v)
-        else:
-            self.log(f"{c['name'].capitalize()}: пусто. Кто-то успел раньше.")
-        # чужое брать — с последствиями
-        owner = c.get("owner")
-        if owner == "gena" and any(n.npc_id == "gena" for n in self.npcs):
-            self.flags["gena_robbed"] = True
-            self.log("Вы чувствуете на спине чей-то взгляд... Гена это так не оставит.")
-        elif owner and self.loc.faction_members(owner):
-            # как в Fallout: кражу замечают, только если вор на виду
-            p = self.player
-            seen = [e for e in self.loc.faction_members(owner)
-                    if pygame.Vector2(e.rect.center).distance_to(p.rect.center) <= e.aggro and self.combat.los(e, p)]
-            if not seen:
-                self.log("Кажется, никто не заметил.")
-                return
-            self.log(f"{seen[0].name.capitalize()}: Эй! Это наше!")
-            self.make_hostile(owner)
-            self.combat.start(player_first=False)
-
     def open_door(self, tile):
         if self.inventory.has("отмычка"):
             self.inventory.remove("отмычка")
@@ -138,9 +108,10 @@ class InteractionMixin:
         """Вызывается боевым модулем: добыча, опыт, перки, флаги квестов."""
         self.log(f"{enemy.name[:1].upper() + enemy.name[1:]} повержен.")
         mult = 2 if self.player.perk_rank("looter") else 1
-        for item, cnt in (enemy.loot or {}).items():
-            self.inventory.add(item, cnt * mult)
-            self.log(f"Трофей: {item} ×{cnt * mult}")
+        loot = {item: cnt * mult for item, cnt in (enemy.loot or {}).items()}
+        self.level.add_corpse(enemy, loot)
+        if loot:
+            self.log("На теле что-то есть — можно обыскать.")
         if self.player.perk_rank("scavenger") and self.player.hp < self.player.max_hp:
             self.player.hp = min(self.player.max_hp, self.player.hp + 5)
             self.log("Падальщик: +5 HP.")

@@ -20,12 +20,28 @@ class Animator:
         self.directional = "idle_down" in frames_by_action
         self.index = 0
         self.timer = 0.0
+        self.once = None     # одноразовая анимация: {"then": действие после, "delay": мс до начала}
 
     def set_action(self, action):
+        self.once = None
         if action != self.action:
             self.action = action
             self.index = 0
             self.timer = 0.0
+
+    def play_once(self, action, then="idle", delay_ms=0):
+        """Проиграть действие один раз (удар, выстрел, вздрагивание) и вернуться к then.
+        delay_ms — подождать перед началом (реакция цели чуть позже удара)."""
+        fb = self.frames_by_action
+        if not (fb.get(f"{action}_{self.direction}") or fb.get(action)):
+            return False
+        self.set_action(then if delay_ms else action)
+        self.once = {"action": action, "then": then, "delay": delay_ms}
+        return True
+
+    @property
+    def busy(self):
+        return self.once is not None
 
     def face(self, dx, dy):
         """Повернуться по направлению движения/взгляда (dx, dy)."""
@@ -42,6 +58,22 @@ class Animator:
                 or fb.get(f"idle_{self.direction}") or fb["idle"])
 
     def update(self, dt_ms):
+        if self.once and self.once["delay"] > 0:
+            self.once["delay"] -= dt_ms
+            if self.once["delay"] <= 0:
+                self.action, self.index, self.timer = self.once["action"], 0, 0.0
+            return
+        if self.once:
+            self.timer += dt_ms
+            if self.timer >= self.frame_ms:
+                self.timer = 0.0
+                if self.index + 1 >= len(self.frames()):  # проиграли — назад к обычному
+                    then = self.once["then"]
+                    self.once = None
+                    self.action, self.index = then, 0
+                else:
+                    self.index += 1
+            return
         self.timer += dt_ms
         if self.timer >= self.frame_ms:
             self.timer = 0.0
