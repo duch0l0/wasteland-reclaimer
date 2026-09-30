@@ -47,8 +47,10 @@ class WorldMixin:
             self.show_slides(d["chapter_end"])
             return
         self.loc = self.get_location(loc_id)
+        self.audio.play_music(d.get("music", "desert"))
         self.autowalk = None
         self.speech = None
+        self.apply_view()
         self.place_player((at[0] * S.TILE, at[1] * S.TILE) if at else self.loc.entry)
         self.sync_gates()
         self.mode = "local"
@@ -56,14 +58,34 @@ class WorldMixin:
 
     def start_encounter(self):
         self.loc, text = make_encounter(self.flags)
+        self.audio.play_music("raiders")
+        self.apply_view()
         self.place_player(self.level.player_spawn)
         self.mode = "local"
         self.log(f"Случайная встреча! {text}")
 
     def go_world_map(self):
+        if self.merc_mode:   # Дэкс не бродит по пустоши: возвращается в Пятнадцатую, выполнив контракт
+            if not self.merc_leave_attempt():
+                self._step_back_from_exit()
+            return
+        self._go_world_map()
+
+    def _step_back_from_exit(self):
+        from ..combat import tile_of, rect_pos_for_tile
+        x, y = tile_of(self.player)
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            t = (x + dx, y + dy)
+            if not self.level.is_wall(*t) and not self.level.is_exit(*t):
+                self.player.rect.topleft = rect_pos_for_tile(self.player, t)
+                self.autowalk = None
+                return
+
+    def _go_world_map(self):
         if self.loc.world_pos:  # из случайной встречи остаёмся там, где она случилась
             self.worldmap.pos = to_screen(self.loc.world_pos)
         self.mode = "world"
+        self.audio.play_music("world")
         self.held_letters.clear()
         self.log("Вы выходите на просторы пустоши.")
 
@@ -76,6 +98,21 @@ class WorldMixin:
             self.start_encounter()
         elif kind == "arrived":
             self.enter_location(loc_id)
+
+    def apply_view(self):
+        """Прямая или изометрическая карта: камера, кадры героя (в изометрии — 8 направлений)."""
+        iso = getattr(self.level, "iso", False)
+        self.cam.iso = iso
+        p = self.player
+        p.iso = iso
+        if iso:
+            if getattr(self, "_hero_iso", None) is None:
+                from ..iso import char_animator
+                self._hero_flat = p.anim
+                self._hero_iso = char_animator("hero")
+            p.anim = self._hero_iso
+        elif getattr(self, "_hero_flat", None) is not None:
+            p.anim = self._hero_flat
 
     def reveal_location(self, loc_id):
         self.worldmap.known.add(loc_id)
@@ -94,8 +131,15 @@ class WorldMixin:
         self.snap_camera()
 
     def _camera_target(self):
-        lvl_w, lvl_h = self.level.pixel_size
         view_w, view_h = self.view_size()
+        if getattr(self.level, "iso", False):   # изометрия: герой в центре, края — по ромбу карты
+            from ..iso import w2i
+            px, py = w2i(self.player.rect.centerx, self.player.rect.bottom - S.TILE // 2)
+            b = self.level.iso_bounds()
+            tx = clamp(px - view_w / 2, b.left, max(b.left, b.right - view_w))
+            ty = clamp(py - 60 - view_h / 2, b.top, max(b.top, b.bottom - view_h))
+            return tx, ty
+        lvl_w, lvl_h = self.level.pixel_size
         # карта меньше экрана — по центру, иначе герой в центре видимой части над панелью
         target_x = (lvl_w - view_w) / 2 if lvl_w <= view_w else \
             clamp(self.player.rect.centerx - view_w // 2, 0, lvl_w - view_w)

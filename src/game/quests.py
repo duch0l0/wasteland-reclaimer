@@ -32,6 +32,8 @@ class QuestMixin:
             return False
         if "flags_any" in cond and not any(self.flags.get(f) for f in cond["flags_any"]):
             return False
+        if "flags_all" in cond and not all(self.flags.get(f) for f in cond["flags_all"]):
+            return False
         if "no_item" in cond and self.inventory.has(cond["no_item"]):
             return False
         if "flag" in cond and not self.flags.get(cond["flag"]):
@@ -80,6 +82,14 @@ class QuestMixin:
             self.set_stage("sq_vault", 50)
         if self.inventory.has("святая вода") and 10 <= st("sq_holywater") < 30:
             self.set_stage("sq_holywater", 30)
+        # Барстоу: зачистка районов
+        cleared = sum(bool(f.get(k)) for k in ("barstow_depot_cleared", "barstow_center_cleared"))
+        if cleared and st("sq_barstow") < 10:
+            self.set_stage("sq_barstow", 10)
+        if cleared == 1 and st("sq_barstow") < 50:
+            self.set_stage("sq_barstow", 50)
+        if cleared == 2 and st("sq_barstow") < 90:
+            self.set_stage("sq_barstow", 90)
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 
@@ -96,7 +106,8 @@ class QuestMixin:
             self.inventory.remove(eff["item"], eff["count"])
             self.log(f"Отдано: {eff['item']} ×{eff['count']}")
         elif t == "xp":
-            self.log(f"+{eff['amount']} опыта.")
+            if not self.merc_mode:   # за Дэкса опыта нет
+                self.log(f"+{eff['amount']} опыта.")
             self.gain_xp(eff["amount"])
         elif t == "trade":
             self.open_trade(eff.get("id", "gena"))
@@ -130,6 +141,10 @@ class QuestMixin:
         elif t == "say":  # герой говорит вслух — облачко над головой
             self.speech = {"ent": self.player, "text": eff["text"], "t": eff.get("ms", 3500)}
             self.log(f"Вы: «{eff['text']}»")
+        elif t == "merc_start":
+            self.merc_start()
+        elif t == "merc_finish":
+            self.merc_finish()
         elif t == "join_dog":
             self.join_dog()
         elif t == "kill_pack":   # отравили кормушку — стая гибнет в своих норах

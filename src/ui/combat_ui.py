@@ -100,7 +100,7 @@ def draw_floaters(surf, floaters, cam, zoom=1):
     for f in floaters:
         txt = font.render(f["text"], True, f["color"])
         txt.set_alpha(max(0, 255 - int(255 * f["t"] / 1100)))
-        surf.blit(txt, txt.get_rect(center=((f["pos"].x - cam.x) * zoom, (f["pos"].y - cam.y) * zoom)))
+        surf.blit(txt, txt.get_rect(center=tuple(c * zoom for c in (lambda x, y: (x, y - f.get("rise", 0)))(*cam.p(f["pos"].x, f["pos"].y)))))
 
 
 def draw_aim_menu(surf, combat):
@@ -147,7 +147,11 @@ def draw_tracers(surf, tracers, cam):
             continue
         u = d / length
         pos = tr["from"] + u * min(length, tr["t"] / 1000 * Combat.BULLET_SPEED)
-        head = (pos.x - cam.x, pos.y - cam.y)
+        head = cam.p(pos.x, pos.y)
+        if cam.iso:   # хвост пули — по направлению полёта на экране
+            a, b = cam.p(*tr["from"]), cam.p(*tr["to"])
+            d2 = pygame.Vector2(b[0] - a[0], b[1] - a[1])
+            u = d2.normalize() if d2.length() else u
         for ln, color, w in ((26, (120, 95, 60), 1), (14, (200, 160, 90), 2), (6, (255, 225, 140), 2)):
             tail = (head[0] - u.x * ln, head[1] - u.y * ln)  # хвост: дальний конец тусклее
             pygame.draw.line(surf, color, tail, head, w)
@@ -179,7 +183,7 @@ def draw_throws(surf, combat, cam):
         k = min(1.0, th["t"] / th["dur"])
         pos = th["from"].lerp(th["to"], k)
         lift = 4 * 60 * k * (1 - k)
-        x, y = int(pos.x - cam.x), int(pos.y - cam.y)
+        x, y = (int(c) for c in cam.p(pos.x, pos.y))
         pygame.draw.ellipse(surf, (0, 0, 0), (x - 5, y - 2, 10, 5))
         color = (80, 100, 60) if th["kind"] == "grenade" else (150, 190, 110)
         pygame.draw.circle(surf, (20, 18, 14), (x, int(y - lift)), 6)
@@ -192,7 +196,7 @@ def draw_blasts(surf, combat, cam):
     """Взрыв: вспышка, огненный шар, кольцо дыма."""
     for b in combat.blasts:
         k = b["t"] / 700
-        x, y = int(b["pos"].x - cam.x), int(b["pos"].y - cam.y)
+        x, y = (int(c) for c in cam.p(b["pos"].x, b["pos"].y))
         r = int(20 + 70 * k)
         layer = pygame.Surface((r * 2 + 4, r * 2 + 4), pygame.SRCALPHA)
         c = (r + 2, r + 2)

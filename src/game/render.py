@@ -51,6 +51,19 @@ class RenderMixin:
 
     def _draw_local(self):
         screen, cam, combat, z = self.screen, self.cam, self.combat, self.zoom
+        shake = (0, 0)
+        if self.action.active and self.action.shake_ms > 0:   # толпа вывалилась — экран дрогнул
+            import random as _r
+            shake = (_r.randint(-6, 6), _r.randint(-4, 4))
+            cam.x += shake[0]
+            cam.y += shake[1]
+        try:
+            self._draw_local_inner(screen, cam, combat, z)
+        finally:
+            cam.x -= shake[0]
+            cam.y -= shake[1]
+
+    def _draw_local_inner(self, screen, cam, combat, z):
         surf = self._world_canvas()
         if self.level.parallax:
             self.parallax.draw(surf, cam.x)
@@ -66,9 +79,10 @@ class RenderMixin:
         if self.companion is not None and self.companion.down:  # выбитый из боя спутник лежит
             from ..corpse import corpse_image
             img = corpse_image(self.companion)
-            surf.blit(img, img.get_rect(center=(self.companion.rect.centerx - int(cam.x),
-                                                self.companion.rect.bottom - 6 - int(cam.y))))
-        layers = [(e.rect.bottom, e) for e in entities] + \
+            fx, fy = cam.foot(self.companion)
+            surf.blit(img, img.get_rect(center=(fx, fy - 6)))
+        key = getattr(self.level, "entity_key", lambda e: e.rect.bottom)   # глубина: y или u+v в изометрии
+        layers = [(key(e), e) for e in entities] + \
             [(y, (img, pos)) for y, img, pos in self.level.drawables(cam, surf.get_size())]
         layers.sort(key=lambda item: item[0])
         outlined = combat_ui.highlights(combat)
@@ -80,6 +94,10 @@ class RenderMixin:
             if thing in outlined:
                 combat_ui.draw_outline(surf, frame, r, outlined[thing])
             surf.blit(frame, r)
+            if thing is self.player and self.action.active and self.action.firing_ms > 0:   # вспышка у ствола
+                fl = thing.anim.frames_by_action.get(f"flash_{thing.anim.direction}")
+                if fl:
+                    surf.blit(fl[(pygame.time.get_ticks() // 40) % len(fl)], r)
 
         self.gore.draw_air(surf, self.level, cam)
 
@@ -92,7 +110,8 @@ class RenderMixin:
         combat_ui.draw_blasts(surf, combat, cam)
         if getattr(self.level, "dark", False):
             me = self.player.rect
-            combat_ui.draw_darkness(surf, (me.centerx - int(cam.x), me.centery - 30 - int(cam.y)), self.level.dark)
+            fx, fy = cam.foot(self.player)
+            combat_ui.draw_darkness(surf, (fx, fy - 30), self.level.dark)
         hint = self.cursor_hint()
         cursor.draw_cursor_hint(surf, hint and (None, *hint[1:]), cam)
         if surf is not screen:  # мир — на экран с масштабом; подписи дальше — в размер экрана
@@ -106,6 +125,8 @@ class RenderMixin:
         if combat.active:
             combat_ui.draw_combat_markers(surf, combat, cam, z)
         combat_ui.draw_floaters(surf, combat.floaters, cam, z)
+        if self.action.active:
+            self.action.draw_overlay(surf, cam, z)
         if hint and hint[0]:
             cursor.draw_cursor_hint(surf, (hint[0], hint[1], None, None), cam)
         self.minimap.draw(surf, self)

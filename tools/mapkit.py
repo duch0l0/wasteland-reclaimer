@@ -74,6 +74,7 @@ class MapKit:
         self.blocked, self.soft, self.reserved = set(), set(), set()
         self.enemies, self.npcs, self.pickups = [], [], []
         self.exits, self.portals = [], []
+        self.roofs = []     # крыши зданий: убираются, когда герой внутри
         self._reach = None
 
     # -------------------------------------------------------- земля и резерв
@@ -267,13 +268,16 @@ class MapKit:
             if y not in gaps:
                 self.put(f"vwall_{style}_{side}", x, y, check=False, allow_reserved=True)
 
-    def building(self, x0, y0, w, h, style, south=(), west=(), east=(), north=()):
+    def building(self, x0, y0, w, h, style, south=(), west=(), east=(), north=(), roof=True, sign=None):
         """Здание со всеми стенами: северная — целая (north — проёмы), южная — с проёмами
         дверей (смещения от x0, чётные, проём 2 клетки), боковые — с проёмами в строках
         west/east (смещения от y0). Пол бетонный. w — чётное. Возвращает внутренность."""
         assert w % 2 == 0, "ширина здания — чётная (фасады по 2 клетки)"
         x1, y1 = x0 + w - 1, y0 + h - 1
         self.paint("c", x0, y0 + 1, x1, y1)
+        if roof:
+            self.roofs.append({"x0": x0, "y0": y0, "x1": x1, "y1": y1, "style": style,
+                               "seed": len(self.roofs) * 7 + x0 * 3 + y0, "sign": sign})
         ngaps = set()
         for off in north:
             ngaps.update((x0 + off, x0 + off + 1))
@@ -328,6 +332,7 @@ class MapKit:
         out = {"w": self.W, "h": self.H, "player": list(self.START), "exits": [list(t) for t in self.exits],
                "ground": ["".join(r) for r in self.ground], "decals": self.decals, "props": self.props,
                "containers": self.containers, "terminals": self.terminals, "portals": self.portals,
+               "roofs": self.roofs,
                "enemies": self.enemies, "npcs": self.npcs, "pickups": self.pickups, **extra}
         with open(path, "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, separators=(",", ":"))

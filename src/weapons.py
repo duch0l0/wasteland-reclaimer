@@ -7,6 +7,8 @@ WEAPONS = {
                "item": "самопал", "ammo": "патроны"},
     "pistol10": {"name": "10-мм пистолет", "ranged": True, "ap": 4, "range": 8, "damage": 9,
                  "item": "10-мм пистолет", "ammo": "патроны"},
+    "rifle": {"name": "Винтовка", "ranged": True, "ap": 5, "range": 10, "damage": 12,
+              "item": "охотничья винтовка", "ammo": "патроны"},
 }
 RANGE_PENALTY_PER_TILE = 4  # −4% к попаданию за каждую клетку дальше первой
 

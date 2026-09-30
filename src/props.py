@@ -30,6 +30,11 @@ def _source_sizes():
     return _SIZES
 
 
+def explosive(obj):
+    """Взрывается ли объект карты (красная бочка). Изометрических тайлов в каталоге нет — не взрываются."""
+    return obj.get("name") in CATALOG and bool(CATALOG[obj["name"]].get("explosive"))
+
+
 def info(name):
     """Описание объекта с вычисленными полями: size (px, с масштабом), foot, block, sight, layer."""
     d = CATALOG[name]

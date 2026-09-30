@@ -14,6 +14,8 @@ DIM = (160, 150, 130)
 
 
 def weapon_label(game, short=False):
+    if getattr(game, "action", None) is not None and game.action.active:
+        return game.action.status()   # экшен: «Автомат 23/30» / «перезарядка»
     w = WEAPONS[game.player.weapon]
     name = game.weapon_name()
     if w.get("ammo"):
@@ -63,11 +65,14 @@ def draw_panel(surf, game):
     lv = p.level_sys
     if combat.active:
         cur = combat.current
-        title = "ВАШ ХОД" if cur is p else f"Ход: {cur.name}" if cur else ""
+        title = ("ХОД ДЭКСА" if getattr(game, "merc_mode", False) else "ВАШ ХОД") if cur is p else \
+            f"Ход: {cur.name}" if cur else ""
         tcolor = (230, 200, 110) if cur is p else (220, 120, 90)
         corner = f"Раунд {combat.round}"
     else:
         title, tcolor, corner = game.loc.name, (210, 190, 120), f"Ур. {lv.level}"
+        if getattr(game, "merc_mode", False):
+            title = f"Дэкс · {title}"
     c = font_small.render(corner, True, DIM)
     surf.blit(c, (right - c.get_width(), box.y + 8))
     t = font.render(title, True, tcolor)
@@ -84,8 +89,12 @@ def draw_panel(surf, game):
         rad = pygame.Surface((eaten, hp_rect.h), pygame.SRCALPHA)
         rad.fill((110, 200, 60, 150))
         surf.blit(rad, (hp_rect.right - eaten, hp_rect.y))
-    _bar(surf, pygame.Rect(x0 + 190, box.y + 32, right - x0 - 190, 15), lv.xp / lv.xp_needed,
-         S.COLOR_XP, S.COLOR_XP_BG, f"XP {lv.xp}/{lv.xp_needed}")
+    if getattr(game, "merc_mode", False):   # экшен за Дэкса — без опыта
+        _bar(surf, pygame.Rect(x0 + 190, box.y + 32, right - x0 - 190, 15), 0,
+             S.COLOR_XP, S.COLOR_XP_BG, "Наёмник по контракту")
+    else:
+        _bar(surf, pygame.Rect(x0 + 190, box.y + 32, right - x0 - 190, 15), lv.xp / lv.xp_needed,
+             S.COLOR_XP, S.COLOR_XP_BG, f"XP {lv.xp}/{lv.xp_needed}")
 
     if combat.active:
         surf.blit(font_small.render("ОД", True, S.COLOR_TEXT), (x0, box.y + 52))

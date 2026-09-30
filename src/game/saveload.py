@@ -51,6 +51,8 @@ class SaveMixin:
             return "Мёртвые не сохраняются."
         if self.slides:
             return "Сначала досмотрите."
+        if self.action.active and self.action.chasing():
+            return "За вами гонятся — не до сохранений."
         return None
 
     # ------------------------------------------------------------ сохранить
@@ -92,9 +94,31 @@ class SaveMixin:
             "loc": None if encounter else self.loc.id,
             "locations": {lid: self._loc_state(loc) for lid, loc in self.locations.items()},
             "log": self.log_lines[-6:], "played_ms": self.play_ms,
+            "merc_mode": self.merc_mode,
+            "other_profile": self._profile_to_json(self.other_profile),
+            "dex_profile": self._profile_to_json(getattr(self, "dex_profile", None)),
             "companion": None if self.companion is None else {
                 "hp": self.companion.hp, "max_hp": self.companion.max_hp, "down": self.companion.down},
         }
+
+    @staticmethod
+    def _profile_to_json(prof):
+        if not prof:
+            return None
+        c = prof.get("companion")
+        return {**prof, "companion": None if c is None else {"hp": c.hp, "max_hp": c.max_hp}}
+
+    def _profile_from_json(self, prof):
+        if not prof:
+            return None
+        c = prof.get("companion")
+        if c:
+            from ..entities import Companion
+            from ..location import npc_animations
+            dog = Companion((0, 0), npc_animations("dog"))
+            dog.hp, dog.max_hp = max(1, c["hp"]), c["max_hp"]
+            c = dog
+        return {**prof, "companion": c}
 
     @staticmethod
     def _loc_state(loc):
@@ -114,6 +138,7 @@ class SaveMixin:
             "explored": [list(t) for t in getattr(lv, "explored", ())],
             "met": sorted(getattr(lv, "met", ())),
             "stains": [list(s) for s in getattr(lv, "stains", [])[-200:]],
+            "hordes_done": [i for i, h in enumerate(getattr(lv, "hordes", [])) if h["done"]],
         }
 
     # ------------------------------------------------------------ загрузить
@@ -182,6 +207,9 @@ class SaveMixin:
             self.companion = Companion((0, 0), npc_animations("dog"))
             self.companion.hp, self.companion.max_hp = max(1, cs["hp"]), cs["max_hp"]
         self.log_lines = list(st.get("log", []))
+        self.merc_mode = st.get("merc_mode", False)
+        self.other_profile = self._profile_from_json(st.get("other_profile"))
+        self.dex_profile = self._profile_from_json(st.get("dex_profile"))
 
         if st["mode"] == "world" or not st["loc"]:
             self.loc = self.get_location(st["loc"] or "ruins")
@@ -189,6 +217,7 @@ class SaveMixin:
         else:
             self.loc = self.get_location(st["loc"])
             self.mode = "local"
+            self.apply_view()
             p.rect.topleft = tuple(ps["pos"])
             self.snap_camera()
         from .. import companion
@@ -228,3 +257,6 @@ class SaveMixin:
         lv._mm_fog = None
         lv._last_reveal = None
         lv.stains = [tuple(s) for s in ls["stains"]]
+        for i in ls.get("hordes_done", []):
+            if i < len(getattr(lv, "hordes", [])):
+                lv.hordes[i]["done"] = True

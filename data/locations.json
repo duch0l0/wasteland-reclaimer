@@ -7,7 +7,8 @@
       330
     ],
     "known": true,
-    "terminals": []
+    "terminals": [],
+    "music": "desert"
   },
   "station": {
     "name": "Заправка «Последний шанс»",
@@ -43,7 +44,8 @@
     "known": false,
     "terminals": [
       "station"
-    ]
+    ],
+    "music": "raiders"
   },
   "baker": {
     "name": "Бейкер",
@@ -58,12 +60,47 @@
     "name": "Убежище 57",
     "map": "data/maps/vault57.json",
     "known": false,
-    "underground": true
+    "underground": true,
+    "music": "lab"
   },
   "drain": {
     "name": "Ливнёвка",
     "map": "data/maps/drain.json",
     "known": false,
-    "underground": true
+    "underground": true,
+    "music": "caves"
+  },
+  "barstow": {
+    "name": "Барстоу",
+    "map": "data/maps/barstow.json",
+    "world_pos": [
+      70,
+      360
+    ],
+    "known": false,
+    "music": "hub",
+    "action": true
+  },
+  "barstow_depot": {
+    "name": "Барстоу: депо",
+    "map": "data/maps/barstow_depot.json",
+    "known": false,
+    "clear_flag": "barstow_depot_cleared",
+    "music": "junktown",
+    "action": true
+  },
+  "barstow_center": {
+    "name": "Барстоу: центр",
+    "map": "data/maps/barstow_center.json",
+    "known": false,
+    "clear_flag": "barstow_center_cleared",
+    "music": "reno",
+    "action": true
+  },
+  "barstow_order": {
+    "name": "Святилище Ордена Тайн",
+    "map": "data/maps/barstow_order.json",
+    "known": false,
+    "music": "vats"
   }
 }

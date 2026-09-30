@@ -216,7 +216,34 @@ def art_baker(s, rnd, game):
         pygame.draw.polygon(s, (190, 175, 150), [(tx, H - 150 - i * 6), (tx + 50, H - 80), (tx + 10, H - 80)])
 
 
-ARTS = {"war": art_war, "alaska": art_alaska, "mariposa": art_mariposa, "bombs": art_bombs, "vault": art_vault,
+def art_barstow(s, rnd, game):
+    _sky(s, (40, 26, 44), (170, 90, 70))
+    _skyline(s, rnd, H - 120, (30, 24, 26), ruined=True)
+    pygame.draw.rect(s, (70, 56, 44), (0, H - 120, W, 120))
+    for x in range(0, W, 26):   # рельсы и шпалы
+        pygame.draw.rect(s, (90, 70, 50), (x, H - 70, 14, 20))
+    pygame.draw.line(s, (170, 170, 160), (0, H - 64), (W, H - 64), 3)
+    pygame.draw.line(s, (170, 170, 160), (0, H - 56), (W, H - 56), 3)
+    font = pygame.font.Font(None, 56)
+    for text, pos, col in (("MOTEL", (120, H - 250), (255, 90, 190)), ("МИРАЖ", (W - 330, H - 290), (255, 70, 150))):
+        glow = font.render(text, True, col)
+        for d in (-3, 3):
+            g = glow.copy()
+            g.set_alpha(70)
+            s.blit(g, (pos[0] + d, pos[1] + d))
+        s.blit(glow, pos)
+    if game is not None:   # Дэкс — выживший с винтовкой
+        try:
+            from ..iso import load_char
+            frames, _ = load_char("hero")
+            f = frames["idle_se"][0]
+            big = pygame.transform.smoothscale(f, (f.get_width() * 2, f.get_height() * 2))
+            s.blit(big, big.get_rect(midbottom=(W // 2, H - 40)))
+        except (OSError, KeyError, pygame.error):
+            pass
+
+
+ARTS = {"barstow": art_barstow, "war": art_war, "alaska": art_alaska, "mariposa": art_mariposa, "bombs": art_bombs, "vault": art_vault,
         "first_years": art_first_years, "letter": art_letter, "arrival": art_arrival, "baker": art_baker}
 
 

@@ -160,7 +160,18 @@ ok(g.latest_save() == "quick", "«Продолжить» — самое свеж
 # ---------------------------------------------------------------- звук
 print("— звук")
 a = g.audio
-ok(a.ok and set(a.sounds) == {"shot", "melee", "hit"}, f"звуки загружены: {sorted(a.sounds)}")
+ok(a.ok and {"shot", "melee", "hit"} <= set(a.sounds), f"звуки загружены: {len(a.sounds)} (свои + Fallout 2, если найден)")
+if a.f2 is not None and (a.f2.install or a.f2.status == "done"):   # есть папка звуков или Fallout 2
+    import time as _t
+    for _ in range(600):
+        if a.f2.status == "done":
+            break
+        _t.sleep(0.1)
+    a.poll()
+    ok({"ghoul_hurt", "human_death", "levelup", "combat_start"} <= set(a.sounds), "звуки Fallout 2 подключены")
+    ok(a._music_file("desert").endswith("07desert.ogg"), "музыка Пятнадцатой — «Desert» из Fallout 2")
+else:
+    print("     (папки fallout2_sounds нет — играют свои звуки)")
 g.menu = None
 g.handle_key(pygame.K_ESCAPE)
 labels = [lbl for lbl, _, _ in g.menu_items()]
@@ -194,14 +205,15 @@ rnd = random.randint
 random.randint = lambda lo, hi: lo  # попадание
 g.combat.attack(g.player, rat)
 random.randint = rnd
-ok(played[:2] == ["melee", "hit"], f"удар ломом по мутанту: {played[:2]}")
+ok("melee" in played and "hit" in played and played.index("melee") < played.index("hit"),
+   f"удар ломом по мутанту: взмах, потом попадание ({played})")
 g.inventory.add("самопал")
 g.inventory.add("патроны", 3)
 g.switch_weapon("pistol")
 played.clear()
 g.player.ap = 8
 g.combat.attack(g.player, rat)
-ok(played and played[0] == "shot", f"выстрел: {played[:1]}")
+ok(any(p in ("shot", "shot_pipe") for p in played), f"выстрел: {played[:2]}")
 fr(g, 20)
 
 print(f"не прошло: {len(failed)}")

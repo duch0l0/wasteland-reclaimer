@@ -586,6 +586,41 @@ def make_folk_b():
     return variant("player", fn)
 
 
+def make_merc():
+    """Наёмник Дэкс: каска, куртка хаки, тёмные штаны, ремень винтовки через грудь
+    (тот самый выживший, за которого играешь в Барстоу)."""
+    helmet = [(62, 72, 48), (86, 98, 64), (110, 124, 82)]
+    def fn(img, d, t):
+        recolor(img, ramp(HERO_CLOTHES, [(112, 98, 66), (128, 112, 76), (146, 128, 88), (168, 150, 104)]),
+                rows_from(t, 12))
+        recolor(img, ramp(HERO_PANTS, [(64, 66, 56), (54, 56, 48), (80, 82, 70), (46, 48, 40), (90, 92, 78)]))
+        hair = row_span(img, t + 4)
+        if hair:   # каска: купол поверх волос
+            x0, x1 = hair
+            for y in range(t - 1, t + 6):
+                w = min(y - t + 3, 4)
+                for x in range(x0 + 3 - w, x1 - 2 + w):
+                    put(img, x, y, helmet[1] if y < t + 2 else helmet[0])
+            for x in range(x0 - 1, x1 + 2):
+                put(img, x, t + 6, helmet[0])
+                put(img, x, t + 7, INK)
+            for x in range(x0 + 2, x1 - 1):
+                put(img, x, t - 2, INK)
+            put(img, (x0 + x1) // 2 - 2, t + 1, helmet[2])
+        if d in ("down", "up"):   # ремень винтовки через грудь (спину)
+            for i in range(9):
+                x, y = (row_span(img, t + 15) or (0, 0))[0] + 2 + i, t + 15 + i
+                if rgb(img, x, y) not in (None, INK):
+                    img.set_at((x, y), (60, 40, 26))
+        else:                     # ствол за плечом
+            sp = row_span(img, t + 14)
+            if sp:
+                bx = sp[0] + 1 if d == "right" else sp[1] - 1
+                for k in range(10):
+                    put(img, bx - (k // 3 if d == "right" else -(k // 3)), t + 6 + k, (40, 40, 44))
+    return variant("player", fn, dy=3)
+
+
 # ---------------------------------------------------------------- новые враги
 
 def make_feral():
@@ -661,7 +696,7 @@ def make_turret():
 
 MAKERS = {"raider": make_raider, "gang": make_gang, "boss": make_boss, "beetle": make_beetle,
           "ada": make_ada, "doc": make_doc, "sheriff": make_sheriff, "silas": make_silas, "mo": make_mo,
-          "lenny": make_lenny, "folk_a": make_folk_a, "folk_b": make_folk_b,
+          "lenny": make_lenny, "merc": make_merc, "folk_a": make_folk_a, "folk_b": make_folk_b,
           "feral": make_feral, "radroach": make_roach, "turret": make_turret}
 
 

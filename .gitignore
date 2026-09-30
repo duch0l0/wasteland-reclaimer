@@ -6,3 +6,12 @@ saves/
 sounds/music/*.wav
 build/
 dist/
+
+# купленные изометрические наборы — сами файлы выкладывать нельзя (лицензия)
+iso/*
+!iso/README.txt
+
+# музыка и звуки Fallout 2 игрока, перекодированные из его копии игры (авторские — в git нельзя)
+f2cache/
+fallout2_sounds/
+crash.log

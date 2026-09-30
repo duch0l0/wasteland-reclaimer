@@ -24,6 +24,8 @@ os.chdir(BASE_DIR)  # относительные пути к assets/ и data/ р
 from src.game import Game, saveload  # noqa: E402 — импорт после chdir: модули читают data/ при загрузке
 
 saveload.SAVE_DIR = os.path.join(USER_DIR, "saves")
+from src import fallout2  # noqa: E402
+fallout2.CACHE_DIR = fallout2.sounds_dir(USER_DIR)   # музыка и звуки: папка fallout2_sounds (см. README)
 
 
 def smoke():
@@ -53,7 +55,12 @@ def main():
     if "--smoke" in sys.argv:
         smoke()
     try:
-        Game().run()
+        game = Game(intro="--iso" not in sys.argv)
+        if "--iso" in sys.argv:   # сразу в изометрический Барстоу
+            game.menu = None
+            game.slides = None
+            game.merc_start()     # за наёмника Дэкса, как по квесту «Контракт на Барстоу»
+        game.run()
     except Exception:
         # в exe без консоли ошибку не видно — пишем её в файл рядом с игрой
         import traceback

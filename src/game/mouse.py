@@ -33,8 +33,8 @@ class MouseMixin:
         return int(pos[0] / self.zoom), int(pos[1] / self.zoom)
 
     def world_pos(self, pos):
-        vx, vy = self.view_pos(pos)
-        return vx + int(self.cam.x), vy + int(self.cam.y)
+        wx, wy = self.cam.inv(*self.view_pos(pos))
+        return int(wx), int(wy)
 
     def tile_at_screen(self, pos):
         wx, wy = self.world_pos(pos)
@@ -78,7 +78,7 @@ class MouseMixin:
         """Красная бочка под курсором (в неё можно выстрелить)."""
         wx, wy = self.world_pos(pos)
         for o in getattr(self.level, "objects", []):
-            if not o.get("hidden") and P.info(o["name"]).get("explosive") and o["rect"].collidepoint(wx, wy):
+            if not o.get("hidden") and P.explosive(o) and o["rect"].collidepoint(wx, wy):
                 return o
         return None
 
@@ -111,6 +111,14 @@ class MouseMixin:
             return
         if self.modal_open() or over_ui(pos):
             return
+        if self.action.active:
+            if button == 3:
+                self.action.switch()
+                return
+            target = self.entity_at_screen(pos)
+            if target in self.npcs or (self.object_at_screen(pos) and target is None):
+                self._explore_click(pos)   # поговорить, обыскать, прочитать — как обычно
+            return                         # иначе ЛКМ — огонь (держать кнопку), см. src/action.py
         if self.combat.active:
             self._combat_click(pos, button)
         elif button == 1:
@@ -303,6 +311,7 @@ class MouseMixin:
                 or over_ui(pos) or not pygame.mouse.get_focused()):
             return []
         cam_x, cam_y = int(self.cam.x), int(self.cam.y)
+        lv = self.level
         target = self.entity_at_screen(pos)
         if target is not None and (target in self.npcs or (target.talk and not target.hostile)):
             frame, r = sprite_of(target, self.cam)
@@ -313,13 +322,17 @@ class MouseMixin:
         kind, what = obj
         if kind == "pickup":
             icon = loader.item_icon(what["kind"])
+            if hasattr(lv, "pickup_screen_rect"):
+                return [(icon, lv.pickup_screen_rect(what, self.cam))]
             r = self.level.pickup_icon_rect(what).move(-cam_x, -cam_y)
             return [(icon, r)]
         if kind == "container" and what.get("corpse"):
+            if hasattr(lv, "corpse_screen_rect"):
+                return [(what["corpse"]["img"], lv.corpse_screen_rect(what, self.cam))]
             return [(what["corpse"]["img"], what["corpse"]["rect"].move(-cam_x, -cam_y))]
         if kind in ("container", "terminal") and what.get("obj"):
             o = what["obj"]
-            img = P.image(o["name"])
+            img = o.get("img") or P.image(o["name"])
             return [(img, o["rect"].move(-cam_x, -cam_y))]
         tile = what["tiles"][0] if kind in ("container", "terminal") else what
         ch = {"container": "X", "terminal": "%", "door": "D"}[kind]
@@ -328,6 +341,12 @@ class MouseMixin:
 
     def cursor_hint(self):
         """Что показать у курсора: (текст, цвет, путь [клетки] или None, клетка под курсором)."""
+        hint = self._cursor_hint()
+        if hint and self.action.active and (hint[0].startswith("Напасть") or hint[2] or not hint[0]):
+            return None   # в экшене вместо подсказки — прицел
+        return hint
+
+    def _cursor_hint(self):
         pos = pygame.mouse.get_pos()
         if self.mode != "local" or self.modal_open() or self.game_over or over_ui(pos):
             return None
@@ -374,6 +393,11 @@ class MouseMixin:
             else:
                 label = "Дверь: заперта"
             return (label, (230, 220, 190), None, None)
+        portal = getattr(self.level, "portal_at", lambda *_: None)(*tile)
+        if portal:
+            return (f"Переход: {portal['label']}", (240, 210, 120), None, tile)
+        if self.level.is_exit(*tile):
+            return ("На карту мира", (240, 210, 120), None, tile)
         if not self.level.is_wall(*tile):
             return ("", None, None, tile)
         return None

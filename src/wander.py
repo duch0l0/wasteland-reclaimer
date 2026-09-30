@@ -62,7 +62,8 @@ def _stop(ent):
 
 def update(game, dt_ms, frozen):
     """frozen — бой/диалог/окно: все стоят (и заканчивают шаг на клетке позже)."""
-    walkers = [e for e in game.enemies if e.alive] + [n for n in game.npcs if n.npc_id not in TIED]
+    walkers = [e for e in game.enemies if e.alive and not getattr(e, "awake", False)] + \
+        [n for n in game.npcs if n.npc_id not in TIED]
     if frozen:
         for e in walkers:
             if getattr(e, "wander_path", None):

@@ -49,6 +49,7 @@ m.npcs += [
     ["doc", 27, 40],                    # клиника
     ["ada", 38, 40],                    # ратуша
     ["dale", 52, 54],                   # помощник шерифа — часовой у двери убежища
+    ["dex", 12, 25],                    # наёмник Дэкс у въезда — охрана застрявшего каравана Розы
     ["loner", 69, 60],
     ["dog", 90, 46],                    # пёс на цепи у ящика с патронами в лагере рейдеров
 ]
@@ -100,7 +101,7 @@ for x in range(18, W - 4, 12):                    # фонари вдоль ул
 
 # ------------------------------------------------------------ северо-запад: жилой квартал
 # дом деда Эймоса — первый у въезда: разгром, чужой глаз на полу, включённый терминал, сейф
-m.building(3, 14, 10, 8, "brick", south=(4,))
+m.building(3, 14, 10, 8, "brick", south=(4,), sign="РИД")
 terminal(5, 15, "grandpa")
 box("metal_chest", 10, 15, "сейф деда",
     {"10-мм пистолет": 1, "голозапись деда": 1, "медаль за Анкоридж": 1, "патроны": 12},
@@ -123,7 +124,7 @@ put("locker_2", 26, 7)
 
 
 # ------------------------------------------------------------ север: салун «Последний глоток»
-ix0, iy0, ix1, iy1 = m.building(15, 16, 14, 11, "planks", south=(6,))
+ix0, iy0, ix1, iy1 = m.building(15, 16, 14, 11, "planks", south=(6,), sign="САЛУН")
 for x in (16, 18, 23):                            # стойка, проход к Мо — посередине
     put("counter", x, 20, check=False)
 put("counter", 25, 20, check=False)
@@ -144,7 +145,7 @@ put("pile_bottles", 27, 25)
 
 
 # ------------------------------------------------------------ склад «Пасифик Фрейт»
-ix0, iy0, ix1, iy1 = m.building(32, 1, 10, 9, "brick", south=(4,))
+ix0, iy0, ix1, iy1 = m.building(32, 1, 10, 9, "brick", south=(4,), sign="PACIFIC FREIGHT")
 terminal(34, 2, "warehouse")
 scatter(LOCKERS + ["shelf_goods", "metal_shelf", "shelf_stuff_1"], ix0, iy0, ix1, iy0, 4)
 scatter(CRATES + ["ammo_box", "toolbox_blue", "pile_scrap"], ix0, iy0 + 2, ix1, iy1, 3)
@@ -187,7 +188,7 @@ m.side_wall("metal", "e", 59, 2, 23, gaps=(11, 12))
 put("water_tank_a", 64, 5, check=False)
 put("water_tank_b", 74, 5, check=False)
 put("water_tank_a", 86, 7, check=False)           # за этим баком прячется Блонди
-ix0, iy0, ix1, iy1 = m.building(81, 13, 12, 8, "metal", south=(4,), west=(4,))  # контора водокачки
+ix0, iy0, ix1, iy1 = m.building(81, 13, 12, 8, "metal", south=(4,), west=(4,), sign="ВОДА")  # контора водокачки
 terminal(83, 14, "pump")
 box("locker_1", 88, 14, "шкафчик Уоллеса", {"записка техника": 1, "бинт": 1})
 scatter(LOCKERS + ["filecab_1", "filecab_4"], ix0, iy0, ix1, iy0, 4)
@@ -202,28 +203,28 @@ scatter(["tool_rack", "metal_sheets", "toolbox_red", "ammo_box", "canister"], 61
 
 
 # ------------------------------------------------------------ юг у дороги: Черепан, шериф, клиника, ратуша
-ix0, iy0, ix1, iy1 = m.building(2, 37, 14, 8, "brick", north=(4,))   # дом Черепана без крыши
+ix0, iy0, ix1, iy1 = m.building(2, 37, 14, 8, "brick", north=(4,), roof=False)   # дом Черепана без крыши
 scatter(["wardrobe", "shelf_goods", "cabinet_small", "nightstand"], ix0, iy0, ix1, iy0, 3)
 scatter(["table_1", "table_chair", "sofa", "chair_wood", "armchair"], ix0 + 4, iy0 + 2, ix1, iy1, 3)
 put("x_puddle", 4, 42)
 put("bucket", 3, 41)
 put("pile_rags", 13, 42)
 
-ix0, iy0, ix1, iy1 = m.building(17, 37, 6, 6, "planks", north=(2,))  # пост шерифа
+ix0, iy0, ix1, iy1 = m.building(17, 37, 6, 6, "planks", north=(2,), sign="★ШЕРИФ")  # пост шерифа
 put("table_2", 20, 38, check=False)
 put("chair_wood", 21, 39, check=False)
 box("locker_double", 18, 41, "оружейный шкаф шерифа", {"патроны": 6}, owner="sheriff")
 put("x_board", 23, 35, allow_reserved=True, check=False)
 m.terminals.append({"prop": len(m.props) - 1, "id": "doc:doc_board_sheriff"})
 
-ix0, iy0, ix1, iy1 = m.building(24, 37, 8, 8, "concrete", north=(2,))  # клиника
+ix0, iy0, ix1, iy1 = m.building(24, 37, 8, 8, "concrete", north=(2,), sign="+КЛИНИКА")  # клиника
 put("bed", 29, 39, check=False)
 put("bed", 29, 42, check=False)
 put("sink", 25, 43, check=False)
 box("glass_cabinet", 25, 38, "аптечный шкаф Дока", {"бинт": 2, "антирадин": 1, "химикаты": 1}, owner="doc")
 put("table_3", 27, 43, check=False)
 
-ix0, iy0, ix1, iy1 = m.building(33, 36, 10, 9, "brick", north=(4,))   # ратуша
+ix0, iy0, ix1, iy1 = m.building(33, 36, 10, 9, "brick", north=(4,), sign="СОВЕТ")   # ратуша
 terminal(35, 37, "council")
 box("filecab_2", 40, 37, "стол Смотрительницы", {"ключ-карта Б": 1, "крышки": 20}, owner="ada")
 put("filecab_1", 41, 37, check=False)
@@ -235,7 +236,7 @@ put("shelf_wood", 41, 42, check=False)
 
 
 # ------------------------------------------------------------ юго-запад: руины над ливнёвкой и кладбище
-ix0, iy0, ix1, iy1 = m.building(2, 48, 16, 13, "concrete", north=(6,), east=(6,))
+ix0, iy0, ix1, iy1 = m.building(2, 48, 16, 13, "concrete", north=(6,), east=(6,), roof=False)  # руины — крыши нет
 m.paint("c", 3, 49, 16, 59)
 put("x_manhole", 9, 54)
 m.portal([(9, 54)], "drain", (3, 3), "Ливнёвка")
@@ -293,7 +294,7 @@ m.hwall(["wall_corrugated", "wall_corrugated2", "wall_metal", "wall_metal2", "wa
          "corrugated_panel", "corrugated_b"], 60, 94, 37, gaps=(60, 61, 62))
 m.side_wall("metal", "e", 64, 38, 62, gaps=(45, 46, 58))
 put("shack_b", 66, 56, check=False)               # лачуга Панка
-ix0, iy0, ix1, iy1 = m.building(68, 40, 12, 8, "metal", south=(4,), west=(3,))  # контора свалки
+ix0, iy0, ix1, iy1 = m.building(68, 40, 12, 8, "metal", south=(4,), west=(3,), sign="КОНТОРА")  # контора свалки
 terminal(70, 41, "junk")
 box("metal_chest", 77, 41, "сейф конторы", {"крышки": 60, "патроны": 10, "тоник": 1},
     requires={"flag": "junk_safe_open", "msg": "Сейф конторы. Электронный замок — открывается с терминала."})

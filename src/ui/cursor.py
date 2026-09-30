@@ -15,10 +15,14 @@ def draw_cursor_hint(surf, hint, cam, text_surf=None):
     surf_world, surf = surf, text_surf or surf
     if path:
         for i, (tx, ty) in enumerate(path):
-            center = (tx * T + T // 2 - int(cam.x), ty * T + T // 2 - int(cam.y))
+            center = tuple(int(c) for c in cam.p(tx * T + T // 2, ty * T + T // 2))
             pygame.draw.circle(surf_world, (20, 16, 12), center, 5)
             pygame.draw.circle(surf_world, color, center, 3)
-    if tile:
+    if tile and getattr(cam, "iso", False):   # клетка — ромб
+        x, y = tile
+        pts = [cam.p(x * T, y * T), cam.p((x + 1) * T, y * T), cam.p((x + 1) * T, (y + 1) * T), cam.p(x * T, (y + 1) * T)]
+        pygame.draw.polygon(surf_world, color or (230, 220, 190), pts, 1)
+    elif tile:
         r = pygame.Rect(tile[0] * T - int(cam.x), tile[1] * T - int(cam.y), T, T)
         frame = pygame.Surface(r.size, pygame.SRCALPHA)
         pygame.draw.rect(frame, (*(color or (230, 220, 190)), 150), frame.get_rect(), 1, border_radius=4)

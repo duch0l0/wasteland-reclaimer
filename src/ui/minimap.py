@@ -131,10 +131,12 @@ class Minimap:
         vw, vh = game.view_size()
         cam = pygame.Rect(int(game.cam.x) * scale // T, int(game.cam.y) * scale // T,
                           vw * scale // T, vh * scale // T)
-        pygame.draw.rect(surf, (200, 190, 150), cam.move(x0, y0).clip(pygame.Rect(x0, y0, w, h)), 1)
+        if not game.cam.iso:
+            pygame.draw.rect(surf, (200, 190, 150), cam.move(x0, y0).clip(pygame.Rect(x0, y0, w, h)), 1)
 
         dot = max(2, scale)
-        view = pygame.Rect(int(game.cam.x), int(game.cam.y), vw, vh)
+        view = pygame.Rect(int(game.cam.x), int(game.cam.y), vw, vh) if not game.cam.iso else \
+            game.player.rect.inflate(vw * 1.4, vh * 2.2)
         for e in game.enemies:  # враги — только те, что сейчас на экране
             if e.alive and view.colliderect(e.rect) and tile_of(e) in explored:
                 pygame.draw.circle(surf, (230, 60, 50), to_map(tile_of(e)), dot)

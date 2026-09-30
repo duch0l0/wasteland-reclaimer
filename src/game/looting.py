@@ -22,12 +22,15 @@ class LootingMixin:
             return
         first = not c["opened"]
         c["opened"] = True
+        self.audio.play("open")
         self.autowalk = None
         self.loot = {"box": c, "side": "box" if c["loot"] else "me", "sel": 0, "stolen_checked": False}
         if first and not c["loot"]:
             self.log(f"{c['name'][:1].upper() + c['name'][1:]}: пусто. Кто-то успел раньше.")
 
     def close_loot(self):
+        if self.loot:
+            self.audio.play("close")
         self.loot = None
 
     # ------------------------------------------------------------ списки
@@ -55,6 +58,7 @@ class LootingMixin:
         if box["loot"][name] <= 0:
             del box["loot"][name]
         self.inventory.add(name, n)
+        self.audio.play("pickup")
         self.log(f"Взято: {name}" + (f" ×{n}" if n > 1 else ""))
 
     def loot_put(self, name, count=None):

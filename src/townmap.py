@@ -147,6 +147,89 @@ def _edge_mask(mask, variant):
     return _EDGE_MASKS[key]
 
 
+WALL_LIFT = T   # стены высотой в две клетки: верх стены на клетку выше её основания
+
+
+def _roof_image(r):
+    """Крыша по стилю здания, в пиксель-арте 2×2: рубероид с гравием и вентиляцией (кирпич),
+    ржавый профнастил (металл), доски (дерево), бетонная плита (бетон). С парапетом."""
+    w, h = (r["x1"] - r["x0"] + 1) * T, (r["y1"] - r["y0"]) * T - WALL_LIFT
+    rnd = random.Random(r["seed"])
+    style = r["style"]
+    pal = {"brick": [(86, 72, 60), (92, 78, 64), (80, 67, 56), (98, 84, 68)],
+           "concrete": [(118, 116, 110), (124, 122, 116), (110, 108, 104), (130, 127, 120)],
+           "metal": [(116, 70, 48), (128, 80, 54), (104, 62, 44), (138, 90, 60)],
+           "planks": [(104, 78, 54), (112, 84, 58), (96, 72, 50), (120, 90, 62)]}[style]
+    img = pygame.Surface((w, h), pygame.SRCALPHA)
+    for y in range(0, h, 2):
+        for x in range(0, w, 2):
+            c = rnd.choice(pal)
+            if style == "metal":                      # профнастил: продольные волны
+                c = pal[3] if (x // 6) % 2 else pal[2]
+                if rnd.random() < 0.05:
+                    c = (150, 96, 60)
+            elif style == "planks":                   # доски поперёк, со щелями
+                if y % 16 in (14,):
+                    c = (60, 44, 32)
+                elif (x + (y // 16) * 37) % 96 < 2:
+                    c = (70, 52, 36)
+            img.fill(c, (x, y, 2, 2))
+    if style in ("brick", "concrete"):                # гравий и пятна
+        for _ in range(w * h // 900):
+            x, y = rnd.randrange(0, w - 6, 2), rnd.randrange(0, h - 6, 2)
+            img.fill(tuple(max(0, v - 18) for v in pal[0]), (x, y, rnd.choice((4, 6, 8)), rnd.choice((2, 4))))
+    if style == "metal":                              # ржавые потёки
+        for _ in range(w // 40):
+            x = rnd.randrange(0, w, 2)
+            img.fill((90, 48, 32), (x, rnd.randrange(0, h // 2), 2, rnd.randrange(h // 4, h // 2)))
+    # мелочи на крыше: короба вентиляции, люк, хлам
+    for _ in range(max(1, (w * h) // (T * T * 14))):
+        bw, bh = rnd.choice(((20, 16), (26, 18), (16, 16), (34, 20)))
+        x, y = rnd.randrange(10, max(11, w - bw - 10), 2), rnd.randrange(10, max(11, h - bh - 14), 2)
+        kind = rnd.random()
+        if kind < 0.5:    # вентиляция
+            pygame.draw.rect(img, (64, 66, 70), (x, y + 4, bw, bh))
+            pygame.draw.rect(img, (140, 142, 146), (x, y, bw, bh))
+            for k in range(3, bw - 2, 4):
+                img.fill((90, 92, 96), (x + k, y + 3, 2, bh - 6))
+        elif kind < 0.75:  # люк
+            pygame.draw.rect(img, (50, 44, 38), (x, y, 18, 16))
+            pygame.draw.rect(img, (110, 100, 88), (x + 2, y + 2, 14, 12))
+            img.fill((70, 62, 54), (x + 2, y + 7, 14, 2))
+        else:              # хлам: доска, бочка
+            pygame.draw.rect(img, (120, 90, 60), (x, y, 28, 6))
+            pygame.draw.circle(img, (80, 90, 70), (x + 36, y + 6), 6)
+    # надпись краской по крыше, как на крышах в Fallout 2: «КЛИНИКА», «ШЕРИФ»…
+    if r.get("sign"):
+        text = r["sign"]
+        mark = text[0] if text[0] in "+★" else None
+        text = text[1:] if mark else text
+        font = pygame.font.Font(None, max(22, min(56, int(w / max(4, len(text)) * 1.5))))
+        paint = (228, 222, 204) if style != "concrete" else (190, 40, 36)
+        t = font.render(text, False, paint)
+        t.set_alpha(170)
+        tx, ty = (w - t.get_width()) // 2, (h - t.get_height()) // 2 + (10 if mark else 0)
+        img.blit(t, (tx, ty))
+        if mark == "+":
+            cx, cy = w // 2, ty - 18
+            img.fill((200, 36, 36), (cx - 4, cy - 12, 8, 24))
+            img.fill((200, 36, 36), (cx - 12, cy - 4, 24, 8))
+        elif mark == "★":
+            import math
+            cx, cy, R = w // 2, ty - 16, 13
+            pts = [(cx + (R if k % 2 == 0 else R * 0.45) * math.sin(k * math.pi / 5),
+                    cy - (R if k % 2 == 0 else R * 0.45) * math.cos(k * math.pi / 5)) for k in range(10)]
+            pygame.draw.polygon(img, (226, 190, 70), pts)
+    # парапет: тёмная кайма, светлый край сверху и слева, тень снизу
+    edge = tuple(max(0, v - 28) for v in pal[0])
+    pygame.draw.rect(img, edge, (0, 0, w, h), 8)
+    img.fill(tuple(min(255, v + 34) for v in pal[3]), (0, 0, w, 2))
+    img.fill(tuple(min(255, v + 20) for v in pal[3]), (0, 0, 2, h))
+    img.fill((30, 24, 20), (0, h - 3, w, 3))
+    img.fill((40, 32, 26), (w - 3, 0, 3, h))
+    return img
+
+
 class TownMap(MapBase):
     parallax = False  # земля сплошная — фон под ней не нужен
 
@@ -166,7 +249,7 @@ class TownMap(MapBase):
         self.portals = []
         for p in d.get("portals", []):
             self.portals.append({"tiles": {tuple(t) for t in p["tiles"]}, "to": p["to"],
-                                 "at": tuple(p["at"]), "label": p.get("label", "")})
+                                 "at": tuple(p["at"]), "label": p.get("label", ""), "requires": p.get("requires")})
         self.exits = {tuple(t) for t in d.get("exits", [])}
         self.doors = []
         self.pickups = []
@@ -249,6 +332,16 @@ class TownMap(MapBase):
             self.gates.append(gate)
             self.doors += gate["tiles"]
 
+        # крыши: рисуются между зданием и тем, что перед ним; когда герой внутри — тают
+        self.roofs = []
+        for r in d.get("roofs", []):
+            # сверху из-под крыши виден верх северной стены (с проёмом двери, если он там),
+            # снизу — фасад южной стены целиком
+            rect = pygame.Rect(r["x0"] * T, r["y0"] * T, (r["x1"] - r["x0"] + 1) * T,
+                               (r["y1"] - r["y0"]) * T - WALL_LIFT)
+            self.roofs.append({**r, "rect": rect, "alpha": 255.0, "img": None,
+                               "sort_y": (r["y1"] + 1) * T + 1})
+
         self.terminals = []
         for t in d.get("terminals", []):
             obj = self.objects[t["prop"]]
@@ -267,6 +360,19 @@ class TownMap(MapBase):
 
     def is_exit(self, x, y):
         return (x, y) in self.exits
+
+    def roof_over(self, tile):
+        """Крыша, под которой клетка (внутри здания, включая стены и проёмы)."""
+        x, y = tile
+        return next((r for r in self.roofs if r["x0"] <= x <= r["x1"] and r["y0"] <= y <= r["y1"]), None)
+
+    def update_roofs(self, player_tile, dt_ms):
+        """Крыша здания, где стоит герой, плавно исчезает; остальные — на месте."""
+        inside = self.roof_over(player_tile)
+        for r in self.roofs:
+            target = 0.0 if r is inside else 255.0
+            step = dt_ms * 1.4
+            r["alpha"] = min(target, r["alpha"] + step) if r["alpha"] < target else max(target, r["alpha"] - step)
 
     def gate_at(self, tile):
         return next((g for g in self.gates if tuple(tile) in g["tiles"]), None)
@@ -416,4 +522,14 @@ class TownMap(MapBase):
             c = o["container"]
             opened = c is not None and c["opened"] and not c["loot"]  # пустой — темнее
             out.append((o["sort_y"], P.image(o["name"], darken=opened), (o["rect"].x - cam_x, o["rect"].y - cam_y)))
+        for r in self.roofs:
+            if r["alpha"] <= 1 or not r["rect"].colliderect(view):
+                continue
+            if r["img"] is None:
+                r["img"] = _roof_image(r)
+            img = r["img"]
+            if r["alpha"] < 255:
+                img = img.copy()
+                img.set_alpha(int(r["alpha"]))
+            out.append((r["sort_y"], img, (r["rect"].x - cam_x, r["rect"].y - cam_y)))
         return out

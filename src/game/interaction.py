@@ -81,6 +81,8 @@ class InteractionMixin:
             self.log("Заперто. Нужна отмычка (у Гены) или хотя бы лом, чтобы выломать.")
 
     def _check_cleared(self):
+        if self.action.hordes_left():
+            return   # в экшене район чист, только когда вышли все толпы из домов
         """Стая крысолюдов в ливнёвке перебита (или отравлена) — шерифу будет что рассказать."""
         if self.loc.id == "drain" and not any(e.alive and e.pack == "ratmen" for e in self.enemies):
             if not self.flags.get("rats_cleared"):
@@ -89,6 +91,14 @@ class InteractionMixin:
                 self.sync_story()
         if self.loc.id == "vault57" and not any(e.alive for e in self.enemies):
             self.flags["vault_cleared"] = True
+        from ..location import LOCATION_DEFS
+        flag = LOCATION_DEFS.get(self.loc.id, {}).get("clear_flag")
+        if flag and not self.flags.get(flag) and not any(e.alive and e.hostile for e in self.enemies):
+            self.flags[flag] = True
+            name = LOCATION_DEFS[self.loc.id]["name"]
+            self.log(f"Район зачищен: {name}. Тишина — даже мухи не жужжат.")
+            self.gain_xp(50)   # за героя; в экшене за Дэкса опыта нет
+            self.sync_story()
 
     def use_gate(self, gate):
         """Гермодверь: открыта флагом (терминал) или ключ-картой из рюкзака."""
@@ -123,6 +133,9 @@ class InteractionMixin:
 
     def switch_weapon(self, to=None):
         """Как «сменить руку» в Fallout: без затрат ОД. Без аргумента — следующее по кругу."""
+        if self.action.active:
+            self.action.switch()
+            return
         guns = available(self.inventory)
         if to is None:
             if len(guns) == 1:
@@ -140,8 +153,13 @@ class InteractionMixin:
         return WEAPONS[self.player.weapon]["name"]
 
     def gain_xp(self, amount):
-        for msg in self.player.gain_xp(amount):
+        if self.merc_mode:
+            return   # Барстоу за Дэкса — экшен без опыта и уровней
+        msgs = self.player.gain_xp(amount)
+        for msg in msgs:
             self.log(msg)
+        if msgs:
+            self.audio.play("levelup")
 
     def take_perk(self, perk):
         perks.take(self.player, perk)

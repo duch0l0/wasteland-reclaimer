@@ -132,6 +132,15 @@ class ControlsMixin:
             self.open_menu("pause")  # Esc, когда закрывать нечего, — меню паузы (и в бою тоже)
 
     def _explore_key(self, key):
+        if self.action.active:
+            if key == pygame.K_r:
+                self.action.reload()
+                return
+            if key in (pygame.K_1, pygame.K_2):
+                self.action.switch("ar" if key == pygame.K_1 else "sg")
+                return
+            if key == pygame.K_SPACE:
+                return
         if key == pygame.K_c:
             self.craft_open = True
         elif key == pygame.K_SPACE:

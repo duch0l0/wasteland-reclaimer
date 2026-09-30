@@ -20,9 +20,14 @@ def _hitbox_in_tile(pos, size):
 
 
 def sprite_of(ent, cam):
-    """Текущий кадр персонажа и где он на экране: спрайт стоит «ногами» на хитбоксе."""
+    """Текущий кадр персонажа и где он на экране: спрайт стоит «ногами» на хитбоксе
+    (изометрический персонаж — точкой ног из его кадров)."""
     frame = ent.anim.current_frame(flip=getattr(ent, "facing_left", False))
-    return frame, frame.get_rect(midbottom=(ent.rect.centerx - cam.x, ent.rect.bottom - cam.y))
+    fx, fy = cam.foot(ent) if hasattr(cam, "foot") else (ent.rect.centerx - cam.x, ent.rect.bottom - cam.y)
+    foot = getattr(ent.anim, "foot", None)
+    if foot:
+        return frame, frame.get_rect(topleft=(round(fx - foot[0]), round(fy - foot[1])))
+    return frame, frame.get_rect(midbottom=(round(fx), round(fy)))
 
 
 class CombatStats:
@@ -125,6 +130,8 @@ class Player(CombatStats):
         sharp = 3 if self.inventory is not None and self.inventory.has("заточенный лом") else 0
         return self.base_damage + (self.level_sys.level - 1) * 2 + 3 * self.perk_rank("heavy_hand") + sharp
 
+    iso = False   # на изометрической карте клавиши двигают по экрану, а не по сетке
+
     def handle_input(self, keys, dt_ms, solid_rects):
         if not self.alive:
             return
@@ -138,6 +145,10 @@ class Player(CombatStats):
             dy -= speed
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             dy += speed
+        if self.iso and (dx or dy):
+            from .iso import input_to_world
+            ux, uy = input_to_world(dx, dy)
+            dx, dy = ux * speed, uy * speed
         self.walk(dx, dy, solid_rects)
 
     def walk(self, dx, dy, solid_rects):

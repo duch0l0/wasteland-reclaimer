@@ -131,12 +131,12 @@ def _slider(surf, game, i, label, kind, y):
         x = pygame.mouse.get_pos()[0]
         game.audio.set_volume(k, (x - b.x) / b.w)
         if k == "sfx":
-            game.audio.play("hit")
+            game.audio.play("button")
 
     def step(d, k=kind):
         game.audio.set_volume(k, game.audio.volume[k] + d)
         if k == "sfx":
-            game.audio.play("hit")
+            game.audio.play("button")
     pygame.draw.rect(surf, (30, 24, 18), bar, border_radius=7)
     pygame.draw.rect(surf, AMBER, (bar.x, bar.y, int(bar.w * vol), bar.h), border_radius=7)
     pygame.draw.circle(surf, (255, 235, 180), (bar.x + int(bar.w * vol), bar.centery), 10)
@@ -164,6 +164,8 @@ def _sound(surf, game, items):
         surf.blit(w, w.get_rect(center=(S.SCREEN_W // 2, 580)))
     h = _font("dejavusans", 16).render("←→ — громкость · клик по шкале — сразу нужное значение", True, AMBER_DIM)
     surf.blit(h, h.get_rect(center=(S.SCREEN_W // 2, 460)))
+    f2 = _font("dejavusans", 16).render(game.audio.f2_status, True, TEXT)   # музыка и звуки Fallout 2 игрока
+    surf.blit(f2, f2.get_rect(center=(S.SCREEN_W // 2, 620)))
 
 
 def draw_menu(surf, game):

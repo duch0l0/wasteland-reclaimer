@@ -85,21 +85,19 @@ class Gore:
     @staticmethod
     def draw_ground(surf, level, cam):
         """Пятна на полу — под персонажами."""
-        cx, cy = int(cam.x), int(cam.y)
         w, h = surf.get_size()
         for x, y, size, color in getattr(level, "stains", ()):
-            sx, sy = x - cx, y - cy
+            sx, sy = cam.p(x, y)
             if -8 < sx < w + 8 and -8 < sy < h + 8:
                 c = (color[0] * 3 // 4, color[1] * 3 // 4, color[2] * 3 // 4)  # засохшее — темнее
                 pygame.draw.ellipse(surf, c, (sx - size, sy - size // 2, size * 2, size))
 
     def draw_air(self, surf, level, cam):
         """Летящие капли и ошмётки — поверх персонажей, с тенью на земле."""
-        cx, cy = int(cam.x), int(cam.y)
         for p in self.parts:
             if p["delay"] > 0 or p["level"] is not level:
                 continue
-            sx, sy = p["x"] - cx, p["y"] - cy
+            sx, sy = cam.p(p["x"], p["y"])
             s = p["size"]
             if s >= 4:  # тень на земле — только у крупных ошмётков
                 pygame.draw.ellipse(surf, (40, 30, 26), (sx - s // 2, sy - 1, s, 3))

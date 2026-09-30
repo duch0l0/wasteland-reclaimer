@@ -5,6 +5,8 @@
 """
 import json
 
+import pygame
+
 from . import settings as S
 from . import loader
 from .tilemap import TileMap, load_map_file
@@ -14,9 +16,9 @@ from .entities import Enemy, NPC
 NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка",
              "turtle": "Черепан", "dog": "Рыжий пёс", "silas": "Брат Сайлас", "mo": "Мо «Ведро»", "lenny": "Лен",
              "marta": "Марта", "sheriff": "Шериф Брэддок", "doc": "Док Мира", "ada": "Смотрительница Ада",
-             "dale": "Дейл"}
+             "dale": "Дейл", "rose": "Караванщица Роза", "dex": "Наёмник Дэкс"}
 # у кого кадры лежат в чужой папке (жители из tools/make_variants.py)
-NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b"}
+NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "merc"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)
@@ -37,7 +39,14 @@ def enemy_animations(type_id):
     return _ANIM_CACHE[type_id]
 
 
-def make_enemy(pos, type_id):
+def make_enemy(pos, type_id, iso=False):
+    """iso — на изометрической карте: кадры из iso_sprite (data/enemies.json), если есть."""
+    sprite = ENEMY_DEFS[type_id].get("iso_sprite") if iso else None
+    if sprite:
+        from .iso import char_animator
+        e = Enemy(pos, {"idle": [pygame.Surface((1, 1))]}, type_id, ENEMY_DEFS[type_id])
+        e.anim = char_animator(sprite)
+        return e
     return Enemy(pos, enemy_animations(type_id), type_id, ENEMY_DEFS[type_id])
 
 
@@ -63,13 +72,24 @@ class Location:
         self.world_pos = d.get("world_pos")
         self.is_encounter = d.get("encounter", False)
         if rows is None and d["map"].endswith(".json"):
-            self.level = TownMap(d["map"])  # карта из объектов (tools/build_town.py)
+            with open(d["map"], "r", encoding="utf-8") as f:
+                is_iso = '"iso":true' in f.read(200).replace(" ", "")
+            if is_iso:
+                from .isomap import IsoMap
+                self.level = IsoMap(d["map"])   # изометрия (tools/build_iso_town.py)
+            else:
+                self.level = TownMap(d["map"])  # карта из объектов (tools/build_town.py)
         else:
             self.level = TileMap(rows or load_map_file(d["map"]), npc_ids=d.get("npcs"),
                                  containers=d.get("containers"), terminals=d.get("terminals"))
         entry = d.get("entry")
         self.entry = (entry[0] * S.TILE, entry[1] * S.TILE) if entry else self.level.player_spawn
-        self.enemies = [make_enemy(pos, t) for pos, t in self.level.enemy_spawns]
+        iso = getattr(self.level, "iso", False)
+        self.enemies = [make_enemy(pos, t, iso) for pos, t in self.level.enemy_spawns]
+        if d.get("action"):   # экшен (Барстоу): здоровье гулей — ровно в пулях
+            from .action import set_action_hp
+            for e in self.enemies:
+                set_action_hp(e)
         self.enemies_all = list(self.enemies)  # исходный порядок — для сохранений (ушедшие исчезают из enemies)
         self.npcs = [NPC(pos, npc_animations(nid), npc_id=nid, name=NPC_NAMES.get(nid, nid))
                      for pos, nid in self.level.npc_spawns]

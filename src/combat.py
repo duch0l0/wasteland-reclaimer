@@ -62,6 +62,18 @@ ENEMY_MISS_RANGED = ["{name} стреляет — пуля уходит в мо�
                      "{name} стреляет, но попадает только в чью-то старую кастрюлю."]
 
 
+# какими голосами кричат (звуки — src/fallout2.SFX: <набор>_attack / _hurt / _death)
+VOICE = {"feral": "ghoul", "ghoul_runner": "ghoul", "rad_mutant": "ghoul", "mutant": "ghoul",
+         "rat": "rat", "ratman": "rat", "ratman_boss": "rat", "radroach": "roach", "beetle": "beetle",
+         "turret": "robot", "mech": "robot"}
+
+
+def voice_of(ent):
+    if getattr(ent, "ally", False):
+        return "dog"
+    return VOICE.get(getattr(ent, "type_id", None), "human")
+
+
 def _cap(text):
     return text[:1].upper() + text[1:]
 
@@ -184,6 +196,7 @@ class Combat:
             if f is not p:
                 f.anim.set_action("idle")
         g.log("— БОЙ! —" if player_first else f"{_cap(enemies[0].name)} замечает вас. — БОЙ! —")
+        g.audio.play("combat_start")
         self.target = None
         self.turn_idx = 0
         self._begin_turn()
@@ -205,6 +218,7 @@ class Combat:
         self.tweens.clear()
         self.game.player.ap = self.game.player.max_ap
         self.game.log(reason)
+        self.game.audio.play("combat_end")
 
     def _snap_to_grid(self, ent):
         """Ставит бойца в ближайшую свободную проходимую клетку."""
@@ -448,11 +462,19 @@ class Combat:
             attacker.anim.play_once("attack_ranged" if prof["ranged"] else "attack_melee") \
                 or attacker.anim.play_once("attack")
         self.busy_ms = S.COMBAT_ATTACK_MS
-        sx = attacker.rect.centerx - self.game.cam.x
+        sx = self.game.cam.p(*attacker.rect.center)[0]
+        audio = self.game.audio
         if prof["ranged"]:
-            self.game.audio.play("shot", sx)
+            if attacker is self.game.player:
+                shot = "shot_pipe" if self.game.player.weapon == "pistol" else "shot"
+            else:
+                shot = "shot_turret" if getattr(attacker, "ai", "") == "turret" else "shot_enemy"
+            audio.play(shot, sx)
         else:  # удар звучит в момент удара, а не замаха
-            self.game.audio.play("melee", sx, delay_ms=100, volume=1.0 if attacker is self.game.player else 0.7)
+            growl = f"{voice_of(attacker)}_attack"
+            if attacker is not self.game.player and audio.has(growl):
+                audio.play(growl, sx, volume=0.8)
+            audio.play("melee", sx, delay_ms=100, volume=1.0 if attacker is self.game.player else 0.7)
         if prof["ammo"]:
             self.game.inventory.remove(prof["ammo"], 1)
         impact_ms = 140  # когда удар «доходит» до цели: вздрагивание, кровь, звук попадания
@@ -496,7 +518,9 @@ class Combat:
         if dmg > 0 and defender.alive:
             self._react(defender, attacker, "hit", impact_ms)
         if dmg > 0:  # звук попадания — вместе с вздрагиванием цели
-            self.game.audio.play("hit", defender.rect.centerx - self.game.cam.x, delay_ms=impact_ms)
+            dx_ = self.game.cam.p(*defender.rect.center)[0]
+            self.game.audio.play("hit_bullet" if prof["ranged"] else "hit", dx_, delay_ms=impact_ms)
+            self._cry(defender, dx_, impact_ms + 60)
         if dmg > 0 and not getattr(defender, "robot", False):  # кровь; от выстрела — ещё и ошмётки
             self.game.gore.hit(self.game.level, defender.rect, attacker.rect.center,
                                "ranged" if prof["ranged"] else "melee", crit=crit, kill=not defender.alive,
@@ -506,6 +530,7 @@ class Combat:
                 self._add_dot(defender, "poison", attacker.poison, 3)
             if getattr(attacker, "rads", 0) and defender is self.game.player:
                 defender.add_rads(attacker.rads)
+                self.game.audio.play("geiger")
                 self._float(defender, f"+{attacker.rads} рад", (140, 230, 90))
         if dmg == 0:
             self._float(defender, "броня", (150, 170, 200))
@@ -579,11 +604,13 @@ class Combat:
 
     def _float(self, ent, text, color):
         # надписи над одним бойцом не должны слипаться — новая встаёт выше самой верхней
-        y = ent.rect.top - 58
-        recent = [f["pos"].y for f in self.floaters if f["ent"] is ent and f["t"] < 900]
+        iso = getattr(self.game.cam, "iso", False)
+        rise = 110 if iso else 0
+        y = ent.rect.bottom - T // 2 if iso else ent.rect.top - 58
+        recent = [f["rise"] for f in self.floaters if f["ent"] is ent and f["t"] < 900]
         if recent:
-            y = min(y, min(recent) - 22)
-        self.floaters.append({"text": text, "color": color, "t": 0, "ent": ent,
+            rise = max(rise, max(recent) + 22)
+        self.floaters.append({"text": text, "color": color, "t": 0, "ent": ent, "rise": rise,
                               "pos": pygame.Vector2(ent.rect.centerx, y)})
 
     # ------------------------------------------------- действия игрока
@@ -637,7 +664,7 @@ class Combat:
         self.blasts = [b for b in self.blasts if b["t"] < 700]
         for f in self.floaters:
             f["t"] += dt_ms
-            f["pos"].y -= dt_ms * 0.03
+            f["rise"] += dt_ms * 0.03
         self.floaters = [f for f in self.floaters if f["t"] < 1100]
         for tr in self.tracers:  # пули: летят, пока не пройдут весь путь
             tr["t"] += dt_ms
@@ -785,11 +812,19 @@ class Combat:
         self.hurt(ent, total, (150, 220, 90) if "poison" in kinds else (255, 150, 60))
         return not ent.alive
 
+    def _cry(self, ent, sx, delay_ms=0):
+        """Крик раненого или умирающего — голосом его вида (люди, гули, собака, крысы…)."""
+        kind = "death" if not ent.alive else "hurt"
+        if kind == "hurt" and random.random() < 0.4:
+            return
+        self.game.audio.play(f"{voice_of(ent)}_{kind}", sx, delay_ms=delay_ms, volume=0.85)
+
     def hurt(self, ent, dmg, color=(230, 120, 60), source=None):
         """Урон не от удара (взрыв, яд, огонь): число над головой, вздрагивание, смерть."""
         if dmg <= 0 or not ent.alive:
             return
         ent.apply_damage(dmg)
+        self._cry(ent, self.game.cam.p(*ent.rect.center)[0])
         self._float(ent, f"-{dmg}", color)
         if ent.alive:
             ent.anim.play_once("hit")
@@ -836,8 +871,8 @@ class Combat:
         g = self.game
         cx, cy = tile_center(tile)
         self.blasts.append({"pos": pygame.Vector2(cx, cy), "t": 0, "kind": kind})
-        g.audio.play("shot", cx - g.cam.x, volume=1.0)
-        g.audio.play("hit", cx - g.cam.x, delay_ms=60)
+        g.audio.play("explosion", g.cam.p(cx, cy)[0], volume=1.0)
+        g.audio.play("hit", g.cam.p(cx, cy)[0], delay_ms=60)
         fighters = [g.player] + [e for e in g.enemies if e.alive] + \
             [c for c in (g.companion,) if c is not None and c.alive and not c.down]
         hit = [e for e in fighters if e.alive and chebyshev(tile_of(e), tile) <= 1]
@@ -868,7 +903,7 @@ class Combat:
     def barrels_near(self, tile, r):
         objs = getattr(self.game.level, "objects", [])
         from . import props as P
-        return [o for o in objs if not o.get("hidden") and P.info(o["name"]).get("explosive")
+        return [o for o in objs if not o.get("hidden") and P.explosive(o)
                 and any(chebyshev(t, tile) <= r for t in o["foot"])]
 
     def blow_barrel(self, obj):
@@ -934,7 +969,7 @@ class Combat:
             g.inventory.remove(prof["ammo"], 1)
         chance = max(S.HIT_CHANCE_MIN, 95 - RANGE_PENALTY_PER_TILE * max(0, dist - 1))
         if prof["ranged"]:
-            g.audio.play("shot", p.rect.centerx - g.cam.x)
+            g.audio.play("shot", g.cam.p(*p.rect.center)[0])
             a = pygame.Vector2(p.rect.centerx, p.rect.bottom - 40)
             self.tracers.append({"from": a, "to": pygame.Vector2(tile_center(tile)), "t": -self.BULLET_DELAY})
         if random.randint(1, 100) <= chance:

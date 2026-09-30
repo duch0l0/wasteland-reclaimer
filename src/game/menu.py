@@ -113,7 +113,7 @@ class MenuMixin:
             step = 0.1 if key in (pygame.K_RIGHT, pygame.K_d) else -0.1
             self.audio.set_volume(kind, self.audio.volume[kind] + step)
             if kind == "sfx":
-                self.audio.play("hit")  # сразу слышно, как громко
+                self.audio.play("button")  # сразу слышно, как громко
             return
         if key in (pygame.K_UP, pygame.K_w):
             m["sel"] = (m["sel"] - 1) % len(items)

@@ -19,6 +19,7 @@ from ..worldmap import WorldMap
 from ..inventory import Inventory
 from ..dialogue import DialogueRunner
 from ..combat import Combat, tile_of
+from ..iso import Camera
 
 from .controls import ControlsMixin
 from .world import WorldMixin
@@ -40,10 +41,11 @@ from .slides import SlidesMixin, SLIDES
 from .looting import LootingMixin
 from .menu import MenuMixin
 from .saveload import SaveMixin
+from .merc import MercMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, RenderMixin):
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, RenderMixin):
     def __init__(self, intro=True, _screen=None, _prologue=False):
         """intro — начать с главного меню (для проверок без окна его пропускают).
         _screen, _prologue — для «Новой игры» из меню: то же окно, сразу пролог."""
@@ -90,7 +92,9 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.inv_last_click = -10**6   # для двойного клика по ячейке
         self.trade = None              # {"id": торговец, "tab": "buy"/"sell"}
 
-        self.cam = pygame.Vector2(0, 0)
+        self.cam = Camera()   # прямая или изометрическая — см. src/iso.py
+        from ..action import ActionMode
+        self.action = ActionMode(self)   # Барстоу за Дэкса — стрельба в реальном времени
         self.held_letters = set()
         self.minimap = Minimap()
         self.gore = Gore()
@@ -98,8 +102,10 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.zoom = S.ZOOM_DEFAULT  # масштаб мира, колёсико мыши — ближе/дальше
         self.speech = None         # реплика над головой: {"ent", "text", "t"}
         self.bark_ms = 4000        # до следующей реплики жителя
-        self.audio = Audio()
-        self.audio.start_music()
+        self._portal_refused = None
+        from .. import fallout2
+        self.audio = Audio(os.getcwd(), fallout2.CACHE_DIR)
+        self.audio.play_music(LOCATION_DEFS.get(self.loc.id, {}).get("music", "desert"))
         self.autowalk = None       # путь по клику мыши вне боя
         self.combat_queue = None   # путь/атака по клику мыши в бою
         self.term = None           # открытый терминал или документ
@@ -163,6 +169,9 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.combat.update(dt_ms)
         self.gore.update(dt_ms)
         companion.update(self, dt_ms)
+        self.action.update(dt_ms)
+        if hasattr(self.level, "update_roofs") and self.mode == "local":
+            self.level.update_roofs(tile_of(self.player), dt_ms)
         if self.speech:
             self.speech["t"] -= dt_ms
             if self.speech["t"] <= 0:
@@ -235,10 +244,19 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.go_world_map()
             return
         portal = getattr(self.level, "portal_at", lambda *_: None)(*tile_of(self.player))
+        if portal and portal.get("requires") and not self.check_condition(portal["requires"]):
+            if self._portal_refused is not portal:   # сообщить один раз, пока стоим на пороге
+                self._portal_refused = portal
+                self.log(portal["requires"].get("msg", "Не пройти."))
+            portal = None
+        elif not portal:
+            self._portal_refused = None
         if portal:
             self.enter_location(portal["to"], at=portal["at"])
             return
         self.check_talkers()
+        if self.action.active:
+            return   # экшен: никакого пошагового боя — гули бегут, Дэкс стреляет
         if not self.dialogue.is_active() and any(
                 e.alive and self.combat.enemy_notices_player(e) for e in self.enemies):
             self.combat.start(player_first=False)  # враг заметил игрока — пошаговый бой
