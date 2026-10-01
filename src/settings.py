@@ -45,7 +45,8 @@ PLAYER_BASE_HP = 30
 PLAYER_BASE_DMG = 5
 PLAYER_ATTACK_RANGE = 46
 PLAYER_ATTACK_COOLDOWN_MS = 420
-XP_TO_LEVEL = lambda lvl: 20 + lvl * 15  # опыт, нужный для перехода с lvl на lvl+1
+XP_TO_LEVEL = lambda lvl: 50 * lvl * (lvl + 1)  # опыт с lvl на lvl+1: 100, 300, 600, 1000, 1500…
+HP_PER_LEVEL = 4
 
 ENEMY_AGGRO_RANGE = 220  # px: радиус обзора врага по умолчанию (у каждого типа свой — data/enemies.json)
 

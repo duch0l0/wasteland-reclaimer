@@ -16,9 +16,25 @@ from .entities import Enemy, NPC
 NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000", "blondie": "Блонди", "loner": "Панк-одиночка",
              "turtle": "Черепан", "dog": "Рыжий пёс", "silas": "Брат Сайлас", "mo": "Мо «Ведро»", "lenny": "Лен",
              "marta": "Марта", "sheriff": "Шериф Брэддок", "doc": "Док Мира", "ada": "Смотрительница Ада",
-             "dale": "Дейл", "rose": "Караванщица Роза", "dex": "Наёмник Дэкс"}
+             "dale": "Дейл", "rose": "Караванщица Роза", "dex": "Наёмник Дэкс",
+             # Бейкер
+             "anselm": "Брат Ансельм", "amos": "Дед Эймос", "amos_b7": "Дед Эймос", "iskra": "Искра",
+             "iskra_out": "Искра", "nick": "Ник Грек", "tobias": "Брат Тобиас", "hattie": "Хэтти Мур",
+             "hollis": "Холлис", "lira_baker": "Лира", "loner_baker": "Панк", "silas_baker": "Брат Сайлас",
+             "scar_baker": "Шрам", "baker_folk_a": "Житель", "baker_folk_b": "Жительница",
+             "baker_kid": "Мальчишка", "baker_folk_c": "Девушка", "baker_folk_d": "Старик",
+             "baker_folk_e": "Караванщица",
+             # случайные встречи
+             "caravan_trader": "Бродячий торговец", "caravan_guard": "Охранник каравана"}
 # у кого кадры лежат в чужой папке (жители из tools/make_variants.py)
-NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "merc"}
+NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "merc",
+               # Бейкер (листы из tools/import_sheets.py)
+               "amos_b7": "amos", "iskra": "girl_hood", "iskra_out": "girl_hood", "nick": "barkeep",
+               "tobias": "cultist", "hattie": "seer", "hollis": "detective", "lira_baker": "blondie",
+               "loner_baker": "loner", "silas_baker": "silas", "scar_baker": "boss",
+               "baker_folk_a": "folk_c", "baker_folk_b": "folk_d", "baker_kid": "kid", "baker_folk_c": "girl_pink",
+               "baker_folk_d": "folk_g", "baker_folk_e": "folk_e",
+               "caravan_trader": "healer", "caravan_guard": "desert_guard"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)
@@ -71,7 +87,9 @@ class Location:
         self.name = d.get("name", loc_id)
         self.world_pos = d.get("world_pos")
         self.is_encounter = d.get("encounter", False)
-        if rows is None and d["map"].endswith(".json"):
+        if rows is None and isinstance(d.get("map"), dict):   # сцена случайной встречи, собранная на лету
+            self.level = TownMap(d["map"])
+        elif rows is None and d["map"].endswith(".json"):
             with open(d["map"], "r", encoding="utf-8") as f:
                 is_iso = '"iso":true' in f.read(200).replace(" ", "")
             if is_iso:

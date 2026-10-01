@@ -234,8 +234,11 @@ class TownMap(MapBase):
     parallax = False  # земля сплошная — фон под ней не нужен
 
     def __init__(self, path):
-        with open(path, "r", encoding="utf-8") as f:
-            d = json.load(f)
+        if isinstance(path, dict):    # готовая карта (случайная встреча)
+            d = path
+        else:
+            with open(path, "r", encoding="utf-8") as f:
+                d = json.load(f)
         self.width, self.height = d["w"], d["h"]
         self.ground = d["ground"]
         self.style = d.get("style", "town")
@@ -306,11 +309,14 @@ class TownMap(MapBase):
             self._tiles["c"].append(c)
         # земля пятнами: три оттенка, участки выбираются плавным шумом
         self._dirt_shades = []
+        tint = d.get("tint")   # оттенок земли карты: Бейкер — песок пожелтее
         for mul in ((236, 232, 226), (245, 242, 237), (255, 255, 255), (255, 250, 243), (255, 245, 232)):
             shade = []
             for t in self._dirt:
                 c = t.copy()
                 c.fill(mul, special_flags=pygame.BLEND_RGB_MULT)
+                if tint:
+                    c.fill(tuple(tint), special_flags=pygame.BLEND_RGB_MULT)
                 shade.append(c)
             self._dirt_shades.append(shade)
         self._tiles["m"] = _vault_floor()
@@ -327,6 +333,7 @@ class TownMap(MapBase):
         for g in d.get("gates", []):
             obj = self.objects[g["prop"]]
             gate = {"tiles": list(obj["foot"]), "flag": g["flag"], "key": g.get("key"), "msg": g.get("msg", ""),
+                    "open_msg": g.get("open_msg"), "pry": g.get("pry", False),
                     "obj": obj, "open": False}
             obj["gate"] = gate
             self.gates.append(gate)

@@ -381,14 +381,19 @@ class Combat:
         if ent is p:
             w = WEAPONS[p.weapon]
             if w["ranged"]:
-                return {"ranged": True, "range": w["range"], "ap": w["ap"],
-                        "skill": p.guns_skill, "damage": w["damage"], "ammo": w["ammo"]}
+                drill = p.perk_rank("burst_master") if w.get("burst", 1) > 1 else 0   # перк автоматчика
+                return {"ranged": True, "range": w["range"], "ap": w["ap"] - drill,
+                        "skill": p.guns_skill, "damage": w["damage"], "ammo": w["ammo"],
+                        "burst": w.get("burst", 1), "recoil": max(0, w.get("recoil", 0) - 6 * drill),
+                        "aim": w.get("aim", True),
+                        "falloff": w.get("falloff", 0), "close_bonus": w.get("close_bonus", 0)}
             return {"ranged": False, "range": 1, "ap": w["ap"], "skill": p.melee_skill,
                     "damage": p.damage, "ammo": None}
         ranged = ent.ai in ("ranged", "turret")
         return {"ranged": ranged, "range": ent.range if ranged else 1,
                 "ap": S.AP_ATTACK + (1 if ranged else 0), "skill": ent.skill,
-                "damage": ent.damage, "ammo": None}
+                "damage": ent.damage, "ammo": None, "burst": getattr(ent, "burst", 1),
+                "recoil": 10, "aim": True, "falloff": 0, "close_bonus": 0}
 
     def attack_cost(self, ent, part_idx=0):
         return self.profile(ent)["ap"] + (1 if part_idx else 0)
@@ -410,10 +415,15 @@ class Combat:
     def hit_chance(self, attacker, defender, part_idx=0):
         prof = self.profile(attacker)
         part = BODY_PARTS[part_idx]
-        chance = prof["skill"] - self.defense(defender) + part["hit"] - (25 if attacker.blinded else 0)
+        aim = part["hit"]
+        if aim < 0 and attacker is self.game.player and attacker.perk_rank("sniper"):
+            aim //= 2   # перк «Снайпер»
+        chance = prof["skill"] - self.defense(defender) + aim - (25 if attacker.blinded else 0)
         if prof["ranged"]:
             dist = chebyshev(tile_of(attacker), tile_of(defender))
             chance -= RANGE_PENALTY_PER_TILE * max(0, dist - 1)
+            if prof.get("close_bonus") and dist <= 2:   # дробь вплотную — разлёт сам находит цель
+                chance += prof["close_bonus"]
             if self.in_cover(attacker, defender):
                 chance -= self.COVER_PENALTY
         return max(S.HIT_CHANCE_MIN, min(S.HIT_CHANCE_MAX, chance))
@@ -448,6 +458,8 @@ class Combat:
 
     def attack(self, attacker, defender, part_idx=0):
         prof = self.profile(attacker)
+        if not prof.get("aim", True):
+            part_idx = 0   # очередью не прицелиться в глаз
         cost = self.attack_cost(attacker, part_idx)
         ok, _ = self.can_attack(attacker, defender)
         if attacker.ap < cost or not ok:
@@ -465,11 +477,7 @@ class Combat:
         sx = self.game.cam.p(*attacker.rect.center)[0]
         audio = self.game.audio
         if prof["ranged"]:
-            if attacker is self.game.player:
-                shot = "shot_pipe" if self.game.player.weapon == "pistol" else "shot"
-            else:
-                shot = "shot_turret" if getattr(attacker, "ai", "") == "turret" else "shot_enemy"
-            audio.play(shot, sx)
+            audio.play(self._shot_sound(attacker), sx)
         else:  # удар звучит в момент удара, а не замаха
             growl = f"{voice_of(attacker)}_attack"
             if attacker is not self.game.player and audio.has(growl):
@@ -480,17 +488,35 @@ class Combat:
         impact_ms = 140  # когда удар «доходит» до цели: вздрагивание, кровь, звук попадания
         if prof["ranged"]:
             impact_ms = self._fire_bullet(attacker, defender)
+        self._resolve_hit(attacker, defender, part_idx, prof, impact_ms)
+        for i in range(1, prof.get("burst", 1)):   # очередь: каждая пуля — свой бросок, отдача копится
+            if not defender.alive or (prof["ammo"] and not self.game.inventory.has(prof["ammo"])):
+                break
+            if prof["ammo"]:
+                self.game.inventory.remove(prof["ammo"], 1)
+            impact = self._fire_bullet(attacker, defender, extra_delay=i * 110)
+            self.game.audio.play(self._shot_sound(attacker), sx, delay_ms=i * 110)
+            self._resolve_hit(attacker, defender, part_idx, prof, impact, penalty=i * prof.get("recoil", 0))
+        return True
 
+    def _shot_sound(self, attacker):
+        if attacker is self.game.player:
+            return {"pistol": "shot_pipe", "shotgun": "sg_shot", "assault": "ar_shot"}.get(
+                self.game.player.weapon, "shot")
+        return "shot_turret" if getattr(attacker, "ai", "") == "turret" else "shot_enemy"
+
+    def _resolve_hit(self, attacker, defender, part_idx, prof, impact_ms, penalty=0):
+        """Один выстрел или удар: попал ли, урон, броня, крит, реакция и сообщения."""
         part = BODY_PARTS[part_idx]
         is_player = attacker is self.game.player
         ally_attacks = self.is_ally(attacker)
         name = _cap(attacker.name)
-        if random.randint(1, 100) > self.hit_chance(attacker, defender, part_idx):
+        if random.randint(1, 100) > self.hit_chance(attacker, defender, part_idx) - penalty:
             if ally_attacks:
                 self.game.log(f"{name} щёлкает зубами — мимо.")
                 self._float(defender, "мимо", (200, 200, 190))
                 self._react(defender, attacker, "dodge", impact_ms)
-                return True
+                return
             if is_player:
                 text = random.choice(PLAYER_MISS_RANGED if prof["ranged"] else PLAYER_MISS_MELEE)
             else:
@@ -503,15 +529,22 @@ class Combat:
                 perp = pygame.Vector2(-d.y, d.x).normalize() * random.choice((-18, 18))
                 b["to"] = b["to"] + d.normalize() * 170 + perp
             self._react(defender, attacker, "dodge", impact_ms)
-            return True
+            return
 
         dmg = random.randint(max(1, prof["damage"] - 2), prof["damage"] + 2)
+        if prof.get("falloff"):   # дробь рассеивается: дальше двух клеток урон падает
+            dist = chebyshev(tile_of(attacker), tile_of(defender))
+            dmg = max(1, round(dmg * max(0.35, 1 - prof["falloff"] * max(0, dist - 1))))
+            if dist <= 1 and is_player and attacker.perk_rank("point_blank"):
+                dmg = round(dmg * 1.3)
         if attacker.crippled_arms:
             dmg = max(1, dmg // 2)
         crit = random.randint(1, 100) <= self.crit_chance(attacker, part_idx)
         if crit:
             dmg = int(dmg * part["mult"])
         armor = 0 if crit else self.armor_blocks(defender, part_idx)  # крит находит щель в панцире
+        if is_player:
+            armor = max(0, armor - 3 * attacker.perk_rank("armor_piercer"))
         absorbed = min(dmg, armor)
         dmg -= absorbed
         defender.apply_damage(dmg)
@@ -570,18 +603,17 @@ class Combat:
         else:
             crit_note = " — КРИТ!" if crit else ""
             self.game.log(f"{name} {attacker.hit_verb}{crit_note}: {dmg} урона.")
-        return True
 
     BULLET_SPEED = 2600   # px/с — пуля видна, но пролетает за доли секунды
     BULLET_DELAY = 90     # мс — вылет в момент вспышки в анимации выстрела
 
-    def _fire_bullet(self, attacker, defender):
+    def _fire_bullet(self, attacker, defender, extra_delay=0):
         """Пуля от дула (уровень груди, чуть впереди) к груди цели. Возвращает, через сколько мс она долетит."""
         side = 1 if defender.rect.centerx >= attacker.rect.centerx else -1
         a = pygame.Vector2(attacker.rect.centerx + side * 26, attacker.rect.bottom - 40)
         b = pygame.Vector2(defender.rect.centerx, defender.rect.bottom - 36)
-        self.tracers.append({"from": a, "to": b, "t": -self.BULLET_DELAY})
-        return self.BULLET_DELAY + int(a.distance_to(b) / self.BULLET_SPEED * 1000)
+        self.tracers.append({"from": a, "to": b, "t": -self.BULLET_DELAY - extra_delay})
+        return self.BULLET_DELAY + extra_delay + int(a.distance_to(b) / self.BULLET_SPEED * 1000)
 
     def _react(self, defender, attacker, kind, delay_ms=140):
         """Цель поворачивается к нападающему и вздрагивает (hit) или уворачивается (dodge) —

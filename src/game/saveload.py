@@ -86,7 +86,7 @@ class SaveMixin:
                        "ac": p.ac, "base_damage": p.base_damage, "level": p.level_sys.level,
                        "xp": p.level_sys.xp, "perks": p.perks, "pending_perks": p.pending_perks,
                        "weapon": p.weapon, "equipment": p.equipment, "dir": p.anim.direction,
-                       "rads": p.rads},
+                       "rads": p.rads, "skills": p.skills, "pending_skills": p.pending_skills},
             "inventory": dict(self.inventory.items),
             "flags": self.flags, "quests": self.quests, "traders": self.traders,
             "world": {"pos": list(self.worldmap.pos), "known": sorted(self.worldmap.known)},
@@ -180,6 +180,9 @@ class SaveMixin:
         p.base_damage = ps["base_damage"]
         p.level_sys.level, p.level_sys.xp = ps["level"], ps["xp"]
         p.perks, p.pending_perks = ps["perks"], ps["pending_perks"]
+        from .. import skills
+        p.skills = dict(ps.get("skills") or skills.defaults(ps["level"]))   # старые сохранения — без навыков
+        p.pending_skills = ps.get("pending_skills", 0)
         p.weapon, p.equipment = ps["weapon"], ps["equipment"]
         p.alive = True
         p.ap = p.max_ap
@@ -234,6 +237,12 @@ class SaveMixin:
         loc.enemies[:] = [e for e, es in zip(loc.enemies_all, ls["enemies"]) if es.get("present", True)]
         keep = {n["id"]: n["pos"] for n in ls["npcs"]}
         loc.npcs[:] = [n for n in loc.npcs if n.npc_id in keep]
+        from ..entities import NPC
+        from ..location import npc_animations, NPC_NAMES
+        have = {n.npc_id for n in loc.npcs}
+        for nid in keep:   # пришедшие по ходу сюжета (караван Розы, спутники в Бейкере) — вернуть
+            if nid not in have:
+                loc.npcs.append(NPC((0, 0), npc_animations(nid), npc_id=nid, name=NPC_NAMES.get(nid, nid)))
         for n in loc.npcs:
             n.rect.topleft = tuple(keep[n.npc_id])
         base = [c for c in lv.containers if not c.get("corpse")]

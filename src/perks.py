@@ -1,5 +1,7 @@
 """
-Перки — выбор при повышении уровня (как в Fallout 2).
+Перки — выбор на чётных уровнях (как в Fallout 2 — не на каждом). Предлагаются три
+случайных из доступных: у сильных перков есть порог уровня (min_level) и перк-предшественник
+(requires), так что набор от игры к игре разный, а лучшее открывается не сразу.
 
 Каждый перк либо сразу меняет характеристики (apply), либо проверяется
 в коде боя через player.perk_rank(id). max_rank > 1 — перк можно брать
@@ -19,6 +21,12 @@ def _thick_skin(p):
 def _tough(p):
     p.max_hp += 12
     p.hp += 12
+
+
+def _skill(skill_id, n):
+    def apply(p):
+        p.skills[skill_id] = p.skill(skill_id) + n
+    return apply
 
 
 PERKS = [
@@ -42,13 +50,34 @@ PERKS = [
      "desc": "Открывает реплики [Красноречие] в диалогах, торговля выгоднее на 20%. Слова — тоже оружие, и патроны не нужны."},
     {"id": "scavenger", "name": "Падальщик", "max_rank": 1, "apply": None,
      "desc": "Каждое убийство лечит 5 HP. Не спрашивайте, как именно."},
+    # --- новые: под навыки и оружие
+    {"id": "medic", "name": "Полевой медик", "max_rank": 1, "apply": _skill("medicine", 10),
+     "desc": "+10 к Медицине, бинты и стимуляторы лечат на 50% больше. Шить по живому — тоже искусство."},
+    {"id": "hacker", "name": "Хакер", "max_rank": 1, "apply": _skill("science", 10),
+     "desc": "+10 к Науке и +2 попытки взлома терминала. RobCo гордилась бы. Или подала бы в суд."},
+    {"id": "ranger", "name": "Следопыт", "max_rank": 1, "apply": _skill("survival", 15),
+     "desc": "+15 к Выживанию: в пустоши нападают реже, а засаду видно за милю."},
+    {"id": "fast_heal", "name": "Быстрое заживление", "max_rank": 1, "apply": None,
+     "desc": "Раны вне боя затягиваются вдвое быстрее. Шрамы — тоже."},
+    {"id": "point_blank", "name": "В упор", "max_rank": 1, "apply": None, "min_level": 4,
+     "desc": "Дробовик вплотную бьёт на 30% сильнее. Разговор на расстоянии вытянутой руки."},
+    {"id": "burst_master", "name": "Автоматчик", "max_rank": 1, "apply": None, "min_level": 4,
+     "desc": "Очередь из автомата стоит на 1 ОД меньше, отдача вдвое слабее."},
+    {"id": "armor_piercer", "name": "Бронебой", "max_rank": 2, "apply": None, "min_level": 6,
+     "desc": "Ваши удары и пули игнорируют 3 единицы брони. Роботы начинают вас уважать."},
+    {"id": "sniper", "name": "Снайпер", "max_rank": 1, "apply": None, "min_level": 8, "requires": "sharp_eye",
+     "desc": "Прицельный выстрел теряет вдвое меньше точности. Глаза, пах, колено — выбирайте."},
+    {"id": "lifegiver", "name": "Жизнелюб", "max_rank": 2, "apply": _tough, "min_level": 6, "requires": "tough",
+     "desc": "Ещё +12 к максимуму HP и +2 HP за каждый следующий уровень. Упрямство — тоже здоровье."},
 ]
 PERKS_BY_ID = {p["id"]: p for p in PERKS}
 
 
 def roll_choices(player, n=3):
     """n случайных перков, которые игрок ещё может взять."""
-    available = [p for p in PERKS if player.perk_rank(p["id"]) < p["max_rank"]]
+    lvl = player.level_sys.level
+    available = [p for p in PERKS if player.perk_rank(p["id"]) < p["max_rank"]
+                 and lvl >= p.get("min_level", 1) and (not p.get("requires") or player.perk_rank(p["requires"]))]
     return random.sample(available, min(n, len(available)))
 
 

@@ -55,11 +55,40 @@ SPECIAL = {
                 "height": 40},  # пёс — примерно по колено человеку (герой в игре 74 px)
 }
 
+# листы, собранные tools/import_sheets.py из картинок npc/raw/: 4×4 квадратные клетки,
+# строки up, right, down, left. id -> рост в игре (герой — 74 px)
+IMPORTED = {
+    # первый акт: Бейкер, Зайзикс, Нидлс
+    "amos": 70,          # дед Эймос Рид, сержант в отставке
+    "cultist": 72,       # «Дети Единства», рядовой в балахоне
+    "anselm": 76,        # брат Ансельм — тот же балахон, белый
+    "detective": 72,     # человек в шляпе с фонарём (предатель в Бейкере / агент Ордена)
+    "healer": 66,        # «целитель» Зайзикса — старик в тюрбане
+    "barkeep": 74,       # здоровяк-бармен
+    "desert_guard": 74,  # охранник в пустынной броне (блокпост на мосту)
+    "soldier": 72,       # солдат в каске (повязка перекрашена)
+    "acolyte": 68,       # послушница в оранжевом
+    "seer": 66,          # женщина в фиолетовом капюшоне
+    "monk": 70, "scout": 72, "redarmor": 72, "visor_punk": 72, "cyborg": 72,
+    "kid": 56, "girl_pink": 64, "girl_hood": 64,
+    **{f"folk_{c}": 70 for c in "cdefghij"},     # жители
+    # враги
+    "robot_guard": 86,   # охранный робот склада «Бейкер-7»
+    "robot_skel": 72,    # робот-скелет
+    "mech_green": 90,    # шагающая броня
+    "sand_golem": 84,    # песчаный голем (Зайзикс)
+    "river_lizard": 72,  # речной ящер (Нидлс)
+    "beast": 76,         # фиолетовый зверь-мутант
+}
+SPECIAL.update({f"{cid}.png": {"name": cid, "cell": None, "cols": 4, "height": h,
+                               "rows": {"up": 0, "right": 1, "down": 2, "left": 3}}
+                for cid, h in IMPORTED.items()})
+
 
 def slice_special(src, dst, spec):
     """Кадры в игровом размере (игра их больше не увеличивает — файл native)."""
     sheet = pygame.image.load(src)
-    cell = spec["cell"]
+    cell = spec["cell"] or sheet.get_width() // spec["cols"]
     cells = {d: [sheet.subsurface((c * cell, r * cell, cell, cell)) for c in range(spec["cols"])]
              for d, r in spec["rows"].items()}
     boxes = [f.get_bounding_rect(min_alpha=10) for fr in cells.values() for f in fr]
@@ -70,8 +99,10 @@ def slice_special(src, dst, spec):
         folder = os.path.join(dst, d)
         os.makedirs(folder, exist_ok=True)
         for i, f in enumerate(frames):
-            pygame.image.save(pygame.transform.smoothscale(f.subsurface(crop).copy(), size),
-                              os.path.join(folder, f"{i}.png"))
+            img = f.subsurface(crop).copy()
+            while img.get_height() < size[1]:   # мелкий пиксель-арт: сперва scale2x, чтобы не размыть
+                img = pygame.transform.scale2x(img)
+            pygame.image.save(pygame.transform.smoothscale(img, size), os.path.join(folder, f"{i}.png"))
     with open(os.path.join(dst, "native"), "w") as fh:
         fh.write("кадры уже в игровом размере\n")
     return size

@@ -192,9 +192,10 @@ def draw_inventory(surf, game):
         f"Уровень {lv.level} · XP {lv.xp}/{lv.xp_needed}",
         f"HP {p.hp}/{p.max_hp}",
         f"ОД {p.max_ap} · КБ {p.armor_class}",
-        f"Ближний бой {p.melee_skill}%",
-        f"Стрельба {p.guns_skill}%",
-        f"Урон в ближнем {p.damage}±2",
+        f"Рукопашная {p.melee_skill} · урон {p.damage}±2",
+        f"Стрельба {p.guns_skill}",
+        f"Медицина {p.skill('medicine')} · Наука {p.skill('science')}",
+        f"Красноречие {p.skill('speech')} · Выживание {p.skill('survival')}",
     ]
     y = box.y + 204
     for line in stats:

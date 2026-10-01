@@ -42,10 +42,11 @@ from .looting import LootingMixin
 from .menu import MenuMixin
 from .saveload import SaveMixin
 from .merc import MercMixin
+from .baker import BakerMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, RenderMixin):
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, RenderMixin):
     def __init__(self, intro=True, _screen=None, _prologue=False):
         """intro — начать с главного меню (для проверок без окна его пропускают).
         _screen, _prologue — для «Новой игры» из меню: то же окно, сразу пролог."""
@@ -188,11 +189,17 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.game_over = True
             self.log("Вы погибли. Esc — выйти.")
 
-        # новый уровень — после боя открываем выбор перка
-        if self.player.pending_perks > 0 and not self.modal_open() and not self.combat.active:
-            self.perk_choices = perks.roll_choices(self.player)
-            if not self.perk_choices:
-                self.player.pending_perks = 0
+        # новый уровень — после боя открываем выбор: сперва навык (каждый уровень), потом перк (чётные)
+        if not self.modal_open() and not self.combat.active:
+            from .. import skills
+            if self.player.pending_skills > 0:
+                self.perk_choices = skills.choices(self.player)
+                if not self.perk_choices:
+                    self.player.pending_skills = 0
+            elif self.player.pending_perks > 0:
+                self.perk_choices = perks.roll_choices(self.player)
+                if not self.perk_choices:
+                    self.player.pending_perks = 0
 
         self._regen(dt_ms)
 
@@ -227,7 +234,10 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.regen_ms = 0
             return
         self.regen_ms += dt_ms
-        if self.regen_ms >= S.HP_REGEN_MS:
+        # Выживание и перк «Быстрое заживление» ускоряют заживление ран
+        need = S.HP_REGEN_MS * 100 // (100 + max(0, self.player.skill("survival") - 20) * 2) // (
+            1 + self.player.perk_rank("fast_heal"))
+        if self.regen_ms >= need:
             self.regen_ms = 0
             self.player.hp += 1
 
@@ -255,6 +265,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.enter_location(portal["to"], at=portal["at"])
             return
         self.check_talkers()
+        self.baker_watch()
         if self.action.active:
             return   # экшен: никакого пошагового боя — гули бегут, Дэкс стреляет
         if not self.dialogue.is_active() and any(

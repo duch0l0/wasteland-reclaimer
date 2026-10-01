@@ -17,7 +17,8 @@ from ..inventory import Inventory
 DEX_START = {
     "player": {"hp": 120, "max_hp": 120, "base_ap": 9, "ac": 12, "base_damage": 6, "level": 4, "xp": 0,
                "perks": {"steady_hand": 1}, "pending_perks": 0, "weapon": "rifle",
-               "equipment": {"head": None, "body": None, "weapon": None}, "rads": 0},
+               "equipment": {"head": None, "body": None, "weapon": None}, "rads": 0,
+               "skills": {"guns": 85, "melee": 70, "medicine": 40, "science": 20, "speech": 30, "survival": 60}},
     "inventory": {"охотничья винтовка": 1, "патроны": 40, "стимулятор": 2, "бинт": 3, "крышки": 15},
     "loc": "barstow", "pos": None,
 }
@@ -33,7 +34,8 @@ class MercMixin:
         return {"player": {"hp": p.hp, "max_hp": p.max_hp, "base_ap": p.base_ap, "ac": p.ac,
                            "base_damage": p.base_damage, "level": p.level_sys.level, "xp": p.level_sys.xp,
                            "perks": dict(p.perks), "pending_perks": p.pending_perks, "weapon": p.weapon,
-                           "equipment": dict(p.equipment), "rads": p.rads},
+                           "equipment": dict(p.equipment), "rads": p.rads, "skills": dict(p.skills),
+                           "pending_skills": p.pending_skills},
                 "inventory": dict(self.inventory.items),
                 "loc": self.loc.id, "pos": list(p.rect.topleft),
                 "companion": self.companion}
@@ -47,6 +49,9 @@ class MercMixin:
         p.perks, p.pending_perks = dict(ps["perks"]), ps["pending_perks"]
         p.weapon, p.equipment = ps["weapon"], dict(ps["equipment"])
         p.rads = ps.get("rads", 0)
+        from ..skills import defaults
+        p.skills = dict(ps.get("skills") or defaults(ps["level"]))
+        p.pending_skills = ps.get("pending_skills", 0)
         p.dots = []
         p.alive = True
         p.blinded = p.crippled_arms = p.crippled_legs = False

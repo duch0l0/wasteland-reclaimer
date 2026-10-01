@@ -55,6 +55,11 @@ class TerminalMixin:
         t = TERMINALS[self.term["id"]]
         return [(i, e) for i, e in enumerate(t["entries"]) if self.check_condition(e.get("if", {}))]
 
+    def hack_tries(self):
+        """Попытки взлома: 4, +1 за каждые 20 очков Науки сверх 15, +2 за перк «Хакер»."""
+        p = self.player
+        return HACK_TRIES + max(0, p.skill("science") - 15) // 20 + 2 * p.perk_rank("hacker")
+
     def lock_key(self, entry):
         return f"term_{self.term['id']}_{entry['lock']['id']}"
 
@@ -146,7 +151,7 @@ class TerminalMixin:
             dump.append("".join(line))
         self.term["view"] = "hack"
         self.term["hack"] = {"password": pw, "words": words, "placed": placed, "dump": dump,
-                             "tries": HACK_TRIES, "tried": [], "log": [], "cursor": 0,
+                             "tries": self.hack_tries(), "tried": [], "log": [], "cursor": 0,
                              "base": rnd.randrange(0xF000, 0xFF00, 0x10)}
 
     def hack_guess(self, word):

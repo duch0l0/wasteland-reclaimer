@@ -101,13 +101,15 @@ class InteractionMixin:
             self.sync_story()
 
     def use_gate(self, gate):
-        """Гермодверь: открыта флагом (терминал) или ключ-картой из рюкзака."""
+        """Гермодверь: открыта флагом (терминал) или ключ-картой из рюкзака;
+        pry — простой засов, который поддевается ломом (лом у героя всегда при себе)."""
         if self.flags.get(gate["flag"]):
             self.level.open_gate(gate)
-        elif gate.get("key") and self.inventory.has(gate["key"]):
+        elif gate.get("pry") or gate.get("key") and self.inventory.has(gate["key"]):
             self.flags[gate["flag"]] = True
             self.level.open_gate(gate)
-            self.log(f"Карта «{gate['key']}» пищит в замке. Гермодверь с рёвом откатывается в сторону.")
+            self.log(gate.get("open_msg") or
+                     f"Карта «{gate['key']}» пищит в замке. Гермодверь с рёвом откатывается в сторону.")
             self.audio.play("hit")
             self.sync_story()
         else:
@@ -162,9 +164,17 @@ class InteractionMixin:
             self.audio.play("levelup")
 
     def take_perk(self, perk):
+        """Выбор в окне повышения уровня: навык (+10) или перк."""
+        from .. import skills
+        self.perk_choices = None
+        if perk.get("kind") == "skill":
+            skills.raise_skill(self.player, perk["id"])
+            self.player.pending_skills -= 1
+            s = skills.SKILL_BY_ID[perk["id"]]
+            self.log(f"Навык «{s['name']}» теперь {self.player.skill(perk['id'])}.")
+            return
         perks.take(self.player, perk)
         self.player.pending_perks -= 1
-        self.perk_choices = None
         self.log(f"Новый перк: {perk['name']}.")
 
     def on_enemy_killed(self, enemy):
@@ -178,7 +188,11 @@ class InteractionMixin:
         if self.player.perk_rank("scavenger") and self.player.hp < self.player.max_hp:
             self.player.hp = min(self.player.max_hp, self.player.hp + 5)
             self.log("Падальщик: +5 HP.")
-        self.gain_xp(enemy.xp_reward)
+        from ..skills import xp_for_kill
+        xp = xp_for_kill(enemy.xp_reward, getattr(enemy, "level", 1), self.player.level_sys.level)
+        if xp and not self.merc_mode:
+            self.log(f"+{xp} опыта." + (" Слабый противник — опыта мало." if xp < enemy.xp_reward else ""))
+        self.gain_xp(xp)
         if enemy.type_id == "raider" and not any(e.alive and e.type_id == "raider" for e in self.enemies):
             self.flags["raiders_dead"] = True
             if any(n.npc_id == "dog" for n in self.npcs):

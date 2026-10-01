@@ -1,8 +1,8 @@
 """
 Общие помощники генераторов карт из объектов (tools/build_town.py, tools/build_underground.py).
 
-Карта собирается из клеток земли (ground) и объектов набора «wasteland town»
-плюс своих (tools/make_props.py). Каждый загораживающий объект ставится,
+Карта собирается из клеток земли (ground) и объектов наборов «wasteland town»
+и «War ruins» плюс своих (tools/make_props.py). Каждый загораживающий объект ставится,
 только если после него все места, куда можно было дойти, остаются
 достижимыми — карта не запирает проходы. Случайность фиксирована (seed).
 """
@@ -296,8 +296,10 @@ class MapKit:
             self.reserve(x0 + off, y1 - 1, x0 + off + 1, y1 + 1)
         return (x0 + 1, y0 + 1, x1 - 1, y1 - 1)
 
-    def portal(self, tiles, to, at, label):
-        self.portals.append({"tiles": [list(t) for t in tiles], "to": to, "at": list(at), "label": label})
+    def portal(self, tiles, to, at, label, requires=None):
+        """requires — условие прохода (как у реплик), msg в нём — что сказать, если нельзя."""
+        self.portals.append({"tiles": [list(t) for t in tiles], "to": to, "at": list(at), "label": label,
+                             **({"requires": requires} if requires else {})})
         for t in tiles:
             self.reserve(*t, *t)
 

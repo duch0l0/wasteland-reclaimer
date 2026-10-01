@@ -52,12 +52,24 @@ class WorldMixin:
         self.speech = None
         self.apply_view()
         self.place_player((at[0] * S.TILE, at[1] * S.TILE) if at else self.loc.entry)
+        if loc_id == "baker":
+            self.baker_arrive()
         self.sync_gates()
         self.mode = "local"
         self.log(f"Вы входите: {self.loc.name}.")
+        seen = f"seen_{loc_id}"
+        if d.get("arrival_slides") and not self.flags.get(seen):   # первый приход — слайды о городе
+            self.flags[seen] = True
+            self.show_slides(d["arrival_slides"])
 
     def start_encounter(self):
-        self.loc, text = make_encounter(self.flags)
+        p = self.player
+        east = self.worldmap.pos.x > S.SCREEN_W * 0.7   # восток, к реке Колорадо
+        loc, text = make_encounter(self.flags, p.level_sys.level, p.skill("survival"), east)
+        if loc is None:    # следопыт обошёл опасную встречу
+            self.log(text)
+            return
+        self.loc = loc
         self.audio.play_music("raiders")
         self.apply_view()
         self.place_player(self.level.player_spawn)
@@ -90,6 +102,7 @@ class WorldMixin:
         self.log("Вы выходите на просторы пустоши.")
 
     def update_world_map(self, dt_ms):
+        self.worldmap.chance_mult = max(0.4, 1 - (self.player.skill("survival") - 20) / 150)
         event = self.worldmap.update(dt_ms)
         if not event:
             return

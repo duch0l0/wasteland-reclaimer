@@ -30,6 +30,7 @@ class WorldMap:
         self.pos = to_screen(location_defs["ruins"]["world_pos"])
         self.target = None                  # id локации, куда идём
         self.encounter_at = None            # доля пути, на которой случится встреча
+        self.chance_mult = 1.0              # Выживание героя: реже нападают (ставит игра)
         self.progress = 0.0
         self.start = pygame.Vector2(self.pos)
         self.wander = False
@@ -52,7 +53,8 @@ class WorldMap:
         self.start = pygame.Vector2(self.pos)
         self.progress = 0.0
         self.wander = False
-        self.encounter_at = random.uniform(0.25, 0.8) if random.random() < ENCOUNTER_CHANCE else None
+        self.encounter_at = (random.uniform(0.25, 0.8) if random.random() < ENCOUNTER_CHANCE * self.chance_mult
+                             else None)
 
     def wander_around(self):
         """Бродить по окрестностям: короткий путь в случайную сторону и гарантированная встреча."""

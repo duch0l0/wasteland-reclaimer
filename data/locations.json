@@ -49,12 +49,14 @@
   },
   "baker": {
     "name": "Бейкер",
+    "map": "data/maps/baker.json",
     "world_pos": [
       880,
       250
     ],
     "known": false,
-    "chapter_end": "chapter1_end"
+    "music": "junktown",
+    "arrival_slides": "baker_arrival"
   },
   "vault57": {
     "name": "Убежище 57",
@@ -102,5 +104,12 @@
     "map": "data/maps/barstow_order.json",
     "known": false,
     "music": "vats"
+  },
+  "baker7": {
+    "name": "Склад «Бейкер-7»",
+    "map": "data/maps/baker7.json",
+    "known": false,
+    "underground": true,
+    "music": "lab"
   }
 }

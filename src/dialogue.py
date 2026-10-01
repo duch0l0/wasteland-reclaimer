@@ -58,6 +58,9 @@ class DialogueRunner:
     def option_label(opt):
         cond = opt.get("if", {})
         tag = CHECK_TAGS.get(cond.get("perk"), "")
+        if not tag and "skill" in cond:
+            from .skills import SKILL_BY_ID
+            tag = f"[{SKILL_BY_ID[cond['skill'][0]]['name']} {cond['skill'][1]}]"
         if not tag and "min_level" in cond:
             tag = f"[Уровень {cond['min_level']}+]"
         return f"{tag} {opt['label']}" if tag else opt["label"]

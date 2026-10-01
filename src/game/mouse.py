@@ -22,6 +22,14 @@ from .. import loader
 from .. import props as P
 from ..ui.common import hotspot_at, over_ui
 
+
+def threat_name(enemy, player):
+    """Имя врага с уровнем; намного сильнее героя — предупреждение (лучше обойти)."""
+    lvl = getattr(enemy, "level", 1)
+    gap = lvl - player.level_sys.level
+    note = " — смертельно опасен" if gap >= 4 else (" — опасен" if gap >= 2 else "")
+    return f"{enemy.name} [ур. {lvl}]{note}"
+
 T = S.TILE
 NEIGHBORS = ((1, 0), (-1, 0), (0, 1), (0, -1))
 
@@ -363,9 +371,9 @@ class MouseMixin:
                 cost = c.attack_cost(p)
                 if ok:
                     enough = p.ap >= cost
-                    return (f"{target.name}: {c.hit_chance(p, target)}% · {cost} ОД",
+                    return (f"{threat_name(target, p)}: {c.hit_chance(p, target)}% · {cost} ОД",
                             (230, 220, 190) if enough else (230, 90, 70), None, None)
-                return (f"{target.name}: {reason}", (170, 160, 140), None, None)
+                return (f"{threat_name(target, p)}: {reason}", (170, 160, 140), None, None)
             if target is None:
                 path = self.combat_path_to(tile)
                 if path:
@@ -378,7 +386,7 @@ class MouseMixin:
         if target is not None and target.talk and not target.hostile:
             return (f"Говорить: {target.name}", (230, 220, 190), None, None)
         if target is not None:
-            return (f"Напасть: {target.name}", (235, 120, 100), None, None)
+            return (f"Напасть: {threat_name(target, p)}", (235, 120, 100), None, None)
         obj = self.object_at_screen(pos)
         if obj:
             kind, what = obj

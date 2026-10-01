@@ -36,7 +36,8 @@
         70
       ]
     },
-    "iso_sprite": "zombie5"
+    "iso_sprite": "zombie5",
+    "level": 2
   },
   "rat": {
     "name": "крысюк",
@@ -73,11 +74,12 @@
       ]
     },
     "coward": true,
-    "note": "мелкая ящероподобная тварь из руин (кадры — tools/slice_sprites.py из npc/rat_boss.png)"
+    "note": "мелкая ящероподобная тварь из руин (кадры — tools/slice_sprites.py из npc/rat_boss.png)",
+    "level": 1
   },
   "raider": {
     "name": "рейдер",
-    "hp": 20,
+    "hp": 22,
     "damage": 5,
     "ac": 10,
     "ap": 7,
@@ -113,7 +115,8 @@
         140
       ]
     },
-    "coward": true
+    "coward": true,
+    "level": 2
   },
   "beetle": {
     "name": "панцирный жук",
@@ -156,7 +159,8 @@
         200,
         120
       ]
-    }
+    },
+    "level": 3
   },
   "gang": {
     "name": "бандит",
@@ -197,11 +201,12 @@
       ]
     },
     "faction": "gang",
-    "grenades": 1
+    "grenades": 1,
+    "level": 3
   },
   "boss": {
     "name": "Шрам",
-    "hp": 35,
+    "hp": 45,
     "damage": 7,
     "ac": 15,
     "ap": 8,
@@ -241,7 +246,8 @@
     "faction": "gang",
     "talk": "boss",
     "grenades": 1,
-    "stims": 1
+    "stims": 1,
+    "level": 5
   },
   "ratman": {
     "name": "крысолюд",
@@ -280,7 +286,8 @@
         150
       ]
     },
-    "poison": 2
+    "poison": 2,
+    "level": 2
   },
   "ratman_boss": {
     "name": "вожак крысолюдов",
@@ -321,7 +328,8 @@
         60
       ]
     },
-    "poison": 3
+    "poison": 3,
+    "level": 4
   },
   "rad_mutant": {
     "name": "светящийся мутант",
@@ -360,7 +368,8 @@
       ]
     },
     "rads": 25,
-    "iso_sprite": "zombie3"
+    "iso_sprite": "zombie3",
+    "level": 3
   },
   "radroach": {
     "name": "радтаракан",
@@ -399,7 +408,8 @@
         150,
         90
       ]
-    }
+    },
+    "level": 1
   },
   "feral": {
     "name": "дикий гуль",
@@ -442,7 +452,8 @@
         90
       ]
     },
-    "iso_sprite": "zombie1"
+    "iso_sprite": "zombie1",
+    "level": 4
   },
   "turret": {
     "name": "турель Vault-Tec",
@@ -488,18 +499,19 @@
         60,
         40
       ]
-    }
+    },
+    "level": 4
   },
   "mech": {
     "name": "шагоход Анклава",
-    "hp": 90,
-    "damage": 12,
+    "hp": 160,
+    "damage": 16,
     "ac": 20,
     "ap": 8,
     "skill": 70,
     "sequence": 6,
     "aggro": 360,
-    "xp": 200,
+    "xp": 400,
     "loot": {
       "патроны": 20,
       "лом": 4,
@@ -508,7 +520,7 @@
     "ai": "ranged",
     "range": 8,
     "hit_verb": "бьёт по вам из пушки",
-    "armor": 8,
+    "armor": 10,
     "weak_parts": [
       "eyes"
     ],
@@ -535,7 +547,9 @@
         80,
         60
       ]
-    }
+    },
+    "level": 12,
+    "burst": 2
   },
   "ghoul_runner": {
     "name": "бегун",
@@ -576,6 +590,455 @@
         190,
         90
       ]
-    }
+    },
+    "level": 3
+  },
+  "cult_guard": {
+    "name": "страж Единства",
+    "hp": 24,
+    "damage": 5,
+    "ac": 10,
+    "ap": 7,
+    "skill": 50,
+    "sequence": 5,
+    "aggro": 260,
+    "xp": 30,
+    "loot": {
+      "патроны": 3,
+      "святая вода": 1
+    },
+    "ai": "ranged",
+    "range": 6,
+    "hit_verb": "стреляет в вас",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        150,
+        40,
+        40
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "faction": "cult",
+    "talk": "cult_guard",
+    "sprite_dir": "cultist",
+    "note": "охрана миссии и блокпоста; нейтральна, пока культ не разозлить",
+    "level": 3
+  },
+  "cultist": {
+    "name": "послушник",
+    "hp": 18,
+    "damage": 4,
+    "ac": 8,
+    "ap": 8,
+    "skill": 45,
+    "sequence": 6,
+    "aggro": 240,
+    "xp": 20,
+    "loot": {
+      "святая вода": 1,
+      "крышки": 4
+    },
+    "ai": "melee",
+    "hit_verb": "бьёт вас посохом",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        150,
+        40,
+        40
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "faction": "cult",
+    "talk": "cultist",
+    "sprite_dir": "acolyte",
+    "coward": true,
+    "level": 2
+  },
+  "robot_guard": {
+    "name": "охранный робот",
+    "hp": 55,
+    "damage": 8,
+    "ac": 20,
+    "ap": 7,
+    "skill": 60,
+    "sequence": 6,
+    "aggro": 330,
+    "xp": 90,
+    "loot": {
+      "лом": 2,
+      "патроны": 4
+    },
+    "ai": "ranged",
+    "range": 7,
+    "hit_verb": "бьёт по вам лазером",
+    "armor": 5,
+    "robot": true,
+    "weak_parts": [
+      "eyes"
+    ],
+    "hitbox": [
+      32,
+      36
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        48,
+        56
+      ],
+      "base": [
+        200,
+        200,
+        190
+      ],
+      "accent": [
+        230,
+        60,
+        40
+      ]
+    },
+    "sprite_dir": "robot_guard",
+    "note": "охрана склада «Бейкер-7»: броня, лазер; оптика уязвима",
+    "level": 6
+  },
+  "sand_golem": {
+    "name": "песчаный голем",
+    "level": 8,
+    "hp": 110,
+    "damage": 15,
+    "ac": 12,
+    "ap": 6,
+    "skill": 65,
+    "sequence": 3,
+    "aggro": 260,
+    "xp": 260,
+    "loot": {
+      "химикаты": 3,
+      "лом": 2
+    },
+    "ai": "melee",
+    "hit_verb": "обрушивает на вас каменный кулак",
+    "armor": 8,
+    "weak_parts": [
+      "eyes"
+    ],
+    "robot": true,
+    "hitbox": [
+      36,
+      40
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        56,
+        56
+      ],
+      "base": [
+        190,
+        160,
+        110
+      ],
+      "accent": [
+        230,
+        60,
+        40
+      ]
+    },
+    "sprite_dir": "sand_golem",
+    "note": "глина и песок с чем-то живым внутри; броня 8 — без бронебоя и высокого уровня бить только в глаза"
+  },
+  "river_lizard": {
+    "name": "речной ящер",
+    "level": 7,
+    "hp": 70,
+    "damage": 13,
+    "ac": 15,
+    "ap": 9,
+    "skill": 70,
+    "sequence": 9,
+    "aggro": 280,
+    "xp": 180,
+    "loot": {
+      "химикаты": 1
+    },
+    "ai": "melee",
+    "hit_verb": "рвёт вас зубами",
+    "armor": 3,
+    "lunge": true,
+    "poison": 3,
+    "pack": "lizards",
+    "hitbox": [
+      36,
+      32
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        56,
+        56
+      ],
+      "base": [
+        60,
+        120,
+        100
+      ],
+      "accent": [
+        230,
+        60,
+        40
+      ]
+    },
+    "sprite_dir": "river_lizard",
+    "note": "быстрый, ядовитый, ходит парами у реки"
+  },
+  "beast": {
+    "name": "рогатый зверь",
+    "level": 6,
+    "hp": 60,
+    "damage": 11,
+    "ac": 10,
+    "ap": 10,
+    "skill": 65,
+    "sequence": 8,
+    "aggro": 260,
+    "xp": 140,
+    "loot": {
+      "химикаты": 1,
+      "ткань": 1
+    },
+    "ai": "melee",
+    "hit_verb": "бодает вас",
+    "armor": 2,
+    "lunge": true,
+    "hitbox": [
+      34,
+      34
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        56,
+        56
+      ],
+      "base": [
+        110,
+        60,
+        120
+      ],
+      "accent": [
+        230,
+        60,
+        40
+      ]
+    },
+    "sprite_dir": "beast",
+    "note": "мутант с рогами: рывок через полкарты"
+  },
+  "mech_green": {
+    "name": "шагающая броня",
+    "level": 10,
+    "hp": 120,
+    "damage": 12,
+    "ac": 22,
+    "ap": 8,
+    "skill": 70,
+    "sequence": 7,
+    "aggro": 330,
+    "xp": 320,
+    "loot": {
+      "патроны": 20,
+      "лом": 4,
+      "автомат": 1
+    },
+    "ai": "ranged",
+    "range": 8,
+    "burst": 2,
+    "hit_verb": "даёт по вам очередь",
+    "armor": 9,
+    "weak_parts": [
+      "eyes"
+    ],
+    "robot": true,
+    "hitbox": [
+      36,
+      40
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        56,
+        56
+      ],
+      "base": [
+        80,
+        100,
+        80
+      ],
+      "accent": [
+        230,
+        60,
+        40
+      ]
+    },
+    "sprite_dir": "mech_green",
+    "note": "патруль неизвестной армии; броня 9, очередь из двух"
+  },
+  "robot_skel": {
+    "name": "робот-скелет",
+    "level": 5,
+    "hp": 45,
+    "damage": 7,
+    "ac": 16,
+    "ap": 7,
+    "skill": 60,
+    "sequence": 6,
+    "aggro": 300,
+    "xp": 90,
+    "loot": {
+      "лом": 3,
+      "патроны": 4
+    },
+    "ai": "ranged",
+    "range": 6,
+    "hit_verb": "стреляет в вас",
+    "armor": 4,
+    "weak_parts": [
+      "eyes"
+    ],
+    "robot": true,
+    "hitbox": [
+      30,
+      34
+    ],
+    "art": {
+      "kind": "beetle",
+      "size": [
+        56,
+        56
+      ],
+      "base": [
+        200,
+        200,
+        200
+      ],
+      "accent": [
+        230,
+        60,
+        40
+      ]
+    },
+    "sprite_dir": "robot_skel"
+  },
+  "raider_elite": {
+    "name": "рейдер в визоре",
+    "level": 5,
+    "hp": 38,
+    "damage": 8,
+    "ac": 14,
+    "ap": 8,
+    "skill": 65,
+    "sequence": 7,
+    "aggro": 300,
+    "xp": 80,
+    "loot": {
+      "патроны": 6,
+      "стимулятор": 1,
+      "дробь": 4
+    },
+    "ai": "ranged",
+    "range": 7,
+    "hit_verb": "стреляет в вас",
+    "grenades": 2,
+    "stims": 1,
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        40,
+        120,
+        140
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "sprite_dir": "visor_punk"
+  },
+  "sniper": {
+    "name": "снайпер в капюшоне",
+    "level": 5,
+    "hp": 30,
+    "damage": 11,
+    "ac": 12,
+    "ap": 7,
+    "skill": 78,
+    "sequence": 8,
+    "aggro": 380,
+    "xp": 80,
+    "loot": {
+      "патроны": 8,
+      "крышки": 15
+    },
+    "ai": "ranged",
+    "range": 11,
+    "hit_verb": "всаживает в вас пулю",
+    "coward": true,
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        60,
+        90,
+        50
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "sprite_dir": "scout"
   }
 }

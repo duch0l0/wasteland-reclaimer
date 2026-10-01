@@ -175,7 +175,8 @@ class BackpackMixin:
             if use.get("heal_full"):
                 p.hp = p.hp_cap
             else:
-                p.hp = min(p.hp_cap, p.hp + use.get("heal", 0))
+                bonus = max(0, p.skill("medicine") - 15) / 100 + 0.5 * p.perk_rank("medic")   # Медицина
+                p.hp = min(p.hp_cap, p.hp + round(use.get("heal", 0) * (1 + bonus)))
             p.dots = [d for d in p.dots if d["kind"] != "poison"]   # лекарство снимает яд
             self.inventory.remove(name)
             self.log(f"Использовано: {name} (+{p.hp - before} HP).")

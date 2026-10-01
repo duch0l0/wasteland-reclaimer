@@ -10,6 +10,10 @@
   x_cliff        скала (кусок обрыва)      x_pipe       ржавая труба у стены
   x_puddle       лужа с тиной (пол)        x_vault_sign табличка «57» Vault-Tec
   x_barrel_boom  красная бочка с горючим — взрывается от выстрела
+  x_thermometer  Термометр Бейкера — «самый высокий градусник в мире», стрелка на 134 °F
+
+Ещё здесь — описания объектов из набора «War ruins» (RUINS ниже: картинки уже нарезаны
+tools/slice_ruins.py, рисовать ничего не надо — только имя, масштаб и пятно на земле).
 
 Рисуем в половинном размере и увеличиваем вдвое без сглаживания — в тон
 пиксель-арту персонажей. Картинки ложатся в assets/town/props/, размеры —
@@ -247,6 +251,42 @@ def barrel_boom():
     return outline(s)
 
 
+DIGITS = {"1": ["010", "110", "010", "010", "111"], "3": ["111", "001", "011", "001", "111"],
+          "4": ["101", "101", "111", "001", "001"], "F": ["111", "100", "110", "100", "100"]}
+
+
+def thermometer():
+    """Термометр Бейкера: табло с цифрами наверху, белая колонна со шкалой и красным
+    столбиком, бетонное основание. Половинный размер 32×200."""
+    s = canvas(32, 200)
+    rect(s, 2, 186, 28, 14, (120, 112, 100))           # основание
+    rect(s, 2, 186, 28, 3, (150, 142, 128))
+    noise(s, [(100, 92, 82), (138, 130, 116)], 30, (2, 189, 28, 11))
+    rect(s, 9, 24, 14, 163, (206, 200, 184))           # колонна
+    rect(s, 19, 24, 4, 163, (168, 160, 144))           # тень справа
+    rect(s, 9, 24, 2, 163, (230, 226, 212))            # блик слева
+    for y in range(34, 180, 8):                        # шкала
+        rect(s, 9, y, 4 if (y // 8) % 2 else 3, 1, (70, 60, 52))
+    rect(s, 15, 64, 3, 116, (176, 36, 28))             # столбик
+    rect(s, 15, 64, 1, 116, (214, 70, 52))
+    pygame.draw.circle(s, (176, 36, 28), (16, 180), 4)
+    for _ in range(14):                                # ржавчина
+        x, y = rnd.randint(9, 22), rnd.randint(26, 184)
+        rect(s, x, y, rnd.randint(1, 2), rnd.randint(1, 4), (150, 90, 50))
+    rect(s, 0, 0, 32, 24, (46, 44, 42))                # табло
+    rect(s, 1, 1, 30, 22, (28, 26, 26))
+    x = 3
+    for ch in "134F":
+        for row, line in enumerate(DIGITS[ch]):
+            for col, bit in enumerate(line):
+                if bit == "1":
+                    rect(s, x + col * 2, 4 + row * 3, 2, 2, (238, 128, 44))
+        x += 7
+    rect(s, 4, 20, 24, 1, (90, 40, 30))
+    outline(s)
+    return s
+
+
 def mesa_vault():
     """Столовая гора с дверью Убежища 57 в южном склоне (вид сверху-спереди)."""
     w, h = 336, 176
@@ -309,6 +349,65 @@ PROPS = {
     "x_vault_sign": (vault_sign, {"foot": [1, 1]}),
     "x_mesa_vault": (mesa_vault, {"foot": [14, 3], "sight": True}),
     "x_barrel_boom": (barrel_boom, {"foot": [1, 1], "explosive": True}),
+    "x_thermometer": (thermometer, {"foot": [2, 1], "sight": True}),
+}
+
+
+# объекты набора «War ruins»: имя -> (картинка, масштаб, пятно [ширина, глубина], доп. поля)
+B, V, S = 1.5, 1.25, 1.2   # масштаб: постройки, машины, мелочь (герой в игре — 74 px)
+RUINS = {
+    # лачуги, хижины, палатки
+    "r_shack": ("r21_034", B, [4, 2], {"sight": True}), "r_shack_ruin": ("r21_035", B, [5, 2], {"sight": True}),
+    "r_shack_tin": ("r21_037", B, [5, 2], {"sight": True}), "r_house_wood": ("r22_018", B, [3, 2], {"sight": True}),
+    "r_shed_tin": ("r22_024", B, [3, 2], {"sight": True}), "r_shed_tin_b": ("r22_025", B, [3, 2], {"sight": True}),
+    "r_cabin": ("r22_041", B, [2, 2], {"sight": True}), "r_cabin_b": ("r22_055", B, [2, 2], {"sight": True}),
+    "r_cabin_c": ("r27_023", B, [2, 2], {"sight": True}), "r_cabin_d": ("r27_024", B, [3, 2], {"sight": True}),
+    "r_shack_e": ("r27_029", B, [2, 2], {"sight": True}), "r_shack_blue": ("r27_008", B, [2, 1], {"sight": True}),
+    "r_shack_f": ("r27_007", B, [3, 2], {"sight": True}), "r_shack_g": ("r27_021", B, [3, 1], {"sight": True}),
+    "r_shanty": ("r27_030", B, [3, 2], {"sight": True}), "r_shanty_big": ("r27_026", B, [5, 3], {"sight": True}),
+    "r_hut": ("r22_069", B, [3, 2], {"sight": True}),
+    "r_tent_big": ("r21_038", S, [4, 1], {"sight": True}), "r_tent_yellow": ("r22_034", S, [2, 1], {}),
+    "r_tent_beige": ("r22_053", S, [2, 1], {}), "r_tent_purple": ("r22_054", S, [2, 1], {}),
+    "r_tent_green": ("r22_067", S, [2, 1], {"sight": True}), "r_tent_orange": ("r22_068", S, [2, 1], {"sight": True}),
+    "r_tent_low": ("r22_070", S, [2, 1], {}), "r_awning": ("r22_073", S, [2, 1], {"block": False, "layer": "floor"}),
+    # большие постройки
+    "r_bunker": ("r26_000", B, [5, 2], {"sight": True}), "r_bunker_small": ("r26_012", B, [3, 2], {"sight": True}),
+    "r_hangar": ("r26_001", B, [6, 2], {"sight": True}), "r_barn": ("r26_015", B, [4, 2], {"sight": True}),
+    "r_water_tower": ("r26_006", B, [1, 1], {}), "r_water_tower_b": ("r26_007", B, [1, 1], {}),
+    "r_water_tower_tall": ("r26_016", B, [2, 1], {"sight": True}), "r_derrick": ("r27_002", B, [2, 1], {"sight": True}),
+    "r_silo": ("r27_018", B, [2, 2], {"sight": True}),
+    # деревья и сухая трава (трава — проходимая)
+    **{f"r_dtree_{c}": (img, 1.3, [1, 1], {}) for c, img in zip("abcdefg", ("r21_011", "r21_012", "r21_013", "r21_014",
+                                                                           "r21_016", "r21_020", "r21_022"))},
+    "r_dry_grass": ("r21_004", S, [1, 1], {"block": False}), "r_dry_grass_b": ("r21_005", S, [1, 1], {"block": False}),
+    "r_dry_bush": ("r21_006", S, [1, 1], {"block": False}),
+    # хлам и мелочь
+    "r_junk_mound": ("r21_044", S, [4, 2], {"sight": True, "search": "junk", "title": "гора хлама"}),
+    "r_dumpster": ("r21_045", S, [2, 1], {"search": "junk", "title": "мусорный бак"}),
+    "r_dumpster_b": ("r21_050", S, [2, 1], {"search": "junk", "title": "мусорный бак"}),
+    "r_trash_can": ("r21_046", S, [1, 1], {"search": "junk", "title": "урна"}),
+    "r_billboard": ("r21_040", S, [1, 1], {}), "r_pole_broken": ("r21_041", S, [1, 1], {}),
+    "r_pole_wire": ("r21_049", S, [1, 1], {}),
+    "r_trash": ("r21_024", S, [2, 1], {"block": False, "layer": "floor"}),
+    "r_bones": ("r21_027", S, [2, 1], {"block": False, "layer": "floor"}),
+    "r_rocks": ("r21_026", S, [2, 1], {}), "r_planks": ("r21_031", S, [2, 1], {}), "r_planks_b": ("r21_033", S, [2, 1], {}),
+    "r_barrels": ("r22_032", S, [1, 1], {"search": "junk", "title": "бочка"}),
+    "r_bin": ("r22_042", S, [1, 1], {}), "r_bin_b": ("r22_043", S, [1, 1], {}),
+    "r_logs": ("r22_051", S, [1, 1], {}), "r_logs_b": ("r22_065", S, [1, 1], {}),
+    "r_sandbags": ("r24_048", S, [1, 1], {}), "r_sandbags_b": ("r24_049", S, [1, 1], {}),
+    "r_sandbag_row": ("r24_057", S, [2, 1], {}), "r_sandbag_row_b": ("r24_060", S, [2, 1], {}),
+    # машины
+    "r_car_wreck": ("r21_051", V, [4, 1], {"search": "junk", "title": "остов машины"}),
+    "r_car_a": ("r22_037", V, [2, 1], {}), "r_car_b": ("r22_038", V, [2, 1], {}),
+    "r_car_c": ("r22_039", V, [2, 1], {}), "r_pickup": ("r22_040", V, [2, 1], {}),
+    "r_car_red": ("r24_043", V, [2, 1], {}), "r_taxi": ("r24_034", V, [2, 1], {}),
+    "r_car_d": ("r24_035", V, [2, 1], {}), "r_car_e": ("r24_050", V, [2, 1], {}),
+    "r_moto": ("r21_052", S, [2, 1], {}), "r_moto_b": ("r24_030", S, [2, 1], {}),
+    "r_rv": ("r24_018", V, [5, 1], {"sight": True, "search": "cloth", "title": "трейлер"}),
+    "r_rv_b": ("r24_025", V, [5, 1], {"sight": True}), "r_rv_c": ("r24_026", V, [5, 1], {"sight": True}),
+    "r_camper": ("r24_003", V, [4, 1], {"sight": True}),
+    "r_army_truck": ("r24_005", V, [5, 1], {"sight": True, "search": "military", "title": "армейский грузовик"}),
+    "r_tanker": ("r24_006", V, [5, 1], {"sight": True}), "r_van": ("r24_012", V, [5, 1], {"sight": True}),
 }
 
 
@@ -345,6 +444,10 @@ def main():
         entry = catalog["props"].setdefault(name, {})
         entry.setdefault("img", name)
         for k, v in desc.items():
+            entry.setdefault(k, v)
+    for name, (img, scale, foot, extra) in RUINS.items():
+        entry = catalog["props"].setdefault(name, {})
+        for k, v in {"img": img, "scale": scale, "foot": foot, **extra}.items():
             entry.setdefault(k, v)
     catalog["loot_tables"].setdefault("grave", {"крышки": [3, 15, 60], "бинт": [1, 1, 20], "патроны": [2, 5, 25],
                                                 "ткань": [1, 2, 40]})

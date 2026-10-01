@@ -3,6 +3,7 @@ import pygame
 
 from . import settings as S
 from . import items
+from . import skills
 from .animator import Animator
 from .leveling import LevelSystem
 
@@ -76,7 +77,9 @@ class Player(CombatStats):
         self.weapon = "melee"   # ключ из src/weapons.py
         self.perks = {}         # id перка -> ранг
         self.free_steps = 0     # перк «Бонус движения»: бесплатные шаги в этом ходу
-        self.pending_perks = 0  # сколько перков ждут выбора
+        self.pending_perks = 0  # сколько перков ждут выбора (перк — на чётных уровнях)
+        self.skills = skills.defaults()   # навыки (src/skills.py): растут по выбору при повышении уровня
+        self.pending_skills = 0 # сколько повышений навыка ждут выбора
         self.rads = 0           # радиация: каждые 10 рад отъедают 1 HP от максимума (как в Fallout 4)
 
     @property
@@ -110,14 +113,16 @@ class Player(CombatStats):
     def max_ap(self):
         return max(2, self.base_ap + self.equip_mod("ap") - (3 if self.crippled_legs else 0))
 
+    def skill(self, skill_id):
+        return self.skills.get(skill_id, skills.SKILL_BY_ID[skill_id]["base"])
+
     @property
     def melee_skill(self):
-        return S.PLAYER_MELEE_SKILL + (self.level_sys.level - 1) * S.PLAYER_SKILL_PER_LEVEL
+        return self.skill("melee")
 
     @property
     def guns_skill(self):
-        return (S.PLAYER_GUNS_SKILL + (self.level_sys.level - 1) * S.PLAYER_SKILL_PER_LEVEL
-                + 15 * self.perk_rank("steady_hand") + self.equip_mod("guns"))
+        return self.skill("guns") + 15 * self.perk_rank("steady_hand") + self.equip_mod("guns")
 
     @property
     def crit_bonus(self):
@@ -128,7 +133,8 @@ class Player(CombatStats):
         """Урон в ближнем бою (у самопала свой — см. src/weapons.py).
         Заточенный лом даёт +3, пока лежит в рюкзаке."""
         sharp = 3 if self.inventory is not None and self.inventory.has("заточенный лом") else 0
-        return self.base_damage + (self.level_sys.level - 1) * 2 + 3 * self.perk_rank("heavy_hand") + sharp
+        return (self.base_damage + max(0, (self.melee_skill - 60) // 10) + 3 * self.perk_rank("heavy_hand")
+                + sharp)
 
     iso = False   # на изометрической карте клавиши двигают по экрану, а не по сетке
 
@@ -212,11 +218,14 @@ class Player(CombatStats):
             self.attacking = False
 
     def gain_xp(self, amount):
+        before = self.level_sys.level
         msgs = self.level_sys.add_xp(amount)
-        self.pending_perks += len(msgs)
         if msgs:
-            self.max_hp += 5 * len(msgs)
-            self.hp = self.max_hp
+            new = range(before + 1, self.level_sys.level + 1)
+            self.pending_skills += len(new)                          # навык — каждый уровень
+            self.pending_perks += sum(1 for lv in new if lv % 2 == 0)  # перк — на чётных
+            self.max_hp += S.HP_PER_LEVEL * len(new) + 2 * self.perk_rank("lifegiver") * len(new)
+            self.hp = self.hp_cap
         return msgs
 
     def draw(self, surf, cam):
@@ -238,6 +247,8 @@ class Enemy(CombatStats):
         self.skill = d["skill"]
         self.aggro = d.get("aggro", 220)
         self.xp_reward = d.get("xp", 10)
+        self.level = d.get("level", 1)                 # насколько опасен: опыт за убийство зависит от разницы
+        self.burst = d.get("burst", 1)                 # выстрелов в очереди
         self.loot = dict(d.get("loot", {}))
         self.ai = d.get("ai", "melee")
         self.range = d.get("range", 1)

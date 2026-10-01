@@ -118,12 +118,15 @@ def draw_perk_menu(surf, choices, player):
     for i, perk in enumerate(choices):
         rank = player.perk_rank(perk["id"])
         title = f"[{i + 1}] {perk['name']}" + (f" (ранг {rank + 1})" if perk["max_rank"] > 1 else "")
+        if perk.get("kind") == "skill":
+            title = f"[{i + 1}] {perk['name']}"
         blocks.append([(title, (230, 200, 110), 0)] +
                       [(line, (200, 190, 170), 18) for line in wrap_text(font_small, perk["desc"], box_w - 50)])
     line_h = 22
     box = centered_box(box_w, 64 + sum(len(b) * line_h + 8 for b in blocks))
     panel(surf, box, 245)
-    surf.blit(font.render(f"Уровень {player.level_sys.level}! Выберите перк (клик или 1–{len(choices)})", True,
+    what = "навык (+10)" if choices and choices[0].get("kind") == "skill" else "перк"
+    surf.blit(font.render(f"Уровень {player.level_sys.level}! Выберите {what} (клик или 1–{len(choices)})", True,
                           (140, 220, 120)), (box.x + 16, box.y + 14))
     y = box.y + 52
     for i, rows in enumerate(blocks):

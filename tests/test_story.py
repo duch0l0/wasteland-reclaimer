@@ -155,7 +155,7 @@ def go_home(g):
 
 
 def finish(g):
-    """Карта мира -> Бейкер -> слайды конца главы."""
+    """Карта мира -> Бейкер -> слайды прибытия (дальше — tests/test_baker.py)."""
     ok("baker" in g.worldmap.known, "Бейкер отмечен на карте мира")
     g.go_world_map()
     g.worldmap.pos = pygame.Vector2(g.worldmap.pos)
@@ -165,7 +165,10 @@ def finish(g):
     while g.slides:
         g.update(5000)
         g.slides_next()
-    ok(shown and g.stage("mq_grandpa") == 100, "Бейкер: слайды конца главы, квест выполнен")
+    ok(shown and g.loc.id == "baker" and g.stage("mq_grandpa") == 70, "Бейкер: слайды прибытия, стадия 70")
+    g.show_slides("baker_finale")   # «что ты оставил за спиной» — в финале главы (весь путь — test_baker.py)
+    texts += " " + " ".join(p["text"] for sl in g.slides["list"] for p in sl["parts"])
+    g.slides = None
     return texts
 
 

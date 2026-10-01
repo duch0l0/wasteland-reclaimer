@@ -1,5 +1,6 @@
 """
-Каталог объектов карт (data/props.json) и их картинки (assets/town/props/).
+Каталог объектов карт (data/props.json) и их картинки: assets/town/props/ (набор
+«wasteland town» и свои x_*) и assets/ruins/props/ (набор «War ruins», картинки r<стр>_<номер>).
 
 Размер пятна на земле (foot) считается по картинке, если не задан явно:
 ширина — сколько клеток занимает картинка, глубина — 1 клетка.
@@ -13,6 +14,7 @@ import pygame
 from . import settings as S
 
 PROPS_DIR = os.path.join("assets", "town", "props")
+RUINS_DIR = os.path.join("assets", "ruins", "props")
 
 with open("data/props.json", "r", encoding="utf-8") as f:
     _DATA = json.load(f)
@@ -25,9 +27,17 @@ _SIZES = None
 def _source_sizes():
     global _SIZES
     if _SIZES is None:
-        with open(os.path.join("assets", "town", "index.json"), "r", encoding="utf-8") as f:
-            _SIZES = {k: v["size"] for k, v in json.load(f).items()}
+        _SIZES = {}
+        for index in (os.path.join("assets", "town", "index.json"), os.path.join("assets", "ruins", "index.json")):
+            if os.path.isfile(index):
+                with open(index, "r", encoding="utf-8") as f:
+                    _SIZES.update({k: v["size"] for k, v in json.load(f).items()})
     return _SIZES
+
+
+def _img_path(img):
+    ruins = img[0] == "r" and img[1:2].isdigit()
+    return os.path.join(RUINS_DIR if ruins else PROPS_DIR, img + ".png")
 
 
 def explosive(obj):
@@ -54,7 +64,7 @@ def image(name, darken=False):
     key = (name, darken)
     if key not in _IMAGES:
         d = info(name)
-        img = pygame.image.load(os.path.join(PROPS_DIR, d["img"] + ".png")).convert_alpha()
+        img = pygame.image.load(_img_path(d["img"])).convert_alpha()
         if img.get_size() != d["size"]:
             img = pygame.transform.smoothscale(img, d["size"])
         if darken:

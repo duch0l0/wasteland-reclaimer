@@ -25,7 +25,7 @@ class QuestMixin:
 
     def check_condition(self, cond):
         """Условие реплики/стартового узла: flag, not_flag, flags_any, item+count, no_item, perk,
-        min_level, stage [квест, не меньше], stage_lt [квест, меньше]."""
+        skill [навык, не меньше], min_level, stage [квест, не меньше], stage_lt [квест, меньше]."""
         if "stage" in cond and self.stage(cond["stage"][0]) < cond["stage"][1]:
             return False
         if "stage_lt" in cond and self.stage(cond["stage_lt"][0]) >= cond["stage_lt"][1]:
@@ -43,6 +43,11 @@ class QuestMixin:
         if "item" in cond and not self.inventory.has(cond["item"], cond.get("count", 1)):
             return False
         if "perk" in cond and not self.player.perk_rank(cond["perk"]):
+            # «Подвешенный язык» заменяет высокое Красноречие
+            from ..skills import SPEECH_FOR_TONGUE
+            if not (cond["perk"] == "silver_tongue" and self.player.skill("speech") >= SPEECH_FOR_TONGUE):
+                return False
+        if "skill" in cond and self.player.skill(cond["skill"][0]) < cond["skill"][1]:
             return False
         if "min_level" in cond and self.player.level_sys.level < cond["min_level"]:
             return False
@@ -145,6 +150,10 @@ class QuestMixin:
             self.merc_start()
         elif t == "merc_finish":
             self.merc_finish()
+        elif t == "baker_assault":
+            self.baker_assault()
+        elif t == "baker_free_amos":
+            self.baker_free_amos()
         elif t == "join_dog":
             self.join_dog()
         elif t == "kill_pack":   # отравили кормушку — стая гибнет в своих норах

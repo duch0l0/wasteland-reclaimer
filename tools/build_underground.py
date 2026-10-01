@@ -12,6 +12,11 @@
   обронили сумку → логово крысолюдов с вожаком и кормушкой → решётка
   стока, через которую крысолюды лезут в город.
 
+Склад «Бейкер-7» (36×26) — под бункером в дюнах Бейкера (tools/build_baker.py):
+  лестница → коридор с охранным роботом → караулка → хранилище: десять контейнеров ВРЭ
+  (пять пустых, пять опломбированных), турель и терминал с журналом отгрузки — он и
+  заканчивает главу (слайды baker_finale).
+
 Запуск из папки game_project:  .venv/bin/python tools/build_underground.py
 """
 from mapkit import MapKit, CRATES, BARRELS, LOCKERS, JUNK_PILES, CLOTH_PILES, RUBBLE
@@ -148,3 +153,36 @@ d.pickups.append(["лом", 1, 45, 14])
 d.check(npc_enemy_gap=0)
 d.save("data/maps/drain.json", style="drain", dark=195)
 print(f"Ливнёвка: объектов {len(d.props)}, врагов {len(d.enemies)}, контейнеров {len(d.containers)}")
+
+
+# ================================================================ Склад «Бейкер-7»
+b = MapKit(36, 26, start=(4, 18), seed=7, fill="x")
+put, box, terminal, scatter = b.put, b.box, b.terminal, b.scatter
+room(b, "m", 2, 16, 7, 21)            # площадка у лестницы
+room(b, "m", 8, 18, 25, 19)           # коридор
+room(b, "m", 8, 10, 14, 16)           # караулка
+room(b, "m", 10, 17, 11, 17)          # дверь караулки
+room(b, "m", 18, 3, 33, 16)           # хранилище
+room(b, "m", 22, 17, 23, 17)          # проход в хранилище
+
+put("x_ladder", 4, 16, check=False)
+b.portal([(4, 16)], "baker", (72, 16), "Бейкер")
+b.reserve(3, 17, 6, 20)
+put("x_vault_sign", 6, 16, check=False)
+# караулка: шкафчики охраны
+box("locker_4", 9, 10, "шкафчик охраны", {"стимулятор": 1, "патроны": 10, "граната": 1})
+box("locker_2", 12, 10, "шкафчик сержанта", {"бинт": 2, "антирадин": 1, "автомат": 1, "патроны": 30})
+put("table_5", 10, 13, check=False)
+put("chair_2", 11, 13, check=False)
+# хранилище: два ряда контейнеров — дальний опломбирован, ближний пуст
+SEALED = {"flag": "never", "msg": "Пломба армии США: «ВРЭ. ПАРТИЯ 7». Вскрывать голыми руками — безумие."}
+for x in (19, 22, 25, 28, 31):
+    box("crate_b", x, 6, "контейнер ВРЭ", {}, requires=SEALED)
+    box("crate_open", x, 11, "пустой контейнер", {})
+terminal(30, 4, "baker7_log")
+scatter(["ammo_box", "metal_sheets", "toolbox_red"], 18, 13, 33, 16, 3)
+b.enemies += [["robot_guard", 18, 18], ["robot_guard", 24, 9], ["robot_guard", 32, 14], ["turret", 20, 4]]
+
+b.check(npc_enemy_gap=0)
+b.save("data/maps/baker7.json", style="vault", dark=170)
+print(f"Бейкер-7: объектов {len(b.props)}, врагов {len(b.enemies)}, контейнеров {len(b.containers)}")

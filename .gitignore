@@ -15,3 +15,7 @@ iso/*
 f2cache/
 fallout2_sounds/
 crash.log
+
+# сводки для подбора объектов (tools/slice_ruins.py --catalog)
+assets/ruins/catalog_*.png
+npc/raw/preview_*.png
