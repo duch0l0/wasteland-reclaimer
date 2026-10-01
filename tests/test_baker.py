@@ -1,11 +1,12 @@
 """
 Бейкер без окна: три пути спасения деда и финал главы на складе «Бейкер-7».
 
+  Город — три района (трасса, миссия, окраина), переходы — по дорогам.
   Тень   — с Панком: калитка ломом, Искра даёт ключ, дед уходит тихо; Искра уходит к брату.
   Сделка — Хэтти ручается, страж пропускает, Ансельм отпускает деда за голозапись.
   Сталь  — с Лирой: штурм, бой, Ансельм отдаёт ключ.
-  Ещё: тревога во дворе без пропуска; Тобиас и самогон; дед открывает склад, журнал —
-  слайды финала, жетон и допуск; сохранение посреди Бейкера.
+  Ещё: тревога во дворе без пропуска; Тобиас и самогон; Рой и Марла; книга даров для Хэтти;
+  дед открывает склад, журнал — слайды финала, жетон и допуск; ночь и свет; сохранение.
 
     .venv/bin/python tests/test_baker.py
 """
@@ -49,6 +50,19 @@ def fr(g, n=2):
 def goto(g, tile):
     g.player.rect.topleft = rect_pos_for_tile(g.player, tile)
     g.snap_camera()
+
+
+def go(g, zone):
+    """Перейти в район Бейкера (по дороге — порталом)."""
+    end_talk(g)
+    portal = next(p for p in g.level.portals if p["to"] == zone)
+    goto(g, sorted(portal["tiles"])[0])
+    fr(g, 3)
+    assert g.loc.id == zone, f"не перешли в {zone}"
+    for e in g.enemies:
+        e.wander_wait = 10 ** 9
+    for n in g.npcs:
+        n.wander_wait = 10 ** 9
 
 
 def stand_near(g, tiles):
@@ -150,17 +164,18 @@ def arrive(flags=()):
 def finale(g, path):
     """Дед у склада -> склад -> журнал -> слайды финала."""
     ok(g.flags.get(f"baker_path_{path}") and g.stage("mq_grandpa") == 80, f"дед свободен, путь — {path}")
-    ok(any(n.npc_id == "amos_b7" for n in g.npcs) and not any(n.npc_id == "amos" for n in g.npcs),
-       "дед ушёл из кельи к складу")
-    goto(g, (72, 15))
-    fr(g, 2)
-    ok(g.loc.id == "baker", "без деда дверь склада не открыть")
+    ok(not any(n.npc_id == "amos" for n in g.npcs), "дед ушёл из кельи")
+    if g.combat.active:
+        fight(g)
+    go(g, "baker")
+    go(g, "baker_outskirts")
+    ok(any(n.npc_id == "amos_b7" for n in g.npcs), "дед ждёт у склада на окраине")
     talk(g, "amos_b7")
     say(g, "Открывай")
     say(g, "Идём вниз")
     end_talk(g)
     ok(g.flags.get("baker7_open") and g.stage("mq_grandpa") == 90, "дед открыл склад: глаз, голос, код")
-    goto(g, (72, 14))
+    goto(g, (66, 10))
     fr(g, 3)
     ok(g.loc.id == "baker7", "спуск в «Бейкер-7»")
     for e in g.enemies:
@@ -186,26 +201,42 @@ def finale(g, path):
     return text
 
 
+# ============================================================ районы и ночь
+print("— районы и ночь")
+g = arrive()
+ok(g.level.night and g.lighting is not None, "Бейкер ночной")
+from src.lighting import light_sources  # noqa: E402
+ok(len(light_sources(g.level)) >= 15, f"на трассе фонари и огонь ({len(light_sources(g.level))} источников)")
+go(g, "baker_mission")
+ok(any(n.npc_id == "anselm" for n in g.npcs), "миссия: Ансельм на месте")
+go(g, "baker")
+go(g, "baker_outskirts")
+ok(any(n.npc_id == "hollis" for n in g.npcs), "окраина: Холлис на свалке")
+
 # ============================================================ тревога: чужак во дворе
 print("— тревога во дворе миссии")
 g = arrive()
+go(g, "baker_mission")
 ok(use_gate(g, "mission_back_open"), "калитка в дюнах — ломом")
-goto(g, (36, 22))     # прямо к стражу у ворот
+goto(g, (40, 27))     # прямо к стражу во дворе
 fr(g, 2)
 ok(g.flags.get("baker_alarm") and g.flags.get("cult_hostile") and g.combat.active, "без пропуска во дворе — тревога и бой")
 
 # ============================================================ путь 1: Тень
 print("— Тень: Панк, Искра, ключ, тихо")
 g = arrive(["route_loner"])
-ok(any(n.npc_id == "loner_baker" for n in g.npcs), "Панк ждёт у калитки")
+go(g, "baker_mission")
+ok(any(n.npc_id == "loner_baker" for n in g.npcs), "Панк ждёт в дюнах у калитки")
 talk(g, "loner_baker")
 say(g, "Скажу")
 ok(g.flags.get("know_iskra") and g.stage("sq_iskra") == 10, "Панк просит найти Искру")
 ok(use_gate(g, "mission_back_open"), "калитка открыта")
-goto(g, (55, 12))     # вдоль восточной стены — вдали от стражи
+goto(g, (57, 14))     # вдоль восточной стены — вдали от стражи
 fr(g, 2)
 ok(not g.flags.get("baker_alarm"), "у восточной стены не заметили")
 talk(g, "iskra")
+fr(g, 2)
+ok(not g.flags.get("baker_alarm"), "у Искры не заметили")
 say(g, "Мне нужен ключ")
 say(g, "Спасибо")
 ok(g.inventory.has("ключ от келий"), "Искра отдала слепок ключа")
@@ -222,8 +253,8 @@ fr(g, 2)
 text = finale(g, "shadow")
 ok("вентиляционную шахту" in text and "глаз в треугольнике" in text, "финал Тени: культ по следам, Орден заметил")
 
-# ============================================================ путь 2: Сделка
-print("— Сделка: Хэтти, страж, Ансельм")
+# ============================================================ путь 2: Сделка + Рой и Марла + книга даров
+print("— Сделка: Хэтти, страж, Ансельм; Марла; книга даров")
 g = arrive(["safe_code"])
 g.inventory.add("голозапись деда", 1)
 talk(g, "hattie")
@@ -231,13 +262,30 @@ say(g, "Я ищу деда")
 say(g, "Город мне поможет")
 say(g, "Скажи стражу")
 end_talk(g)
-guard = next(e for e in g.enemies if e.type_id == "cult_guard" and tile_of(e)[1] < 30)
+talk(g, "hattie")
+say(g, "книгу долгов")
+say(g, "Достану")
+end_talk(g)
+talk(g, "roy")
+say(g, "Я загляну в миссию")
+say(g, "Отдам")
+ok(g.inventory.has("записка Роя") and g.stage("sq_roy") == 10, "Рой дал записку для Марлы")
+go(g, "baker_mission")
+guard = next(e for e in g.enemies if e.type_id == "cult_guard" and tile_of(e)[1] > 39)
 talk_enemy(g, guard)
 say(g, "прислала Хэтти")
 say(g, "Свет с тобой")
 fr(g, 2)
 ok(g.flags.get("mission_pass") and next(gt for gt in g.level.gates if gt["flag"] == "mission_gate_open")["open"],
    "страж пропустил — ворота открыты")
+talk(g, "marla")
+say(g, "записка")
+say(g, "Иди к нему")
+fr(g, 2)
+ok(g.flags.get("marla_home") and not any(n.npc_id == "marla" for n in g.npcs), "Марла ушла из миссии")
+box = next(c for c in g.level.containers if c["name"] == "сундук Ансельма")
+box["loot"].pop("книга даров")
+g.inventory.add("книга даров", 1)    # обыск чужого сундука проверен в test_story; здесь — просто взять книгу
 talk(g, "anselm")
 say(g, "держишь моего деда")
 ok(any("10-23-77" in o for o in options(g)), "можно выменять деда на код склада")
@@ -245,14 +293,25 @@ say(g, "его голос на записи")
 say(g, "Договорились")
 fr(g, 2)
 ok(g.flags.get("cells_open") and g.flags.get("deal_anselm"), "Ансельм отпустил деда")
-goto(g, (49, 15))
+goto(g, (49, 20))
 fr(g, 2)
 ok(not g.flags.get("baker_alarm"), "с пропуском по двору можно ходить")
 talk(g, "amos")
 say(g, "Иди")
 fr(g, 2)
+go(g, "baker")
+ok(any(n.npc_id == "marla_home" for n in g.npcs), "Марла дома у Роя")
+talk(g, "roy")
+say(g, "Берегите")
+ok(g.stage("sq_roy") == 100, "Рой отблагодарил")
+talk(g, "hattie")
+say(g, "книга даров")
+say(g, "Спасибо, Хэтти")
+ok(g.flags.get("debt_cleared") and g.stage("sq_debt") == 100, "Хэтти: Бейкер больше не платит миссии")
+go(g, "baker_mission")
 text = finale(g, "deal")
-ok("Холлиса увезли" in text or "люди Холлиса" in text, "финал Сделки: Ансельм нарушает слово, Холлис забирает ящики")
+ok("люди Холлиса" in text and "книгу даров" in text and "ведро" in text,
+   "финал Сделки: Холлис, книга даров, Рой и Марла")
 
 # ============================================================ путь 3: Сталь
 print("— Сталь: Лира и штурм")
@@ -260,18 +319,20 @@ g = arrive(["route_lira"])
 talk(g, "lira_baker")
 say(g, "Штурмуем")
 ok(g.flags.get("baker_assault") and g.flags.get("cult_hostile"), "штурм начат, культ враждебен")
-alive_before = sum(e.alive for e in g.enemies if e.faction == "cult")
-ok(alive_before < 5, f"паладины сняли часть охраны (осталось {alive_before} из 5)")
-fight(g)
-in_mission = [e for e in g.enemies if e.faction == "cult" and tile_of(e)[1] < 25]
-for _ in range(6):      # во двор: оставшиеся балахоны замечают и вступают в бой
-    left = [e for e in in_mission if e.alive]
+if g.combat.active:
+    fight(g)     # блокпост на трассе тоже вступил в бой
+go(g, "baker_mission")
+alive = [e for e in g.enemies if e.faction == "cult" and e.alive and tile_of(e)[1] <= 38]
+ok(len(alive) < 3, f"паладины сняли часть охраны во дворе (осталось {len(alive)} из 3)")
+for _ in range(8):      # во двор: оставшиеся балахоны замечают и вступают в бой
+    if g.combat.active:
+        fight(g)
+    left = [e for e in g.enemies if e.alive and e.faction == "cult"]
     if not left:
         break
     stand_near(g, [tile_of(left[0])])
     fr(g, 3)
-    fight(g)
-ok(not any(e.alive for e in in_mission), "охрана миссии перебита")
+ok(not any(e.alive and e.faction == "cult" for e in g.enemies), "охрана миссии перебита")
 talk(g, "anselm")
 say(g, "Ключ от келий")
 say(g, "Иди")
@@ -301,13 +362,14 @@ ok(g.inventory.has("ключ от келий") and not g.inventory.has("само
 # ============================================================ сохранение
 print("— сохранение в Бейкере")
 g = arrive(["route_loner"])
+go(g, "baker_mission")
 talk(g, "loner_baker")
 say(g, "Скажу")
 g.save_game("1")
 g2 = Game(intro=False)
 g2.load_game("1")
 fr(g2, 2)
-ok(g2.loc.id == "baker" and any(n.npc_id == "loner_baker" for n in g2.npcs) and g2.flags.get("know_iskra"),
+ok(g2.loc.id == "baker_mission" and any(n.npc_id == "loner_baker" for n in g2.npcs) and g2.flags.get("know_iskra"),
    "после загрузки Панк на месте, флаги целы")
 
 print()

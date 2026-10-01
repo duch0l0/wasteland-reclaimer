@@ -48,7 +48,7 @@
     "music": "raiders"
   },
   "baker": {
-    "name": "Бейкер",
+    "name": "Бейкер: трасса",
     "map": "data/maps/baker.json",
     "world_pos": [
       880,
@@ -111,5 +111,17 @@
     "known": false,
     "underground": true,
     "music": "lab"
+  },
+  "baker_mission": {
+    "name": "Бейкер: миссия",
+    "map": "data/maps/baker_mission.json",
+    "known": false,
+    "music": "vats"
+  },
+  "baker_outskirts": {
+    "name": "Бейкер: окраина",
+    "map": "data/maps/baker_outskirts.json",
+    "known": false,
+    "music": "junktown"
   }
 }

@@ -225,6 +225,8 @@ class SaveMixin:
             self.snap_camera()
         from .. import companion
         companion.place_near_player(self)
+        if self.mode == "local":
+            self.restore_town_hostility()
         self.sync_gates()
 
     @staticmethod

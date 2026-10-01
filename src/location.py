@@ -25,7 +25,9 @@ NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000"
              "baker_kid": "Мальчишка", "baker_folk_c": "Девушка", "baker_folk_d": "Старик",
              "baker_folk_e": "Караванщица",
              # случайные встречи
-             "caravan_trader": "Бродячий торговец", "caravan_guard": "Охранник каравана"}
+             "caravan_trader": "Бродячий торговец", "caravan_guard": "Охранник каравана",
+             "roy": "Рой", "marla": "Марла", "marla_home": "Марла", "acolyte_a": "Послушница",
+             "acolyte_b": "Послушник", "baker_kid_b": "Девочка"}
 # у кого кадры лежат в чужой папке (жители из tools/make_variants.py)
 NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "merc",
                # Бейкер (листы из tools/import_sheets.py)
@@ -34,7 +36,9 @@ NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "me
                "loner_baker": "loner", "silas_baker": "silas", "scar_baker": "boss",
                "baker_folk_a": "folk_c", "baker_folk_b": "folk_d", "baker_kid": "kid", "baker_folk_c": "girl_pink",
                "baker_folk_d": "folk_g", "baker_folk_e": "folk_e",
-               "caravan_trader": "healer", "caravan_guard": "desert_guard"}
+               "caravan_trader": "healer", "caravan_guard": "desert_guard",
+               "roy": "folk_f", "marla": "folk_h", "marla_home": "folk_h", "acolyte_a": "acolyte",
+               "acolyte_b": "monk", "baker_kid_b": "folk_j"}
 
 with open("data/enemies.json", "r", encoding="utf-8") as f:
     ENEMY_DEFS = json.load(f)

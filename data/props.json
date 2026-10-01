@@ -151,8 +151,8 @@
     "bucket": {"img": "p2_084", "scale": 0.75},
     "shovel": {"img": "p2_085", "scale": 0.75, "block": false},
     "lantern": {"img": "p2_086", "scale": 0.75, "block": false},
-    "candles": {"img": "p2_087", "scale": 0.75, "block": false},
-    "lantern_lit": {"img": "p2_088", "scale": 0.75, "block": false},
+    "candles": {"img": "p2_087", "scale": 0.75, "block": false, "light": {"r": 80, "color": [255, 170, 80], "at": [0.5, 0.3], "flicker": 0.6}},
+    "lantern_lit": {"img": "p2_088", "scale": 0.75, "block": false, "light": {"r": 120, "color": [255, 180, 90], "at": [0.5, 0.4], "flicker": 0.4}},
     "backpack": {"img": "p2_089", "scale": 0.75, "block": false, "search": "bag", "title": "рюкзак"},
     "canteen": {"img": "p2_090", "scale": 0.75, "block": false},
     "junk_small_1": {"img": "p2_091", "scale": 0.75, "block": false},
@@ -301,7 +301,7 @@
     "pole_52": {"img": "p5_052"},
     "pole_76": {"img": "p5_076"},
     "pole_77": {"img": "p5_077"},
-    "lamp_post": {"img": "p5_020"},
+    "lamp_post": {"img": "p5_020", "light": {"r": 200, "color": [255, 170, 90], "at": [0.5, 0.06]}},
     "stool_round_41": {"img": "p5_041", "scale": 0.65},
     "stool_round_55": {"img": "p5_055", "scale": 0.65},
     "stool_round_56": {"img": "p5_056", "scale": 0.65},
@@ -359,7 +359,7 @@
     "vwall_metal_e": {"img": "p1_vwall_metal_e", "foot": [1, 1], "sight": true},
     "vwall_planks_w": {"img": "p1_vwall_planks_w", "foot": [1, 1], "sight": true},
     "vwall_planks_e": {"img": "p1_vwall_planks_e", "foot": [1, 1], "sight": true},
-    "terminal": {"img": "x_terminal", "scale": 0.75, "foot": [1, 1]},
+    "terminal": {"img": "x_terminal", "scale": 0.75, "foot": [1, 1], "light": {"r": 70, "color": [90, 220, 120], "at": [0.5, 0.3]}},
     "x_grave": {"img": "x_grave", "foot": [1, 1], "search": "grave", "title": "могила"},
     "x_cross": {"img": "x_cross", "foot": [1, 1]},
     "x_tombstone": {"img": "x_tombstone", "foot": [1, 1]},
@@ -458,6 +458,11 @@
     "r_camper": {"img": "r24_003", "scale": 1.25, "foot": [4, 1], "sight": true},
     "r_army_truck": {"img": "r24_005", "scale": 1.25, "foot": [5, 1], "sight": true, "search": "military", "title": "армейский грузовик"},
     "r_tanker": {"img": "r24_006", "scale": 1.25, "foot": [5, 1], "sight": true},
-    "r_van": {"img": "r24_012", "scale": 1.25, "foot": [5, 1], "sight": true}
+    "r_van": {"img": "r24_012", "scale": 1.25, "foot": [5, 1], "sight": true},
+    "campfire": {"img": "p2_079", "scale": 0.75, "light": {"r": 190, "color": [255, 140, 60], "at": [0.5, 0.35], "flicker": 1, "flame": true}},
+    "r_streetlamp": {"img": "r12_033", "scale": 1.5, "foot": [1, 1], "light": {"r": 210, "color": [255, 165, 85], "at": [0.82, 0.1]}},
+    "r_streetlamp_b": {"img": "r12_035", "scale": 1.5, "foot": [1, 1], "light": {"r": 210, "color": [255, 165, 85], "at": [0.18, 0.1]}},
+    "x_fire_barrel": {"img": "r12_052", "scale": 1.5, "foot": [1, 1], "title": "бочка с огнём", "light": {"r": 170, "color": [255, 140, 60], "at": [0.5, 0.12], "flicker": 1, "flame": true}},
+    "r_burning_rubble": {"img": "r12_022", "scale": 1.5, "foot": [2, 1], "light": {"r": 190, "color": [255, 120, 50], "at": [0.5, 0.45], "flicker": 1, "flame": true}}
   }
 }

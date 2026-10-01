@@ -100,6 +100,10 @@ class RenderMixin:
                     surf.blit(fl[(pygame.time.get_ticks() // 40) % len(fl)], r)
 
         self.gore.draw_air(surf, self.level, cam)
+        if getattr(self.level, "night", None):   # ночь: темнота, фонари, огонь (src/lighting.py)
+            fx, fy = cam.foot(self.player)
+            self.lighting.apply(surf, self.level, cam, (fx, fy - 30), pygame.time.get_ticks())
+            self.level.draw_arrows(surf, cam)
 
         # под курсором — то, с чем можно взаимодействовать, обведено контуром
         for img, r in self.hover_highlight():

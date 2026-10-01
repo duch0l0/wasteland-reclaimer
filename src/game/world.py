@@ -52,8 +52,9 @@ class WorldMixin:
         self.speech = None
         self.apply_view()
         self.place_player((at[0] * S.TILE, at[1] * S.TILE) if at else self.loc.entry)
-        if loc_id == "baker":
-            self.baker_arrive()
+        if loc_id.startswith("baker") and loc_id != "baker7":
+            self.baker_arrive(loc_id)
+        self.restore_town_hostility()   # город помнит нападение: стража враждебна, убитые мертвы
         self.sync_gates()
         self.mode = "local"
         self.log(f"Вы входите: {self.loc.name}.")

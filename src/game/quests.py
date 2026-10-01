@@ -154,6 +154,8 @@ class QuestMixin:
             self.baker_assault()
         elif t == "baker_free_amos":
             self.baker_free_amos()
+        elif t == "marla_return":
+            self.marla_return()
         elif t == "join_dog":
             self.join_dog()
         elif t == "kill_pack":   # отравили кормушку — стая гибнет в своих норах

@@ -27,6 +27,7 @@ from .tilemap import MapBase
 
 T = S.TILE
 GROUND_DIR = os.path.join("assets", "town", "ground")
+SHOW_ROOF_SIGNS = False
 
 
 def _dirt_tiles(n=6):
@@ -199,8 +200,9 @@ def _roof_image(r):
         else:              # хлам: доска, бочка
             pygame.draw.rect(img, (120, 90, 60), (x, y, 28, 6))
             pygame.draw.circle(img, (80, 90, 70), (x + 36, y + 6), 6)
-    # надпись краской по крыше, как на крышах в Fallout 2: «КЛИНИКА», «ШЕРИФ»…
-    if r.get("sign"):
+    # надписи на крышах выключены: где что — подсказывают жители в диалогах
+    # (поле sign в картах оставлено, вернуть — SHOW_ROOF_SIGNS = True)
+    if SHOW_ROOF_SIGNS and r.get("sign"):
         text = r["sign"]
         mark = text[0] if text[0] in "+★" else None
         text = text[1:] if mark else text
@@ -243,6 +245,8 @@ class TownMap(MapBase):
         self.ground = d["ground"]
         self.style = d.get("style", "town")
         self.dark = d.get("dark", False)          # под землёй: тьма по краям экрана
+        self.night = d.get("night")               # ночь: цвет темноты, свет — src/lighting.py
+        self.lights = d.get("lights", [])         # отдельные источники света [x, y, радиус, цвет, мерцание]
         self.blocked, self.sight = set(), set()
         for y, row in enumerate(self.ground):
             for x, code in enumerate(row):
@@ -503,14 +507,36 @@ class TownMap(MapBase):
         for o in self.objects:
             if o["floor"] and o["rect"].colliderect(view) and not o.get("hidden"):
                 surf.blit(P.image(o["name"]), (o["rect"].x - cam_x, o["rect"].y - cam_y))
+        if not self.night:   # ночью стрелки рисуются поверх темноты (draw_arrows из render)
+            self.draw_arrows(surf, cam)
+        self.draw_pickups(surf, cam)
+
+    _GREEN = None
+
+    def draw_arrows(self, surf, cam):
+        """Стрелки на краях карты: жёлтые — выход на карту мира, зелёные — в соседний район."""
+        cam_x, cam_y = int(cam.x), int(cam.y)
+        sw, sh = surf.get_size()
+        x0, y0 = max(0, cam_x // T), max(0, cam_y // T)
+        x1, y1 = min(self.width, (cam_x + sw) // T + 1), min(self.height, (cam_y + sh) // T + 1)
         for (x, y) in self.exits:
             if x0 <= x < x1 and y0 <= y < y1:
                 surf.blit(self._exit_arrow(x, y), (x * T - cam_x, y * T - cam_y))
-        self.draw_pickups(surf, cam)
+        for p in self.portals:
+            for (x, y) in p["tiles"]:
+                if (x in (0, self.width - 1) or y in (0, self.height - 1)) and x0 <= x < x1 and y0 <= y < y1:
+                    surf.blit(self._exit_arrow(x, y, green=True), (x * T - cam_x, y * T - cam_y))
 
-    def _exit_arrow(self, x, y):
-        """Стрелки выхода смотрят наружу, к краю карты."""
+    def _exit_arrow(self, x, y, green=False):
+        """Стрелки выхода смотрят наружу, к краю карты. Жёлтые — на карту мира,
+        зелёные — в соседний район той же локации."""
         arrow = loader.special_tile(">")
+        if green:
+            if TownMap._GREEN is None:
+                g = arrow.copy()
+                g.fill((90, 255, 110, 255), special_flags=pygame.BLEND_RGBA_MULT)
+                TownMap._GREEN = g
+            arrow = TownMap._GREEN
         if x == 0:
             return pygame.transform.flip(arrow, True, False)
         if y == self.height - 1:

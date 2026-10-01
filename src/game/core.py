@@ -43,10 +43,11 @@ from .menu import MenuMixin
 from .saveload import SaveMixin
 from .merc import MercMixin
 from .baker import BakerMixin
+from .crime import CrimeMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, RenderMixin):
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, RenderMixin):
     def __init__(self, intro=True, _screen=None, _prologue=False):
         """intro — начать с главного меню (для проверок без окна его пропускают).
         _screen, _prologue — для «Новой игры» из меню: то же окно, сразу пролог."""
@@ -82,6 +83,8 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         # системы и открытые окна
         with open("data/traders.json", "r", encoding="utf-8") as f:
             self.traders = json.load(f)
+        from ..lighting import Lighting
+        self.lighting = Lighting()
         self.dialogue = DialogueRunner("data/dialogues.json", self.check_condition)
         self.dialogue_speaker = None   # NPC или враг, с которым говорим
         self.combat = Combat(self)

@@ -7,6 +7,8 @@ from ..weapons import WEAPONS, available
 
 class InteractionMixin:
     def talk_to(self, speaker, tree_id):
+        if speaker in self.npcs and self.scared_line(speaker):   # город видел убийцу — не разговаривают
+            return True
         if self.dialogue.start(tree_id):
             self.dialogue_speaker = speaker
             # собеседник поворачивается к игроку
@@ -18,6 +20,11 @@ class InteractionMixin:
     def interact(self):
         """E: поговорить с NPC рядом, иначе терминал, контейнер, дверь, предмет на земле."""
         reach = self.player.rect.inflate(60, 60)  # хитбокс узкий, достаём NPC с соседнего тайла
+        if pygame.key.get_mods() & pygame.KMOD_SHIFT:   # Shift + E — напасть на жителя рядом
+            npc = next((n for n in self.npcs if reach.colliderect(n.rect)), None)
+            if npc is not None:
+                self.attack_npc(npc)
+                return
         for npc in self.npcs:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
                 return
@@ -180,6 +187,8 @@ class InteractionMixin:
     def on_enemy_killed(self, enemy):
         """Вызывается боевым модулем: добыча, опыт, перки, флаги квестов."""
         self.log(f"{enemy.name[:1].upper() + enemy.name[1:]} повержен.")
+        if getattr(enemy, "npc_id", None):   # убитый житель не воскреснет при следующем приходе
+            self.flags[f"killed_{enemy.npc_id}"] = True
         mult = 2 if self.player.perk_rank("looter") else 1
         loot = {item: cnt * mult for item, cnt in (enemy.loot or {}).items()}
         self.level.add_corpse(enemy, loot)

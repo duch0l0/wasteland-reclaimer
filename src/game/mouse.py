@@ -134,7 +134,9 @@ class MouseMixin:
 
     def _explore_click(self, pos):
         target = self.entity_at_screen(pos)
-        if target in self.npcs:
+        if target in self.npcs and pygame.key.get_mods() & pygame.KMOD_SHIFT:   # Shift + клик — напасть
+            self._go_next_to(tile_of(target), lambda: self.attack_npc(target) if target in self.npcs else None)
+        elif target in self.npcs:
             self._go_next_to(tile_of(target), lambda: self._talk_when_near(target))
         elif target is not None and target.talk and not target.hostile:
             self._go_next_to(tile_of(target), lambda: self.talk_to(target, target.talk)
@@ -381,8 +383,10 @@ class MouseMixin:
                     color = (130, 230, 120) if len(path) <= can else (230, 90, 70)
                     return (f"{len(path)} ОД", color, path, tile)
             return None
+        if target in self.npcs and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            return (f"Напасть: {target.name}", (235, 120, 100), None, None)
         if target in self.npcs:
-            return (f"Говорить: {target.name}", (230, 220, 190), None, None)
+            return (f"Говорить: {target.name} (Shift — напасть)", (230, 220, 190), None, None)
         if target is not None and target.talk and not target.hostile:
             return (f"Говорить: {target.name}", (230, 220, 190), None, None)
         if target is not None:

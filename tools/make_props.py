@@ -394,6 +394,13 @@ RUINS = {
     "r_barrels": ("r22_032", S, [1, 1], {"search": "junk", "title": "бочка"}),
     "r_bin": ("r22_042", S, [1, 1], {}), "r_bin_b": ("r22_043", S, [1, 1], {}),
     "r_logs": ("r22_051", S, [1, 1], {}), "r_logs_b": ("r22_065", S, [1, 1], {}),
+    # свет (ночные карты, src/lighting.py): фонари, бочки с огнём, горящие обломки
+    "r_streetlamp": ("r12_033", B, [1, 1], {"light": {"r": 210, "color": [255, 165, 85], "at": [0.82, 0.1]}}),
+    "r_streetlamp_b": ("r12_035", B, [1, 1], {"light": {"r": 210, "color": [255, 165, 85], "at": [0.18, 0.1]}}),
+    "x_fire_barrel": ("r12_052", B, [1, 1], {"title": "бочка с огнём",
+                      "light": {"r": 170, "color": [255, 140, 60], "at": [0.5, 0.12], "flicker": 1, "flame": True}}),
+    "r_burning_rubble": ("r12_022", B, [2, 1], {"light": {"r": 190, "color": [255, 120, 50], "at": [0.5, 0.45],
+                                                         "flicker": 1, "flame": True}}),
     "r_sandbags": ("r24_048", S, [1, 1], {}), "r_sandbags_b": ("r24_049", S, [1, 1], {}),
     "r_sandbag_row": ("r24_057", S, [2, 1], {}), "r_sandbag_row_b": ("r24_060", S, [2, 1], {}),
     # машины
@@ -445,6 +452,14 @@ def main():
         entry.setdefault("img", name)
         for k, v in desc.items():
             entry.setdefault(k, v)
+    # свет у объектов «wasteland town»
+    for name, light in {"lamp_post": {"r": 200, "color": [255, 170, 90], "at": [0.5, 0.06]},
+                        "lantern_lit": {"r": 120, "color": [255, 180, 90], "at": [0.5, 0.4], "flicker": 0.4},
+                        "candles": {"r": 80, "color": [255, 170, 80], "at": [0.5, 0.3], "flicker": 0.6},
+                        "terminal": {"r": 70, "color": [90, 220, 120], "at": [0.5, 0.3]}}.items():
+        catalog["props"][name].setdefault("light", light)
+    catalog["props"].setdefault("campfire", {"img": "p2_079", "scale": 0.75, "light": {
+        "r": 190, "color": [255, 140, 60], "at": [0.5, 0.35], "flicker": 1, "flame": True}})
     for name, (img, scale, foot, extra) in RUINS.items():
         entry = catalog["props"].setdefault(name, {})
         for k, v in {"img": img, "scale": scale, "foot": foot, **extra}.items():

@@ -180,6 +180,7 @@ class Combat:
             if not e.hostile:  # напали на нейтрального — вся его фракция теперь враждебна
                 g.make_hostile(e.faction)
             enemies += [m for m in self._pack_of(e) if m not in enemies]
+        enemies += [e for e in g.enemies if e not in enemies and self.hears_fight(e)]
         self.active = True
         self.round = 1
         self.tweens.clear()
@@ -285,9 +286,15 @@ class Combat:
                 break
         self._begin_turn()
 
+    HEARING = 20 * T   # на шум боя сбегаются враждебные той же фракции, даже из-за угла
+
+    def hears_fight(self, e):
+        return (e.alive and e.hostile and e.faction is not None and e.faction != "ally"
+                and self._dist(e, self.game.player) <= self.HEARING)
+
     def _check_new_enemies(self):
         for e in self.game.enemies:
-            if e.alive and e not in self.order and self.enemy_notices_player(e):
+            if e.alive and e not in self.order and (self.enemy_notices_player(e) or self.hears_fight(e)):
                 for m in [e] + self._pack_of(e):
                     if m not in self.order:
                         self._snap_to_grid(m)
