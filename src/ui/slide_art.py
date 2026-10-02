@@ -200,20 +200,34 @@ def art_arrival(s, rnd, game):
 
 
 def art_baker(s, rnd, game):
-    _sky(s, (70, 40, 40), (220, 140, 80))
-    pygame.draw.rect(s, (90, 60, 40), (0, H - 80, W, 80))
-    # Термометр: высокий столб со шкалой
-    x = W // 2 + 140
-    pygame.draw.rect(s, (40, 30, 26), (x - 26, 20, 52, H - 90), border_radius=12)
-    pygame.draw.rect(s, (230, 225, 200), (x - 16, 36, 32, H - 120), border_radius=8)
-    for y in range(50, H - 100, 16):
+    """Бейкер в сумерках: дюны, лачуги со светящимися окнами, шатры миссии, Термометр с табло."""
+    _sky(s, (40, 30, 46), (190, 120, 76))
+    base = H - 80
+    for i, (amp, off, col) in enumerate(((22, 0.0, (120, 84, 56)), (16, 1.7, (100, 70, 46)))):   # дюны
+        pts = [(x, base - 30 + i * 18 + amp * math.sin(x / 90 + off)) for x in range(0, W + 10, 10)]
+        pygame.draw.polygon(s, col, pts + [(W, H), (0, H)])
+    pygame.draw.rect(s, (80, 56, 38), (0, base, W, H - base))
+    # Термометр: высокий столб со шкалой и табло наверху
+    x = W // 2 + 160
+    pygame.draw.rect(s, (40, 30, 26), (x - 26, 40, 52, base - 40), border_radius=10)
+    pygame.draw.rect(s, (230, 225, 200), (x - 16, 70, 32, base - 80), border_radius=8)
+    for y in range(80, base - 20, 16):
         pygame.draw.line(s, (60, 50, 40), (x - 16, y), (x - 6, y), 2)
-    pygame.draw.rect(s, (200, 50, 40), (x - 6, 150, 12, H - 240))
-    pygame.draw.circle(s, (200, 50, 40), (x, H - 80), 20)
-    # шатры миссии у подножия
+    pygame.draw.rect(s, (200, 50, 40), (x - 5, 150, 10, base - 160))
+    pygame.draw.rect(s, (30, 24, 22), (x - 40, 18, 80, 34))
+    font = pygame.font.Font(None, 34)
+    s.blit(font.render("134°", True, (240, 140, 60)), (x - 30, 24))
+    # лачуги с покатыми крышами и круглые шатры миссии у подножия
+    for sx, sw, sh in ((40, 90, 50), (150, 70, 40), (W - 150, 100, 56)):
+        pygame.draw.rect(s, (60, 44, 32), (sx, base - sh, sw, sh))
+        pygame.draw.polygon(s, (44, 32, 24), [(sx - 8, base - sh), (sx + sw // 2, base - sh - 22), (sx + sw + 8, base - sh)])
+        pygame.draw.rect(s, (230, 170, 90), (sx + sw // 3, base - sh + 14, 10, 12))     # светится окно
     for i, tx in enumerate((x - 330, x - 240, x - 150)):
-        pygame.draw.polygon(s, (235, 225, 205), [(tx - 50, H - 80), (tx, H - 150 - i * 6), (tx + 50, H - 80)])
-        pygame.draw.polygon(s, (190, 175, 150), [(tx, H - 150 - i * 6), (tx + 50, H - 80), (tx + 10, H - 80)])
+        r = pygame.Rect(0, 0, 110, 70 + i * 6)
+        r.midbottom = (tx, base + 6)
+        pygame.draw.ellipse(s, (226, 214, 190), r)
+        pygame.draw.rect(s, (80, 56, 38), (r.x, r.centery + 8, r.w, r.h))
+        pygame.draw.rect(s, (60, 44, 32), (tx - 8, base - 26, 16, 26))                 # вход
 
 
 def art_barstow(s, rnd, game):

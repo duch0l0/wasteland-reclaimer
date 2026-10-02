@@ -4,7 +4,7 @@ import pygame
 
 from .. import settings as S
 from ..combat import BODY_PARTS
-from ..entities import sprite_of
+from ..entities import sprite_of, visible_rect
 from .common import fonts, panel, hotspot, close_button, digit_key, COLOR_HOVER
 
 
@@ -72,7 +72,7 @@ def draw_health_bars(surf, game, cam, zoom=1):
     else:
         fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp]
     for f in fighters:
-        r = _z(sprite_of(f, cam)[1], zoom)
+        r = _z(visible_rect(f, cam), zoom)
         color = (90, 210, 90) if f is game.player or getattr(f, "ally", False) else (215, 60, 50)
         _bar(surf, r.centerx, health_bar_y(r), f.hp / f.max_hp if f.max_hp else 0, color)
 
@@ -83,7 +83,7 @@ def draw_combat_markers(surf, combat, cam, zoom=1):
     p, t = combat.game.player, combat.target
     if t is None or not t.alive:
         return
-    r = _z(sprite_of(t, cam)[1], zoom)
+    r = _z(visible_rect(t, cam), zoom)
     ok, reason = combat.can_attack(p, t)
     label, color = (f"{combat.hit_chance(p, t)}%", (240, 230, 200)) if ok else (reason, (170, 160, 140))
     txt = font_small.render(label, True, color)
@@ -146,10 +146,15 @@ def draw_tracers(surf, tracers, cam):
         if not length:
             continue
         u = d / length
-        pos = tr["from"] + u * min(length, tr["t"] / 1000 * Combat.BULLET_SPEED)
+        k = min(1.0, tr["t"] / 1000 * Combat.BULLET_SPEED / length)
+        pos = tr["from"] + d * k
         head = cam.p(pos.x, pos.y)
         if cam.iso:   # хвост пули — по направлению полёта на экране
             a, b = cam.p(*tr["from"]), cam.p(*tr["to"])
+            if tr.get("muzzle"):   # экшен: пуля вылетает из дула и летит на высоте груди
+                a = (a[0] + tr["muzzle"][0], a[1] + tr["muzzle"][1])
+                b = (b[0], b[1] - tr["lift"])
+                head = (a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k)
             d2 = pygame.Vector2(b[0] - a[0], b[1] - a[1])
             u = d2.normalize() if d2.length() else u
         for ln, color, w in ((26, (120, 95, 60), 1), (14, (200, 160, 90), 2), (6, (255, 225, 140), 2)):
@@ -163,7 +168,7 @@ def draw_speech(surf, speech, cam, zoom=1):
     from .common import fonts
     _, font_small = fonts()
     ent = speech["ent"]
-    r = _z(sprite_of(ent, cam)[1], zoom)
+    r = _z(visible_rect(ent, cam), zoom)
     txt = font_small.render(speech["text"], True, (30, 24, 18))
     box = txt.get_rect(midbottom=(r.centerx, r.top - 18)).inflate(20, 12)
     alpha = min(255, speech["t"] // 2)

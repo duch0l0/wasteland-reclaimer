@@ -72,6 +72,8 @@ class RenderMixin:
         self.level.draw(surf, cam)
         self.gore.draw_ground(surf, self.level, cam)
         self.level.draw_corpses(surf, cam)
+        if self.action.active:
+            self.action.draw_world(surf, cam)   # гильзы и бонусы на земле
 
         # персонажи и объекты карты — вперемешку, кто ниже, тот ближе к камере
         pal = self.companion if self.companion is not None and not self.companion.down else None
@@ -81,6 +83,12 @@ class RenderMixin:
             img = corpse_image(self.companion)
             fx, fy = cam.foot(self.companion)
             surf.blit(img, img.get_rect(center=(fx, fy - 6)))
+        if not getattr(cam, "iso", False):   # мягкая тень под ногами — персонажи стоят на земле, а не висят
+            for e in entities:
+                frame, r = sprite_of(e, cam)
+                if r.colliderect(surf.get_rect()):
+                    sh = _shadow(max(20, min(64, int(e.rect.w * 1.25))))
+                    surf.blit(sh, sh.get_rect(center=(r.centerx, r.bottom - 3)))
         key = getattr(self.level, "entity_key", lambda e: e.rect.bottom)   # глубина: y или u+v в изометрии
         layers = [(key(e), e) for e in entities] + \
             [(y, (img, pos)) for y, img, pos in self.level.drawables(cam, surf.get_size())]
@@ -91,6 +99,8 @@ class RenderMixin:
                 surf.blit(*thing)
                 continue
             frame, r = sprite_of(thing, cam)
+            if getattr(thing, "flash_ms", 0) > 0:   # попадание в экшене — вспышка белым
+                frame = _white(frame)
             if thing in outlined:
                 combat_ui.draw_outline(surf, frame, r, outlined[thing])
             surf.blit(frame, r)
@@ -141,7 +151,12 @@ class RenderMixin:
         if self.dialogue.is_active():
             name = getattr(self.dialogue_speaker, "name", "???")
             labels = [self.dialogue.option_label(o) for o in self.dialogue.visible_options()]
-            menus.draw_dialogue(surf, self.dialogue.current_node(), labels, name[:1].upper() + name[1:])
+            sp = self.dialogue_speaker
+            portrait = None
+            frames = getattr(getattr(sp, "anim", None), "frames_by_action", {}) if sp is not None else {}
+            if frames:
+                portrait = (frames.get("idle_down") or frames.get("walk_down") or [None])[0]
+            menus.draw_dialogue(surf, self.dialogue.current_node(), labels, name[:1].upper() + name[1:], portrait)
         if self.craft_open:
             menus.draw_craft_menu(surf, self.inventory)
         if self.inv_open:
@@ -154,3 +169,33 @@ class RenderMixin:
         if self.game_over:
             txt = fontlib.get("dejavusans", 40).render("ВЫ ПОГИБЛИ", True, (220, 60, 50))
             surf.blit(txt, txt.get_rect(center=(S.SCREEN_W // 2, (S.SCREEN_H - PANEL_H) // 2)))
+
+
+_SHADOWS = {}
+
+
+def _shadow(w):
+    """Полупрозрачный овал тени шириной w (кэш по ширине)."""
+    w = w // 4 * 4
+    if w not in _SHADOWS:
+        h = max(6, w // 3)
+        s = pygame.Surface((w, h), pygame.SRCALPHA)
+        for i in range(4):   # к краю — прозрачнее
+            k = i / 4
+            pygame.draw.ellipse(s, (0, 0, 0, 34), (w * k / 2, h * k / 2, w * (1 - k), h * (1 - k)))
+        _SHADOWS[w] = s
+    return _SHADOWS[w]
+
+
+_WHITE = {}
+
+
+def _white(frame):
+    """Тот же силуэт, высветленный почти до белого (кэш по кадру)."""
+    key = id(frame)
+    hit = _WHITE.get(key)
+    if hit is None or hit[0] is not frame:
+        w = frame.copy()
+        w.fill((85, 70, 60, 0), special_flags=pygame.BLEND_RGBA_ADD)   # тёплая вспышка, силуэт читается
+        hit = _WHITE[key] = (frame, w)
+    return hit[1]

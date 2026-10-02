@@ -2,7 +2,7 @@
 Экшен-режим: Барстоу за наёмника Дэкса — стрельба в реальном времени.
 
 Вместо пошагового боя: WASD — бежать, мышь — целиться, зажатая ЛКМ — стрелять,
-ПКМ / F / 1 / 2 — сменить ствол, R — перезарядить. Патроны бесконечные, но магазин
+ПКМ / Shift — рывок, Q / 1 / 2 — сменить ствол, R — перезарядить. Патроны бесконечные, но магазин
 кончается — и Дэкс перезаряжается:
   автомат  — 30 патронов очередью, перезарядка 3 с;
   дробовик — 8 выстрелов веером дроби (отбрасывает), перезарядка 5 с — патроны
@@ -11,6 +11,15 @@
 расстояний от Дэкса по клеткам, пересчитывается несколько раз в секунду), вблизи — бьёт.
 У некоторых домов, стоит подойти, из двери вываливается толпа в 15–20 гулей («hordes»
 в карте, tools/build_barstow.py). От них можно убежать: Дэкс быстрее почти всех.
+
+Аркада в духе Crimsonland:
+  - попадание — гуль вспыхивает белым и вздрагивает, из ствола летят гильзы, дробовик трясёт экран;
+  - убитый гуль падает (кадры смерти) и отлетает по направлению выстрела (src/isomap.py);
+  - с убитых иногда падают бонусы: аптечка, «ярость» (скорострельность ×2), бронебойные
+    (пуля прошивает до трёх гулей), граната (взрыв вокруг Дэкса); лежат 12 с, к концу мигают;
+  - счётчик убитых и серия: убийства подряд без паузы больше 2.5 с — «СЕРИЯ ×N»;
+  - ПКМ или Shift — рывок на три клетки в сторону бега (перезарядка 2.5 с), чтобы вырваться из толпы.
+    Смена ствола — Q, 1, 2.
 
 Какие локации в этом режиме — "action": true в data/locations.json (и только за Дэкса).
 """
@@ -51,6 +60,18 @@ SPEED = {"feral": 105, "ghoul_runner": 170, "rad_mutant": 72, "mutant": 95}
 ATTACK_MS = 850
 REACH = 40
 
+# бонусы с убитых: id -> (подпись, цвет, длительность эффекта мс или 0 — мгновенно)
+POWERUPS = {
+    "medkit": ("АПТЕЧКА", (220, 60, 60), 0),
+    "rage": ("ЯРОСТЬ", (255, 150, 40), 8000),
+    "pierce": ("БРОНЕБОЙНЫЕ", (120, 200, 255), 10000),
+    "grenade": ("ГРАНАТА", (150, 220, 90), 0),
+}
+DROP_CHANCE = 0.08
+POWERUP_LIFE = 12000
+STREAK_MS = 2500
+DASH_DIST, DASH_MS, DASH_COOL = 3 * T, 160, 2500
+
 
 class ActionMode:
     def __init__(self, game):
@@ -65,6 +86,15 @@ class ActionMode:
         self.spawn_queue = []         # [(мс, враг-вид, клетка)]
         self.shake_ms = 0
         self._last_pos = None
+        self.powerups = []            # [{"kind", "pos": Vector2 мира, "t": мс жизни}]
+        self.buffs = {}               # id -> мс до конца
+        self.casings = []             # гильзы: [x, y, vx, vy, жизнь]
+        self.kills = 0
+        self.streak, self.streak_ms, self.best_streak = 0, 0, 0
+        self.banner = None            # большая надпись поверх: [текст, цвет, мс]
+        self.dash_ms = 0              # идёт рывок
+        self.dash_cool = 0
+        self.dash_dir = pygame.Vector2()
 
     # ------------------------------------------------------------ когда включён
     @property
@@ -119,42 +149,73 @@ class ActionMode:
         target = g.entity_at_screen(pos)   # по жителю (Роза) — не стрелять, а говорить
         return target is None or target in g.enemies
 
+    _MUZZLE = {}
+
+    def muzzle_offset(self):
+        """Где дуло на экране относительно ног героя: центр вспышки в кадре flash_<сторона>.
+        В изометрии мир — это земля, а ствол — в руках, на высоте груди."""
+        p = self.g.player
+        d = p.anim.direction
+        if d not in self._MUZZLE:
+            off = (0, -44)
+            fl = p.anim.frames_by_action.get(f"flash_{d}")
+            foot = getattr(p.anim, "foot", None)
+            if fl and foot:
+                m = pygame.mask.from_surface(fl[0], 60)
+                if m.count():
+                    cx, cy = m.centroid()
+                    off = (cx - foot[0], cy - foot[1])
+            self._MUZZLE[d] = off
+        return self._MUZZLE[d]
+
     def _shoot(self):
         g, p = self.g, self.g.player
         gun = GUNS[self.gun]
         ox, oy = p.rect.centerx, p.rect.centery - 6
         ax, ay = self.aim_world()
         base = math.atan2(ay - oy, ax - ox)
+        p.anim.face(ax - ox, ay - oy)
+        muzzle = self.muzzle_offset() if g.cam.iso else None
         hits = {}
         for _ in range(gun.pellets):
             a = base + math.radians(random.uniform(-gun.spread / 2, gun.spread / 2))
-            end, victim = self._ray(ox, oy, a, gun.range)
-            g.combat.tracers.append({"from": pygame.Vector2(ox, oy), "to": pygame.Vector2(end), "t": 0})
-            if victim is not None:
+            end, victims = self._ray(ox, oy, a, gun.range, pierce=3 if self.buffs.get("pierce") else 1)
+            g.combat.tracers.append({"from": pygame.Vector2(ox, oy), "to": pygame.Vector2(end), "t": 0,
+                                     "muzzle": muzzle, "lift": -muzzle[1]})
+            for victim in victims:
                 hits.setdefault(id(victim), [victim, 0, a])[1] += random.randint(*gun.dmg)
         g.audio.play(f"{gun.snd}_shot", g.cam.p(ox, oy)[0], volume=0.7 if gun.pellets == 1 else 0.9)
+        side = base + math.pi / 2   # гильза вылетает вбок и чуть назад
+        self.casings.append([ox + math.cos(base) * 14, oy + math.sin(base) * 14,
+                             math.cos(side) * random.uniform(60, 110) - math.cos(base) * 30,
+                             math.sin(side) * random.uniform(60, 110) - math.sin(base) * 30, 2600])
+        if gun.pellets > 1:
+            self.shake_ms = max(self.shake_ms, 140)
         for victim, dmg, a in hits.values():
             self._damage(victim, dmg, a, gun)
         self.ammo[self.gun] -= 1
         self.firing_ms = 260
         p.anim.face(ax - ox, ay - oy)
 
-    def _ray(self, ox, oy, a, rng):
+    def _ray(self, ox, oy, a, rng, pierce=1):
         """Луч выстрела: до стены, до первого гуля или на всю дальность."""
         dx, dy = math.cos(a), math.sin(a)
         lv = self.g.level
         foes = [e for e in self.g.enemies if e.alive]
         step = 8
         x, y = ox, oy
+        hit = []
         for _ in range(int(rng / step)):
             x += dx * step
             y += dy * step
             if lv.blocks_sight(int(x) // T, int(y) // T) and (int(x) // T, int(y) // T) != tile_of(self.g.player):
-                return (x, y), None
+                return (x, y), hit
             for e in foes:
-                if e.rect.inflate(10, 16).collidepoint(x, y):
-                    return (x, y), e
-        return (x, y), None
+                if e not in hit and e.rect.inflate(10, 16).collidepoint(x, y):
+                    hit.append(e)
+                    if len(hit) >= pierce:
+                        return (x, y), hit
+        return (x, y), hit
 
     def _damage(self, e, dmg, a, gun):
         g = self.g
@@ -162,7 +223,7 @@ class ActionMode:
         e.awake = True
         fx, fy = g.cam.p(*e.rect.center)
         g.audio.play(f"{gun.snd}_hit", fx, volume=0.6)
-        g.combat._float(e, f"-{dmg}", (230, 80, 60))
+        e.flash_ms = 70                         # вспыхивает
         g.gore.hit(g.level, e.rect, (e.rect.centerx - math.cos(a) * 40, e.rect.centery - math.sin(a) * 40),
                    "ranged", crit=gun.pellets > 1, kill=not e.alive, delay_ms=0)
         if gun.knock and e.alive:   # дробь отбрасывает
@@ -173,7 +234,10 @@ class ActionMode:
                 g.audio.play(f"{voice_of(e)}_hurt", fx, volume=0.6)
         else:
             g.audio.play(f"{voice_of(e)}_death", fx, volume=0.8)
+            fly = 22 + gun.knock * 2.5              # тело отлетает по направлению выстрела
+            e.death_push = (math.cos(a) * fly, math.sin(a) * fly)
             g.on_enemy_killed(e)
+            self._on_kill(e)
 
     # ------------------------------------------------------------ кадр
     def update(self, dt_ms):
@@ -183,6 +247,7 @@ class ActionMode:
         if not p.alive:
             return
         self._guns(dt_ms)
+        self._arcade(dt_ms)
         self._hordes(dt_ms)
         self._zombies(dt_ms)
         # анимация Дэкса: стреляет — повёрнут к прицелу, на бегу — стрельба на бегу
@@ -215,10 +280,115 @@ class ActionMode:
                 self.reload()
                 return
             self._shoot()
-            self.cool += gun.fire_ms
+            self.cool += gun.fire_ms // (2 if self.buffs.get("rage") else 1)
             if self.ammo[self.gun] <= 0:   # магазин пуст — сразу перезаряжается
                 self.reload()
                 return
+
+    # ------------------------------------------------------------ аркада: убийства, бонусы, рывок
+    def _on_kill(self, e):
+        self.kills += 1
+        self.streak += 1
+        self.streak_ms = STREAK_MS
+        self.best_streak = max(self.best_streak, self.streak)
+        if self.streak in (5, 10, 15, 20, 30, 50) or (self.streak > 50 and self.streak % 25 == 0):
+            self.banner = [f"СЕРИЯ ×{self.streak}", (255, 210, 90), 1400]
+            self.g.audio.play("levelup", volume=0.5)
+        if random.random() < DROP_CHANCE or self.kills % 30 == 0:
+            kind = random.choices(list(POWERUPS), weights=(4, 3, 3, 2))[0]
+            self.powerups.append({"kind": kind, "pos": pygame.Vector2(e.rect.center), "t": POWERUP_LIFE})
+
+    def _take(self, kind):
+        g, p = self.g, self.g.player
+        name, color, dur = POWERUPS[kind]
+        g.audio.play("pickup")
+        self.banner = [name, color, 1100]
+        if kind == "medkit":
+            p.hp = min(p.max_hp, p.hp + 40)
+        elif kind == "grenade":
+            self._blast(pygame.Vector2(p.rect.center), 4 * T, 80)
+        else:
+            self.buffs[kind] = dur
+
+    def _blast(self, at, radius, dmg):
+        g = self.g
+        g.audio.play("explosion")
+        self.shake_ms = 450
+        if hasattr(g.combat, "blasts"):
+            g.combat.blasts.append({"pos": pygame.Vector2(at), "t": 0, "kind": "grenade"})
+        for e in [e for e in g.enemies if e.alive and e.hostile]:
+            v = pygame.Vector2(e.rect.center) - at
+            if v.length() <= radius:
+                a = math.atan2(v.y, v.x)
+                self._damage(e, dmg, a, GUNS["sg"])
+
+    def _arcade(self, dt_ms):
+        p = self.g.player
+        for k in list(self.buffs):
+            self.buffs[k] -= dt_ms
+            if self.buffs[k] <= 0:
+                del self.buffs[k]
+        if self.streak_ms > 0:
+            self.streak_ms -= dt_ms
+            if self.streak_ms <= 0:
+                self.streak = 0
+        if self.banner:
+            self.banner[2] -= dt_ms
+            if self.banner[2] <= 0:
+                self.banner = None
+        pc = pygame.Vector2(p.rect.center)
+        for pu in list(self.powerups):
+            pu["t"] -= dt_ms
+            if pu["t"] <= 0:
+                self.powerups.remove(pu)
+            elif pu["pos"].distance_to(pc) < 34:
+                self.powerups.remove(pu)
+                self._take(pu["kind"])
+        for c in self.casings:            # гильзы: отлетают, тормозят, лежат
+            c[4] -= dt_ms
+            k = dt_ms / 1000
+            c[0] += c[2] * k
+            c[1] += c[3] * k
+            c[2] *= 0.86
+            c[3] *= 0.86
+        self.casings = [c for c in self.casings if c[4] > 0][-80:]
+        for e in self.g.enemies:
+            if getattr(e, "flash_ms", 0) > 0:
+                e.flash_ms -= dt_ms
+        # рывок
+        self.dash_cool = max(0, self.dash_cool - dt_ms)
+        if self.dash_ms > 0:
+            step = min(self.dash_ms, dt_ms)
+            self.dash_ms -= dt_ms
+            v = self.dash_dir * (DASH_DIST * step / DASH_MS)
+            lv = self.g.level
+            for ax, ay in ((v.x, 0), (0, v.y)):
+                p.rect.x += round(ax)
+                p.rect.y += round(ay)
+                if any(p.rect.colliderect(r) for r in lv.solids_near(p.rect)):
+                    p.rect.x -= round(ax)
+                    p.rect.y -= round(ay)
+
+    def dash(self):
+        """ПКМ / Shift: рывок туда, куда жмут WASD или стрелки (стоишь — к прицелу)."""
+        if self.dash_cool or self.dash_ms > 0 or not self.active:
+            return
+        keys = self.g.held_keys()   # буквы — в любой раскладке
+        dx = (keys[pygame.K_d] or keys[pygame.K_RIGHT]) - (keys[pygame.K_a] or keys[pygame.K_LEFT])
+        dy = (keys[pygame.K_s] or keys[pygame.K_DOWN]) - (keys[pygame.K_w] or keys[pygame.K_UP])
+        from .iso import i2w
+        if dx or dy:   # клавиши двигают по экрану — в мир переводим через изометрию
+            wx, wy = i2w(dx * 2, dy) if self.g.cam.iso else (dx, dy)
+            d = pygame.Vector2(wx, wy)
+        else:
+            ax, ay = self.aim_world()
+            d = pygame.Vector2(ax - self.g.player.rect.centerx, ay - self.g.player.rect.centery)
+        if d.length() < 0.01:
+            return
+        self.dash_dir = d.normalize()
+        self.dash_ms = DASH_MS
+        self.dash_cool = DASH_COOL
+        self.g.audio.play("melee", volume=0.6)
 
     # ------------------------------------------------------------ гули
     def _flow(self):
@@ -355,6 +525,32 @@ class ActionMode:
         """За Дэксом гонятся (сохраняться нельзя)."""
         return any(e.alive and getattr(e, "awake", False) for e in self.g.enemies) or bool(self.spawn_queue)
 
+    # ------------------------------------------------------------ картинка в мире (под персонажами)
+    def draw_world(self, surf, cam):
+        """Гильзы на земле и бонусы: пульсирующий круг, значок, подпись; к концу жизни мигают."""
+        for x, y, *_ in self.casings:
+            sx, sy = cam.p(x, y)
+            pygame.draw.rect(surf, (40, 30, 10), (sx - 2, sy - 1, 4, 3))
+            pygame.draw.rect(surf, (230, 190, 80), (sx - 1, sy - 1, 3, 2))
+        now = pygame.time.get_ticks()
+        from .ui.common import fonts
+        _, font_small = fonts()
+        for pu in self.powerups:
+            if pu["t"] < 3000 and (now // 120) % 2:
+                continue
+            name, color, _ = POWERUPS[pu["kind"]]
+            sx, sy = cam.p(pu["pos"].x, pu["pos"].y)
+            bob = math.sin(now / 180 + pu["pos"].x) * 3
+            r = 15 + int(3 * math.sin(now / 150))
+            glow = pygame.Surface((r * 4, r * 4), pygame.SRCALPHA)
+            pygame.draw.circle(glow, (*color, 70), (r * 2, r * 2), r * 2)
+            surf.blit(glow, (sx - r * 2, sy - r * 2 - 10 + bob))
+            pygame.draw.circle(surf, (20, 16, 12), (sx, int(sy - 10 + bob)), 12)
+            pygame.draw.circle(surf, color, (sx, int(sy - 10 + bob)), 10)
+            _powerup_icon(surf, pu["kind"], (sx, int(sy - 10 + bob)))
+            t = font_small.render(name, True, (255, 245, 220))
+            surf.blit(t, t.get_rect(midtop=(sx, sy + 6 + bob)))
+
     # ------------------------------------------------------------ картинка поверх
     def draw_overlay(self, surf, cam, zoom):
         """Прицел у мыши, патроны и полоска перезарядки над Дэксом."""
@@ -378,3 +574,46 @@ class ActionMode:
         for i in range(gun.mag if gun.mag <= 8 else 0):   # у дробовика — каждый патрон
             c = (230, 80, 50) if i < self.ammo[self.gun] else (60, 50, 44)
             pygame.draw.rect(surf, c, (x - 28 + i * 7, y + 8, 5, 8))
+        # бонусы, что действуют сейчас, — под полоской патронов
+        bx = x - 32
+        for k, left in self.buffs.items():
+            name, color, dur = POWERUPS[k]
+            pygame.draw.rect(surf, (15, 12, 10), (bx - 1, y + 19, 66, 6))
+            pygame.draw.rect(surf, color, (bx, y + 20, int(64 * left / dur), 4))
+            y += 7
+        # счёт и серия — сверху по центру
+        from .ui.common import fonts
+        font, font_small = fonts()
+        t = font.render(f"Убито: {self.kills}", True, (240, 225, 190))
+        sx = surf.get_width() // 2
+        back = pygame.Surface((t.get_width() + 24, t.get_height() + 8), pygame.SRCALPHA)
+        back.fill((20, 14, 10, 150))
+        surf.blit(back, back.get_rect(midtop=(sx, 6)))
+        surf.blit(t, t.get_rect(midtop=(sx, 10)))
+        if self.streak >= 3:
+            st = font_small.render(f"серия ×{self.streak}", True, (255, 200, 90))
+            surf.blit(st, st.get_rect(midtop=(sx, 40)))
+        if self.dash_cool:
+            d = font_small.render(f"рывок {self.dash_cool / 1000:.1f} с", True, (170, 160, 140))
+            surf.blit(d, d.get_rect(midtop=(int(fx * zoom), y + 30)))
+        if self.banner:
+            text, color, left = self.banner
+            big = pygame.font.Font(None, 64).render(text, True, color)
+            big.set_alpha(min(255, left // 3))
+            surf.blit(big, big.get_rect(center=(sx, 110)))
+
+
+def _powerup_icon(surf, kind, c):
+    x, y = c
+    w = (255, 250, 240)
+    if kind == "medkit":
+        pygame.draw.rect(surf, w, (x - 2, y - 6, 4, 12))
+        pygame.draw.rect(surf, w, (x - 6, y - 2, 12, 4))
+    elif kind == "rage":
+        pygame.draw.polygon(surf, w, [(x + 2, y - 7), (x - 4, y + 1), (x, y + 1), (x - 2, y + 7), (x + 4, y - 1), (x, y - 1)])
+    elif kind == "pierce":
+        pygame.draw.line(surf, w, (x - 6, y + 4), (x + 6, y - 4), 2)
+        pygame.draw.polygon(surf, w, [(x + 7, y - 5), (x + 2, y - 5), (x + 6, y)])
+    else:
+        pygame.draw.circle(surf, w, (x, y + 1), 5)
+        pygame.draw.rect(surf, w, (x - 1, y - 7, 3, 4))

@@ -17,34 +17,65 @@ def _clickable_block(surf, rect, key):
     return hover
 
 
-def draw_dialogue(surf, node, option_labels, speaker_name):
+PORTRAIT = 132   # рамка портрета собеседника слева в окне диалога
+
+
+def _portrait(frame):
+    """Собеседник крупно, как «говорящая голова» Fallout: кадр стоя лицом к герою,
+    увеличенный без сглаживания, на тёмном фоне с тёплой подсветкой снизу."""
+    img = pygame.Surface((PORTRAIT, PORTRAIT))
+    img.fill((22, 18, 15))
+    for i in range(PORTRAIT // 2, 0, -6):   # тёплое пятно света за фигурой
+        k = 1 - i / (PORTRAIT / 2)
+        pygame.draw.circle(img, (int(22 + 50 * k), int(18 + 36 * k), int(15 + 20 * k)),
+                           (PORTRAIT // 2, PORTRAIT - 26), i)
+    r = frame.get_bounding_rect(min_alpha=10)
+    if r.w and r.h and r.h > r.w:   # человек — по пояс: верхние две трети фигуры
+        r.h = max(8, int(r.h * 0.66))
+    fig = frame.subsurface(r) if r.w and r.h else frame
+    k = min((PORTRAIT - 10) / fig.get_height(), (PORTRAIT - 10) / fig.get_width(), 4)
+    big = pygame.transform.scale(fig, (max(1, int(fig.get_width() * k)), max(1, int(fig.get_height() * k))))
+    img.blit(big, big.get_rect(midbottom=(PORTRAIT // 2, PORTRAIT)))
+    return img
+
+
+def draw_dialogue(surf, node, option_labels, speaker_name, portrait=None):
+    """portrait — кадр собеседника (стоя лицом вниз) или None."""
     font, font_small = fonts()
     line_h = 20
     box_w = S.SCREEN_W - 80
-    text_lines = wrap_text(font_small, node.get("text", ""), box_w - 32)
-    opt_lines = [wrap_text(font_small, f"[{i + 1}] {label}", box_w - 32) for i, label in enumerate(option_labels)]
+    pad = PORTRAIT + 28 if portrait is not None else 16     # текст — правее портрета
+    text_lines = wrap_text(font_small, node.get("text", ""), box_w - pad - 16)
+    opt_lines = [wrap_text(font_small, f"[{i + 1}] {label}", box_w - pad - 16) for i, label in enumerate(option_labels)]
     n_opt_lines = sum(len(l) for l in opt_lines) if option_labels else 1
     box_h = 44 + len(text_lines) * line_h + 8 + n_opt_lines * line_h + 12
+    if portrait is not None:
+        box_h = max(box_h, PORTRAIT + 28)
 
     box = pygame.Rect(40, S.SCREEN_H - PANEL_H - box_h - 8, box_w, box_h)
     panel(surf, box, 235)
-    surf.blit(font.render(speaker_name, True, COLOR_TITLE), (box.x + 16, box.y + 10))
+    if portrait is not None:
+        pr = pygame.Rect(box.x + 14, box.y + 14, PORTRAIT, PORTRAIT)
+        surf.blit(_portrait(portrait), pr)
+        pygame.draw.rect(surf, (120, 100, 70), pr.inflate(4, 4), 2)
+    surf.blit(font.render(speaker_name, True, COLOR_TITLE), (box.x + pad, box.y + 10))
 
     y = box.y + 40
     for line in text_lines:
-        surf.blit(font_small.render(line, True, S.COLOR_TEXT), (box.x + 16, y))
+        surf.blit(font_small.render(line, True, S.COLOR_TEXT), (box.x + pad, y))
         y += line_h
     y += 8
     for i, lines in enumerate(opt_lines):
-        hover = _clickable_block(surf, pygame.Rect(box.x + 10, y - 1, box.w - 20, len(lines) * line_h), digit_key(i))
+        hover = _clickable_block(surf, pygame.Rect(box.x + pad - 6, y - 1, box.w - pad - 4, len(lines) * line_h),
+                                 digit_key(i))
         for j, line in enumerate(lines):
             color = COLOR_HOVER if hover else (220, 210, 190)
-            surf.blit(font_small.render(line, True, color), (box.x + 16 + (0 if j == 0 else 24), y))
+            surf.blit(font_small.render(line, True, color), (box.x + pad + (0 if j == 0 else 24), y))
             y += line_h
     if not option_labels:
-        hover = _clickable_block(surf, pygame.Rect(box.x + 10, y - 1, 260, line_h), pygame.K_SPACE)
+        hover = _clickable_block(surf, pygame.Rect(box.x + pad - 6, y - 1, 260, line_h), pygame.K_SPACE)
         surf.blit(font_small.render("[любая клавиша или клик — закрыть]", True,
-                                    COLOR_HOVER if hover else (160, 150, 130)), (box.x + 16, y))
+                                    COLOR_HOVER if hover else (160, 150, 130)), (box.x + pad, y))
 
 
 def draw_craft_menu(surf, inventory):

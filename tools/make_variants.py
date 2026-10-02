@@ -659,35 +659,60 @@ def make_roach():
 
 
 def make_turret():
-    """Турель Vault-Tec на треноге: корпус, ствол по направлению, мигающий огонёк."""
-    W_, H_ = 26, 30
-    body, body_hi, dark = (88, 96, 104), (140, 150, 158), (40, 44, 50)
+    """Турель Vault-Tec: шестигранное основание с жёлто-чёрной разметкой, тумба, купол со
+    стальным бликом, сдвоенные стволы по направлению, мигающий красный датчик и полоса
+    Vault-Tec. Рисуется мелким пиксель-артом 34×34 (игра увеличивает вдвое), контур — общий INK."""
+    W_, H_ = 34, 34
+    steel, steel_hi, steel_lo, dark = (110, 118, 126), (176, 186, 194), (70, 76, 84), (34, 38, 44)
     out = {}
     for d in DIRS:
         out[d] = []
         for i in range(4):
             img = pygame.Surface((W_, H_), pygame.SRCALPHA)
             cx = W_ // 2
-            for lx in (-6, 0, 6):                           # тренога
-                for k in range(7):
-                    put(img, cx + lx * k // 6, H_ - 1 - (6 - k), dark)
-            outline_px(img, [(cx - 5 + a, 12 + b) for a in range(11) for b in range(8)], body)
-            for a in range(11):
-                put(img, cx - 5 + a, 12, body_hi)
-            put(img, cx - 3, 15, (40, 90, 170))             # эмблема Vault-Tec — синий квадратик
-            put(img, cx - 2, 15, (230, 190, 60))
-            blink = (255, 60, 40) if i % 2 == 0 else (120, 20, 16)
-            if d == "down":
-                outline_px(img, [(cx, 20 + k) for k in range(5)], dark)
-                put(img, cx + 3, 14, blink)
-            elif d == "up":
-                outline_px(img, [(cx, 7 + k) for k in range(5)], dark)
-                put(img, cx + 3, 17, blink)
-            else:
-                s = 1 if d == "right" else -1
-                outline_px(img, [(cx + s * (6 + k), 15) for k in range(7)] +
-                           [(cx + s * (6 + k), 16) for k in range(7)], dark)
-                put(img, cx - s * 3, 14, blink)
+            # основание: шестигранная плита, по краю — жёлто-чёрные полосы
+            base = [(cx - 12, 28), (cx - 7, 24), (cx + 7, 24), (cx + 12, 28), (cx + 7, 32), (cx - 7, 32)]
+            pygame.draw.polygon(img, steel_lo, base)
+            for k in range(-11, 12, 4):
+                pygame.draw.line(img, (220, 180, 40), (cx + k, 31), (cx + k + 2, 29))
+            pygame.draw.polygon(img, dark, base, 1)
+            pygame.draw.rect(img, steel_lo, (cx - 3, 18, 7, 8))          # тумба
+            pygame.draw.line(img, steel, (cx - 2, 18), (cx - 2, 25))
+            # стволы — до или после купола, чтобы «назад» они прятались за ним
+            def barrels():
+                if d == "down":
+                    for bx in (cx - 3, cx + 2):
+                        pygame.draw.rect(img, dark, (bx, 16, 2, 9))
+                elif d == "up":
+                    for bx in (cx - 3, cx + 2):
+                        pygame.draw.rect(img, dark, (bx, 2, 2, 8))
+                else:
+                    sgn = 1 if d == "right" else -1
+                    x0 = cx + (6 if sgn > 0 else -16)
+                    for by in (11, 14):
+                        pygame.draw.rect(img, dark, (x0, by, 10, 2))
+                    pygame.draw.rect(img, (250, 220, 120) if i == 0 else dark,
+                                     (x0 + (10 if sgn > 0 else -1), 11, 1, 5))   # вспышка на первом кадре
+            if d == "up":
+                barrels()
+            pygame.draw.ellipse(img, steel, (cx - 8, 6, 17, 14))            # купол
+            pygame.draw.ellipse(img, steel_hi, (cx - 6, 7, 8, 5))           # блик
+            pygame.draw.line(img, (40, 90, 170), (cx - 7, 15), (cx + 7, 15))   # полоса Vault-Tec
+            pygame.draw.line(img, (230, 190, 60), (cx - 7, 16), (cx + 7, 16))
+            pygame.draw.ellipse(img, dark, (cx - 8, 6, 17, 14), 1)
+            if d != "up":
+                barrels()
+            eye = (255, 70, 40) if i % 2 == 0 else (130, 24, 18)
+            ex = {"down": cx, "up": cx, "left": cx - 4, "right": cx + 4}[d]
+            if d != "up":
+                pygame.draw.rect(img, eye, (ex - 1, 10, 3, 2))
+            # общий контур
+            mask = pygame.mask.from_surface(img, 10)
+            for y in range(H_):
+                for x in range(W_):
+                    if not mask.get_at((x, y)) and any(0 <= x + dx < W_ and 0 <= y + dy < H_ and mask.get_at((x + dx, y + dy))
+                                                       for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                        img.set_at((x, y), INK)
             out[d].append(img)
     return out
 

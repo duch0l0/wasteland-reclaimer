@@ -31,6 +31,21 @@ def sprite_of(ent, cam):
     return frame, frame.get_rect(midbottom=(round(fx), round(fy)))
 
 
+_VISIBLE = {}
+
+
+def visible_rect(ent, cam):
+    """Где на экране видимая фигура (без прозрачных полей кадра) — для полосок здоровья и
+    облачков речи: у героя кадр с запасом сверху под поднятый лом."""
+    frame, r = sprite_of(ent, cam)
+    key = id(frame)
+    box = _VISIBLE.get(key)
+    if box is None or box[0] is not frame:
+        box = _VISIBLE[key] = (frame, frame.get_bounding_rect(min_alpha=10))
+    b = box[1]
+    return pygame.Rect(r.x + b.x, r.y + b.y, b.w, b.h) if b.w and b.h else r
+
+
 class CombatStats:
     """Общие для игрока и врагов поля пошагового боя: ОД и травмы от критов."""
     armor = 0                  # панцирь: сколько урона гасит (у жука)

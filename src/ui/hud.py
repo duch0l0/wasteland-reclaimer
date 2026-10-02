@@ -133,8 +133,14 @@ def draw_panel(surf, game):
 def draw_log_overlay(surf, log_lines, n=4):
     """Лог поверх карты мира."""
     _, font_small = fonts()
-    y = 10
-    for line in log_lines[-n:]:
-        for part in wrap_text(font_small, line, S.SCREEN_W - 20):
-            surf.blit(font_small.render(part, True, (245, 235, 210)), (10, y))
-            y += 18
+    parts = [p for line in log_lines[-n:] for p in wrap_text(font_small, line, S.SCREEN_W // 2)]
+    if not parts:
+        return
+    w = max(font_small.size(p)[0] for p in parts) + 20
+    back = pygame.Surface((w, len(parts) * 18 + 12), pygame.SRCALPHA)
+    back.fill((26, 18, 10, 150))    # тёмная подложка: на светлой карте текст иначе теряется
+    surf.blit(back, (0, 0))
+    y = 6
+    for part in parts:
+        surf.blit(font_small.render(part, True, (245, 235, 210)), (10, y))
+        y += 18

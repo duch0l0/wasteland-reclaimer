@@ -72,10 +72,6 @@ SOURCES = {
         "frames": [0, 2, 4, 6], "order": ["up", "left", "down", "right"],
         "chars": {(0, 0): "detective"},
     },
-    "cultist.png": {   # справа от большой картинки — 4×4 маленьких кадра
-        "key": (255, 255, 255), "tol": 40, "crop": (340, 90, 400, 570), "rows": 4, "cols": 4, "block": (4, 4),
-        "frames": [0, 1, 2, 3], "order": ["down", "left", "right", "up"], "chars": {(0, 0): "cultist"},
-    },
     # кадры вразброс: строки фигур сверху вниз (figrows: направление -> (строка, [фигуры в ней]))
     "lizard.gif": {
         "key": None, "tol": 30, "figrows": {"right": (3, [0, 1, 2, 3]), "down": (4, [0, 1, 2, 3]),
@@ -123,8 +119,35 @@ def white_robe(sheet):
     return out
 
 
-# листы, перекрашенные из уже собранных: id -> (из какого, чем)
-DERIVED = {"anselm": ("cultist", white_robe)}
+def _recolor(sheet, pick, paint):
+    """Перекрасить ткань: pick(цвет) — этот ли пиксель, paint(яркость 0..1, альфа) -> новый цвет."""
+    out = sheet.copy()
+    w, h = out.get_size()
+    for y in range(h):
+        for x in range(w):
+            c = out.get_at((x, y))
+            if c.a and pick(c):
+                out.set_at((x, y), paint(max(c.r, c.g, c.b) / 255, c.a))
+    return out
+
+
+def red_robe(sheet):
+    """Культист «Детей Единства»: фиолетовый капюшон провидицы -> тёмно-красный балахон."""
+    return _recolor(sheet, lambda c: c.b > c.g + 12 and c.r > c.g,
+                    lambda v, a: (min(255, int(30 + v * 260)), int(14 + v * 40), int(14 + v * 36), a))
+
+
+def white_robe_monk(sheet):
+    """Брат Ансельм: коричневая ряса монаха -> белая с тёплым оттенком."""
+    return _recolor(sheet, lambda c: c.r > c.b + 25 and c.g > c.b + 8 and max(c.r, c.g, c.b) < 215,
+                    lambda v, a: (min(255, int(110 + v * 190)), min(255, int(104 + v * 186)),
+                                  min(255, int(92 + v * 170)), a))
+
+
+# листы, перекрашенные из уже собранных: id -> (из какого, чем).
+# Культист — из провидицы в капюшоне, Ансельм — из монаха: тот же размер и стиль, что у остальных жителей
+# (маленький лист npc/raw/cultist.png при увеличении выходил крупными квадратами — больше не используется)
+DERIVED = {}   # культист и Ансельм теперь рисуются кодом: tools/make_robes.py
 
 
 # ------------------------------------------------------------ фон

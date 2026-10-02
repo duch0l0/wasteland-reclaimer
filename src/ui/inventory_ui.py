@@ -188,19 +188,26 @@ def draw_inventory(surf, game):
         cap = (game.weapon_name() if label == "Оружие" else name[:1].upper() + name[1:] if name else "пусто")
         _slot(surf, pygame.Rect(lx + 2 + i * 76, box.y + 84, 60, 60), label, name, cap, select(name))
     lv = p.level_sys
-    stats = [
-        f"Уровень {lv.level} · XP {lv.xp}/{lv.xp_needed}",
-        f"HP {p.hp}/{p.max_hp}",
-        f"ОД {p.max_ap} · КБ {p.armor_class}",
-        f"Рукопашная {p.melee_skill} · урон {p.damage}±2",
-        f"Стрельба {p.guns_skill}",
-        f"Медицина {p.skill('medicine')} · Наука {p.skill('science')}",
-        f"Красноречие {p.skill('speech')} · Выживание {p.skill('survival')}",
-    ]
-    y = box.y + 204
-    for line in stats:
-        surf.blit(font_small.render(line, True, S.COLOR_TEXT), (lx, y))
-        y += 19
+    col_w = 196   # левая колонка до сетки: подпись слева, число справа — ничего не вылезает
+    rows = [("Уровень", f"{lv.level}"), ("Опыт", f"{lv.xp}/{lv.xp_needed}"), ("HP", f"{p.hp}/{p.max_hp}"),
+            ("ОД · КБ", f"{p.max_ap} · {p.armor_class}"), ("Урон ломом", f"{p.damage}±2")]
+    skill_rows = [("Стрельба", p.guns_skill), ("Рукопашная", p.melee_skill), ("Медицина", p.skill("medicine")),
+                  ("Наука", p.skill("science")), ("Красноречие", p.skill("speech")),
+                  ("Выживание", p.skill("survival"))]
+    y = box.y + 186
+    for label, val in rows:
+        surf.blit(font_tiny().render(label, True, COLOR_DIM), (lx, y))
+        v = font_tiny().render(val, True, S.COLOR_TEXT)
+        surf.blit(v, (lx + col_w - v.get_width(), y))
+        y += 17
+    y += 4
+    surf.blit(font_small.render("Навыки", True, COLOR_TITLE), (lx, y))
+    y += 20
+    for label, val in skill_rows:
+        surf.blit(font_tiny().render(label, True, (200, 190, 170)), (lx + 6, y))
+        v = font_tiny().render(str(val), True, S.COLOR_TEXT)
+        surf.blit(v, (lx + col_w - v.get_width(), y))
+        y += 16
     y += 6
     surf.blit(font_small.render("Перки", True, COLOR_TITLE), (lx, y))
     y += 20

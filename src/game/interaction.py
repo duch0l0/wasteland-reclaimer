@@ -186,13 +186,14 @@ class InteractionMixin:
 
     def on_enemy_killed(self, enemy):
         """Вызывается боевым модулем: добыча, опыт, перки, флаги квестов."""
-        self.log(f"{enemy.name[:1].upper() + enemy.name[1:]} повержен.")
+        if not self.action.active:   # в экшене счёт убитых — на экране, лог не засоряем
+            self.log(f"{enemy.name[:1].upper() + enemy.name[1:]} повержен.")
         if getattr(enemy, "npc_id", None):   # убитый житель не воскреснет при следующем приходе
             self.flags[f"killed_{enemy.npc_id}"] = True
         mult = 2 if self.player.perk_rank("looter") else 1
         loot = {item: cnt * mult for item, cnt in (enemy.loot or {}).items()}
         self.level.add_corpse(enemy, loot)
-        if loot:
+        if loot and not self.action.active:
             self.log("На теле что-то есть — можно обыскать.")
         if self.player.perk_rank("scavenger") and self.player.hp < self.player.max_hp:
             self.player.hp = min(self.player.max_hp, self.player.hp + 5)

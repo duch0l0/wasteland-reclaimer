@@ -264,11 +264,26 @@ class IsoMap(MapBase):
     def pickup_screen_rect(self, p, cam):
         return loader.item_icon(p["kind"]).get_rect(center=cam.p(*p["rect"].center))
 
+    DIE_FRAME_MS = 70       # кадр анимации падения
+    SLIDE_MS = 260          # за сколько тело доезжает, куда его отбросило
+
     def draw_corpses(self, surf, cam):
+        now = pygame.time.get_ticks()
         for c in self.corpses:
             cc = c["corpse"]
             fx, fy = cam.p(*cc["foot"])
-            surf.blit(cc["img"], (fx - cc["anchor"][0], fy - cc["anchor"][1]))
+            img = cc["img"]
+            if cc.get("frames"):   # только что убит: падает и отлетает по направлению выстрела
+                el = now - cc["born"]
+                img = cc["frames"][min(len(cc["frames"]) - 1, el // self.DIE_FRAME_MS)]
+                k = min(1.0, el / self.SLIDE_MS)
+                k = 1 - (1 - k) ** 2
+                px, py = cam.p(cc["foot"][0] + cc["push"][0] * k, cc["foot"][1] + cc["push"][1] * k)
+                fx, fy = px, py
+                if el >= self.DIE_FRAME_MS * len(cc["frames"]) and k >= 1:
+                    cc["foot"] = (cc["foot"][0] + cc["push"][0], cc["foot"][1] + cc["push"][1])
+                    cc["frames"] = None
+            surf.blit(img, (fx - cc["anchor"][0], fy - cc["anchor"][1]))
 
     def add_corpse(self, enemy, loot):
         box = super().add_corpse(enemy, loot)
@@ -280,6 +295,9 @@ class IsoMap(MapBase):
             frames = anim.frames_by_action.get(f"die_{anim.direction}")
             if frames:
                 cc["img"] = frames[-1]
+                push = getattr(enemy, "death_push", None)
+                if push is not None:   # убит только что (не загрузка сохранения) — падение проигрывается
+                    cc["frames"], cc["born"], cc["push"] = list(frames), pygame.time.get_ticks(), push
             cc["anchor"] = foot
         else:
             cc["anchor"] = (cc["img"].get_width() // 2, cc["img"].get_height() // 2 + 6)

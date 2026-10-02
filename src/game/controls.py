@@ -139,7 +139,11 @@ class ControlsMixin:
             if key in (pygame.K_1, pygame.K_2):
                 self.action.switch("ar" if key == pygame.K_1 else "sg")
                 return
-            if key == pygame.K_SPACE:
+            if key in (pygame.K_LSHIFT, pygame.K_RSHIFT):
+                self.action.dash()
+                return
+            if key == pygame.K_q:
+                self.action.switch()
                 return
         if key == pygame.K_c:
             self.craft_open = True

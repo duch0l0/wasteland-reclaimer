@@ -72,8 +72,12 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.mode = "local"        # "local" — внутри локации, "world" — карта мира
 
         # игрок
-        player_anims = loader.load_humanoid_animations(
-            S.PLAYER_DIR, loader.FRAME_SIZE, base_color=(90, 110, 90), accent_color=(200, 190, 160))
+        from .. import hero_look
+        if hero_look.available():   # герой по слоям: надетое и оружие в руках видны (tools/make_hero.py)
+            player_anims = hero_look.animations()
+        else:
+            player_anims = loader.load_humanoid_animations(
+                S.PLAYER_DIR, loader.FRAME_SIZE, base_color=(90, 110, 90), accent_color=(200, 190, 160))
         self.player = Player(self.level.player_spawn, player_anims)
         self.inventory = Inventory("data/recipes.json")
         self.player.inventory = self.inventory
@@ -146,6 +150,18 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         if len(self.log_lines) > 30:
             self.log_lines.pop(0)
 
+    def refresh_hero_look(self):
+        """Переоделся или сменил оружие — спрайт героя собирается заново (кэш — в hero_look)."""
+        from .. import hero_look
+        if (self.merc_mode or not hero_look.available() or getattr(self.cam, "iso", False)
+                or getattr(self.level, "iso", False)
+                or getattr(self.player.anim, "direction", "down") not in hero_look.DIRS):
+            return   # на изометрической карте у героя свой аниматор (8 сторон) — его не трогаем
+        key = hero_look.look_key(self.player)
+        if key != getattr(self, "_hero_key", None):
+            self._hero_key = key
+            self.player.anim.frames_by_action = hero_look.animations(*key)
+
     def modal_open(self):
         return bool(self.dialogue.is_active() or self.craft_open or self.inv_open or self.trade
                     or self.game_over or self.perk_choices or self.term or self.slides or self.journal_open
@@ -165,6 +181,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             return
 
         Minimap.reveal(self)  # туман войны: открыть клетки вокруг героя
+        self.refresh_hero_look()
         self.player.update(dt_ms)
         for e in self.enemies:
             e.update(dt_ms)

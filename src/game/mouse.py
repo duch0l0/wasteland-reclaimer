@@ -121,7 +121,7 @@ class MouseMixin:
             return
         if self.action.active:
             if button == 3:
-                self.action.switch()
+                self.action.dash()   # ПКМ — рывок (смена ствола — Q, 1, 2)
                 return
             target = self.entity_at_screen(pos)
             if target in self.npcs or (self.object_at_screen(pos) and target is None):
