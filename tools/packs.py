@@ -25,6 +25,7 @@
 Запуск из папки game_project:
   .venv/bin/python tools/packs.py find <слово>          — какие наборы есть по слову
   .venv/bin/python tools/packs.py slice <slug> <short>  — нарезать набор (и сводки)
+  .venv/bin/python tools/packs.py sync-git              — в git только используемое (перед коммитом)
 """
 import glob
 import hashlib
@@ -212,8 +213,56 @@ def slice_pack(slug, short):
     return objs, floors, walls
 
 
+def used_files():
+    """Файлы assets/packs, на которые ссылаются карты и каталоги объектов (картинки «pk:…»)."""
+    refs = set()
+    for path in glob.glob(os.path.join(ROOT, "data", "props", "*.json")):
+        with open(path, encoding="utf-8") as f:
+            refs.update(d["img"] for d in json.load(f).get("props", {}).values() if d["img"].startswith("pk:"))
+    for path in glob.glob(os.path.join(ROOT, "data", "maps", "*.json")):
+        with open(path, encoding="utf-8") as f:
+            m = json.load(f)
+        for imgs in (m.get("floors") or {}).values():
+            refs.update(imgs)
+        for w in (m.get("walls") or {}).values():
+            refs.update((w + "_top", w + "_face"))
+    files = set()
+    for ref in refs:
+        short, rest = ref[3:].split("/", 1)
+        files.add(os.path.join("assets", "packs", short, "index.json"))
+        if "/" in rest:                                    # кусок страницы — нужна вся страница
+            files.add(os.path.join("assets", "packs", short, "pages", rest.split("/")[0] + ".png"))
+        else:
+            with open(os.path.join(OUT, short, "index.json"), encoding="utf-8") as f:
+                d = json.load(f)["items"][rest]
+            files.add(os.path.join("assets", "packs", short, d["dir"], rest + ".png"))
+    return sorted(files)
+
+
+def sync_git():
+    """В git — только то, что используется: остальная нарезка лежит на диске (assets/packs в .gitignore)
+    и при новой сборке пересоздаётся из бандла. Используемые файлы добавляются принудительно,
+    ставшие ненужными — убираются из индекса git (с диска не удаляются)."""
+    import subprocess
+    used = used_files()
+    missing = [f for f in used if not os.path.isfile(os.path.join(ROOT, f))]
+    assert not missing, f"нет файлов: {missing[:5]}"
+    tracked = subprocess.run(["git", "ls-files", "assets/packs"], cwd=ROOT, capture_output=True, text=True,
+                             check=True).stdout.split()
+    stale = sorted(set(tracked) - set(used))
+    for i in range(0, len(stale), 500):
+        subprocess.run(["git", "rm", "--cached", "-q", *stale[i:i + 500]], cwd=ROOT, check=True)
+    for i in range(0, len(used), 500):
+        subprocess.run(["git", "add", "-f", *used[i:i + 500]], cwd=ROOT, check=True)
+    size = sum(os.path.getsize(os.path.join(ROOT, f)) for f in used)
+    print(f"в git из наборов: {len(used)} файлов, {size / 1e6:.1f} МБ; убрано из индекса: {len(stale)}")
+
+
 def main():
     os.chdir(ROOT)
+    if len(sys.argv) >= 2 and sys.argv[1] == "sync-git":
+        sync_git()
+        return
     if len(sys.argv) >= 3 and sys.argv[1] == "find":
         print("\n".join(find(sys.argv[2])))
     elif len(sys.argv) >= 4 and sys.argv[1] == "slice":

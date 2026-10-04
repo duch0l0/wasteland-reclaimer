@@ -19,3 +19,6 @@ crash.log
 # сводки для подбора объектов (tools/slice_ruins.py --catalog)
 assets/ruins/catalog_*.png
 npc/raw/preview_*.png
+
+# нарезка наборов бандла: в git — только используемое (tools/packs.py sync-git)
+assets/packs/
