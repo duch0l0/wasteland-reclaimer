@@ -2,6 +2,8 @@
 Карта из объектов (data/maps/*.json, собирается tools/build_town.py).
 
   ground   — строки кодов земли: d земля, a асфальт, h/v разметка, g гравий, c бетонный пол,
+             _ пустота (чёрная, непроходимо); свои коды — "floors" {код: [картинки «pk:…»]} и
+             "walls" {код: стена набора «pk:<набор>/<стена>»} — стена A4: верх с окантовкой и фасад;
              m стальной пол убежища, w мокрый бетон ливнёвки, x скала/толща стены (непроходимо,
              у края над полом рисуется стена — её вид задаёт style: vault / drain);
   portals  — переходы в другую локацию: {"tiles": [[x, y]...], "to": id, "at": [x, y], "label"};
@@ -232,6 +234,9 @@ def _roof_image(r):
     return img
 
 
+_VOID = None   # пустота за стенами интерьера — чёрная клетка (создаётся в TownMap)
+
+
 class TownMap(MapBase):
     parallax = False  # земля сплошная — фон под ней не нужен
 
@@ -248,11 +253,15 @@ class TownMap(MapBase):
         self.night = d.get("night")               # ночь: цвет темноты, свет — src/lighting.py
         self.lights = d.get("lights", [])         # отдельные источники света [x, y, радиус, цвет, мерцание]
         self.blocked, self.sight = set(), set()
+        # стены из наборов (автотайл A4, как в RPG Maker): {код: "pk:<набор>/<стена>"} — непроходимы
+        self.wallsets = dict(d.get("walls", {}))
+        solid = {"x", "_"} | set(self.wallsets)
         for y, row in enumerate(self.ground):
             for x, code in enumerate(row):
-                if code == "x":
+                if code in solid:
                     self.blocked.add((x, y))
                     self.sight.add((x, y))
+        self.blocked.update(tuple(t) for t in d.get("blocked", []))   # вода в штампах наборов — не пройти
         self.portals = []
         for p in d.get("portals", []):
             self.portals.append({"tiles": {tuple(t) for t in p["tiles"]}, "to": p["to"],
@@ -328,6 +337,16 @@ class TownMap(MapBase):
         self._rock = _rock_tiles()
         self._edge_cache = {}
         self._face = _wall_faces(self.style)
+        # полы из наборов: {код: ["pk:…", …]} — варианты клетки 48×48 (заливки A2, куски страниц)
+        for code, imgs in d.get("floors", {}).items():
+            self._tiles[code] = [pygame.transform.scale(P.pack_image(i), (T, T)).convert() for i in imgs]
+        global _VOID
+        if _VOID is None:
+            _VOID = pygame.Surface((T, T))
+            _VOID.fill((8, 6, 6))
+        self._walls_img = {code: (P.pack_image(w + "_top"), P.pack_image(w + "_face"))
+                           for code, w in self.wallsets.items()}
+        self._wall_cache = {}
         line = pygame.image.load(os.path.join(GROUND_DIR, "asphalt_line.png")).convert()
         self._tiles["v"] = [line]
         self._tiles["h"] = [pygame.transform.rotate(line, 90)]
@@ -465,6 +484,10 @@ class TownMap(MapBase):
     def _raw_tile(self, x, y):
         code = self.ground[y][x]
         h = (x * 73856093) ^ (y * 19349663)  # один и тот же вариант клетки при каждом кадре
+        if code in self.wallsets:
+            return self._wall_tile(x, y, code)
+        if code == "_":
+            return _VOID
         if code == "x":
             below = self.ground[y + 1][x] if y + 1 < self.height else "x"
             if below != "x":
@@ -475,6 +498,48 @@ class TownMap(MapBase):
         else:
             variants = self._dirt_shades[self._shade(x, y)]
         return variants[h % len(variants)]
+
+    # ------------------------------------------------------------ стены A4 (как в RPG Maker)
+    def _is_wall(self, x, y):
+        return not (0 <= x < self.width and 0 <= y < self.height) or self.ground[y][x] in self.wallsets \
+            or self.ground[y][x] in "x_"
+
+    def _face_row(self, x, y):
+        """Фасад стены — две нижние клетки вертикального ряда стены: 2 — нижняя, 1 — верхняя, 0 — не фасад."""
+        if not self._is_wall(x, y + 1):
+            return 2
+        if not self._is_wall(x, y + 2) and y + 1 < self.height and self.ground[y + 1][x] in self.wallsets:
+            return 1
+        return 0
+
+    def _wall_tile(self, x, y, code):
+        key = (x, y)
+        t = self._wall_cache.get(key)
+        if t is not None:
+            return t
+        top, face = self._walls_img[code]
+        t = pygame.Surface((T, T))
+        fr = self._face_row(x, y)
+        if fr:   # фасад 96×96 = 2×2 клетки: половина по чётности столбца, верх/низ — по ряду
+            t.blit(face, (0, 0), ((x % 2) * T, (fr - 1) * T, T, T))
+        else:    # верх стены — автотайл из четвертинок 24×24 (как у RPG Maker)
+            def ceil(cx, cy):
+                return self._is_wall(cx, cy) and not self._face_row(cx, cy)
+            q = T // 2
+            for qx in (0, 1):
+                for qy in (0, 1):
+                    sx, sy = (1 if qx else -1), (1 if qy else -1)
+                    hside, vside = ceil(x + sx, y), ceil(x, y + sy)
+                    diag = ceil(x + sx, y + sy)
+                    if hside and vside and not diag:          # внутренний угол — из верхнего правого блока
+                        src = (T + qx * q, qy * q)
+                    else:
+                        col = (1 if qx == 0 else 2) if hside else (0 if qx == 0 else 3)
+                        row = (1 if qy == 0 else 2) if vside else (0 if qy == 0 else 3)
+                        src = (col * q, T + row * q)
+                    t.blit(top, (qx * q, qy * q), (*src, q, q))
+        self._wall_cache[key] = t
+        return t
 
     @staticmethod
     def _noise(x, y):

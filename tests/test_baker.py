@@ -372,6 +372,53 @@ fr(g2, 2)
 ok(g2.loc.id == "baker_mission" and any(n.npc_id == "loner_baker" for n in g2.npcs) and g2.flags.get("know_iskra"),
    "после загрузки Панк на месте, флаги целы")
 
+# ============================================================ уровни: крипта и второй этаж мотеля
+print("— крипта и мотель")
+g = arrive()
+go(g, "baker_mission")
+g.flags["mission_pass"] = True      # гость миссии: двор не поднимает тревогу
+hatch = next(p for p in g.level.portals if p["to"] == "baker_crypt")
+end_talk(g)
+goto(g, sorted(hatch["tiles"])[0])
+fr(g, 3)
+ok(g.loc.id == "baker_mission", "без ключа плита за алтарём не открывается")
+g.inventory.add("ключ от крипты", 1)
+end_talk(g)
+goto(g, (35, 16))
+fr(g, 2)
+end_talk(g)
+goto(g, sorted(hatch["tiles"])[0])
+fr(g, 3)
+ok(g.loc.id == "baker_crypt", "с ключом Ансельма — вниз, в крипту")
+ok(any(n.npc_id == "oskar" for n in g.npcs) and any(e.type_id == "joined" for e in g.enemies),
+   "в крипте — Оскар в клетке и Сплетённый в купели")
+talk(g, "oskar")
+say(g, "выпущу")
+say(g, "Иди к Хэтти")
+ok(g.flags.get("oskar_free") and not any(n.npc_id == "oskar" for n in g.npcs), "Оскар выпущен")
+joined = next(e for e in g.enemies if e.type_id == "joined")
+ok(not joined.hostile and joined.talk == "joined", "Сплетённый сначала говорит тремя голосами")
+for e in g.enemies:
+    if e.type_id == "radroach":    # тараканы в кабинете опытов — не мешают проверить терминал
+        e.alive = False
+g.combat.active = False
+end_talk(g)
+t = next(t for t in g.level.terminals if t["id"] == "crypt_log")
+stand_near(g, t["tiles"])
+g.handle_key(pygame.K_e)
+ok(g.term and g.term["id"] == "crypt_log", "журнал опытов Ансельма")
+g.close_terminal()
+g.enter_location("baker")
+fr(g, 2)
+end_talk(g)          # страж блокпоста у въезда заговаривает сам
+stairs = next(p for p in g.level.portals if p["to"] == "baker_motel_2f")
+goto(g, sorted(stairs["tiles"])[0])
+fr(g, 3)
+ok(g.loc.id == "baker_motel_2f" and any(n.npc_id == "motel_mom" for n in g.npcs),
+   "по лестнице в холле — второй этаж мотеля, в номере 201 прячется семья")
+box = next(c for c in g.level.containers if c["name"] == "сундук Холлиса")
+ok(box.get("requires"), "сундук Холлиса — на замке")
+
 print()
 print("ИТОГ:", "всё прошло" if not failed else f"провалов: {len(failed)}")
 sys.exit(1 if failed else 0)

@@ -717,12 +717,79 @@ def make_turret():
     return out
 
 
+def make_ghoul_kid():
+    """Ребёнок-гуль из школы: тот же дикий гуль, но на треть ниже."""
+    out = {}
+    for d, frames in load("feral").items():
+        out[d] = [pygame.transform.scale(f, (max(1, round(f.get_width() * 0.7)), max(1, round(f.get_height() * 0.7))))
+                  for f in frames]
+    return out
+
+
+def make_ghoul_lady():
+    """Мисс Лейн, учительница-гуль: жительница folk_d, кожа серо-зелёная и в пятнах, волосы седые.
+    Кадры крупные (native), как у исходника."""
+    import random
+    r = random.Random(41)
+    out = {}
+    for d, frames in load("folk_d").items():
+        out[d] = []
+        for f in frames:
+            img = f.copy()
+            w, h = img.get_size()
+            for y in range(h):
+                for x in range(w):
+                    c = img.get_at((x, y))
+                    if c.a < 40:
+                        continue
+                    lum = (c.r + c.g + c.b) / 3
+                    if c.r > 150 and c.r > c.g > c.b and c.r - c.b > 40:          # кожа
+                        k = lum / 255
+                        g = (int(110 + 70 * k), int(118 + 66 * k), int(84 + 40 * k))
+                        if r.random() < 0.12:
+                            g = (int(g[0] * 0.7), int(g[1] * 0.62), int(g[2] * 0.6))   # язвы
+                        img.set_at((x, y), (*g, c.a))
+                    elif lum < 110 and abs(c.r - c.g) < 30 and y < h * 0.4:      # тёмные волосы -> седые клочья
+                        v = int(130 + lum * 0.6)
+                        img.set_at((x, y), (v, v, int(v * 0.95), c.a))
+            out[d].append(img)
+    return out
+
+
+def make_joined():
+    """«Сплетённый» из крипты Бейкера: фиолетовый зверь-мутант, перекрашенный в бледно-розовую плоть
+    с багровыми швами, — трое прихожан, сросшихся в одно тело. Кадры native, как у исходника."""
+    out = {}
+    for d, frames in load("beast").items():
+        out[d] = []
+        for f in frames:
+            img = f.copy()
+            w, h = img.get_size()
+            for y in range(h):
+                for x in range(w):
+                    c = img.get_at((x, y))
+                    if c.a < 40:
+                        continue
+                    lum = (c.r + c.g + c.b) / 3
+                    if c.b > c.g + 10:                          # фиолетовая шкура -> бледная плоть
+                        k = lum / 200
+                        img.set_at((x, y), (min(255, int(120 + 120 * k)), int(80 + 90 * k), int(80 + 80 * k), c.a))
+                    elif lum > 150 and c.r > 150:               # рога -> багровые швы
+                        img.set_at((x, y), (150, 40, 40, c.a))
+            out[d].append(img)
+    return out
+
+
+NATIVE = {"ghoul_lady", "joined"}   # кадры уже в игровом размере
+
+
 # ----------------------------------------------------------------
 
 MAKERS = {"raider": make_raider, "gang": make_gang, "boss": make_boss, "beetle": make_beetle,
           "ada": make_ada, "doc": make_doc, "sheriff": make_sheriff, "silas": make_silas, "mo": make_mo,
           "lenny": make_lenny, "merc": make_merc, "folk_a": make_folk_a, "folk_b": make_folk_b,
-          "feral": make_feral, "radroach": make_roach, "turret": make_turret}
+          "feral": make_feral, "radroach": make_roach, "turret": make_turret,
+          "ghoul_kid": make_ghoul_kid, "ghoul_lady": make_ghoul_lady, "joined": make_joined}
 
 
 def preview(ids, path):
@@ -748,6 +815,9 @@ def main():
     pygame.display.set_mode((1, 1))
     for sid, make in MAKERS.items():
         save(sid, make())
+        if sid in NATIVE:
+            with open(os.path.join(SPRITES, sid, "native"), "w") as fh:
+                fh.write("кадры уже в игровом размере\n")
         print("готово:", sid)
     if "preview" in sys.argv:
         path = sys.argv[sys.argv.index("preview") + 1] if len(sys.argv) > sys.argv.index("preview") + 1 \

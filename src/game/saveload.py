@@ -89,7 +89,8 @@ class SaveMixin:
                        "rads": p.rads, "skills": p.skills, "pending_skills": p.pending_skills},
             "inventory": dict(self.inventory.items),
             "flags": self.flags, "quests": self.quests, "traders": self.traders,
-            "world": {"pos": list(self.worldmap.pos), "known": sorted(self.worldmap.known)},
+            "world": {"pos": list(self.worldmap.pos), "known": sorted(self.worldmap.known), "v": 2,
+                      "fog": __import__("base64").b64encode(__import__("zlib").compress(self.worldmap.fog_bytes())).decode()},
             "mode": "world" if (self.mode == "world" or encounter) else "local",
             "loc": None if encounter else self.loc.id,
             "locations": {lid: self._loc_state(loc) for lid, loc in self.locations.items()},
@@ -193,8 +194,17 @@ class SaveMixin:
         p.anim.direction = ps.get("dir", "down")
         p.anim.set_action("idle")
 
-        self.worldmap.pos = pygame.Vector2(st["world"]["pos"])
         self.worldmap.known = set(st["world"]["known"])
+        if st["world"].get("v") == 2:
+            import base64
+            import zlib
+            self.worldmap.pos = pygame.Vector2(st["world"]["pos"])
+            self.worldmap.set_fog(zlib.decompress(base64.b64decode(st["world"]["fog"])) if st["world"].get("fog") else None)
+        else:   # сохранение со старой маленькой карты — встаём у локации, где был герой
+            lid = st.get("loc") or "ruins"
+            self.worldmap.pos = pygame.Vector2(LOCATION_DEFS.get(lid, LOCATION_DEFS["ruins"]).get(
+                "world_pos", LOCATION_DEFS["ruins"]["world_pos"]))
+            self.worldmap.set_fog(None)
         self.worldmap.target = None
 
         self.locations = {}

@@ -128,7 +128,9 @@ calm(g)
 ok(all(any(n.npc_id == i for n in g.npcs) for i in ("sheriff", "doc", "ada", "silas", "mo", "lenny", "marta", "dale")),
    "в городе живут шериф, Док, Смотрительница, проповедник, Мо, Лен, Марта, Дейл")
 ok(not any(p["kind"] == "самопал" for p in g.level.pickups), "самопал на земле не валяется — его надо заработать")
-ok(len(g.level.portals) == 2, "в городе два спуска: ливнёвка и Убежище 57")
+ok({p["to"] for p in g.level.portals} == {"drain", "vault57", "fifteen_school", "fifteen_cellar",
+                                          "fifteen_saloon_cellar"},
+   "из города: ливнёвка, Убежище 57, старая школа, подвал деда, подвал салуна")
 g.open_terminal("doc:doc_board_market")
 ok(g.term and g.term.get("doc") == "doc_board_market", "доска объявлений читается")
 g.close_terminal()

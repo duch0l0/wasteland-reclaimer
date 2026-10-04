@@ -26,6 +26,10 @@ NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000"
              "baker_folk_e": "Караванщица",
              # случайные встречи
              "caravan_trader": "Бродячий торговец", "caravan_guard": "Охранник каравана",
+             "farmer_miller": "Фермер Миллер",
+             "walt": "Старик Уолт", "miss_lane": "Мисс Лейн", "ghoul_kid_a": "Томми", "ghoul_kid_b": "Сью",
+             "ghoul_kid_c": "Маленький Джо", "tess": "Тесс",
+             "oskar": "Брат Оскар", "motel_mom": "Женщина в номере 201", "motel_kid": "Мальчик",
              "roy": "Рой", "marla": "Марла", "marla_home": "Марла", "acolyte_a": "Послушница",
              "acolyte_b": "Послушник", "baker_kid_b": "Девочка"}
 # у кого кадры лежат в чужой папке (жители из tools/make_variants.py)
@@ -36,7 +40,10 @@ NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "me
                "loner_baker": "loner", "silas_baker": "silas", "scar_baker": "boss",
                "baker_folk_a": "folk_c", "baker_folk_b": "folk_d", "baker_kid": "kid", "baker_folk_c": "girl_pink",
                "baker_folk_d": "folk_g", "baker_folk_e": "folk_e",
-               "caravan_trader": "healer", "caravan_guard": "desert_guard",
+               "caravan_trader": "healer", "caravan_guard": "desert_guard", "farmer_miller": "folk_i",
+               "walt": "folk_g", "miss_lane": "ghoul_lady", "ghoul_kid_a": "ghoul_kid", "ghoul_kid_b": "ghoul_kid",
+               "ghoul_kid_c": "ghoul_kid", "tess": "acolyte",
+               "oskar": "folk_c", "motel_mom": "folk_f", "motel_kid": "kid",
                "roy": "folk_f", "marla": "folk_h", "marla_home": "folk_h", "acolyte_a": "acolyte",
                "acolyte_b": "monk", "baker_kid_b": "folk_j"}
 
@@ -91,7 +98,10 @@ class Location:
         self.name = d.get("name", loc_id)
         self.world_pos = d.get("world_pos")
         self.is_encounter = d.get("encounter", False)
-        if rows is None and isinstance(d.get("map"), dict):   # сцена случайной встречи, собранная на лету
+        if rows is None and d.get("scene"):   # придорожное место: сцена из src/encounters.py, всегда одна и та же
+            from .encounters import spot_map
+            self.level = TownMap(spot_map(loc_id, d["scene"]))
+        elif rows is None and isinstance(d.get("map"), dict):   # сцена случайной встречи, собранная на лету
             self.level = TownMap(d["map"])
         elif rows is None and d["map"].endswith(".json"):
             with open(d["map"], "r", encoding="utf-8") as f:

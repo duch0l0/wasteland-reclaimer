@@ -3,8 +3,8 @@
     "name": "Пятнадцатая",
     "map": "data/maps/town.json",
     "world_pos": [
-      230,
-      330
+      1600,
+      1100
     ],
     "known": true,
     "terminals": [],
@@ -34,8 +34,8 @@
       }
     ],
     "world_pos": [
-      700,
-      150
+      1760,
+      900
     ],
     "entry": [
       1,
@@ -51,12 +51,13 @@
     "name": "Бейкер: трасса",
     "map": "data/maps/baker.json",
     "world_pos": [
-      880,
-      250
+      1910,
+      975
     ],
     "known": false,
     "music": "junktown",
-    "arrival_slides": "baker_arrival"
+    "arrival_slides": "baker_arrival",
+    "world_name": "Бейкер"
   },
   "vault57": {
     "name": "Убежище 57",
@@ -76,8 +77,8 @@
     "name": "Барстоу",
     "map": "data/maps/barstow.json",
     "world_pos": [
-      70,
-      360
+      1450,
+      1150
     ],
     "known": false,
     "music": "hub",
@@ -123,5 +124,123 @@
     "map": "data/maps/baker_outskirts.json",
     "known": false,
     "music": "junktown"
+  },
+  "spot_convoy": {
+    "name": "Разбитый армейский конвой",
+    "world_pos": [
+      1720,
+      1240
+    ],
+    "scene": "convoy",
+    "discover": true,
+    "known": false,
+    "music": "desert"
+  },
+  "spot_caravan": {
+    "name": "Лагерь караванщиков у Ладлоу",
+    "world_pos": [
+      1250,
+      1190
+    ],
+    "scene": "caravan_camp",
+    "discover": true,
+    "known": false,
+    "music": "hub"
+  },
+  "spot_farm": {
+    "name": "Ферма Миллеров",
+    "world_pos": [
+      1080,
+      1060
+    ],
+    "scene": "farm",
+    "discover": true,
+    "known": false,
+    "music": "desert"
+  },
+  "spot_radio": {
+    "name": "Радиовышка «Голос пустоши»",
+    "world_pos": [
+      2120,
+      600
+    ],
+    "scene": "radio",
+    "discover": true,
+    "known": false,
+    "music": "raiders"
+  },
+  "spot_diner": {
+    "name": "Закусочная «Последний бургер»",
+    "world_pos": [
+      2310,
+      1360
+    ],
+    "scene": "diner",
+    "discover": true,
+    "known": false,
+    "music": "raiders"
+  },
+  "spot_saltlake": {
+    "name": "Солёное озеро Сода",
+    "world_pos": [
+      1985,
+      1100
+    ],
+    "scene": "saltlake",
+    "discover": true,
+    "known": false,
+    "music": "desert"
+  },
+  "spot_toll": {
+    "name": "Застава на I-15",
+    "world_pos": [
+      2230,
+      830
+    ],
+    "scene": "toll",
+    "discover": true,
+    "known": false,
+    "music": "raiders"
+  },
+  "fifteen_school": {
+    "name": "Пятнадцатая: старая школа",
+    "map": "data/maps/fifteen_school.json",
+    "known": false,
+    "music": "desert"
+  },
+  "fifteen_school_in": {
+    "name": "Школа «Солнечная долина»",
+    "map": "data/maps/fifteen_school_in.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "fifteen_cellar": {
+    "name": "Подвал деда",
+    "map": "data/maps/fifteen_cellar.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "fifteen_saloon_cellar": {
+    "name": "Подвал салуна",
+    "map": "data/maps/fifteen_saloon_cellar.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "baker_crypt": {
+    "name": "Крипта Единства",
+    "map": "data/maps/baker_crypt.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "baker_motel_2f": {
+    "name": "Мотель: второй этаж",
+    "map": "data/maps/baker_motel_2f.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
   }
 }

@@ -320,6 +320,28 @@ scatter(STONES + FLOOR_BITS[:5], 1, 1, W - 2, H - 2, 30)
 scatter(RUBBLE, 1, 1, W - 2, 3, 2)
 
 
+# ------------------------------------------------------------ новые районы (tools/build_fifteen.py)
+# ставится в самом конце, чтобы не сдвигать случайную расстановку выше
+m.portal([(W - 1, y) for y in range(30, 34)], "fifteen_school", (2, 30), "Старая школа")
+
+
+def hatch(cands, to, at, label, requires):
+    """Люк в подвал: первая свободная клетка из списка; выходят из подвала на соседнюю (at)."""
+    for x, y in cands:
+        if (x, y) not in m.blocked and (x, y) not in m.soft and m.ground[y][x] == "c":
+            m.props.append(["x_manhole", x, y])
+            m.portal([(x, y)], to, at, label, requires=requires)
+            return (x, y)
+    raise AssertionError(f"негде поставить люк в {to}")
+
+
+hatch([(9, 19), (8, 19), (6, 20), (9, 20)], "fifteen_cellar", (3, 5), "Подвал деда",
+      {"flag": "cellar_found",
+       "msg": "Половицы здесь звучат гулко. Под ними люк — без ручки и без замка. Как открыть — знает только дед."})
+hatch([(20, 18), (22, 18), (25, 19), (19, 19)], "fifteen_saloon_cellar", (3, 5), "Подвал салуна",
+      {"flag": "mo_cellar", "msg": "Люк за стойкой. Мо, не оборачиваясь: «Это мой подвал. Даже не думай»."})
+
+
 # ------------------------------------------------------------ проверки и запись
 reach = m.check(gap_exempt=("dog",))
 m.save("data/maps/town.json")

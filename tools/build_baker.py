@@ -136,6 +136,9 @@ for x, y in ((12, 23), (12, 31)):
 desert(t, 1, 1, W - 2, 9, trees=6)
 desert(t, 1, 33, W - 2, H - 2, trees=6, junk=10)
 desert(t, 18, 10, 23, 23, trees=2, bushes=4, junk=3)
+# лестница на второй этаж мотеля (tools/build_baker_levels.py) — в углу холла
+t.props.append(["mt_stairs", 67, 15])
+t.portal([(67, 16), (68, 16)], "baker_motel_2f", (37, 17), "Второй этаж мотеля")
 save(t, "data/maps/baker.json", exempt=("nick", "tobias", "roy", "baker_kid"))   # блокпост культа нейтрален
 
 
@@ -190,7 +193,7 @@ put("candles", 50, 14, check=False)
 # дом Ансельма: сундук с книгой даров
 m.building(40, 28, 8, 7, "brick", north=(2,), sign=None)
 box("metal_chest", 45, 30, "сундук Ансельма", {"крышки": 80, "стимулятор": 1, "святая вода": 2,
-                                                "книга даров": 1}, owner="anselm")
+                                                "книга даров": 1, "ключ от крипты": 1}, owner="anselm")
 put("bed", 41, 32, check=False)
 put("table_2", 44, 33, check=False)
 put("candles", 46, 33, check=False)
@@ -230,6 +233,11 @@ desert(m, 1, 9, 11, H - 2, trees=4, bushes=10, junk=6)
 desert(m, 60, 9, W - 2, H - 2, trees=6, bushes=14, junk=8)
 desert(m, 12, 41, 32, H - 2, trees=3, bushes=8)
 desert(m, 39, 41, 59, H - 2, trees=3, bushes=8)
+# плита за алтарём — спуск в крипту (tools/build_baker_levels.py); ключ — в сундуке Ансельма
+m.props.append(["x_manhole", 34, 15])
+m.portal([(34, 15)], "baker_crypt", (4, 5), "Крипта Единства",
+         requires={"item": "ключ от крипты",
+                   "msg": "За алтарём — каменная плита с замочной скважиной в форме круга. Ключ — у брата Ансельма."})
 save(m, "data/maps/baker_mission.json",
      gates=[{"prop": front_gate, "flag": "mission_gate_open",
              "msg": "Ворота миссии заперты изнутри. За решёткой — шатры, костёр и белые балахоны."},

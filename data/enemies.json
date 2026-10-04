@@ -676,7 +676,7 @@
     },
     "faction": "cult",
     "talk": "cultist",
-    "sprite_dir": "acolyte",
+    "sprite_dir": "cultist",
     "coward": true,
     "level": 2
   },
@@ -1040,5 +1040,48 @@
       ]
     },
     "sprite_dir": "scout"
+  },
+  "joined": {
+    "name": "Сплетённый",
+    "level": 6,
+    "hp": 95,
+    "damage": 12,
+    "ac": 10,
+    "ap": 7,
+    "skill": 65,
+    "sequence": 4,
+    "aggro": 200,
+    "xp": 220,
+    "loot": {
+      "образец ВРЭ": 1
+    },
+    "ai": "melee",
+    "hit_verb": "бьёт вас тремя руками сразу",
+    "armor": 3,
+    "hitbox": [
+      40,
+      40
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        56,
+        70
+      ],
+      "base": [
+        150,
+        120,
+        120
+      ],
+      "accent": [
+        200,
+        60,
+        60
+      ]
+    },
+    "sprite_dir": "joined",
+    "faction": "joined",
+    "talk": "joined",
+    "note": "трое прихожан, «соединённых» в купели; медленный, бьёт сильно; разговаривает тремя голосами"
   }
 }

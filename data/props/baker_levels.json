@@ -1,0 +1,170 @@
+{
+"props": {
+"cu_candelabra": {
+"img": "pk:cult/cult_1_005",
+"block": true,
+"sight": false
+},
+"cu_candelabra_b": {
+"img": "pk:cult/cult_1_008",
+"block": true,
+"sight": false
+},
+"cu_altar": {
+"img": "pk:cult/cult_2_045",
+"block": true,
+"sight": true
+},
+"cu_altar_b": {
+"img": "pk:cult/cult_2_046",
+"block": true,
+"sight": true
+},
+"cu_bookshelf": {
+"img": "pk:cult/cult_2_006",
+"block": true,
+"sight": true
+},
+"cu_bookshelf_b": {
+"img": "pk:cult/cult_2_040",
+"block": true,
+"sight": true
+},
+"cu_banner": {
+"img": "pk:cult/cult_2_131",
+"block": true,
+"sight": true
+},
+"cu_bones": {
+"img": "pk:cult/cult_2_097",
+"block": true,
+"sight": false,
+"search": "grave",
+"title": "груда костей"
+},
+"cu_skulls": {
+"img": "pk:cult/cult_2_099",
+"block": true,
+"sight": false
+},
+"cu_statue": {
+"img": "pk:cult/cult_2_094",
+"block": true,
+"sight": true
+},
+"cu_arch": {
+"img": "pk:cult/cult_2_033",
+"block": true,
+"sight": true
+},
+"cu_coffin": {
+"img": "pk:cult/cult_2_154",
+"block": true,
+"sight": false,
+"search": "grave",
+"title": "каменный гроб"
+},
+"cu_chest": {
+"img": "pk:cult/cult_2_124",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "сундук"
+},
+"lb_vat": {
+"img": "pk:wlab/wlab_1_000",
+"block": true,
+"sight": true
+},
+"lb_vats": {
+"img": "pk:wlab/wlab_1_002",
+"block": true,
+"sight": true
+},
+"lb_tank": {
+"img": "pk:wlab/wlab_1_008",
+"block": true,
+"sight": true
+},
+"lb_tank_b": {
+"img": "pk:wlab/wlab_1_034",
+"block": true,
+"sight": true
+},
+"lb_arm": {
+"img": "pk:wlab/wlab_1_029",
+"block": true,
+"sight": false
+},
+"lb_desk_pc": {
+"img": "pk:wlab/wlab_1_018",
+"block": true,
+"sight": false
+},
+"lb_desk_chem": {
+"img": "pk:wlab/wlab_1_012",
+"block": true,
+"sight": false
+},
+"lb_shelf": {
+"img": "pk:wlab/wlab_2_069",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка с реактивами"
+},
+"lb_case": {
+"img": "pk:wlab/wlab_2_084",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "ящик"
+},
+"hp_bed": {
+"img": "pk:hosp/hosp_1_007",
+"block": true,
+"sight": false
+},
+"hp_drip": {
+"img": "pk:hosp/hosp_1_010",
+"block": true,
+"sight": false
+},
+"bk_cage": {
+"img": "pk:wschool/p1/12,2,4,2",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"mt_vending": {
+"img": "pk:motel/motel_1_002",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "торговый автомат"
+},
+"mt_ice": {
+"img": "pk:motel/motel_1_022",
+"block": true,
+"sight": true
+},
+"mt_plant": {
+"img": "pk:motel/motel_1_063",
+"block": true,
+"sight": false
+},
+"mt_stairs": {
+"img": "pk:motel/p1/4,8,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+}
+}
+}

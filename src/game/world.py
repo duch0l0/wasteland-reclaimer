@@ -65,8 +65,9 @@ class WorldMixin:
 
     def start_encounter(self):
         p = self.player
-        east = self.worldmap.pos.x > S.SCREEN_W * 0.7   # восток, к реке Колорадо
-        loc, text = make_encounter(self.flags, p.level_sys.level, p.skill("survival"), east)
+        from ..worldmap import region_at
+        region = region_at(self.worldmap.pos)
+        loc, text = make_encounter(self.flags, p.level_sys.level, p.skill("survival"), region)
         if loc is None:    # следопыт обошёл опасную встречу
             self.log(text)
             return
@@ -105,6 +106,9 @@ class WorldMixin:
     def update_world_map(self, dt_ms):
         self.worldmap.chance_mult = max(0.4, 1 - (self.player.skill("survival") - 20) / 150)
         event = self.worldmap.update(dt_ms)
+        for lid in self.worldmap.discovered:   # прошли рядом с придорожным местом
+            self.log(f"Вы замечаете в стороне от дороги: {LOCATION_DEFS[lid]['name']}. Отмечено на карте.")
+        self.worldmap.discovered.clear()
         if not event:
             return
         kind, loc_id = event
@@ -130,6 +134,8 @@ class WorldMixin:
 
     def reveal_location(self, loc_id):
         self.worldmap.known.add(loc_id)
+        if LOCATION_DEFS[loc_id].get("world_pos"):
+            self.worldmap.reveal(LOCATION_DEFS[loc_id]["world_pos"], 90)
         self.log(f"На карте отмечено: {LOCATION_DEFS[loc_id]['name']}.")
 
     # ------------------------------------------------------------ камера

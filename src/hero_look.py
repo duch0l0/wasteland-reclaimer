@@ -20,7 +20,7 @@ from . import loader
 ROOT = os.path.join("assets", "hero")
 DIRS = ("down", "left", "right", "up")
 BODY = {"куртка из покрышек": "body_tire", "бронежилет из дорожных знаков": "body_signs",
-        "балахон послушника": "body_robe"}
+        "балахон послушника": "body_robe", "армейский бронежилет": "body_tire"}
 HEAD = {"каска строителя": "head_hardhat", "мотошлем": "head_moto"}
 FRAMES = {"walk": 4, "melee": 3, "shoot": 3}
 _LAYERS = {}

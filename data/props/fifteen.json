@@ -1,0 +1,327 @@
+{
+"props": {
+"ws_desk": {
+"img": "pk:wschool/wschool_2_000",
+"block": true,
+"sight": false
+},
+"ws_desk_b": {
+"img": "pk:wschool/wschool_2_001",
+"block": true,
+"sight": false
+},
+"ws_desk_pile": {
+"img": "pk:wschool/wschool_2_143",
+"block": true,
+"sight": false
+},
+"ws_desk_pile_b": {
+"img": "pk:wschool/wschool_2_144",
+"block": true,
+"sight": false
+},
+"ws_teacher_desk": {
+"img": "pk:wschool/wschool_2_080",
+"block": true,
+"sight": false
+},
+"ws_board": {
+"img": "pk:wschool/p1/8,8,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ws_cork": {
+"img": "pk:wschool/p1/12,8,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ws_window": {
+"img": "pk:wschool/p1/4,8,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ws_lockers": {
+"img": "pk:wschool/p1/6,12,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ws_lockers_b": {
+"img": "pk:wschool/p1/8,12,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ws_bookshelf": {
+"img": "pk:wschool/wschool_3_021",
+"block": true,
+"sight": true
+},
+"ws_bookshelf_b": {
+"img": "pk:wschool/wschool_3_054",
+"block": true,
+"sight": true
+},
+"ws_sofa": {
+"img": "pk:wschool/wschool_3_010",
+"block": true,
+"sight": false
+},
+"ws_plant": {
+"img": "pk:wschool/wschool_3_041",
+"block": true,
+"sight": false
+},
+"ws_filecab": {
+"img": "pk:wschool/wschool_3_000",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "картотека"
+},
+"ws_cabinet": {
+"img": "pk:wschool/wschool_3_033",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "шкаф"
+},
+"ws_microscope": {
+"img": "pk:wschool/wschool_3_038",
+"block": true,
+"sight": false
+},
+"ws_hope": {
+"img": "pk:wschool/p3/12,2,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ws_exit": {
+"img": "pk:wschool/p3/12,4,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ws_trash": {
+"img": "pk:wschool/wschool_2_116",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "мусорные баки"
+},
+"ws_bleachers": {
+"img": "pk:wschool/wschool_4_009",
+"block": true,
+"sight": false
+},
+"ws_bleachers_b": {
+"img": "pk:wschool/wschool_4_010",
+"block": true,
+"sight": false
+},
+"ws_hoop": {
+"img": "pk:wschool/wschool_4_005",
+"block": true,
+"sight": false
+},
+"ws_hoop_b": {
+"img": "pk:wschool/wschool_4_006",
+"block": true,
+"sight": false
+},
+"ws_goal": {
+"img": "pk:wschool/wschool_4_016",
+"block": true,
+"sight": false
+},
+"ws_flowerbed": {
+"img": "pk:wschool/wschool_4_027",
+"block": true,
+"sight": false
+},
+"ws_fence": {
+"img": "pk:wschool/wschool_4_037",
+"block": true,
+"sight": false
+},
+"ws_bus": {
+"img": "pk:wschool/wschool_4_042",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "школьный автобус"
+},
+"ws_junk": {
+"img": "pk:wschool/wschool_4_046",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"ws_mat": {
+"img": "pk:wschool/wschool_5_031",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"t50_car0": {
+"img": "pk:town50/town50_1_029",
+"block": true,
+"sight": false
+},
+"t50_car1": {
+"img": "pk:town50/town50_1_030",
+"block": true,
+"sight": false
+},
+"t50_car2": {
+"img": "pk:town50/town50_1_037",
+"block": true,
+"sight": false
+},
+"t50_car3": {
+"img": "pk:town50/town50_1_038",
+"block": true,
+"sight": false
+},
+"t50_car4": {
+"img": "pk:town50/town50_1_045",
+"block": true,
+"sight": false
+},
+"t50_car5": {
+"img": "pk:town50/town50_1_053",
+"block": true,
+"sight": false
+},
+"t50_phone": {
+"img": "pk:town50/town50_1_100",
+"block": true,
+"sight": false
+},
+"t50_hydrant": {
+"img": "pk:town50/town50_1_108",
+"block": true,
+"sight": false
+},
+"t50_lamp": {
+"img": "pk:town50/town50_1_120",
+"block": true,
+"sight": false
+},
+"t50_mailbox": {
+"img": "pk:town50/town50_1_118",
+"block": true,
+"sight": false
+},
+"t50_diner_sign": {
+"img": "pk:town50/town50_1_116",
+"block": true,
+"sight": true
+},
+"t50_pump": {
+"img": "pk:town50/town50_1_102",
+"block": true,
+"sight": false
+},
+"t50_bench": {
+"img": "pk:town50/town50_1_130",
+"block": true,
+"sight": false
+},
+"nb_bunk": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true
+},
+"nb_shelf_cans": {
+"img": "pk:nbunk/nbunk_2_004",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка с консервами"
+},
+"nb_locker": {
+"img": "pk:nbunk/nbunk_2_006",
+"block": true,
+"sight": true,
+"search": "locker",
+"title": "шкаф"
+},
+"nb_workbench": {
+"img": "pk:nbunk/nbunk_2_014",
+"block": true,
+"sight": false
+},
+"nb_desk_pc": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false
+},
+"nb_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true
+},
+"nb_generator": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": false
+},
+"court": {
+"img": "pk:wschool/p4/0,0,3,3",
+"block": false,
+"sight": false,
+"foot": [
+3,
+3
+],
+"layer": "floor"
+},
+"track": {
+"img": "pk:wschool/p4/9,0,3,3",
+"block": false,
+"sight": false,
+"foot": [
+3,
+3
+],
+"layer": "floor"
+},
+"gym_court": {
+"img": "pk:wschool/p5/0,3,3,5",
+"block": false,
+"sight": false,
+"foot": [
+3,
+5
+],
+"layer": "floor"
+}
+}
+}
