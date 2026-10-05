@@ -314,7 +314,7 @@ class MapKit:
         for c in self.containers:
             foot = self.footprint(*self.props[c["prop"]])
             assert any((fx + dx, fy + dy) in reach for fx, fy in foot for dx in (-1, 0, 1) for dy in (-1, 0, 1)), \
-                f"к {c['name']} не подойти"
+                f"к {c['name']} не подойти ({self.__dict__.get('id')} {self.props[c['prop']][1:3]})"
         for t in self.terminals:
             foot = self.footprint(*self.props[t["prop"]])
             assert any((fx + dx, fy + dy) in reach for fx, fy in foot for dx in (-1, 0, 1) for dy in (-1, 0, 1)), \

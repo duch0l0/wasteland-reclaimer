@@ -1,0 +1,548 @@
+{
+"props": {
+"v22_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v22_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v22_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v22_tree0": {
+"img": "pk:rvill/rvill_2_032",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"v22_tree1": {
+"img": "pk:rvill/rvill_2_033",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"v22_tree2": {
+"img": "pk:rvill/rvill_2_034",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"v22_grass0": {
+"img": "pk:rvill/rvill_2_001",
+"block": false,
+"sight": false
+},
+"v22_grass1": {
+"img": "pk:rvill/rvill_2_002",
+"block": false,
+"sight": false
+},
+"v22_grass2": {
+"img": "pk:rvill/rvill_2_005",
+"block": false,
+"sight": false
+},
+"v22_grass3": {
+"img": "pk:rvill/rvill_2_006",
+"block": false,
+"sight": false
+},
+"v22_grass4": {
+"img": "pk:rvill/rvill_2_008",
+"block": false,
+"sight": false
+},
+"v22_bed0": {
+"img": "pk:ghouse/ghouse_1_007",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_bed1": {
+"img": "pk:ghouse/ghouse_1_008",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_bed2": {
+"img": "pk:ghouse/ghouse_1_009",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_bed3": {
+"img": "pk:ghouse/ghouse_1_013",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_bed_empty": {
+"img": "pk:ghouse/ghouse_1_014",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_row0": {
+"img": "pk:ghouse/ghouse_3_000",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_row1": {
+"img": "pk:ghouse/ghouse_3_001",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_row2": {
+"img": "pk:ghouse/ghouse_3_002",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_row3": {
+"img": "pk:ghouse/ghouse_3_003",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_row4": {
+"img": "pk:ghouse/ghouse_3_005",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_row5": {
+"img": "pk:ghouse/ghouse_3_006",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v22_tomato": {
+"img": "pk:ghouse/ghouse_3_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_tomato_b": {
+"img": "pk:ghouse/ghouse_3_025",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_cucumber": {
+"img": "pk:ghouse/ghouse_3_027",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_cucumber_b": {
+"img": "pk:ghouse/ghouse_3_028",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_cabbage": {
+"img": "pk:ghouse/ghouse_3_048",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_cabbage_b": {
+"img": "pk:ghouse/ghouse_3_050",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_lettuce": {
+"img": "pk:ghouse/ghouse_3_052",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_hydroponics": {
+"img": "pk:ghouse/ghouse_1_052",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"v22_pipes": {
+"img": "pk:ghouse/ghouse_1_018",
+"block": true,
+"sight": false,
+"foot": [
+8,
+1
+]
+},
+"v22_potting": {
+"img": "pk:ghouse/ghouse_1_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_seeds": {
+"img": "pk:ghouse/ghouse_1_037",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж с семенами"
+},
+"v22_ferts": {
+"img": "pk:ghouse/ghouse_1_038",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж с удобрениями"
+},
+"v22_plant_shelf": {
+"img": "pk:ghouse/ghouse_2_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_plant_shelf_b": {
+"img": "pk:ghouse/ghouse_2_027",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_big_plant": {
+"img": "pk:ghouse/ghouse_2_046",
+"block": true,
+"sight": false
+},
+"v22_pot0": {
+"img": "pk:ghouse/ghouse_1_026",
+"block": true,
+"sight": false
+},
+"v22_pot1": {
+"img": "pk:ghouse/ghouse_1_027",
+"block": true,
+"sight": false
+},
+"v22_pot2": {
+"img": "pk:ghouse/ghouse_1_028",
+"block": true,
+"sight": false
+},
+"v22_pot3": {
+"img": "pk:ghouse/ghouse_1_029",
+"block": true,
+"sight": false
+},
+"v22_pot4": {
+"img": "pk:ghouse/ghouse_1_030",
+"block": true,
+"sight": false
+},
+"v22_console": {
+"img": "pk:ghouse/ghouse_1_059",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_cooler": {
+"img": "pk:ghouse/ghouse_1_048",
+"block": true,
+"sight": false
+},
+"v22_worktable": {
+"img": "pk:ghouse/ghouse_3_128",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_bunk0": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v22_bunk1": {
+"img": "pk:nbunk/nbunk_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v22_bunk2": {
+"img": "pk:nbunk/nbunk_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v22_bunk3": {
+"img": "pk:nbunk/nbunk_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v22_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"v22_desk_pc": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_desk_pc_b": {
+"img": "pk:nbunk/nbunk_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_gun_rack": {
+"img": "pk:gcave/p1/14,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "оружейная стойка"
+},
+"v22_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"v22_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"v22_chem": {
+"img": "pk:wlab/wlab_1_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_chem_b": {
+"img": "pk:wlab/wlab_1_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v22_vat": {
+"img": "pk:wlab/wlab_1_000",
+"block": true,
+"sight": true
+},
+"v22_lab_cab": {
+"img": "pk:wlab/wlab_2_037",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "drawer",
+"title": "шкаф с реактивами"
+},
+"v22_spore": {
+"img": "pk:gcave/p1/2,4,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 70,
+"color": [
+160,
+255,
+120
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.2
+}
+},
+"v22_spore_b": {
+"img": "pk:gcave/p1/2,5,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 60,
+"color": [
+200,
+255,
+140
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.2
+}
+},
+"v22_spore_c": {
+"img": "pk:gcave/p1/7,4,1,1",
+"block": true,
+"sight": false
+},
+"v22_biohazard": {
+"img": "pk:hosp/hosp_1_012",
+"block": true,
+"sight": false
+},
+"v22_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+}
+}
+}

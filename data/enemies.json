@@ -1216,5 +1216,49 @@
     "coward": true,
     "level": 2,
     "sprite_dir": "raider"
+  },
+  "spore_carrier": {
+    "name": "споровик",
+    "hp": 26,
+    "damage": 5,
+    "ac": 8,
+    "ap": 10,
+    "skill": 60,
+    "sequence": 8,
+    "aggro": 240,
+    "xp": 30,
+    "loot": {
+      "сушёные травы": 1
+    },
+    "ai": "melee",
+    "hit_verb": "плюёт в вас спорами",
+    "rads": 8,
+    "lunge": true,
+    "pack": "ferals",
+    "note": "много ОД: подбегает издалека и бьёт; облучает",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        120,
+        110,
+        70
+      ],
+      "accent": [
+        220,
+        200,
+        90
+      ]
+    },
+    "level": 5,
+    "poison": 3,
+    "sprite_dir": "spore_carrier"
   }
 }

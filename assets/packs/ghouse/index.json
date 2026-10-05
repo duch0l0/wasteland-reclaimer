@@ -1,0 +1,4772 @@
+{
+"slug": "modern-greenhouse-pixel-art-tileset",
+"items": {
+"ghouse_1_000": {
+"size": [
+188,
+96
+],
+"dir": "props"
+},
+"ghouse_1_001": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"ghouse_1_002": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"ghouse_1_003": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"ghouse_1_004": {
+"size": [
+189,
+192
+],
+"dir": "props"
+},
+"ghouse_1_005": {
+"size": [
+92,
+192
+],
+"dir": "props"
+},
+"ghouse_1_006": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"ghouse_1_007": {
+"size": [
+188,
+86
+],
+"dir": "props"
+},
+"ghouse_1_008": {
+"size": [
+188,
+89
+],
+"dir": "props"
+},
+"ghouse_1_009": {
+"size": [
+188,
+89
+],
+"dir": "props"
+},
+"ghouse_1_010": {
+"size": [
+93,
+184
+],
+"dir": "props"
+},
+"ghouse_1_011": {
+"size": [
+93,
+184
+],
+"dir": "props"
+},
+"ghouse_1_012": {
+"size": [
+188,
+88
+],
+"dir": "props"
+},
+"ghouse_1_013": {
+"size": [
+188,
+89
+],
+"dir": "props"
+},
+"ghouse_1_014": {
+"size": [
+188,
+89
+],
+"dir": "props"
+},
+"ghouse_1_015": {
+"size": [
+37,
+42
+],
+"dir": "props"
+},
+"ghouse_1_016": {
+"size": [
+18,
+38
+],
+"dir": "props"
+},
+"ghouse_1_017": {
+"size": [
+35,
+34
+],
+"dir": "props"
+},
+"ghouse_1_018": {
+"size": [
+384,
+93
+],
+"dir": "props"
+},
+"ghouse_1_019": {
+"size": [
+150,
+71
+],
+"dir": "props"
+},
+"ghouse_1_020": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"ghouse_1_021": {
+"size": [
+30,
+36
+],
+"dir": "props"
+},
+"ghouse_1_022": {
+"size": [
+32,
+41
+],
+"dir": "props"
+},
+"ghouse_1_023": {
+"size": [
+26,
+45
+],
+"dir": "props"
+},
+"ghouse_1_024": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"ghouse_1_025": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"ghouse_1_026": {
+"size": [
+43,
+89
+],
+"dir": "props"
+},
+"ghouse_1_027": {
+"size": [
+39,
+86
+],
+"dir": "props"
+},
+"ghouse_1_028": {
+"size": [
+36,
+86
+],
+"dir": "props"
+},
+"ghouse_1_029": {
+"size": [
+37,
+84
+],
+"dir": "props"
+},
+"ghouse_1_030": {
+"size": [
+36,
+65
+],
+"dir": "props"
+},
+"ghouse_1_031": {
+"size": [
+37,
+64
+],
+"dir": "props"
+},
+"ghouse_1_032": {
+"size": [
+36,
+57
+],
+"dir": "props"
+},
+"ghouse_1_033": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_1_034": {
+"size": [
+32,
+48
+],
+"dir": "props"
+},
+"ghouse_1_035": {
+"size": [
+18,
+24
+],
+"dir": "props"
+},
+"ghouse_1_036": {
+"size": [
+96,
+93
+],
+"dir": "props"
+},
+"ghouse_1_037": {
+"size": [
+90,
+89
+],
+"dir": "props"
+},
+"ghouse_1_038": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"ghouse_1_039": {
+"size": [
+38,
+29
+],
+"dir": "props"
+},
+"ghouse_1_040": {
+"size": [
+38,
+29
+],
+"dir": "props"
+},
+"ghouse_1_041": {
+"size": [
+10,
+28
+],
+"dir": "props"
+},
+"ghouse_1_042": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_1_043": {
+"size": [
+26,
+44
+],
+"dir": "props"
+},
+"ghouse_1_044": {
+"size": [
+26,
+44
+],
+"dir": "props"
+},
+"ghouse_1_045": {
+"size": [
+36,
+48
+],
+"dir": "props"
+},
+"ghouse_1_046": {
+"size": [
+49,
+88
+],
+"dir": "props"
+},
+"ghouse_1_047": {
+"size": [
+38,
+88
+],
+"dir": "props"
+},
+"ghouse_1_048": {
+"size": [
+34,
+89
+],
+"dir": "props"
+},
+"ghouse_1_049": {
+"size": [
+34,
+89
+],
+"dir": "props"
+},
+"ghouse_1_050": {
+"size": [
+38,
+29
+],
+"dir": "props"
+},
+"ghouse_1_051": {
+"size": [
+38,
+29
+],
+"dir": "props"
+},
+"ghouse_1_052": {
+"size": [
+192,
+187
+],
+"dir": "props"
+},
+"ghouse_1_053": {
+"size": [
+43,
+35
+],
+"dir": "props"
+},
+"ghouse_1_054": {
+"size": [
+38,
+38
+],
+"dir": "props"
+},
+"ghouse_1_055": {
+"size": [
+26,
+34
+],
+"dir": "props"
+},
+"ghouse_1_056": {
+"size": [
+66,
+63
+],
+"dir": "props"
+},
+"ghouse_1_057": {
+"size": [
+43,
+40
+],
+"dir": "props"
+},
+"ghouse_1_058": {
+"size": [
+27,
+87
+],
+"dir": "props"
+},
+"ghouse_1_059": {
+"size": [
+96,
+90
+],
+"dir": "props"
+},
+"ghouse_1_060": {
+"size": [
+38,
+48
+],
+"dir": "props"
+},
+"ghouse_1_061": {
+"size": [
+38,
+48
+],
+"dir": "props"
+},
+"ghouse_1_062": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"ghouse_1_063": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"ghouse_2_000": {
+"size": [
+28,
+41
+],
+"dir": "props"
+},
+"ghouse_2_001": {
+"size": [
+28,
+42
+],
+"dir": "props"
+},
+"ghouse_2_002": {
+"size": [
+28,
+42
+],
+"dir": "props"
+},
+"ghouse_2_003": {
+"size": [
+28,
+43
+],
+"dir": "props"
+},
+"ghouse_2_004": {
+"size": [
+28,
+44
+],
+"dir": "props"
+},
+"ghouse_2_005": {
+"size": [
+40,
+34
+],
+"dir": "props"
+},
+"ghouse_2_006": {
+"size": [
+42,
+34
+],
+"dir": "props"
+},
+"ghouse_2_007": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"ghouse_2_008": {
+"size": [
+30,
+44
+],
+"dir": "props"
+},
+"ghouse_2_009": {
+"size": [
+28,
+43
+],
+"dir": "props"
+},
+"ghouse_2_010": {
+"size": [
+27,
+45
+],
+"dir": "props"
+},
+"ghouse_2_011": {
+"size": [
+28,
+44
+],
+"dir": "props"
+},
+"ghouse_2_012": {
+"size": [
+28,
+41
+],
+"dir": "props"
+},
+"ghouse_2_013": {
+"size": [
+40,
+35
+],
+"dir": "props"
+},
+"ghouse_2_014": {
+"size": [
+42,
+35
+],
+"dir": "props"
+},
+"ghouse_2_015": {
+"size": [
+42,
+41
+],
+"dir": "props"
+},
+"ghouse_2_016": {
+"size": [
+38,
+95
+],
+"dir": "props"
+},
+"ghouse_2_017": {
+"size": [
+37,
+89
+],
+"dir": "props"
+},
+"ghouse_2_018": {
+"size": [
+44,
+89
+],
+"dir": "props"
+},
+"ghouse_2_019": {
+"size": [
+39,
+95
+],
+"dir": "props"
+},
+"ghouse_2_020": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"ghouse_2_021": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"ghouse_2_022": {
+"size": [
+92,
+92
+],
+"dir": "props"
+},
+"ghouse_2_023": {
+"size": [
+92,
+141
+],
+"dir": "props"
+},
+"ghouse_2_024": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_2_025": {
+"size": [
+92,
+92
+],
+"dir": "props"
+},
+"ghouse_2_026": {
+"size": [
+92,
+86
+],
+"dir": "props"
+},
+"ghouse_2_027": {
+"size": [
+92,
+95
+],
+"dir": "props"
+},
+"ghouse_2_028": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"ghouse_2_029": {
+"size": [
+92,
+95
+],
+"dir": "props"
+},
+"ghouse_2_030": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_2_031": {
+"size": [
+14,
+46
+],
+"dir": "props"
+},
+"ghouse_2_032": {
+"size": [
+91,
+64
+],
+"dir": "props"
+},
+"ghouse_2_033": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_034": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_035": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_2_036": {
+"size": [
+18,
+44
+],
+"dir": "props"
+},
+"ghouse_2_037": {
+"size": [
+16,
+45
+],
+"dir": "props"
+},
+"ghouse_2_038": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"ghouse_2_039": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_040": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_041": {
+"size": [
+92,
+128
+],
+"dir": "props"
+},
+"ghouse_2_042": {
+"size": [
+44,
+138
+],
+"dir": "props"
+},
+"ghouse_2_043": {
+"size": [
+96,
+138
+],
+"dir": "props"
+},
+"ghouse_2_044": {
+"size": [
+141,
+138
+],
+"dir": "props"
+},
+"ghouse_2_045": {
+"size": [
+48,
+72
+],
+"dir": "props"
+},
+"ghouse_2_046": {
+"size": [
+78,
+91
+],
+"dir": "props"
+},
+"ghouse_2_047": {
+"size": [
+28,
+92
+],
+"dir": "props"
+},
+"ghouse_2_048": {
+"size": [
+28,
+92
+],
+"dir": "props"
+},
+"ghouse_2_049": {
+"size": [
+26,
+92
+],
+"dir": "props"
+},
+"ghouse_2_050": {
+"size": [
+42,
+93
+],
+"dir": "props"
+},
+"ghouse_2_051": {
+"size": [
+42,
+93
+],
+"dir": "props"
+},
+"ghouse_2_052": {
+"size": [
+38,
+48
+],
+"dir": "props"
+},
+"ghouse_2_053": {
+"size": [
+38,
+48
+],
+"dir": "props"
+},
+"ghouse_2_054": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"ghouse_2_055": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_2_056": {
+"size": [
+44,
+48
+],
+"dir": "props"
+},
+"ghouse_2_057": {
+"size": [
+44,
+48
+],
+"dir": "props"
+},
+"ghouse_2_058": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"ghouse_2_059": {
+"size": [
+44,
+39
+],
+"dir": "props"
+},
+"ghouse_2_060": {
+"size": [
+24,
+43
+],
+"dir": "props"
+},
+"ghouse_2_061": {
+"size": [
+27,
+44
+],
+"dir": "props"
+},
+"ghouse_2_062": {
+"size": [
+28,
+46
+],
+"dir": "props"
+},
+"ghouse_2_063": {
+"size": [
+32,
+46
+],
+"dir": "props"
+},
+"ghouse_2_064": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"ghouse_2_065": {
+"size": [
+32,
+44
+],
+"dir": "props"
+},
+"ghouse_2_066": {
+"size": [
+34,
+46
+],
+"dir": "props"
+},
+"ghouse_2_067": {
+"size": [
+38,
+46
+],
+"dir": "props"
+},
+"ghouse_2_068": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_069": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_070": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_071": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_2_072": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_2_073": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_074": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"ghouse_2_075": {
+"size": [
+35,
+44
+],
+"dir": "props"
+},
+"ghouse_2_076": {
+"size": [
+38,
+45
+],
+"dir": "props"
+},
+"ghouse_2_077": {
+"size": [
+36,
+45
+],
+"dir": "props"
+},
+"ghouse_2_078": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_2_079": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"ghouse_2_080": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"ghouse_2_081": {
+"size": [
+30,
+44
+],
+"dir": "props"
+},
+"ghouse_2_082": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_083": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_084": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"ghouse_2_085": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"ghouse_2_086": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_087": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"ghouse_2_088": {
+"size": [
+72,
+87
+],
+"dir": "props"
+},
+"ghouse_2_089": {
+"size": [
+34,
+40
+],
+"dir": "props"
+},
+"ghouse_2_090": {
+"size": [
+36,
+42
+],
+"dir": "props"
+},
+"ghouse_2_091": {
+"size": [
+38,
+45
+],
+"dir": "props"
+},
+"ghouse_2_092": {
+"size": [
+31,
+42
+],
+"dir": "props"
+},
+"ghouse_2_093": {
+"size": [
+26,
+45
+],
+"dir": "props"
+},
+"ghouse_2_094": {
+"size": [
+33,
+46
+],
+"dir": "props"
+},
+"ghouse_2_095": {
+"size": [
+35,
+46
+],
+"dir": "props"
+},
+"ghouse_2_096": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"ghouse_2_097": {
+"size": [
+45,
+35
+],
+"dir": "props"
+},
+"ghouse_2_098": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"ghouse_2_099": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"ghouse_2_100": {
+"size": [
+46,
+32
+],
+"dir": "props"
+},
+"ghouse_2_101": {
+"size": [
+25,
+44
+],
+"dir": "props"
+},
+"ghouse_2_102": {
+"size": [
+29,
+36
+],
+"dir": "props"
+},
+"ghouse_2_103": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"ghouse_2_104": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_2_105": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"ghouse_2_106": {
+"size": [
+32,
+43
+],
+"dir": "props"
+},
+"ghouse_2_107": {
+"size": [
+34,
+46
+],
+"dir": "props"
+},
+"ghouse_2_108": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_2_109": {
+"size": [
+46,
+35
+],
+"dir": "props"
+},
+"ghouse_2_110": {
+"size": [
+46,
+32
+],
+"dir": "props"
+},
+"ghouse_2_111": {
+"size": [
+46,
+46
+],
+"dir": "props"
+},
+"ghouse_2_112": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"ghouse_2_113": {
+"size": [
+90,
+92
+],
+"dir": "props"
+},
+"ghouse_2_114": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"ghouse_2_115": {
+"size": [
+36,
+45
+],
+"dir": "props"
+},
+"ghouse_2_116": {
+"size": [
+24,
+43
+],
+"dir": "props"
+},
+"ghouse_2_117": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_2_118": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_2_119": {
+"size": [
+35,
+45
+],
+"dir": "props"
+},
+"ghouse_2_120": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_2_121": {
+"size": [
+42,
+30
+],
+"dir": "props"
+},
+"ghouse_2_122": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"ghouse_2_123": {
+"size": [
+37,
+44
+],
+"dir": "props"
+},
+"ghouse_2_124": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"ghouse_2_125": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"ghouse_2_126": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"ghouse_2_127": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"ghouse_2_128": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"ghouse_2_129": {
+"size": [
+24,
+42
+],
+"dir": "props"
+},
+"ghouse_2_130": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"ghouse_2_131": {
+"size": [
+33,
+43
+],
+"dir": "props"
+},
+"ghouse_2_132": {
+"size": [
+40,
+42
+],
+"dir": "props"
+},
+"ghouse_2_133": {
+"size": [
+68,
+84
+],
+"dir": "props"
+},
+"ghouse_2_134": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"ghouse_2_135": {
+"size": [
+19,
+26
+],
+"dir": "props"
+},
+"ghouse_2_136": {
+"size": [
+18,
+26
+],
+"dir": "props"
+},
+"ghouse_2_137": {
+"size": [
+40,
+47
+],
+"dir": "props"
+},
+"ghouse_2_138": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"ghouse_2_139": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"ghouse_2_140": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"ghouse_2_141": {
+"size": [
+45,
+40
+],
+"dir": "props"
+},
+"ghouse_2_142": {
+"size": [
+35,
+45
+],
+"dir": "props"
+},
+"ghouse_2_143": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"ghouse_2_144": {
+"size": [
+32,
+44
+],
+"dir": "props"
+},
+"ghouse_2_145": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_2_146": {
+"size": [
+28,
+43
+],
+"dir": "props"
+},
+"ghouse_2_147": {
+"size": [
+32,
+43
+],
+"dir": "props"
+},
+"ghouse_2_148": {
+"size": [
+46,
+46
+],
+"dir": "props"
+},
+"ghouse_2_149": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"ghouse_2_150": {
+"size": [
+47,
+39
+],
+"dir": "props"
+},
+"ghouse_2_151": {
+"size": [
+44,
+47
+],
+"dir": "props"
+},
+"ghouse_2_152": {
+"size": [
+27,
+46
+],
+"dir": "props"
+},
+"ghouse_2_153": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_2_154": {
+"size": [
+44,
+29
+],
+"dir": "props"
+},
+"ghouse_2_155": {
+"size": [
+36,
+40
+],
+"dir": "props"
+},
+"ghouse_2_156": {
+"size": [
+24,
+46
+],
+"dir": "props"
+},
+"ghouse_2_157": {
+"size": [
+29,
+45
+],
+"dir": "props"
+},
+"ghouse_2_158": {
+"size": [
+27,
+46
+],
+"dir": "props"
+},
+"ghouse_2_159": {
+"size": [
+28,
+46
+],
+"dir": "props"
+},
+"ghouse_2_160": {
+"size": [
+29,
+38
+],
+"dir": "props"
+},
+"ghouse_2_161": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"ghouse_2_162": {
+"size": [
+43,
+64
+],
+"dir": "props"
+},
+"ghouse_2_163": {
+"size": [
+43,
+88
+],
+"dir": "props"
+},
+"ghouse_2_164": {
+"size": [
+22,
+46
+],
+"dir": "props"
+},
+"ghouse_2_165": {
+"size": [
+43,
+34
+],
+"dir": "props"
+},
+"ghouse_2_166": {
+"size": [
+36,
+31
+],
+"dir": "props"
+},
+"ghouse_2_167": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"ghouse_2_168": {
+"size": [
+44,
+27
+],
+"dir": "props"
+},
+"ghouse_2_169": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_2_170": {
+"size": [
+28,
+47
+],
+"dir": "props"
+},
+"ghouse_3_000": {
+"size": [
+192,
+47
+],
+"dir": "props"
+},
+"ghouse_3_001": {
+"size": [
+192,
+46
+],
+"dir": "props"
+},
+"ghouse_3_002": {
+"size": [
+192,
+45
+],
+"dir": "props"
+},
+"ghouse_3_003": {
+"size": [
+192,
+45
+],
+"dir": "props"
+},
+"ghouse_3_004": {
+"size": [
+192,
+46
+],
+"dir": "props"
+},
+"ghouse_3_005": {
+"size": [
+192,
+35
+],
+"dir": "props"
+},
+"ghouse_3_006": {
+"size": [
+192,
+45
+],
+"dir": "props"
+},
+"ghouse_3_007": {
+"size": [
+192,
+43
+],
+"dir": "props"
+},
+"ghouse_3_008": {
+"size": [
+192,
+40
+],
+"dir": "props"
+},
+"ghouse_3_009": {
+"size": [
+192,
+46
+],
+"dir": "props"
+},
+"ghouse_3_010": {
+"size": [
+192,
+46
+],
+"dir": "props"
+},
+"ghouse_3_011": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"ghouse_3_012": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"ghouse_3_013": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"ghouse_3_014": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"ghouse_3_015": {
+"size": [
+192,
+41
+],
+"dir": "props"
+},
+"ghouse_3_016": {
+"size": [
+192,
+42
+],
+"dir": "props"
+},
+"ghouse_3_017": {
+"size": [
+192,
+46
+],
+"dir": "props"
+},
+"ghouse_3_018": {
+"size": [
+44,
+35
+],
+"dir": "props"
+},
+"ghouse_3_019": {
+"size": [
+44,
+35
+],
+"dir": "props"
+},
+"ghouse_3_020": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"ghouse_3_021": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"ghouse_3_022": {
+"size": [
+44,
+93
+],
+"dir": "props"
+},
+"ghouse_3_023": {
+"size": [
+44,
+93
+],
+"dir": "props"
+},
+"ghouse_3_024": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_025": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_026": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_027": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_028": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_029": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_030": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_031": {
+"size": [
+44,
+93
+],
+"dir": "props"
+},
+"ghouse_3_032": {
+"size": [
+44,
+93
+],
+"dir": "props"
+},
+"ghouse_3_033": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_034": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_035": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_036": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_037": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_038": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_039": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_040": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_041": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_042": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_043": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_044": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_045": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_046": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_047": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_048": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"ghouse_3_049": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"ghouse_3_050": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"ghouse_3_051": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"ghouse_3_052": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"ghouse_3_053": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_054": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_055": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_056": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_057": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_058": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_059": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_060": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_061": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_062": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_063": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_064": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_3_065": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"ghouse_3_066": {
+"size": [
+92,
+91
+],
+"dir": "props"
+},
+"ghouse_3_067": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"ghouse_3_068": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"ghouse_3_069": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"ghouse_3_070": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_071": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_072": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_073": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_074": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_075": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_076": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_077": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_078": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_079": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_080": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_081": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_082": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_083": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_084": {
+"size": [
+37,
+43
+],
+"dir": "props"
+},
+"ghouse_3_085": {
+"size": [
+32,
+40
+],
+"dir": "props"
+},
+"ghouse_3_086": {
+"size": [
+30,
+39
+],
+"dir": "props"
+},
+"ghouse_3_087": {
+"size": [
+30,
+39
+],
+"dir": "props"
+},
+"ghouse_3_088": {
+"size": [
+30,
+39
+],
+"dir": "props"
+},
+"ghouse_3_089": {
+"size": [
+30,
+39
+],
+"dir": "props"
+},
+"ghouse_3_090": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_091": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_092": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_093": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_094": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_095": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_096": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_097": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_098": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_099": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_100": {
+"size": [
+43,
+46
+],
+"dir": "props"
+},
+"ghouse_3_101": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"ghouse_3_102": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_3_103": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_3_104": {
+"size": [
+28,
+39
+],
+"dir": "props"
+},
+"ghouse_3_105": {
+"size": [
+28,
+39
+],
+"dir": "props"
+},
+"ghouse_3_106": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_107": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_108": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_109": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_110": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_111": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_112": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_113": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"ghouse_3_114": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"ghouse_3_115": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"ghouse_3_116": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"ghouse_3_117": {
+"size": [
+33,
+24
+],
+"dir": "props"
+},
+"ghouse_3_118": {
+"size": [
+28,
+37
+],
+"dir": "props"
+},
+"ghouse_3_119": {
+"size": [
+27,
+37
+],
+"dir": "props"
+},
+"ghouse_3_120": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_121": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_122": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_123": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_124": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_125": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_126": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_127": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"ghouse_3_128": {
+"size": [
+94,
+94
+],
+"dir": "props"
+},
+"ghouse_3_129": {
+"size": [
+44,
+48
+],
+"dir": "props"
+},
+"ghouse_4_000": {
+"size": [
+94,
+46
+],
+"dir": "props"
+},
+"ghouse_4_001": {
+"size": [
+94,
+46
+],
+"dir": "props"
+},
+"ghouse_4_002": {
+"size": [
+94,
+43
+],
+"dir": "props"
+},
+"ghouse_4_003": {
+"size": [
+94,
+43
+],
+"dir": "props"
+},
+"ghouse_4_004": {
+"size": [
+94,
+44
+],
+"dir": "props"
+},
+"ghouse_4_005": {
+"size": [
+94,
+43
+],
+"dir": "props"
+},
+"ghouse_4_006": {
+"size": [
+94,
+45
+],
+"dir": "props"
+},
+"ghouse_4_007": {
+"size": [
+94,
+45
+],
+"dir": "props"
+},
+"ghouse_4_008": {
+"size": [
+31,
+95
+],
+"dir": "props"
+},
+"ghouse_4_009": {
+"size": [
+31,
+95
+],
+"dir": "props"
+},
+"ghouse_4_010": {
+"size": [
+94,
+90
+],
+"dir": "props"
+},
+"ghouse_4_011": {
+"size": [
+94,
+42
+],
+"dir": "props"
+},
+"ghouse_4_012": {
+"size": [
+94,
+42
+],
+"dir": "props"
+},
+"ghouse_4_013": {
+"size": [
+94,
+45
+],
+"dir": "props"
+},
+"ghouse_4_014": {
+"size": [
+94,
+42
+],
+"dir": "props"
+},
+"ghouse_4_015": {
+"size": [
+47,
+86
+],
+"dir": "props"
+},
+"ghouse_4_016": {
+"size": [
+47,
+86
+],
+"dir": "props"
+},
+"ghouse_4_017": {
+"size": [
+47,
+90
+],
+"dir": "props"
+},
+"ghouse_4_018": {
+"size": [
+46,
+89
+],
+"dir": "props"
+},
+"ghouse_4_019": {
+"size": [
+44,
+78
+],
+"dir": "props"
+},
+"ghouse_4_020": {
+"size": [
+44,
+80
+],
+"dir": "props"
+},
+"ghouse_4_021": {
+"size": [
+44,
+85
+],
+"dir": "props"
+},
+"ghouse_4_022": {
+"size": [
+44,
+85
+],
+"dir": "props"
+},
+"ghouse_4_023": {
+"size": [
+43,
+80
+],
+"dir": "props"
+},
+"ghouse_4_024": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"ghouse_4_025": {
+"size": [
+45,
+84
+],
+"dir": "props"
+},
+"ghouse_4_026": {
+"size": [
+45,
+78
+],
+"dir": "props"
+},
+"ghouse_4_027": {
+"size": [
+40,
+63
+],
+"dir": "props"
+},
+"ghouse_4_028": {
+"size": [
+44,
+90
+],
+"dir": "props"
+},
+"ghouse_4_029": {
+"size": [
+43,
+95
+],
+"dir": "props"
+},
+"ghouse_4_030": {
+"size": [
+41,
+93
+],
+"dir": "props"
+},
+"ghouse_4_031": {
+"size": [
+25,
+34
+],
+"dir": "props"
+},
+"ghouse_4_032": {
+"size": [
+30,
+34
+],
+"dir": "props"
+},
+"ghouse_4_033": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"ghouse_4_034": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"ghouse_4_035": {
+"size": [
+90,
+92
+],
+"dir": "props"
+},
+"ghouse_4_036": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"ghouse_4_037": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"ghouse_4_038": {
+"size": [
+26,
+35
+],
+"dir": "props"
+},
+"ghouse_4_039": {
+"size": [
+30,
+35
+],
+"dir": "props"
+},
+"ghouse_4_040": {
+"size": [
+86,
+91
+],
+"dir": "props"
+},
+"ghouse_4_041": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"ghouse_4_042": {
+"size": [
+45,
+89
+],
+"dir": "props"
+},
+"ghouse_4_043": {
+"size": [
+46,
+91
+],
+"dir": "props"
+},
+"ghouse_4_044": {
+"size": [
+45,
+91
+],
+"dir": "props"
+},
+"ghouse_4_045": {
+"size": [
+45,
+94
+],
+"dir": "props"
+},
+"ghouse_4_046": {
+"size": [
+46,
+88
+],
+"dir": "props"
+},
+"ghouse_4_047": {
+"size": [
+45,
+88
+],
+"dir": "props"
+},
+"ghouse_4_048": {
+"size": [
+44,
+89
+],
+"dir": "props"
+},
+"ghouse_4_049": {
+"size": [
+46,
+90
+],
+"dir": "props"
+},
+"ghouse_4_050": {
+"size": [
+47,
+93
+],
+"dir": "props"
+},
+"ghouse_4_051": {
+"size": [
+45,
+93
+],
+"dir": "props"
+},
+"ghouse_4_052": {
+"size": [
+45,
+94
+],
+"dir": "props"
+},
+"ghouse_4_053": {
+"size": [
+45,
+92
+],
+"dir": "props"
+},
+"ghouse_4_054": {
+"size": [
+45,
+84
+],
+"dir": "props"
+},
+"ghouse_4_055": {
+"size": [
+42,
+92
+],
+"dir": "props"
+},
+"ghouse_4_056": {
+"size": [
+45,
+92
+],
+"dir": "props"
+},
+"ghouse_4_057": {
+"size": [
+44,
+91
+],
+"dir": "props"
+},
+"ghouse_4_058": {
+"size": [
+43,
+63
+],
+"dir": "props"
+},
+"ghouse_4_059": {
+"size": [
+44,
+82
+],
+"dir": "props"
+},
+"ghouse_4_060": {
+"size": [
+44,
+82
+],
+"dir": "props"
+},
+"ghouse_4_061": {
+"size": [
+36,
+93
+],
+"dir": "props"
+},
+"ghouse_4_062": {
+"size": [
+36,
+93
+],
+"dir": "props"
+},
+"ghouse_4_063": {
+"size": [
+36,
+93
+],
+"dir": "props"
+},
+"ghouse_4_064": {
+"size": [
+44,
+84
+],
+"dir": "props"
+},
+"ghouse_4_065": {
+"size": [
+46,
+93
+],
+"dir": "props"
+},
+"ghouse_4_066": {
+"size": [
+38,
+93
+],
+"dir": "props"
+},
+"ghouse_4_067": {
+"size": [
+36,
+93
+],
+"dir": "props"
+},
+"ghouse_4_068": {
+"size": [
+40,
+94
+],
+"dir": "props"
+},
+"ghouse_4_069": {
+"size": [
+40,
+94
+],
+"dir": "props"
+},
+"ghouse_4_070": {
+"size": [
+44,
+86
+],
+"dir": "props"
+},
+"ghouse_4_071": {
+"size": [
+44,
+86
+],
+"dir": "props"
+},
+"ghouse_4_072": {
+"size": [
+44,
+86
+],
+"dir": "props"
+},
+"ghouse_4_073": {
+"size": [
+44,
+86
+],
+"dir": "props"
+},
+"ghouse_4_074": {
+"size": [
+191,
+88
+],
+"dir": "props"
+},
+"ghouse_4_075": {
+"size": [
+191,
+95
+],
+"dir": "props"
+},
+"ghouse_4_076": {
+"size": [
+333,
+94
+],
+"dir": "props"
+},
+"ghouse_4_077": {
+"size": [
+45,
+96
+],
+"dir": "props"
+},
+"ghouse_4_078": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_4_079": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"ghouse_4_080": {
+"size": [
+38,
+47
+],
+"dir": "props"
+},
+"ghouse_4_081": {
+"size": [
+38,
+47
+],
+"dir": "props"
+},
+"ghouse_4_082": {
+"size": [
+38,
+47
+],
+"dir": "props"
+},
+"ghouse_4_083": {
+"size": [
+92,
+87
+],
+"dir": "props"
+},
+"ghouse_4_084": {
+"size": [
+92,
+87
+],
+"dir": "props"
+},
+"ghouse_4_085": {
+"size": [
+92,
+97
+],
+"dir": "props"
+},
+"ghouse_4_086": {
+"size": [
+92,
+97
+],
+"dir": "props"
+},
+"ghouse_4_087": {
+"size": [
+92,
+97
+],
+"dir": "props"
+},
+"ghouse_4_088": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"ghouse_4_089": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"ghouse_4_090": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"ghouse_4_091": {
+"size": [
+38,
+47
+],
+"dir": "props"
+},
+"ghouse_4_092": {
+"size": [
+38,
+47
+],
+"dir": "props"
+},
+"ghouse_4_093": {
+"size": [
+74,
+46
+],
+"dir": "props"
+},
+"ghouse_4_094": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_4_095": {
+"size": [
+30,
+46
+],
+"dir": "props"
+},
+"ghouse_4_096": {
+"size": [
+45,
+31
+],
+"dir": "props"
+},
+"ghouse_4_097": {
+"size": [
+45,
+35
+],
+"dir": "props"
+},
+"ghouse_4_098": {
+"size": [
+31,
+48
+],
+"dir": "props"
+},
+"ghouse_4_099": {
+"size": [
+42,
+48
+],
+"dir": "props"
+},
+"ghouse_4_100": {
+"size": [
+68,
+46
+],
+"dir": "props"
+},
+"ghouse_4_101": {
+"size": [
+41,
+49
+],
+"dir": "props"
+},
+"ghouse_4_102": {
+"size": [
+38,
+48
+],
+"dir": "props"
+},
+"ghouse_4_103": {
+"size": [
+17,
+41
+],
+"dir": "props"
+},
+"ghouse_4_104": {
+"size": [
+17,
+41
+],
+"dir": "props"
+},
+"ghouse_4_105": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_106": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_107": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_108": {
+"size": [
+74,
+46
+],
+"dir": "props"
+},
+"ghouse_4_109": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_4_110": {
+"size": [
+30,
+46
+],
+"dir": "props"
+},
+"ghouse_4_111": {
+"size": [
+44,
+31
+],
+"dir": "props"
+},
+"ghouse_4_112": {
+"size": [
+45,
+34
+],
+"dir": "props"
+},
+"ghouse_4_113": {
+"size": [
+29,
+47
+],
+"dir": "props"
+},
+"ghouse_4_114": {
+"size": [
+43,
+47
+],
+"dir": "props"
+},
+"ghouse_4_115": {
+"size": [
+68,
+48
+],
+"dir": "props"
+},
+"ghouse_4_116": {
+"size": [
+18,
+48
+],
+"dir": "props"
+},
+"ghouse_4_117": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_118": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_119": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_120": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_4_121": {
+"size": [
+48,
+48
+],
+"dir": "props"
+},
+"ghouse_5_000": {
+"size": [
+377,
+286
+],
+"dir": "props"
+},
+"ghouse_5_001": {
+"size": [
+46,
+39
+],
+"dir": "props"
+},
+"ghouse_5_002": {
+"size": [
+40,
+47
+],
+"dir": "props"
+},
+"ghouse_5_003": {
+"size": [
+46,
+39
+],
+"dir": "props"
+},
+"ghouse_5_004": {
+"size": [
+46,
+42
+],
+"dir": "props"
+},
+"ghouse_5_005": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"ghouse_5_006": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"ghouse_5_007": {
+"size": [
+40,
+47
+],
+"dir": "props"
+},
+"ghouse_5_008": {
+"size": [
+41,
+45
+],
+"dir": "props"
+},
+"ghouse_5_009": {
+"size": [
+71,
+64
+],
+"dir": "props"
+},
+"ghouse_5_010": {
+"size": [
+46,
+37
+],
+"dir": "props"
+},
+"ghouse_5_011": {
+"size": [
+46,
+30
+],
+"dir": "props"
+},
+"ghouse_5_012": {
+"size": [
+46,
+39
+],
+"dir": "props"
+},
+"ghouse_5_013": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"ghouse_5_014": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"ghouse_5_015": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"ghouse_5_016": {
+"size": [
+20,
+42
+],
+"dir": "props"
+},
+"ghouse_5_017": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"ghouse_5_018": {
+"size": [
+92,
+77
+],
+"dir": "props"
+},
+"ghouse_5_019": {
+"size": [
+94,
+78
+],
+"dir": "props"
+},
+"ghouse_5_020": {
+"size": [
+93,
+81
+],
+"dir": "props"
+},
+"ghouse_5_021": {
+"size": [
+90,
+83
+],
+"dir": "props"
+},
+"ghouse_5_022": {
+"size": [
+91,
+81
+],
+"dir": "props"
+},
+"ghouse_5_023": {
+"size": [
+94,
+95
+],
+"dir": "props"
+},
+"ghouse_5_024": {
+"size": [
+94,
+91
+],
+"dir": "props"
+},
+"ghouse_5_025": {
+"size": [
+96,
+96
+],
+"dir": "props"
+},
+"ghouse_5_026": {
+"size": [
+94,
+95
+],
+"dir": "props"
+},
+"ghouse_5_027": {
+"size": [
+192,
+70
+],
+"dir": "props"
+},
+"ghouse_5_028": {
+"size": [
+46,
+65
+],
+"dir": "props"
+},
+"ghouse_5_029": {
+"size": [
+46,
+65
+],
+"dir": "props"
+},
+"ghouse_5_030": {
+"size": [
+46,
+67
+],
+"dir": "props"
+},
+"ghouse_5_031": {
+"size": [
+46,
+75
+],
+"dir": "props"
+},
+"ghouse_5_032": {
+"size": [
+94,
+65
+],
+"dir": "props"
+},
+"ghouse_5_033": {
+"size": [
+94,
+66
+],
+"dir": "props"
+},
+"ghouse_5_034": {
+"size": [
+94,
+76
+],
+"dir": "props"
+},
+"ghouse_5_035": {
+"size": [
+192,
+78
+],
+"dir": "props"
+},
+"ghouse_5_036": {
+"size": [
+192,
+79
+],
+"dir": "props"
+},
+"ghouse_5_037": {
+"size": [
+192,
+81
+],
+"dir": "props"
+},
+"ghouse_5_038": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"ghouse_5_039": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"ghouse_5_040": {
+"size": [
+192,
+175
+],
+"dir": "props"
+},
+"ghouse_5_041": {
+"size": [
+192,
+80
+],
+"dir": "props"
+},
+"ghouse_5_042": {
+"size": [
+186,
+79
+],
+"dir": "props"
+},
+"ghouse_5_043": {
+"size": [
+92,
+88
+],
+"dir": "props"
+},
+"ghouse_5_044": {
+"size": [
+92,
+88
+],
+"dir": "props"
+},
+"ghouse_w1_00_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_00_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_01_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_01_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_02_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_02_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_03_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_03_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_04_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_04_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_05_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_05_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_06_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_06_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_07_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_07_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_08_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_08_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_09_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_09_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_10_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_10_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_11_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_11_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_12_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_12_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_13_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_13_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_14_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_14_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_15_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_15_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_16_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_16_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_17_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_17_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_18_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_18_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_19_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_19_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_20_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_20_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_21_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_21_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_22_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_22_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w1_23_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w1_23_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_00_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_00_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_01_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_01_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_02_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_02_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_03_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_03_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_04_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_04_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_05_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_05_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_06_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_06_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_07_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_07_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_08_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_08_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_09_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_09_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_10_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_10_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_11_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_11_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_12_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_12_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_13_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_13_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_14_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_14_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_15_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_15_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_16_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_16_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_17_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_17_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_18_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_18_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_19_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_19_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_20_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_20_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_21_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_21_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_22_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_22_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w2_23_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w2_23_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_00_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_00_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_01_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_01_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_02_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_02_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_03_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_03_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_04_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_04_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_05_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_05_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_06_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_06_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_07_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_07_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_08_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_08_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_09_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_09_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_10_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_10_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_11_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_11_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_12_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_12_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_13_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_13_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_14_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_14_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_15_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_15_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_16_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_16_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_17_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_17_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_18_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_18_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_19_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_19_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_20_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_20_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_21_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_21_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_22_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_22_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"ghouse_w3_23_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"ghouse_w3_23_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"p1": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p2": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p3": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p4": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p5": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+}
+}
+}

@@ -49,9 +49,19 @@ ROLES = {
     "morpheus": "cultist", "cult_foreman": "cultist", "cooper": "elite",
     # Убежище 15
     "jackal_boss": "elite", "jackal_a": "brawler", "jackal_b": "brawler", "jackal_c": "brawler", "v15_sentry": "guard",
+    # Примм
+    "deputy_baxter": "guard", "pr_deputy": "guard", "pr_caravan_guard": "guard", "brother_job": "cultist",
+    "cult_guard_pr": "cultist", "cult_guard_pr_b": "cultist", "cult_sister_pr": "cultist",
+    # Гудспрингс
+    "sunny": "elite", "mayor_pettit": "guard", "cult_hunter": "cultist", "ezekiel": "brawler",
+    # Убежище 22
+    "hugo_lee": "elite",
+    # Ниптон
+    "groom_cal": "elite", "groom_a": "brawler", "groom_b": "brawler", "groom_c": "brawler", "brother_t": "cultist",
+    "cult_guard_np": "cultist", "cult_guard_np_b": "cultist",
 }
-CULT_ZONES = {"baker_mission"}
-SPARE = {"dog", "robot", "amos", "amos_b7"}     # их не трогает и не превращает: пёс, робот, дед в келье
+CULT_ZONES = {"baker_mission", "primm_camp", "nipton_mine"}
+SPARE = {"dog", "robot", "amos", "amos_b7", "tobi", "np_captive"}     # их не трогает и не превращает: пёс, робот, дед в келье
 
 
 def faction_of(loc_id):

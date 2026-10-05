@@ -586,5 +586,150 @@
     "known": false,
     "music": "vats",
     "underground": true
+  },
+  "primm": {
+    "name": "Примм",
+    "map": "data/maps/primm.json",
+    "known": false,
+    "music": "reno",
+    "world_pos": [
+      2260,
+      650
+    ],
+    "world_name": "Примм",
+    "discover": true
+  },
+  "primm_bison": {
+    "name": "Отель «Бизон Стив»",
+    "map": "data/maps/primm_bison.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "primm_vikki": {
+    "name": "Казино «Викки и Вэнс»",
+    "map": "data/maps/primm_vikki.json",
+    "known": false,
+    "music": "reno",
+    "underground": true
+  },
+  "primm_cellar": {
+    "name": "Подвал «Викки и Вэнс»",
+    "map": "data/maps/primm_cellar.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "primm_camp": {
+    "name": "Лагерь у горок",
+    "map": "data/maps/primm_camp.json",
+    "known": false,
+    "music": "vats",
+    "clear_flag": "primm_camp_cleared"
+  },
+  "goodsprings": {
+    "name": "Гудспрингс",
+    "map": "data/maps/goodsprings.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      2330,
+      560
+    ],
+    "world_name": "Гудспрингс",
+    "discover": true
+  },
+  "goodsprings_saloon": {
+    "name": "Салун «Старатель»",
+    "map": "data/maps/goodsprings_saloon.json",
+    "known": false,
+    "music": "desert",
+    "underground": true
+  },
+  "goodsprings_doc": {
+    "name": "Дом дока Митчелла",
+    "map": "data/maps/goodsprings_doc.json",
+    "known": false,
+    "music": "desert",
+    "underground": true
+  },
+  "goodsprings_cave": {
+    "name": "Пещера источника",
+    "map": "data/maps/goodsprings_cave.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "vault22": {
+    "name": "Убежище 22",
+    "map": "data/maps/vault22.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      2390,
+      470
+    ],
+    "world_name": "Убежище 22",
+    "discover": true
+  },
+  "vault22_living": {
+    "name": "Убежище 22: жилой ярус",
+    "map": "data/maps/vault22_living.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vault22_garden": {
+    "name": "Убежище 22: оранжереи",
+    "map": "data/maps/vault22_garden.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vault22_lab": {
+    "name": "Убежище 22: лаборатория",
+    "map": "data/maps/vault22_lab.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "nipton": {
+    "name": "Ниптон",
+    "map": "data/maps/nipton.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      2480,
+      720
+    ],
+    "world_name": "Ниптон",
+    "discover": true
+  },
+  "nipton_hall": {
+    "name": "Ратуша Ниптона",
+    "map": "data/maps/nipton_hall.json",
+    "known": false,
+    "music": "desert",
+    "underground": true
+  },
+  "nipton_shed": {
+    "name": "Сарай у площади",
+    "map": "data/maps/nipton_shed.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "nipton_camp": {
+    "name": "Лагерь «женихов»",
+    "map": "data/maps/nipton_camp.json",
+    "known": false,
+    "music": "raiders"
+  },
+  "nipton_mine": {
+    "name": "Старая шахта",
+    "map": "data/maps/nipton_mine.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
   }
 }

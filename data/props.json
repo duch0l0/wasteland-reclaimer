@@ -470,6 +470,9 @@
     "x_vault_gear15": {"img": "x_vault_gear15", "foot": [2, 1], "sight": true},
     "x_vault_gear4": {"img": "x_vault_gear4", "foot": [2, 1], "sight": true},
     "x_vault_sign15": {"img": "x_vault_sign15", "foot": [1, 1]},
-    "x_vault_sign4": {"img": "x_vault_sign4", "foot": [1, 1]}
+    "x_vault_sign4": {"img": "x_vault_sign4", "foot": [1, 1]},
+    "x_vault_door22": {"img": "x_vault_door22", "foot": [4, 2], "sight": true},
+    "x_vault_gear22": {"img": "x_vault_gear22", "foot": [2, 1], "sight": true},
+    "x_vault_sign22": {"img": "x_vault_sign22", "foot": [1, 1]}
   }
 }

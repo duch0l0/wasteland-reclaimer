@@ -115,6 +115,22 @@ class QuestMixin:
             self.reveal_location("vault15")   # журнал переселенцев или Иона из лагеря Арадеша: «на север, за холмами»
         if f.get("know_vault4") and "vault4" not in self.worldmap.known:   # Купер или сеть убежищ — побережье южнее ЛА
             self.reveal_location("vault4")
+        if "vault4" in self.locations and "primm" not in self.worldmap.known:   # акт III: дорога на Мохаве — через Примм
+            self.reveal_location("primm")
+        if "primm" in self.locations and "goodsprings" not in self.worldmap.known:   # от Примма — старая дорога на север
+            self.reveal_location("goodsprings")
+        if "goodsprings" in self.locations and "vault22" not in self.worldmap.known:   # из Гудспрингса — тропа к Убежищу 22
+            self.reveal_location("vault22")
+        if (f.get("know_nipton_lottery") or f.get("know_brother_t_nipton") or "vault22" in self.locations) \
+                and "nipton" not in self.worldmap.known:   # голоса Иезекииля или слухи — Ниптон
+            self.reveal_location("nipton")
+        if self.inventory.has("жетон жребия") and not f.get("nipton_decided"):   # жетон с зазубриной — у героя, вытянут мэр
+            f["nipton_token_swapped"] = True
+        # Примм: улики против вдовы — две из четырёх, и она уже не может молчать
+        if self.inventory.has("письмо культа"):
+            f["clue_letter"] = True
+        if sum(bool(f.get(k)) for k in ("clue_gun", "clue_shawl", "clue_letter", "clue_log")) >= 2:
+            f["mae_suspect"] = True
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 

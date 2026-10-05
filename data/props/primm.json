@@ -1,0 +1,655 @@
+{
+"props": {
+"pr_coaster": {
+"img": "pk:apark/apark_2_121",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"pr_coaster_long": {
+"img": "pk:apark/apark_2_133",
+"block": true,
+"sight": true,
+"foot": [
+6,
+1
+]
+},
+"pr_coaster_loop": {
+"img": "pk:apark/apark_2_120",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_coaster_ring": {
+"img": "pk:apark/apark_2_131",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_booth0": {
+"img": "pk:apark/apark_2_100",
+"block": true,
+"sight": false
+},
+"pr_booth1": {
+"img": "pk:apark/apark_2_101",
+"block": true,
+"sight": false
+},
+"pr_booth2": {
+"img": "pk:apark/apark_2_102",
+"block": true,
+"sight": false
+},
+"pr_stall_hotdog": {
+"img": "pk:apark/apark_1_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_stall": {
+"img": "pk:apark/apark_1_030",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_signpost": {
+"img": "pk:apark/apark_1_037",
+"block": true,
+"sight": false
+},
+"pr_umbrella": {
+"img": "pk:apark/apark_3_028",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_lamp": {
+"img": "pk:apark/apark_3_064",
+"block": true,
+"sight": false,
+"light": {
+"r": 140,
+"color": [
+255,
+210,
+140
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"pr_lamp_b": {
+"img": "pk:apark/apark_3_070",
+"block": true,
+"sight": false,
+"light": {
+"r": 140,
+"color": [
+255,
+210,
+140
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"pr_ticket": {
+"img": "pk:apark/apark_1_078",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_bench": {
+"img": "pk:apark/apark_1_066",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_wreck0": {
+"img": "pk:zcity/zcity_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_wreck1": {
+"img": "pk:zcity/zcity_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_wreck2": {
+"img": "pk:zcity/zcity_2_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_wreck3": {
+"img": "pk:zcity/zcity_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_wreck4": {
+"img": "pk:zcity/zcity_2_034",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_wreck5": {
+"img": "pk:zcity/zcity_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_truck": {
+"img": "pk:jtown/jtown_2_016",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"pr_cart": {
+"img": "pk:bazaar/bazaar_1_023",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_water_barrel": {
+"img": "pk:desnat/desnat_3_037",
+"block": true,
+"sight": false
+},
+"pr_crate": {
+"img": "pk:bazaar/bazaar_3_000",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"pr_tires": {
+"img": "pk:ucamp/ucamp_2_043",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_gas_pump": {
+"img": "pk:zcity/zcity_1_134",
+"block": true,
+"sight": false
+},
+"pr_reception": {
+"img": "pk:lhotel/lhotel_1_012",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"pr_sofa": {
+"img": "pk:lhotel/lhotel_1_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_sofa_red": {
+"img": "pk:lhotel/lhotel_1_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_palm": {
+"img": "pk:lhotel/lhotel_1_016",
+"block": true,
+"sight": false
+},
+"pr_palm_b": {
+"img": "pk:lhotel/lhotel_1_020",
+"block": true,
+"sight": false
+},
+"pr_luggage": {
+"img": "pk:lhotel/lhotel_1_008",
+"block": true,
+"sight": false
+},
+"pr_floor_lamp": {
+"img": "pk:lhotel/lhotel_1_043",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+220,
+160
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"pr_desk": {
+"img": "pk:lhotel/lhotel_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_bed0": {
+"img": "pk:lhotel/lhotel_2_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"pr_bed1": {
+"img": "pk:lhotel/lhotel_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"pr_bed2": {
+"img": "pk:lhotel/lhotel_2_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"pr_bed3": {
+"img": "pk:lhotel/lhotel_2_052",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"pr_armchair": {
+"img": "pk:lhotel/lhotel_2_016",
+"block": true,
+"sight": false
+},
+"pr_armchair_b": {
+"img": "pk:lhotel/lhotel_2_017",
+"block": true,
+"sight": false
+},
+"pr_wardrobe": {
+"img": "pk:lhotel/lhotel_2_054",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "cloth",
+"title": "шкаф"
+},
+"pr_couch_long": {
+"img": "pk:lhotel/lhotel_1_044",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_slot0": {
+"img": "pk:casino/casino_1_000",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot1": {
+"img": "pk:casino/casino_1_001",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot2": {
+"img": "pk:casino/casino_1_002",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot3": {
+"img": "pk:casino/casino_1_003",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot4": {
+"img": "pk:casino/casino_1_004",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot5": {
+"img": "pk:casino/casino_1_005",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot6": {
+"img": "pk:casino/casino_1_006",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_slot7": {
+"img": "pk:casino/casino_1_007",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"pr_roulette": {
+"img": "pk:casino/casino_1_026",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"pr_blackjack": {
+"img": "pk:casino/casino_3_024",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"pr_cashier": {
+"img": "pk:casino/casino_2_017",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"pr_stool": {
+"img": "pk:casino/casino_1_044",
+"block": true,
+"sight": false
+},
+"pr_neon_jackpot": {
+"img": "pk:casino/casino_1_051",
+"block": false,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+255,
+200,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.1
+}
+},
+"pr_bar": {
+"img": "pk:west/west_2_108",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"pr_bottle_shelf": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка с бутылками"
+},
+"pr_office_desk": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"pr_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"pr_gun_rack": {
+"img": "pk:gcave/p1/14,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "оружейная стойка"
+},
+"pr_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф"
+},
+"pr_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "шкаф с делами"
+},
+"pr_blood": {
+"img": "pk:cult/p3/0,15,1,1",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"pr_cell_bars": {
+"img": "pk:cult/cult_3_020",
+"block": true,
+"sight": true
+},
+"pr_cot": {
+"img": "pk:ucamp/ucamp_3_027",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"pr_tent_white": {
+"img": "pk:bazaar/bazaar_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"pr_cult_van": {
+"img": "pk:zcity/zcity_2_098",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_altar": {
+"img": "pk:cult/cult_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"pr_candelabra": {
+"img": "pk:cult/cult_2_068",
+"block": false,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.5
+}
+},
+"pr_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"pr_park_patch": {
+"img": "pk:wpark/p1/4,9,4,3",
+"block": false,
+"sight": false,
+"foot": [
+4,
+3
+],
+"layer": "floor"
+},
+"pr_lobby_rug": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+}
+}
+}

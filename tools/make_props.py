@@ -353,9 +353,9 @@ PROPS = {
     "x_thermometer": (thermometer, {"foot": [2, 1], "sight": True}),
     # новые — только в конец: рисунки берут случайность из общего генератора, порядок не менять
     # Убежища 15 и 4: дверь снаружи (в скале), шестерня изнутри, табличка
-    **{f"x_vault_door{n}": (lambda n=n: vault_door(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4")},
-    **{f"x_vault_gear{n}": (lambda n=n: vault_gear(n), {"foot": [2, 1], "sight": True}) for n in ("15", "4")},
-    **{f"x_vault_sign{n}": (lambda n=n: vault_sign(n), {"foot": [1, 1]}) for n in ("15", "4")},
+    **{f"x_vault_door{n}": (lambda n=n: vault_door(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4", "22")},
+    **{f"x_vault_gear{n}": (lambda n=n: vault_gear(n), {"foot": [2, 1], "sight": True}) for n in ("15", "4", "22")},
+    **{f"x_vault_sign{n}": (lambda n=n: vault_sign(n), {"foot": [1, 1]}) for n in ("15", "4", "22")},
 }
 
 

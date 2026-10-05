@@ -1,0 +1,488 @@
+{
+"props": {
+"np_house0": {
+"img": "pk:rvill/rvill_1_003",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_house1": {
+"img": "pk:rvill/rvill_1_011",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_house2": {
+"img": "pk:rvill/rvill_1_027",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_house3": {
+"img": "pk:rvill/rvill_1_001",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_house4": {
+"img": "pk:rvill/rvill_1_026",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_house5": {
+"img": "pk:rvill/rvill_1_025",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_shack": {
+"img": "pk:rvill/rvill_1_036",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"np_well": {
+"img": "pk:rvill/rvill_1_060",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_tree0": {
+"img": "pk:rvill/rvill_2_010",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"np_tree1": {
+"img": "pk:rvill/rvill_2_011",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"np_tree2": {
+"img": "pk:rvill/rvill_2_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"np_grass0": {
+"img": "pk:rvill/rvill_2_014",
+"block": false,
+"sight": false
+},
+"np_grass1": {
+"img": "pk:rvill/rvill_2_015",
+"block": false,
+"sight": false
+},
+"np_grass2": {
+"img": "pk:rvill/rvill_2_016",
+"block": false,
+"sight": false
+},
+"np_grass3": {
+"img": "pk:rvill/rvill_2_017",
+"block": false,
+"sight": false
+},
+"np_cactus": {
+"img": "pk:west/west_1_008",
+"block": true,
+"sight": false
+},
+"np_fence": {
+"img": "pk:west/west_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_fence_b": {
+"img": "pk:west/west_1_014",
+"block": true,
+"sight": false
+},
+"np_trough": {
+"img": "pk:west/west_1_016",
+"block": true,
+"sight": false
+},
+"np_barrel": {
+"img": "pk:west/west_1_017",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"np_crate": {
+"img": "pk:west/west_1_018",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"np_wagon": {
+"img": "pk:west/west_1_012",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"np_sign": {
+"img": "pk:west/p1/12,4,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_stage": {
+"img": "pk:cult/cult_3_042",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_drum": {
+"img": "pk:west/west_1_017",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "барабан жребия"
+},
+"np_bunting": {
+"img": "pk:apark/apark_3_066",
+"block": false,
+"sight": false
+},
+"np_lights": {
+"img": "pk:apark/apark_3_063",
+"block": false,
+"sight": false
+},
+"np_stall": {
+"img": "pk:apark/apark_1_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_stall_b": {
+"img": "pk:apark/apark_1_030",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_ticket": {
+"img": "pk:apark/apark_1_078",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_lamp": {
+"img": "pk:apark/apark_3_070",
+"block": true,
+"sight": false,
+"light": {
+"r": 140,
+"color": [
+255,
+200,
+130
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"np_bench": {
+"img": "pk:apark/apark_1_066",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_tent0": {
+"img": "pk:ucamp/ucamp_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_tent1": {
+"img": "pk:ucamp/ucamp_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_tent2": {
+"img": "pk:ucamp/ucamp_2_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_tent3": {
+"img": "pk:ucamp/ucamp_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_cage": {
+"img": "pk:cult/cult_3_020",
+"block": true,
+"sight": true
+},
+"np_cage_held": {
+"img": "pk:cult/cult_3_020",
+"block": false,
+"sight": false
+},
+"np_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"np_skull_pole": {
+"img": "pk:gcave/p1/2,8,1,2",
+"block": true,
+"sight": false
+},
+"np_spikes": {
+"img": "pk:gcave/p1/12,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_loot": {
+"img": "pk:gcave/p1/10,10,2,2",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "добыча «женихов»"
+},
+"np_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"np_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"np_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"np_mine_cart": {
+"img": "pk:west/p1/13,7,1,1",
+"block": true,
+"sight": false
+},
+"np_rails": {
+"img": "pk:west/p1/8,8,8,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"np_boulder": {
+"img": "pk:gcave/p1/4,4,1,1",
+"block": true,
+"sight": false
+},
+"np_boulder_b": {
+"img": "pk:gcave/p1/5,4,1,1",
+"block": true,
+"sight": false
+},
+"np_lantern": {
+"img": "pk:bazaar/bazaar_2_088",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+180,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.3
+}
+},
+"np_altar": {
+"img": "pk:cult/cult_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"np_desk": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф"
+},
+"np_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "шкаф с бумагами"
+},
+"np_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"np_cot": {
+"img": "pk:ucamp/ucamp_3_027",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"np_hay": {
+"img": "pk:west/west_1_004",
+"block": false,
+"sight": false
+}
+}
+}

@@ -12,6 +12,7 @@
   ghoul_cobbs  из soldier  — капрал Коббс: армейская форма
   ghoul_child  из kid      — гулёнок
   ghoul_cooper из sheriff  — Купер Говард, гуль в ковбойской шляпе и пыльнике
+  spore_carrier из ghoul_c — споровик Убежища 22: тело проросло грибом
 
 Запуск из папки game_project:
     .venv/bin/python tools/make_ghouls.py            — сделать кадры
@@ -74,6 +75,29 @@ def ghoulify(src, seed, hair=True):
     return out
 
 
+def sporify(frames, seed=23):
+    """Споровик (Убежище 22): тело проросло грибом — зелёные пятна и светящиеся бугорки."""
+    r = random.Random(seed)
+    out = {}
+    for d, lst in frames.items():
+        out[d] = []
+        for f in lst:
+            img = f.copy()
+            w, h = img.get_size()
+            for y in range(h):
+                for x in range(w):
+                    c = img.get_at((x, y))
+                    if c.a < 40:
+                        continue
+                    lum = (c.r + c.g + c.b) / 3
+                    g = (int(lum * 0.55), int(min(255, lum * 1.05 + 30)), int(lum * 0.45))
+                    if r.random() < 0.05:
+                        g = (200, 255, 140)              # светящиеся шляпки
+                    img.set_at((x, y), (*g, c.a))
+            out[d].append(img)
+    return out
+
+
 def save(sid, frames, native=True):
     dst = os.path.join(SPRITES, sid)
     shutil.rmtree(dst, ignore_errors=True)
@@ -106,6 +130,8 @@ def main():
     for sid, (src, seed, hair) in GHOULS.items():
         save(sid, ghoulify(src, seed, hair), os.path.isfile(os.path.join(SPRITES, src, "native")))
         print("готово:", sid)
+    save("spore_carrier", sporify(load("ghoul_c")))
+    print("готово: spore_carrier")
     if "preview" in sys.argv:
         path = sys.argv[sys.argv.index("preview") + 1] if len(sys.argv) > sys.argv.index("preview") + 1 \
             else os.path.join(ROOT, "assets", "_preview_ghouls.png")
