@@ -1083,5 +1083,138 @@
     "faction": "joined",
     "talk": "joined",
     "note": "трое прихожан, «соединённых» в купели; медленный, бьёт сильно; разговаривает тремя голосами"
+  },
+  "radscorpion": {
+    "name": "радскорпион",
+    "hp": 26,
+    "damage": 7,
+    "ac": 6,
+    "ap": 7,
+    "skill": 60,
+    "sequence": 5,
+    "aggro": 200,
+    "xp": 45,
+    "loot": {
+      "хвост радскорпиона": 1
+    },
+    "ai": "melee",
+    "hit_verb": "жалит вас",
+    "armor": 4,
+    "weak_parts": [
+      "eyes",
+      "legs"
+    ],
+    "hitbox": [
+      34,
+      30
+    ],
+    "poison": 4,
+    "sprite_dir": "radscorpion",
+    "art": {
+      "kind": "beetle",
+      "size": [
+        60,
+        48
+      ],
+      "base": [
+        60,
+        72,
+        84
+      ],
+      "accent": [
+        150,
+        200,
+        120
+      ]
+    },
+    "level": 4
+  },
+  "radscorpion_queen": {
+    "name": "матка радскорпионов",
+    "hp": 70,
+    "damage": 11,
+    "ac": 10,
+    "ap": 8,
+    "skill": 70,
+    "sequence": 6,
+    "aggro": 260,
+    "xp": 160,
+    "loot": {
+      "хвост радскорпиона": 2,
+      "крышки": 30
+    },
+    "ai": "melee",
+    "hit_verb": "бьёт вас жалом",
+    "armor": 8,
+    "weak_parts": [
+      "eyes",
+      "legs"
+    ],
+    "hitbox": [
+      40,
+      34
+    ],
+    "poison": 7,
+    "sprite_dir": "radscorpion",
+    "art": {
+      "kind": "beetle",
+      "size": [
+        60,
+        48
+      ],
+      "base": [
+        60,
+        72,
+        84
+      ],
+      "accent": [
+        150,
+        200,
+        120
+      ]
+    },
+    "level": 7
+  },
+  "jackal": {
+    "name": "шакал",
+    "hp": 22,
+    "damage": 5,
+    "ac": 10,
+    "ap": 7,
+    "skill": 50,
+    "sequence": 5,
+    "aggro": 300,
+    "xp": 25,
+    "loot": {
+      "крышки": 8,
+      "патроны": 4
+    },
+    "ai": "ranged",
+    "range": 6,
+    "hit_verb": "режет вас ржавым тесаком",
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        130,
+        60,
+        50
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "coward": true,
+    "level": 2,
+    "sprite_dir": "raider"
   }
 }

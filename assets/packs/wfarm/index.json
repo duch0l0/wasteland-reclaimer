@@ -1,0 +1,1923 @@
+{
+"slug": "post-apocalyptic-wasteland-survival-farm-tileset",
+"items": {
+"wfarm_1_000": {
+"size": [
+46,
+56
+],
+"dir": "props"
+},
+"wfarm_1_001": {
+"size": [
+48,
+92
+],
+"dir": "props"
+},
+"wfarm_1_002": {
+"size": [
+48,
+92
+],
+"dir": "props"
+},
+"wfarm_1_003": {
+"size": [
+33,
+46
+],
+"dir": "props"
+},
+"wfarm_1_004": {
+"size": [
+48,
+74
+],
+"dir": "props"
+},
+"wfarm_1_005": {
+"size": [
+46,
+40
+],
+"dir": "props"
+},
+"wfarm_1_006": {
+"size": [
+50,
+75
+],
+"dir": "props"
+},
+"wfarm_1_007": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_008": {
+"size": [
+45,
+55
+],
+"dir": "props"
+},
+"wfarm_1_009": {
+"size": [
+45,
+55
+],
+"dir": "props"
+},
+"wfarm_1_010": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_011": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_012": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"wfarm_1_013": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"wfarm_1_014": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"wfarm_1_015": {
+"size": [
+91,
+102
+],
+"dir": "props"
+},
+"wfarm_1_016": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"wfarm_1_017": {
+"size": [
+45,
+37
+],
+"dir": "props"
+},
+"wfarm_1_018": {
+"size": [
+45,
+75
+],
+"dir": "props"
+},
+"wfarm_1_019": {
+"size": [
+45,
+75
+],
+"dir": "props"
+},
+"wfarm_1_020": {
+"size": [
+45,
+75
+],
+"dir": "props"
+},
+"wfarm_1_021": {
+"size": [
+43,
+53
+],
+"dir": "props"
+},
+"wfarm_1_022": {
+"size": [
+42,
+57
+],
+"dir": "props"
+},
+"wfarm_1_023": {
+"size": [
+42,
+53
+],
+"dir": "props"
+},
+"wfarm_1_024": {
+"size": [
+44,
+70
+],
+"dir": "props"
+},
+"wfarm_1_025": {
+"size": [
+44,
+70
+],
+"dir": "props"
+},
+"wfarm_1_026": {
+"size": [
+39,
+58
+],
+"dir": "props"
+},
+"wfarm_1_027": {
+"size": [
+42,
+90
+],
+"dir": "props"
+},
+"wfarm_1_028": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"wfarm_1_029": {
+"size": [
+45,
+41
+],
+"dir": "props"
+},
+"wfarm_1_030": {
+"size": [
+45,
+42
+],
+"dir": "props"
+},
+"wfarm_1_031": {
+"size": [
+45,
+37
+],
+"dir": "props"
+},
+"wfarm_1_032": {
+"size": [
+45,
+37
+],
+"dir": "props"
+},
+"wfarm_1_033": {
+"size": [
+91,
+41
+],
+"dir": "props"
+},
+"wfarm_1_034": {
+"size": [
+45,
+39
+],
+"dir": "props"
+},
+"wfarm_1_035": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"wfarm_1_036": {
+"size": [
+46,
+86
+],
+"dir": "props"
+},
+"wfarm_1_037": {
+"size": [
+45,
+76
+],
+"dir": "props"
+},
+"wfarm_1_038": {
+"size": [
+45,
+76
+],
+"dir": "props"
+},
+"wfarm_1_039": {
+"size": [
+69,
+59
+],
+"dir": "props"
+},
+"wfarm_1_040": {
+"size": [
+69,
+57
+],
+"dir": "props"
+},
+"wfarm_1_041": {
+"size": [
+45,
+44
+],
+"dir": "props"
+},
+"wfarm_1_042": {
+"size": [
+40,
+38
+],
+"dir": "props"
+},
+"wfarm_1_043": {
+"size": [
+44,
+28
+],
+"dir": "props"
+},
+"wfarm_1_044": {
+"size": [
+44,
+21
+],
+"dir": "props"
+},
+"wfarm_1_045": {
+"size": [
+91,
+53
+],
+"dir": "props"
+},
+"wfarm_1_046": {
+"size": [
+91,
+59
+],
+"dir": "props"
+},
+"wfarm_1_047": {
+"size": [
+45,
+89
+],
+"dir": "props"
+},
+"wfarm_1_048": {
+"size": [
+45,
+81
+],
+"dir": "props"
+},
+"wfarm_1_049": {
+"size": [
+45,
+82
+],
+"dir": "props"
+},
+"wfarm_1_050": {
+"size": [
+69,
+53
+],
+"dir": "props"
+},
+"wfarm_1_051": {
+"size": [
+69,
+49
+],
+"dir": "props"
+},
+"wfarm_1_052": {
+"size": [
+33,
+45
+],
+"dir": "props"
+},
+"wfarm_1_053": {
+"size": [
+91,
+89
+],
+"dir": "props"
+},
+"wfarm_1_054": {
+"size": [
+91,
+89
+],
+"dir": "props"
+},
+"wfarm_1_055": {
+"size": [
+45,
+49
+],
+"dir": "props"
+},
+"wfarm_1_056": {
+"size": [
+45,
+70
+],
+"dir": "props"
+},
+"wfarm_1_057": {
+"size": [
+45,
+84
+],
+"dir": "props"
+},
+"wfarm_1_058": {
+"size": [
+91,
+78
+],
+"dir": "props"
+},
+"wfarm_1_059": {
+"size": [
+91,
+76
+],
+"dir": "props"
+},
+"wfarm_1_060": {
+"size": [
+85,
+85
+],
+"dir": "props"
+},
+"wfarm_1_061": {
+"size": [
+85,
+93
+],
+"dir": "props"
+},
+"wfarm_1_062": {
+"size": [
+27,
+41
+],
+"dir": "props"
+},
+"wfarm_1_063": {
+"size": [
+27,
+45
+],
+"dir": "props"
+},
+"wfarm_1_064": {
+"size": [
+33,
+33
+],
+"dir": "props"
+},
+"wfarm_1_065": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_066": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_067": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_068": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_1_069": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"wfarm_1_070": {
+"size": [
+23,
+42
+],
+"dir": "props"
+},
+"wfarm_1_071": {
+"size": [
+27,
+42
+],
+"dir": "props"
+},
+"wfarm_1_072": {
+"size": [
+93,
+60
+],
+"dir": "props"
+},
+"wfarm_1_073": {
+"size": [
+94,
+60
+],
+"dir": "props"
+},
+"wfarm_1_074": {
+"size": [
+94,
+65
+],
+"dir": "props"
+},
+"wfarm_1_075": {
+"size": [
+46,
+69
+],
+"dir": "props"
+},
+"wfarm_1_076": {
+"size": [
+36,
+49
+],
+"dir": "props"
+},
+"wfarm_1_077": {
+"size": [
+33,
+35
+],
+"dir": "props"
+},
+"wfarm_1_078": {
+"size": [
+33,
+38
+],
+"dir": "props"
+},
+"wfarm_1_079": {
+"size": [
+33,
+31
+],
+"dir": "props"
+},
+"wfarm_1_080": {
+"size": [
+91,
+89
+],
+"dir": "props"
+},
+"wfarm_1_081": {
+"size": [
+91,
+92
+],
+"dir": "props"
+},
+"wfarm_1_082": {
+"size": [
+29,
+41
+],
+"dir": "props"
+},
+"wfarm_1_083": {
+"size": [
+33,
+30
+],
+"dir": "props"
+},
+"wfarm_1_084": {
+"size": [
+22,
+45
+],
+"dir": "props"
+},
+"wfarm_1_085": {
+"size": [
+91,
+86
+],
+"dir": "props"
+},
+"wfarm_1_086": {
+"size": [
+91,
+85
+],
+"dir": "props"
+},
+"wfarm_1_087": {
+"size": [
+91,
+75
+],
+"dir": "props"
+},
+"wfarm_1_088": {
+"size": [
+37,
+38
+],
+"dir": "props"
+},
+"wfarm_1_089": {
+"size": [
+19,
+28
+],
+"dir": "props"
+},
+"wfarm_1_090": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"wfarm_1_091": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"wfarm_1_092": {
+"size": [
+44,
+57
+],
+"dir": "props"
+},
+"wfarm_1_093": {
+"size": [
+45,
+67
+],
+"dir": "props"
+},
+"wfarm_1_094": {
+"size": [
+44,
+57
+],
+"dir": "props"
+},
+"wfarm_1_095": {
+"size": [
+43,
+62
+],
+"dir": "props"
+},
+"wfarm_1_096": {
+"size": [
+43,
+90
+],
+"dir": "props"
+},
+"wfarm_2_000": {
+"size": [
+94,
+41
+],
+"dir": "props"
+},
+"wfarm_2_001": {
+"size": [
+41,
+82
+],
+"dir": "props"
+},
+"wfarm_2_002": {
+"size": [
+42,
+82
+],
+"dir": "props"
+},
+"wfarm_2_003": {
+"size": [
+94,
+41
+],
+"dir": "props"
+},
+"wfarm_2_004": {
+"size": [
+45,
+178
+],
+"dir": "props"
+},
+"wfarm_2_005": {
+"size": [
+47,
+189
+],
+"dir": "props"
+},
+"wfarm_2_006": {
+"size": [
+45,
+192
+],
+"dir": "props"
+},
+"wfarm_2_007": {
+"size": [
+44,
+192
+],
+"dir": "props"
+},
+"wfarm_2_008": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"wfarm_2_009": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"wfarm_2_010": {
+"size": [
+42,
+82
+],
+"dir": "props"
+},
+"wfarm_2_011": {
+"size": [
+42,
+79
+],
+"dir": "props"
+},
+"wfarm_2_012": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"wfarm_2_013": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"wfarm_2_014": {
+"size": [
+384,
+288
+],
+"dir": "props"
+},
+"wfarm_2_015": {
+"size": [
+89,
+91
+],
+"dir": "props"
+},
+"wfarm_2_016": {
+"size": [
+91,
+39
+],
+"dir": "props"
+},
+"wfarm_2_017": {
+"size": [
+87,
+83
+],
+"dir": "props"
+},
+"wfarm_2_018": {
+"size": [
+87,
+85
+],
+"dir": "props"
+},
+"wfarm_2_019": {
+"size": [
+91,
+36
+],
+"dir": "props"
+},
+"wfarm_2_020": {
+"size": [
+87,
+90
+],
+"dir": "props"
+},
+"wfarm_2_021": {
+"size": [
+89,
+89
+],
+"dir": "props"
+},
+"wfarm_2_022": {
+"size": [
+91,
+37
+],
+"dir": "props"
+},
+"wfarm_2_023": {
+"size": [
+90,
+34
+],
+"dir": "props"
+},
+"wfarm_2_024": {
+"size": [
+20,
+42
+],
+"dir": "props"
+},
+"wfarm_2_025": {
+"size": [
+20,
+41
+],
+"dir": "props"
+},
+"wfarm_2_026": {
+"size": [
+20,
+44
+],
+"dir": "props"
+},
+"wfarm_2_027": {
+"size": [
+23,
+42
+],
+"dir": "props"
+},
+"wfarm_2_028": {
+"size": [
+42,
+85
+],
+"dir": "props"
+},
+"wfarm_2_029": {
+"size": [
+42,
+79
+],
+"dir": "props"
+},
+"wfarm_2_030": {
+"size": [
+91,
+37
+],
+"dir": "props"
+},
+"wfarm_2_031": {
+"size": [
+90,
+37
+],
+"dir": "props"
+},
+"wfarm_2_032": {
+"size": [
+20,
+43
+],
+"dir": "props"
+},
+"wfarm_2_033": {
+"size": [
+22,
+39
+],
+"dir": "props"
+},
+"wfarm_2_034": {
+"size": [
+20,
+39
+],
+"dir": "props"
+},
+"wfarm_2_035": {
+"size": [
+20,
+39
+],
+"dir": "props"
+},
+"wfarm_2_036": {
+"size": [
+91,
+90
+],
+"dir": "props"
+},
+"wfarm_2_037": {
+"size": [
+91,
+92
+],
+"dir": "props"
+},
+"wfarm_2_038": {
+"size": [
+768,
+384
+],
+"dir": "props"
+},
+"wfarm_3_000": {
+"size": [
+192,
+141
+],
+"dir": "props"
+},
+"wfarm_3_001": {
+"size": [
+181,
+94
+],
+"dir": "props"
+},
+"wfarm_3_002": {
+"size": [
+89,
+91
+],
+"dir": "props"
+},
+"wfarm_3_003": {
+"size": [
+86,
+90
+],
+"dir": "props"
+},
+"wfarm_3_004": {
+"size": [
+192,
+187
+],
+"dir": "props"
+},
+"wfarm_3_005": {
+"size": [
+187,
+93
+],
+"dir": "props"
+},
+"wfarm_3_006": {
+"size": [
+87,
+89
+],
+"dir": "props"
+},
+"wfarm_3_007": {
+"size": [
+78,
+87
+],
+"dir": "props"
+},
+"wfarm_3_008": {
+"size": [
+186,
+235
+],
+"dir": "props"
+},
+"wfarm_3_009": {
+"size": [
+88,
+137
+],
+"dir": "props"
+},
+"wfarm_3_010": {
+"size": [
+22,
+92
+],
+"dir": "props"
+},
+"wfarm_3_011": {
+"size": [
+150,
+186
+],
+"dir": "props"
+},
+"wfarm_3_012": {
+"size": [
+188,
+188
+],
+"dir": "props"
+},
+"wfarm_3_013": {
+"size": [
+30,
+56
+],
+"dir": "props"
+},
+"wfarm_3_014": {
+"size": [
+95,
+41
+],
+"dir": "props"
+},
+"wfarm_3_015": {
+"size": [
+88,
+126
+],
+"dir": "props"
+},
+"wfarm_3_016": {
+"size": [
+768,
+193
+],
+"dir": "props"
+},
+"wfarm_3_017": {
+"size": [
+91,
+92
+],
+"dir": "props"
+},
+"wfarm_3_018": {
+"size": [
+672,
+189
+],
+"dir": "props"
+},
+"wfarm_4_000": {
+"size": [
+184,
+184
+],
+"dir": "props"
+},
+"wfarm_4_001": {
+"size": [
+153,
+156
+],
+"dir": "props"
+},
+"wfarm_4_002": {
+"size": [
+159,
+187
+],
+"dir": "props"
+},
+"wfarm_4_003": {
+"size": [
+173,
+186
+],
+"dir": "props"
+},
+"wfarm_4_004": {
+"size": [
+167,
+186
+],
+"dir": "props"
+},
+"wfarm_4_005": {
+"size": [
+186,
+182
+],
+"dir": "props"
+},
+"wfarm_4_006": {
+"size": [
+164,
+183
+],
+"dir": "props"
+},
+"wfarm_4_007": {
+"size": [
+158,
+189
+],
+"dir": "props"
+},
+"wfarm_4_008": {
+"size": [
+11,
+14
+],
+"dir": "props"
+},
+"wfarm_4_009": {
+"size": [
+16,
+21
+],
+"dir": "props"
+},
+"wfarm_4_010": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"wfarm_4_011": {
+"size": [
+39,
+42
+],
+"dir": "props"
+},
+"wfarm_4_012": {
+"size": [
+16,
+22
+],
+"dir": "props"
+},
+"wfarm_4_013": {
+"size": [
+40,
+43
+],
+"dir": "props"
+},
+"wfarm_4_014": {
+"size": [
+46,
+44
+],
+"dir": "props"
+},
+"wfarm_4_015": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"wfarm_4_016": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"wfarm_4_017": {
+"size": [
+158,
+189
+],
+"dir": "props"
+},
+"wfarm_4_018": {
+"size": [
+93,
+179
+],
+"dir": "props"
+},
+"wfarm_4_019": {
+"size": [
+11,
+14
+],
+"dir": "props"
+},
+"wfarm_4_020": {
+"size": [
+16,
+20
+],
+"dir": "props"
+},
+"wfarm_4_021": {
+"size": [
+41,
+42
+],
+"dir": "props"
+},
+"wfarm_4_022": {
+"size": [
+92,
+88
+],
+"dir": "props"
+},
+"wfarm_4_023": {
+"size": [
+15,
+139
+],
+"dir": "props"
+},
+"wfarm_4_024": {
+"size": [
+92,
+88
+],
+"dir": "props"
+},
+"wfarm_4_025": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"wfarm_4_026": {
+"size": [
+15,
+92
+],
+"dir": "props"
+},
+"wfarm_4_027": {
+"size": [
+88,
+87
+],
+"dir": "props"
+},
+"wfarm_4_028": {
+"size": [
+12,
+16
+],
+"dir": "props"
+},
+"wfarm_4_029": {
+"size": [
+16,
+20
+],
+"dir": "props"
+},
+"wfarm_4_030": {
+"size": [
+41,
+42
+],
+"dir": "props"
+},
+"wfarm_4_031": {
+"size": [
+96,
+88
+],
+"dir": "props"
+},
+"wfarm_4_032": {
+"size": [
+11,
+14
+],
+"dir": "props"
+},
+"wfarm_4_033": {
+"size": [
+16,
+20
+],
+"dir": "props"
+},
+"wfarm_4_034": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"wfarm_4_035": {
+"size": [
+96,
+94
+],
+"dir": "props"
+},
+"wfarm_4_036": {
+"size": [
+69,
+72
+],
+"dir": "props"
+},
+"wfarm_4_037": {
+"size": [
+93,
+71
+],
+"dir": "props"
+},
+"wfarm_4_038": {
+"size": [
+92,
+95
+],
+"dir": "props"
+},
+"wfarm_4_039": {
+"size": [
+158,
+184
+],
+"dir": "props"
+},
+"wfarm_4_040": {
+"size": [
+81,
+63
+],
+"dir": "props"
+},
+"wfarm_4_041": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"wfarm_4_042": {
+"size": [
+19,
+25
+],
+"dir": "props"
+},
+"wfarm_4_043": {
+"size": [
+16,
+21
+],
+"dir": "props"
+},
+"wfarm_4_044": {
+"size": [
+41,
+42
+],
+"dir": "props"
+},
+"wfarm_4_045": {
+"size": [
+94,
+94
+],
+"dir": "props"
+},
+"wfarm_4_046": {
+"size": [
+44,
+55
+],
+"dir": "props"
+},
+"wfarm_4_047": {
+"size": [
+44,
+73
+],
+"dir": "props"
+},
+"wfarm_4_048": {
+"size": [
+44,
+55
+],
+"dir": "props"
+},
+"wfarm_4_049": {
+"size": [
+44,
+73
+],
+"dir": "props"
+},
+"wfarm_4_050": {
+"size": [
+44,
+73
+],
+"dir": "props"
+},
+"wfarm_4_051": {
+"size": [
+44,
+73
+],
+"dir": "props"
+},
+"wfarm_5_000": {
+"size": [
+33,
+39
+],
+"dir": "props"
+},
+"wfarm_5_001": {
+"size": [
+31,
+43
+],
+"dir": "props"
+},
+"wfarm_5_002": {
+"size": [
+33,
+43
+],
+"dir": "props"
+},
+"wfarm_5_003": {
+"size": [
+33,
+41
+],
+"dir": "props"
+},
+"wfarm_5_004": {
+"size": [
+29,
+40
+],
+"dir": "props"
+},
+"wfarm_5_005": {
+"size": [
+33,
+37
+],
+"dir": "props"
+},
+"wfarm_5_006": {
+"size": [
+33,
+38
+],
+"dir": "props"
+},
+"wfarm_5_007": {
+"size": [
+33,
+42
+],
+"dir": "props"
+},
+"wfarm_5_008": {
+"size": [
+192,
+90
+],
+"dir": "props"
+},
+"wfarm_5_009": {
+"size": [
+188,
+91
+],
+"dir": "props"
+},
+"wfarm_5_010": {
+"size": [
+188,
+91
+],
+"dir": "props"
+},
+"wfarm_5_011": {
+"size": [
+384,
+89
+],
+"dir": "props"
+},
+"wfarm_5_012": {
+"size": [
+188,
+91
+],
+"dir": "props"
+},
+"wfarm_5_013": {
+"size": [
+188,
+91
+],
+"dir": "props"
+},
+"wfarm_5_014": {
+"size": [
+45,
+80
+],
+"dir": "props"
+},
+"wfarm_5_015": {
+"size": [
+45,
+85
+],
+"dir": "props"
+},
+"wfarm_5_016": {
+"size": [
+45,
+93
+],
+"dir": "props"
+},
+"wfarm_5_017": {
+"size": [
+45,
+92
+],
+"dir": "props"
+},
+"wfarm_5_018": {
+"size": [
+45,
+92
+],
+"dir": "props"
+},
+"wfarm_5_019": {
+"size": [
+45,
+90
+],
+"dir": "props"
+},
+"wfarm_5_020": {
+"size": [
+45,
+87
+],
+"dir": "props"
+},
+"wfarm_5_021": {
+"size": [
+45,
+85
+],
+"dir": "props"
+},
+"wfarm_5_022": {
+"size": [
+188,
+91
+],
+"dir": "props"
+},
+"wfarm_5_023": {
+"size": [
+91,
+78
+],
+"dir": "props"
+},
+"wfarm_5_024": {
+"size": [
+91,
+78
+],
+"dir": "props"
+},
+"wfarm_5_025": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_026": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_027": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_028": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_029": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_030": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_031": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_032": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"wfarm_5_033": {
+"size": [
+91,
+76
+],
+"dir": "props"
+},
+"wfarm_5_034": {
+"size": [
+91,
+68
+],
+"dir": "props"
+},
+"wfarm_5_035": {
+"size": [
+91,
+59
+],
+"dir": "props"
+},
+"wfarm_5_036": {
+"size": [
+91,
+66
+],
+"dir": "props"
+},
+"wfarm_5_037": {
+"size": [
+91,
+81
+],
+"dir": "props"
+},
+"wfarm_5_038": {
+"size": [
+91,
+59
+],
+"dir": "props"
+},
+"wfarm_5_039": {
+"size": [
+46,
+33
+],
+"dir": "props"
+},
+"wfarm_5_040": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"wfarm_5_041": {
+"size": [
+44,
+91
+],
+"dir": "props"
+},
+"wfarm_5_042": {
+"size": [
+41,
+69
+],
+"dir": "props"
+},
+"wfarm_5_043": {
+"size": [
+91,
+138
+],
+"dir": "props"
+},
+"wfarm_5_044": {
+"size": [
+91,
+139
+],
+"dir": "props"
+},
+"wfarm_5_045": {
+"size": [
+91,
+134
+],
+"dir": "props"
+},
+"wfarm_5_046": {
+"size": [
+91,
+111
+],
+"dir": "props"
+},
+"wfarm_5_047": {
+"size": [
+91,
+138
+],
+"dir": "props"
+},
+"wfarm_5_048": {
+"size": [
+91,
+138
+],
+"dir": "props"
+},
+"wfarm_5_049": {
+"size": [
+91,
+95
+],
+"dir": "props"
+},
+"wfarm_5_050": {
+"size": [
+91,
+95
+],
+"dir": "props"
+},
+"wfarm_5_051": {
+"size": [
+91,
+66
+],
+"dir": "props"
+},
+"wfarm_5_052": {
+"size": [
+91,
+66
+],
+"dir": "props"
+},
+"wfarm_5_053": {
+"size": [
+91,
+87
+],
+"dir": "props"
+},
+"wfarm_5_054": {
+"size": [
+91,
+90
+],
+"dir": "props"
+},
+"wfarm_5_055": {
+"size": [
+91,
+74
+],
+"dir": "props"
+},
+"wfarm_5_056": {
+"size": [
+91,
+76
+],
+"dir": "props"
+},
+"wfarm_5_057": {
+"size": [
+91,
+90
+],
+"dir": "props"
+},
+"wfarm_5_058": {
+"size": [
+91,
+91
+],
+"dir": "props"
+},
+"wfarm_5_059": {
+"size": [
+91,
+43
+],
+"dir": "props"
+},
+"wfarm_5_060": {
+"size": [
+91,
+43
+],
+"dir": "props"
+},
+"wfarm_5_061": {
+"size": [
+91,
+43
+],
+"dir": "props"
+},
+"p1": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p2": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p3": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p4": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p5": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+}
+}
+}

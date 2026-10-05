@@ -468,5 +468,123 @@
     "known": false,
     "music": "lab",
     "underground": true
+  },
+  "aradesh": {
+    "name": "Лагерь Арадеша",
+    "map": "data/maps/aradesh.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      960,
+      930
+    ],
+    "world_name": "Лагерь Арадеша",
+    "discover": true
+  },
+  "aradesh_hall": {
+    "name": "Дом собраний",
+    "map": "data/maps/aradesh_hall.json",
+    "known": false,
+    "music": "desert",
+    "underground": true
+  },
+  "aradesh_canyon": {
+    "name": "Каньон у лагеря",
+    "map": "data/maps/aradesh_canyon.json",
+    "known": false,
+    "music": "raiders"
+  },
+  "aradesh_cave": {
+    "name": "Пещера радскорпионов",
+    "map": "data/maps/aradesh_cave.json",
+    "known": false,
+    "music": "caves",
+    "underground": true,
+    "clear_flag": "aradesh_spring_cleared"
+  },
+  "boneyard": {
+    "name": "Боунъярд",
+    "map": "data/maps/boneyard.json",
+    "known": false,
+    "music": "reno",
+    "world_pos": [
+      760,
+      1290
+    ],
+    "world_name": "Боунъярд",
+    "discover": true
+  },
+  "boneyard_adytum": {
+    "name": "Адитум",
+    "map": "data/maps/boneyard_adytum.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "boneyard_cathedral": {
+    "name": "Фундамент Собора",
+    "map": "data/maps/boneyard_cathedral.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "boneyard_vt": {
+    "name": "Офис Vault-Tec",
+    "map": "data/maps/boneyard_vt.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vault15": {
+    "name": "Убежище 15",
+    "map": "data/maps/vault15.json",
+    "known": false,
+    "music": "raiders",
+    "world_pos": [
+      880,
+      780
+    ],
+    "world_name": "Убежище 15",
+    "discover": true
+  },
+  "vault15_atrium": {
+    "name": "Убежище 15: верхний ярус",
+    "map": "data/maps/vault15_atrium.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vault15_lower": {
+    "name": "Убежище 15: нижний ярус",
+    "map": "data/maps/vault15_lower.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "vault4": {
+    "name": "Убежище 4",
+    "map": "data/maps/vault4.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      720,
+      1380
+    ],
+    "world_name": "Убежище 4",
+    "discover": true
+  },
+  "vault4_upper": {
+    "name": "Убежище 4: жилой ярус",
+    "map": "data/maps/vault4_upper.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vault4_lower": {
+    "name": "Убежище 4: нижний ярус",
+    "map": "data/maps/vault4_lower.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
   }
 }

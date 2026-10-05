@@ -1,0 +1,373 @@
+{
+"props": {
+"v4_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v4_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v4_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v4_outcrop": {
+"img": "pk:desnat/p1/12,4,3,2",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"v4_van": {
+"img": "pk:zcity/zcity_2_097",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_bunk0": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_bunk1": {
+"img": "pk:nbunk/nbunk_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_bunk2": {
+"img": "pk:nbunk/nbunk_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_bunk3": {
+"img": "pk:nbunk/nbunk_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_shelf": {
+"img": "pk:nbunk/nbunk_2_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж с припасами"
+},
+"v4_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"v4_desk_pc": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_desk_pc_b": {
+"img": "pk:nbunk/nbunk_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"v4_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"v4_planter0": {
+"img": "pk:wfarm/wfarm_1_058",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_planter1": {
+"img": "pk:wfarm/wfarm_1_059",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_planter2": {
+"img": "pk:wfarm/wfarm_1_072",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_planter3": {
+"img": "pk:wfarm/wfarm_1_073",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_planter4": {
+"img": "pk:wfarm/wfarm_1_074",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_shelf_plants": {
+"img": "pk:wfarm/wfarm_1_085",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_pot_plant": {
+"img": "pk:wfarm/wfarm_1_027",
+"block": true,
+"sight": false
+},
+"v4_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"v4_board": {
+"img": "pk:aoffice/aoffice_2_010",
+"block": true,
+"sight": false
+},
+"v4_vat": {
+"img": "pk:wlab/wlab_1_000",
+"block": true,
+"sight": true
+},
+"v4_vats": {
+"img": "pk:wlab/wlab_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_tank": {
+"img": "pk:wlab/wlab_1_008",
+"block": true,
+"sight": true
+},
+"v4_tank_b": {
+"img": "pk:wlab/wlab_1_034",
+"block": true,
+"sight": true
+},
+"v4_console": {
+"img": "pk:wlab/wlab_1_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_console_b": {
+"img": "pk:wlab/wlab_1_010",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_chem": {
+"img": "pk:wlab/wlab_1_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_chem_b": {
+"img": "pk:wlab/wlab_1_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_arm": {
+"img": "pk:wlab/wlab_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_cabinet": {
+"img": "pk:wlab/wlab_2_037",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "drawer",
+"title": "шкаф с препаратами"
+},
+"v4_cabinet_b": {
+"img": "pk:wlab/wlab_2_070",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "drawer",
+"title": "полка с реактивами"
+},
+"v4_tube": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_tube_b": {
+"img": "pk:wlab/wlab_3_102",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_tube_broken": {
+"img": "pk:wlab/wlab_3_103",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v4_lab_desk": {
+"img": "pk:wlab/wlab_3_054",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v4_crate": {
+"img": "pk:wlab/wlab_2_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "армейский ящик"
+},
+"v4_cage": {
+"img": "pk:cult/cult_3_020",
+"block": true,
+"sight": true
+},
+"v4_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+},
+"v4_bones_b": {
+"img": "pk:grave/grave_2_027",
+"block": false,
+"sight": false
+},
+"v4_biohazard": {
+"img": "pk:hosp/hosp_1_012",
+"block": true,
+"sight": false
+}
+}
+}

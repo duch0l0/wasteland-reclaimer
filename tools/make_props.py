@@ -125,12 +125,12 @@ def cliff(w=48, h=40):
     return outline(s)
 
 
-def vault_door():
+def vault_door(label="57"):
     """Скала с круглой дверью-шестернёй и жёлтой рамой (снаружи)."""
     s = cliff(96, 72)
     cx, cy, r = 48, 42, 22
     pygame.draw.circle(s, (40, 36, 34), (cx, cy), r + 4)              # проём
-    gear(s, cx, cy, r)
+    gear(s, cx, cy, r, label)
     for k in range(-26, 27, 4):                                          # жёлто-чёрная рама
         col = (220, 180, 40) if (k // 4) % 2 == 0 else (30, 28, 26)
         px(s, cx + k, cy - r - 6, col)
@@ -227,12 +227,12 @@ def puddle():
     return s
 
 
-def vault_sign():
+def vault_sign(label="57"):
     s = canvas(26, 20)
     rect(s, 1, 1, 24, 16, (40, 70, 140))
     rect(s, 2, 2, 22, 14, (52, 90, 170))
     font = pygame.font.Font(None, 18)
-    t = font.render("57", False, (236, 200, 60))
+    t = font.render(label, False, (236, 200, 60))
     s.blit(t, t.get_rect(center=(13, 9)))
     rect(s, 12, 17, 2, 3, (80, 80, 84))
     return outline(s)
@@ -351,6 +351,11 @@ PROPS = {
     "x_mesa_vault": (mesa_vault, {"foot": [14, 3], "sight": True}),
     "x_barrel_boom": (barrel_boom, {"foot": [1, 1], "explosive": True}),
     "x_thermometer": (thermometer, {"foot": [2, 1], "sight": True}),
+    # новые — только в конец: рисунки берут случайность из общего генератора, порядок не менять
+    # Убежища 15 и 4: дверь снаружи (в скале), шестерня изнутри, табличка
+    **{f"x_vault_door{n}": (lambda n=n: vault_door(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4")},
+    **{f"x_vault_gear{n}": (lambda n=n: vault_gear(n), {"foot": [2, 1], "sight": True}) for n in ("15", "4")},
+    **{f"x_vault_sign{n}": (lambda n=n: vault_sign(n), {"foot": [1, 1]}) for n in ("15", "4")},
 }
 
 

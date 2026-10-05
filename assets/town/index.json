@@ -4665,5 +4665,59 @@
    128
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_vault_door15": {
+  "page": null,
+  "rect": null,
+  "size": [
+   192,
+   144
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_door4": {
+  "page": null,
+  "rect": null,
+  "size": [
+   192,
+   144
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_gear15": {
+  "page": null,
+  "rect": null,
+  "size": [
+   128,
+   128
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_gear4": {
+  "page": null,
+  "rect": null,
+  "size": [
+   128,
+   128
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_sign15": {
+  "page": null,
+  "rect": null,
+  "size": [
+   52,
+   40
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_vault_sign4": {
+  "page": null,
+  "rect": null,
+  "size": [
+   52,
+   40
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

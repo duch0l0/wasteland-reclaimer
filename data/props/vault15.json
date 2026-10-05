@@ -1,0 +1,366 @@
+{
+"props": {
+"v15_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v15_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v15_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v15_outcrop": {
+"img": "pk:desnat/p1/12,4,3,2",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"v15_tent0": {
+"img": "pk:ucamp/ucamp_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_tent1": {
+"img": "pk:ucamp/ucamp_2_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_tent2": {
+"img": "pk:ucamp/ucamp_2_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_tent3": {
+"img": "pk:ucamp/ucamp_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_shack": {
+"img": "pk:ucamp/ucamp_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"v15_cage": {
+"img": "pk:cult/cult_3_020",
+"block": false,
+"sight": false
+},
+"v15_hang_cage": {
+"img": "pk:cult/cult_3_112",
+"block": true,
+"sight": false
+},
+"v15_spikes": {
+"img": "pk:gcave/p1/12,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_skull_pole": {
+"img": "pk:gcave/p1/2,8,1,2",
+"block": true,
+"sight": false
+},
+"v15_loot": {
+"img": "pk:gcave/p1/10,10,2,2",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "добыча Шакалов"
+},
+"v15_tires": {
+"img": "pk:ucamp/ucamp_2_043",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_bunk0": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_bunk1": {
+"img": "pk:nbunk/nbunk_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_bunk2": {
+"img": "pk:nbunk/nbunk_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_bunk3": {
+"img": "pk:nbunk/nbunk_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_bed": {
+"img": "pk:nbunk/nbunk_2_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_shelf": {
+"img": "pk:nbunk/nbunk_2_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж с припасами"
+},
+"v15_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"v15_locker2": {
+"img": "pk:nbunk/nbunk_2_006",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкаф"
+},
+"v15_toolboard": {
+"img": "pk:nbunk/nbunk_2_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "tools",
+"title": "щит с инструментами"
+},
+"v15_workbench": {
+"img": "pk:nbunk/nbunk_2_014",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_desk_pc": {
+"img": "pk:nbunk/nbunk_2_015",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_desk_pc_b": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_desk_pc_c": {
+"img": "pk:nbunk/nbunk_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_desk_cans": {
+"img": "pk:nbunk/nbunk_2_020",
+"block": true,
+"sight": false,
+"foot": [
+3,
+1
+]
+},
+"v15_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"v15_gen": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v15_gen_b": {
+"img": "pk:nbunk/nbunk_2_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v15_gen_yellow": {
+"img": "pk:nbunk/nbunk_2_027",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v15_crate0": {
+"img": "pk:nbunk/nbunk_2_030",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"v15_crate1": {
+"img": "pk:nbunk/nbunk_2_031",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"v15_crate2": {
+"img": "pk:nbunk/nbunk_2_034",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"v15_crate3": {
+"img": "pk:nbunk/nbunk_2_035",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"v15_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"v15_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+},
+"v15_bones_b": {
+"img": "pk:grave/grave_2_027",
+"block": false,
+"sight": false
+},
+"v15_debris": {
+"img": "pk:pmall/pmall_2_042",
+"block": true,
+"sight": false
+}
+}
+}

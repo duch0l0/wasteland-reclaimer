@@ -24,7 +24,7 @@ class QuestMixin:
         self.journal_sel = quest_id
 
     def check_condition(self, cond):
-        """Условие реплики/стартового узла: flag, not_flag, flags_any, item+count, no_item, perk,
+        """Условие реплики/стартового узла: flag, not_flag, not_flags (ни одного), flags_any, item+count, no_item, perk,
         skill [навык, не меньше], min_level, stage [квест, не меньше], stage_lt [квест, меньше]."""
         if "stage" in cond and self.stage(cond["stage"][0]) < cond["stage"][1]:
             return False
@@ -39,6 +39,8 @@ class QuestMixin:
         if "flag" in cond and not self.flags.get(cond["flag"]):
             return False
         if "not_flag" in cond and self.flags.get(cond["not_flag"]):
+            return False
+        if "not_flags" in cond and any(self.flags.get(f) for f in cond["not_flags"]):
             return False
         if "item" in cond and not self.inventory.has(cond["item"], cond.get("count", 1)):
             return False
@@ -105,6 +107,14 @@ class QuestMixin:
             self.reveal_location("junktown")
         if ("junktown" in self.locations or f.get("know_cobbs_necropolis")) and "necropolis" not in self.worldmap.known:
             self.reveal_location("necropolis")   # архив Анны Шоу или караванщики Джанктауна — к гулям Бейкерсфилда
+        if "necropolis" in self.locations and "aradesh" not in self.worldmap.known:   # гули видели переселенцев на севере
+            self.reveal_location("aradesh")
+        if "aradesh" in self.locations and "boneyard" not in self.worldmap.known:   # Ханы и журнал фургона — на юг, к руинам ЛА
+            self.reveal_location("boneyard")
+        if ("boneyard" in self.locations or f.get("know_vault15")) and "vault15" not in self.worldmap.known:
+            self.reveal_location("vault15")   # журнал переселенцев или Иона из лагеря Арадеша: «на север, за холмами»
+        if f.get("know_vault4") and "vault4" not in self.worldmap.known:   # Купер или сеть убежищ — побережье южнее ЛА
+            self.reveal_location("vault4")
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 
@@ -144,6 +154,12 @@ class QuestMixin:
             if speaker is not None and getattr(speaker, "faction", None):
                 self.make_hostile(speaker.faction)
             self.combat.start(player_first=False)
+        elif t == "town_fight":   # собеседник и все бойцы локации — в бой (как нападение на жителя)
+            speaker = next((n for n in self.npcs if n.npc_id == eff.get("npc")), None)
+            target = self.town_turns_hostile(speaker)
+            self.combat.start(player_first=False)
+            if self.combat.active and target in self.combat.order:
+                self.combat.target = target
         elif t == "quest":
             self.set_stage(eff["id"], eff["stage"])
         elif t == "read":

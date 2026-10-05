@@ -7,6 +7,7 @@
                 и фильтром, промасленная кожанка с жёлтой полосой, джинса;
   boss        — Шрам, главарь Бензо-банды: из Панка. Бритый череп, шрам через
                 всё лицо, светящийся глаз, красная кожанка, два наплечника;
+  radscorpion — радскорпион: тот же жук, ржаво-красный, с хвостом-жалом над спиной;
   beetle      — панцирный жук: из пса. Хитин с отливом, шов по панцирю,
                 усики, жвалы, лишняя пара лап, светящиеся глазки.
 
@@ -780,6 +781,67 @@ def make_joined():
     return out
 
 
+SCORP = [(22, 10, 8), (64, 24, 16), (110, 44, 24), (156, 72, 34), (198, 112, 52), (236, 170, 96)]
+SCORP_SHELL = [(48, 18, 12), (86, 34, 20), (128, 58, 30), (170, 90, 44), (214, 136, 70), (246, 196, 130)]
+
+
+def make_scorpion():
+    """Радскорпион (лагерь Арадеша): жук в ржаво-красном хитине и с хвостом-жалом, выгнутым над спиной."""
+    global CHITIN, SHELL, GLOW
+    saved = CHITIN, SHELL, GLOW
+    CHITIN, SHELL, GLOW = SCORP, SCORP_SHELL, (255, 230, 90)
+    try:
+        base = make_beetle(height=30)
+    finally:
+        CHITIN, SHELL, GLOW = saved
+    out = {}
+    for d, frames in base.items():
+        out[d] = []
+        for i, f in enumerate(frames):
+            img = pad(f, 7, 12)
+            bb = img.get_bounding_rect(min_alpha=10)
+            sway = (0, 1, 0, -1)[i % 4]
+            if d in ("left", "right"):
+                back = 1 if d == "left" else -1          # хвост растёт с задней стороны
+                x0 = (bb.right - 2) if d == "left" else bb.left + 1
+                y0 = bb.top + 10
+                pts = [(x0 + back * 2, y0 - 2), (x0 + back * 3, y0 - 6), (x0 + back * 2, y0 - 10),
+                       (x0, y0 - 13 + sway), (x0 - back * 3, y0 - 14 + sway), (x0 - back * 6, y0 - 12 + sway)]
+            else:
+                cx = bb.centerx + sway
+                if d == "down":                          # хвост из-за спины — над головой
+                    y0 = bb.top + 6
+                    pts = [(cx, y0 - 2), (cx, y0 - 5), (cx + 1, y0 - 8), (cx + 1, y0 - 11), (cx, y0 - 13)]
+                else:                                    # вид со спины: хвост ближе всего к нам
+                    y0 = bb.bottom - 4
+                    pts = [(cx, y0), (cx, y0 - 4), (cx, y0 - 9), (cx, y0 - 14), (cx, y0 - 19), (cx, y0 - 23)]
+            for k, (x, y) in enumerate(pts):             # сегменты: овалы с контуром и бликом
+                r = 3 if k < len(pts) - 2 else 2
+                pygame.draw.circle(img, SCORP[0], (x, y), r + 1)
+                pygame.draw.circle(img, SCORP[3 if k % 2 else 2], (x, y), r)
+                img.set_at((x - 1, y - 1), SCORP[5])
+            # клешни: две пары «щипцов» впереди
+            if d in ("left", "right"):
+                fwd = -1 if d == "left" else 1
+                fx = (bb.left - 1) if d == "left" else bb.right
+                claws = [(fx + fwd * 2, bb.bottom - 9), (fx + fwd * 4, bb.bottom - 5)]
+            elif d == "down":
+                claws = [(bb.left - 1, bb.bottom - 6), (bb.right, bb.bottom - 6)]
+            else:
+                claws = [(bb.left, bb.top + 6), (bb.right - 1, bb.top + 6)]
+            for k, (x, y) in enumerate(claws):
+                x += (1, -1)[k % 2] * (i % 2)                # щёлкают на шаге
+                pygame.draw.circle(img, SCORP[0], (x, y), 4)
+                pygame.draw.circle(img, SCORP[3], (x, y), 3)
+                pygame.draw.line(img, SCORP[0], (x - 1, y - 3), (x + 1, y - 1))   # прорезь между «пальцами»
+                img.set_at((x - 1, y + 1), SCORP[5])
+            sx, sy = pts[-1]                             # жало светится
+            pygame.draw.circle(img, (40, 30, 10), (sx, sy), 3)
+            pygame.draw.circle(img, (250, 220, 80), (sx, sy), 2)
+            out[d].append(img)
+    return out
+
+
 NATIVE = {"ghoul_lady", "joined"}   # кадры уже в игровом размере
 
 
@@ -789,7 +851,8 @@ MAKERS = {"raider": make_raider, "gang": make_gang, "boss": make_boss, "beetle":
           "ada": make_ada, "doc": make_doc, "sheriff": make_sheriff, "silas": make_silas, "mo": make_mo,
           "lenny": make_lenny, "merc": make_merc, "folk_a": make_folk_a, "folk_b": make_folk_b,
           "feral": make_feral, "radroach": make_roach, "turret": make_turret,
-          "ghoul_kid": make_ghoul_kid, "ghoul_lady": make_ghoul_lady, "joined": make_joined}
+          "ghoul_kid": make_ghoul_kid, "ghoul_lady": make_ghoul_lady, "joined": make_joined,
+          "radscorpion": make_scorpion}
 
 
 def preview(ids, path):
@@ -813,7 +876,10 @@ def preview(ids, path):
 def main():
     pygame.init()
     pygame.display.set_mode((1, 1))
+    only = [a for a in sys.argv[1:] if a in MAKERS]       # можно пересобрать только нужных: make_variants.py radscorpion
     for sid, make in MAKERS.items():
+        if only and sid not in only:
+            continue
         save(sid, make())
         if sid in NATIVE:
             with open(os.path.join(SPRITES, sid, "native"), "w") as fh:

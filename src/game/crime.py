@@ -42,6 +42,13 @@ ROLES = {
     # Некрополь
     "nc_guard": "guard", "nc_guard_b": "guard", "nc_hall_guard": "guard", "nc_hall_guard_b": "guard",
     "set": "elite", "cobbs": "elite", "cult_envoy": "cultist", "zeke": "brawler",
+    # лагерь Арадеша и Ханы
+    "aradesh": "guard", "khan_chief": "elite", "khan_a": "brawler", "khan_b": "brawler", "unity_sister": "cultist",
+    # Боунъярд
+    "adytum_guard": "guard", "adytum_guard_b": "guard", "blade_nika": "elite", "blade_a": "brawler", "blade_b": "brawler",
+    "morpheus": "cultist", "cult_foreman": "cultist", "cooper": "elite",
+    # Убежище 15
+    "jackal_boss": "elite", "jackal_a": "brawler", "jackal_b": "brawler", "jackal_c": "brawler", "v15_sentry": "guard",
 }
 CULT_ZONES = {"baker_mission"}
 SPARE = {"dog", "robot", "amos", "amos_b7"}     # их не трогает и не превращает: пёс, робот, дед в келье

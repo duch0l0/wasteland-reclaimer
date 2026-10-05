@@ -1,0 +1,3414 @@
+{
+"slug": "goblin-cave-pixel-art-tileset",
+"items": {
+"gcave_1_000": {
+"size": [
+768,
+672
+],
+"dir": "props"
+},
+"gcave_1_001": {
+"size": [
+91,
+72
+],
+"dir": "props"
+},
+"gcave_1_002": {
+"size": [
+92,
+73
+],
+"dir": "props"
+},
+"gcave_2_000": {
+"size": [
+92,
+49
+],
+"dir": "props"
+},
+"gcave_2_001": {
+"size": [
+95,
+49
+],
+"dir": "props"
+},
+"gcave_2_002": {
+"size": [
+82,
+87
+],
+"dir": "props"
+},
+"gcave_2_003": {
+"size": [
+87,
+80
+],
+"dir": "props"
+},
+"gcave_2_004": {
+"size": [
+90,
+65
+],
+"dir": "props"
+},
+"gcave_2_005": {
+"size": [
+98,
+49
+],
+"dir": "props"
+},
+"gcave_2_006": {
+"size": [
+34,
+40
+],
+"dir": "props"
+},
+"gcave_2_007": {
+"size": [
+32,
+40
+],
+"dir": "props"
+},
+"gcave_2_008": {
+"size": [
+22,
+34
+],
+"dir": "props"
+},
+"gcave_2_009": {
+"size": [
+89,
+88
+],
+"dir": "props"
+},
+"gcave_2_010": {
+"size": [
+76,
+90
+],
+"dir": "props"
+},
+"gcave_2_011": {
+"size": [
+97,
+97
+],
+"dir": "props"
+},
+"gcave_2_012": {
+"size": [
+95,
+46
+],
+"dir": "props"
+},
+"gcave_2_013": {
+"size": [
+42,
+48
+],
+"dir": "props"
+},
+"gcave_2_014": {
+"size": [
+46,
+48
+],
+"dir": "props"
+},
+"gcave_2_015": {
+"size": [
+88,
+87
+],
+"dir": "props"
+},
+"gcave_2_016": {
+"size": [
+37,
+45
+],
+"dir": "props"
+},
+"gcave_2_017": {
+"size": [
+43,
+46
+],
+"dir": "props"
+},
+"gcave_2_018": {
+"size": [
+76,
+79
+],
+"dir": "props"
+},
+"gcave_2_019": {
+"size": [
+88,
+78
+],
+"dir": "props"
+},
+"gcave_2_020": {
+"size": [
+95,
+50
+],
+"dir": "props"
+},
+"gcave_2_021": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"gcave_2_022": {
+"size": [
+40,
+47
+],
+"dir": "props"
+},
+"gcave_2_023": {
+"size": [
+89,
+86
+],
+"dir": "props"
+},
+"gcave_2_024": {
+"size": [
+91,
+88
+],
+"dir": "props"
+},
+"gcave_2_025": {
+"size": [
+90,
+85
+],
+"dir": "props"
+},
+"gcave_2_026": {
+"size": [
+86,
+74
+],
+"dir": "props"
+},
+"gcave_2_027": {
+"size": [
+86,
+81
+],
+"dir": "props"
+},
+"gcave_2_028": {
+"size": [
+86,
+89
+],
+"dir": "props"
+},
+"gcave_2_029": {
+"size": [
+85,
+88
+],
+"dir": "props"
+},
+"gcave_2_030": {
+"size": [
+139,
+74
+],
+"dir": "props"
+},
+"gcave_2_031": {
+"size": [
+38,
+54
+],
+"dir": "props"
+},
+"gcave_2_032": {
+"size": [
+97,
+242
+],
+"dir": "props"
+},
+"gcave_2_033": {
+"size": [
+41,
+48
+],
+"dir": "props"
+},
+"gcave_2_034": {
+"size": [
+42,
+48
+],
+"dir": "props"
+},
+"gcave_2_035": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"gcave_2_036": {
+"size": [
+88,
+82
+],
+"dir": "props"
+},
+"gcave_2_037": {
+"size": [
+39,
+39
+],
+"dir": "props"
+},
+"gcave_2_038": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_2_039": {
+"size": [
+80,
+82
+],
+"dir": "props"
+},
+"gcave_2_040": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"gcave_2_041": {
+"size": [
+34,
+44
+],
+"dir": "props"
+},
+"gcave_2_042": {
+"size": [
+91,
+92
+],
+"dir": "props"
+},
+"gcave_2_043": {
+"size": [
+39,
+43
+],
+"dir": "props"
+},
+"gcave_2_044": {
+"size": [
+79,
+94
+],
+"dir": "props"
+},
+"gcave_2_045": {
+"size": [
+43,
+36
+],
+"dir": "props"
+},
+"gcave_2_046": {
+"size": [
+94,
+91
+],
+"dir": "props"
+},
+"gcave_2_047": {
+"size": [
+48,
+37
+],
+"dir": "props"
+},
+"gcave_2_048": {
+"size": [
+47,
+38
+],
+"dir": "props"
+},
+"gcave_2_049": {
+"size": [
+87,
+80
+],
+"dir": "props"
+},
+"gcave_2_050": {
+"size": [
+94,
+94
+],
+"dir": "props"
+},
+"gcave_2_051": {
+"size": [
+91,
+91
+],
+"dir": "props"
+},
+"gcave_2_052": {
+"size": [
+93,
+93
+],
+"dir": "props"
+},
+"gcave_2_053": {
+"size": [
+47,
+42
+],
+"dir": "props"
+},
+"gcave_2_054": {
+"size": [
+24,
+49
+],
+"dir": "props"
+},
+"gcave_2_055": {
+"size": [
+193,
+194
+],
+"dir": "props"
+},
+"gcave_2_056": {
+"size": [
+48,
+49
+],
+"dir": "props"
+},
+"gcave_2_057": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_2_058": {
+"size": [
+46,
+42
+],
+"dir": "props"
+},
+"gcave_2_059": {
+"size": [
+45,
+47
+],
+"dir": "props"
+},
+"gcave_2_060": {
+"size": [
+93,
+89
+],
+"dir": "props"
+},
+"gcave_2_061": {
+"size": [
+94,
+92
+],
+"dir": "props"
+},
+"gcave_2_062": {
+"size": [
+96,
+97
+],
+"dir": "props"
+},
+"gcave_2_063": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"gcave_2_064": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"gcave_2_065": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_2_066": {
+"size": [
+50,
+38
+],
+"dir": "props"
+},
+"gcave_2_067": {
+"size": [
+37,
+33
+],
+"dir": "props"
+},
+"gcave_2_068": {
+"size": [
+89,
+50
+],
+"dir": "props"
+},
+"gcave_2_069": {
+"size": [
+82,
+48
+],
+"dir": "props"
+},
+"gcave_2_070": {
+"size": [
+45,
+41
+],
+"dir": "props"
+},
+"gcave_2_071": {
+"size": [
+47,
+42
+],
+"dir": "props"
+},
+"gcave_2_072": {
+"size": [
+21,
+18
+],
+"dir": "props"
+},
+"gcave_2_073": {
+"size": [
+18,
+19
+],
+"dir": "props"
+},
+"gcave_2_074": {
+"size": [
+22,
+19
+],
+"dir": "props"
+},
+"gcave_2_075": {
+"size": [
+20,
+22
+],
+"dir": "props"
+},
+"gcave_2_076": {
+"size": [
+47,
+38
+],
+"dir": "props"
+},
+"gcave_2_077": {
+"size": [
+48,
+45
+],
+"dir": "props"
+},
+"gcave_2_078": {
+"size": [
+49,
+39
+],
+"dir": "props"
+},
+"gcave_2_079": {
+"size": [
+46,
+44
+],
+"dir": "props"
+},
+"gcave_2_080": {
+"size": [
+47,
+44
+],
+"dir": "props"
+},
+"gcave_2_081": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"gcave_2_082": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"gcave_2_083": {
+"size": [
+97,
+84
+],
+"dir": "props"
+},
+"gcave_2_084": {
+"size": [
+82,
+45
+],
+"dir": "props"
+},
+"gcave_2_085": {
+"size": [
+82,
+44
+],
+"dir": "props"
+},
+"gcave_2_086": {
+"size": [
+84,
+46
+],
+"dir": "props"
+},
+"gcave_2_087": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"gcave_2_088": {
+"size": [
+49,
+40
+],
+"dir": "props"
+},
+"gcave_2_089": {
+"size": [
+46,
+40
+],
+"dir": "props"
+},
+"gcave_2_090": {
+"size": [
+38,
+50
+],
+"dir": "props"
+},
+"gcave_2_091": {
+"size": [
+24,
+33
+],
+"dir": "props"
+},
+"gcave_2_092": {
+"size": [
+81,
+49
+],
+"dir": "props"
+},
+"gcave_2_093": {
+"size": [
+29,
+48
+],
+"dir": "props"
+},
+"gcave_2_094": {
+"size": [
+190,
+40
+],
+"dir": "props"
+},
+"gcave_2_095": {
+"size": [
+47,
+46
+],
+"dir": "props"
+},
+"gcave_2_096": {
+"size": [
+45,
+40
+],
+"dir": "props"
+},
+"gcave_2_097": {
+"size": [
+46,
+37
+],
+"dir": "props"
+},
+"gcave_2_098": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"gcave_2_099": {
+"size": [
+46,
+44
+],
+"dir": "props"
+},
+"gcave_2_100": {
+"size": [
+40,
+48
+],
+"dir": "props"
+},
+"gcave_2_101": {
+"size": [
+47,
+46
+],
+"dir": "props"
+},
+"gcave_2_102": {
+"size": [
+47,
+48
+],
+"dir": "props"
+},
+"gcave_2_103": {
+"size": [
+51,
+45
+],
+"dir": "props"
+},
+"gcave_2_104": {
+"size": [
+40,
+49
+],
+"dir": "props"
+},
+"gcave_2_105": {
+"size": [
+49,
+94
+],
+"dir": "props"
+},
+"gcave_2_106": {
+"size": [
+43,
+45
+],
+"dir": "props"
+},
+"gcave_2_107": {
+"size": [
+49,
+41
+],
+"dir": "props"
+},
+"gcave_2_108": {
+"size": [
+47,
+41
+],
+"dir": "props"
+},
+"gcave_2_109": {
+"size": [
+96,
+45
+],
+"dir": "props"
+},
+"gcave_2_110": {
+"size": [
+45,
+45
+],
+"dir": "props"
+},
+"gcave_2_111": {
+"size": [
+48,
+43
+],
+"dir": "props"
+},
+"gcave_2_112": {
+"size": [
+40,
+47
+],
+"dir": "props"
+},
+"gcave_2_113": {
+"size": [
+31,
+47
+],
+"dir": "props"
+},
+"gcave_2_114": {
+"size": [
+39,
+48
+],
+"dir": "props"
+},
+"gcave_2_115": {
+"size": [
+38,
+48
+],
+"dir": "props"
+},
+"gcave_2_116": {
+"size": [
+96,
+48
+],
+"dir": "props"
+},
+"gcave_3_000": {
+"size": [
+156,
+142
+],
+"dir": "props"
+},
+"gcave_3_001": {
+"size": [
+94,
+140
+],
+"dir": "props"
+},
+"gcave_3_002": {
+"size": [
+94,
+140
+],
+"dir": "props"
+},
+"gcave_3_003": {
+"size": [
+187,
+139
+],
+"dir": "props"
+},
+"gcave_3_004": {
+"size": [
+189,
+189
+],
+"dir": "props"
+},
+"gcave_3_005": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"gcave_3_006": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"gcave_3_007": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"gcave_3_008": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"gcave_3_009": {
+"size": [
+143,
+140
+],
+"dir": "props"
+},
+"gcave_3_010": {
+"size": [
+66,
+42
+],
+"dir": "props"
+},
+"gcave_3_011": {
+"size": [
+86,
+89
+],
+"dir": "props"
+},
+"gcave_3_012": {
+"size": [
+90,
+84
+],
+"dir": "props"
+},
+"gcave_3_013": {
+"size": [
+88,
+139
+],
+"dir": "props"
+},
+"gcave_3_014": {
+"size": [
+140,
+89
+],
+"dir": "props"
+},
+"gcave_3_015": {
+"size": [
+139,
+89
+],
+"dir": "props"
+},
+"gcave_3_016": {
+"size": [
+84,
+93
+],
+"dir": "props"
+},
+"gcave_3_017": {
+"size": [
+88,
+87
+],
+"dir": "props"
+},
+"gcave_3_018": {
+"size": [
+87,
+44
+],
+"dir": "props"
+},
+"gcave_3_019": {
+"size": [
+30,
+44
+],
+"dir": "props"
+},
+"gcave_3_020": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_3_021": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_3_022": {
+"size": [
+90,
+137
+],
+"dir": "props"
+},
+"gcave_3_023": {
+"size": [
+85,
+92
+],
+"dir": "props"
+},
+"gcave_3_024": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"gcave_3_025": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_3_026": {
+"size": [
+136,
+96
+],
+"dir": "props"
+},
+"gcave_3_027": {
+"size": [
+22,
+43
+],
+"dir": "props"
+},
+"gcave_3_028": {
+"size": [
+22,
+37
+],
+"dir": "props"
+},
+"gcave_3_029": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"gcave_3_030": {
+"size": [
+87,
+92
+],
+"dir": "props"
+},
+"gcave_3_031": {
+"size": [
+84,
+92
+],
+"dir": "props"
+},
+"gcave_3_032": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"gcave_3_033": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"gcave_3_034": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_3_035": {
+"size": [
+43,
+34
+],
+"dir": "props"
+},
+"gcave_3_036": {
+"size": [
+100,
+68
+],
+"dir": "props"
+},
+"gcave_3_037": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_3_038": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"gcave_3_039": {
+"size": [
+91,
+38
+],
+"dir": "props"
+},
+"gcave_3_040": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_3_041": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_3_042": {
+"size": [
+45,
+46
+],
+"dir": "props"
+},
+"gcave_3_043": {
+"size": [
+46,
+44
+],
+"dir": "props"
+},
+"gcave_3_044": {
+"size": [
+46,
+46
+],
+"dir": "props"
+},
+"gcave_3_045": {
+"size": [
+88,
+89
+],
+"dir": "props"
+},
+"gcave_3_046": {
+"size": [
+90,
+92
+],
+"dir": "props"
+},
+"gcave_3_047": {
+"size": [
+45,
+37
+],
+"dir": "props"
+},
+"gcave_3_048": {
+"size": [
+46,
+40
+],
+"dir": "props"
+},
+"gcave_3_049": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_3_050": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_3_051": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_3_052": {
+"size": [
+45,
+46
+],
+"dir": "props"
+},
+"gcave_3_053": {
+"size": [
+45,
+42
+],
+"dir": "props"
+},
+"gcave_3_054": {
+"size": [
+44,
+39
+],
+"dir": "props"
+},
+"gcave_3_055": {
+"size": [
+94,
+87
+],
+"dir": "props"
+},
+"gcave_3_056": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"gcave_3_057": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_3_058": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_3_059": {
+"size": [
+46,
+41
+],
+"dir": "props"
+},
+"gcave_3_060": {
+"size": [
+95,
+86
+],
+"dir": "props"
+},
+"gcave_3_061": {
+"size": [
+28,
+42
+],
+"dir": "props"
+},
+"gcave_3_062": {
+"size": [
+16,
+44
+],
+"dir": "props"
+},
+"gcave_3_063": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_3_064": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_3_065": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"gcave_3_066": {
+"size": [
+190,
+192
+],
+"dir": "props"
+},
+"gcave_3_067": {
+"size": [
+189,
+192
+],
+"dir": "props"
+},
+"gcave_3_068": {
+"size": [
+41,
+33
+],
+"dir": "props"
+},
+"gcave_3_069": {
+"size": [
+28,
+38
+],
+"dir": "props"
+},
+"gcave_3_070": {
+"size": [
+45,
+47
+],
+"dir": "props"
+},
+"gcave_3_071": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"gcave_3_072": {
+"size": [
+46,
+46
+],
+"dir": "props"
+},
+"gcave_3_073": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"gcave_3_074": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"gcave_3_075": {
+"size": [
+48,
+37
+],
+"dir": "props"
+},
+"gcave_3_076": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"gcave_3_077": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"gcave_3_078": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"gcave_3_079": {
+"size": [
+46,
+40
+],
+"dir": "props"
+},
+"gcave_3_080": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"gcave_4_000": {
+"size": [
+48,
+92
+],
+"dir": "props"
+},
+"gcave_4_001": {
+"size": [
+48,
+92
+],
+"dir": "props"
+},
+"gcave_4_002": {
+"size": [
+47,
+95
+],
+"dir": "props"
+},
+"gcave_4_003": {
+"size": [
+45,
+93
+],
+"dir": "props"
+},
+"gcave_4_004": {
+"size": [
+90,
+82
+],
+"dir": "props"
+},
+"gcave_4_005": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"gcave_4_006": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"gcave_4_007": {
+"size": [
+90,
+89
+],
+"dir": "props"
+},
+"gcave_4_008": {
+"size": [
+90,
+164
+],
+"dir": "props"
+},
+"gcave_4_009": {
+"size": [
+96,
+186
+],
+"dir": "props"
+},
+"gcave_4_010": {
+"size": [
+92,
+96
+],
+"dir": "props"
+},
+"gcave_4_011": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"gcave_4_012": {
+"size": [
+44,
+93
+],
+"dir": "props"
+},
+"gcave_4_013": {
+"size": [
+32,
+69
+],
+"dir": "props"
+},
+"gcave_4_014": {
+"size": [
+44,
+93
+],
+"dir": "props"
+},
+"gcave_4_015": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"gcave_4_016": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"gcave_4_017": {
+"size": [
+90,
+72
+],
+"dir": "props"
+},
+"gcave_4_018": {
+"size": [
+80,
+93
+],
+"dir": "props"
+},
+"gcave_4_019": {
+"size": [
+80,
+88
+],
+"dir": "props"
+},
+"gcave_4_020": {
+"size": [
+90,
+86
+],
+"dir": "props"
+},
+"gcave_4_021": {
+"size": [
+90,
+76
+],
+"dir": "props"
+},
+"gcave_4_022": {
+"size": [
+90,
+80
+],
+"dir": "props"
+},
+"gcave_4_023": {
+"size": [
+90,
+75
+],
+"dir": "props"
+},
+"gcave_4_024": {
+"size": [
+90,
+78
+],
+"dir": "props"
+},
+"gcave_4_025": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"gcave_4_026": {
+"size": [
+45,
+66
+],
+"dir": "props"
+},
+"gcave_4_027": {
+"size": [
+42,
+81
+],
+"dir": "props"
+},
+"gcave_4_028": {
+"size": [
+61,
+88
+],
+"dir": "props"
+},
+"gcave_4_029": {
+"size": [
+90,
+79
+],
+"dir": "props"
+},
+"gcave_4_030": {
+"size": [
+24,
+14
+],
+"dir": "props"
+},
+"gcave_4_031": {
+"size": [
+36,
+91
+],
+"dir": "props"
+},
+"gcave_4_032": {
+"size": [
+91,
+69
+],
+"dir": "props"
+},
+"gcave_4_033": {
+"size": [
+91,
+74
+],
+"dir": "props"
+},
+"gcave_4_034": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"gcave_4_035": {
+"size": [
+79,
+62
+],
+"dir": "props"
+},
+"gcave_4_036": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_4_037": {
+"size": [
+44,
+35
+],
+"dir": "props"
+},
+"gcave_4_038": {
+"size": [
+74,
+91
+],
+"dir": "props"
+},
+"gcave_4_039": {
+"size": [
+90,
+54
+],
+"dir": "props"
+},
+"gcave_4_040": {
+"size": [
+44,
+39
+],
+"dir": "props"
+},
+"gcave_4_041": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_4_042": {
+"size": [
+69,
+64
+],
+"dir": "props"
+},
+"gcave_4_043": {
+"size": [
+69,
+61
+],
+"dir": "props"
+},
+"gcave_4_044": {
+"size": [
+80,
+94
+],
+"dir": "props"
+},
+"gcave_4_045": {
+"size": [
+74,
+92
+],
+"dir": "props"
+},
+"gcave_4_046": {
+"size": [
+92,
+76
+],
+"dir": "props"
+},
+"gcave_4_047": {
+"size": [
+77,
+77
+],
+"dir": "props"
+},
+"gcave_4_048": {
+"size": [
+74,
+83
+],
+"dir": "props"
+},
+"gcave_4_049": {
+"size": [
+80,
+75
+],
+"dir": "props"
+},
+"gcave_4_050": {
+"size": [
+80,
+68
+],
+"dir": "props"
+},
+"gcave_4_051": {
+"size": [
+80,
+94
+],
+"dir": "props"
+},
+"gcave_4_052": {
+"size": [
+67,
+93
+],
+"dir": "props"
+},
+"gcave_4_053": {
+"size": [
+73,
+94
+],
+"dir": "props"
+},
+"gcave_4_054": {
+"size": [
+92,
+72
+],
+"dir": "props"
+},
+"gcave_4_055": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"gcave_4_056": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"gcave_4_057": {
+"size": [
+42,
+47
+],
+"dir": "props"
+},
+"gcave_4_058": {
+"size": [
+93,
+93
+],
+"dir": "props"
+},
+"gcave_4_059": {
+"size": [
+86,
+82
+],
+"dir": "props"
+},
+"gcave_4_060": {
+"size": [
+90,
+74
+],
+"dir": "props"
+},
+"gcave_4_061": {
+"size": [
+92,
+73
+],
+"dir": "props"
+},
+"gcave_4_062": {
+"size": [
+92,
+77
+],
+"dir": "props"
+},
+"gcave_4_063": {
+"size": [
+92,
+75
+],
+"dir": "props"
+},
+"gcave_4_064": {
+"size": [
+92,
+83
+],
+"dir": "props"
+},
+"gcave_5_000": {
+"size": [
+39,
+42
+],
+"dir": "props"
+},
+"gcave_5_001": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"gcave_5_002": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_5_003": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"gcave_5_004": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_005": {
+"size": [
+43,
+41
+],
+"dir": "props"
+},
+"gcave_5_006": {
+"size": [
+139,
+88
+],
+"dir": "props"
+},
+"gcave_5_007": {
+"size": [
+92,
+88
+],
+"dir": "props"
+},
+"gcave_5_008": {
+"size": [
+140,
+89
+],
+"dir": "props"
+},
+"gcave_5_009": {
+"size": [
+92,
+89
+],
+"dir": "props"
+},
+"gcave_5_010": {
+"size": [
+43,
+39
+],
+"dir": "props"
+},
+"gcave_5_011": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_5_012": {
+"size": [
+42,
+41
+],
+"dir": "props"
+},
+"gcave_5_013": {
+"size": [
+34,
+36
+],
+"dir": "props"
+},
+"gcave_5_014": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_5_015": {
+"size": [
+43,
+45
+],
+"dir": "props"
+},
+"gcave_5_016": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_5_017": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_018": {
+"size": [
+43,
+38
+],
+"dir": "props"
+},
+"gcave_5_019": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"gcave_5_020": {
+"size": [
+41,
+33
+],
+"dir": "props"
+},
+"gcave_5_021": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_022": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_023": {
+"size": [
+43,
+40
+],
+"dir": "props"
+},
+"gcave_5_024": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_025": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_026": {
+"size": [
+41,
+40
+],
+"dir": "props"
+},
+"gcave_5_027": {
+"size": [
+139,
+88
+],
+"dir": "props"
+},
+"gcave_5_028": {
+"size": [
+88,
+66
+],
+"dir": "props"
+},
+"gcave_5_029": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_030": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_031": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_032": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_033": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_034": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_035": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_036": {
+"size": [
+42,
+39
+],
+"dir": "props"
+},
+"gcave_5_037": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"gcave_5_038": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_039": {
+"size": [
+42,
+42
+],
+"dir": "props"
+},
+"gcave_5_040": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_041": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_042": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"gcave_5_043": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_044": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_045": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_046": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_047": {
+"size": [
+42,
+39
+],
+"dir": "props"
+},
+"gcave_5_048": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_049": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_050": {
+"size": [
+17,
+18
+],
+"dir": "props"
+},
+"gcave_5_051": {
+"size": [
+12,
+15
+],
+"dir": "props"
+},
+"gcave_5_052": {
+"size": [
+18,
+17
+],
+"dir": "props"
+},
+"gcave_5_053": {
+"size": [
+138,
+91
+],
+"dir": "props"
+},
+"gcave_5_054": {
+"size": [
+90,
+69
+],
+"dir": "props"
+},
+"gcave_5_055": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_056": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_057": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_058": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"gcave_5_059": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"gcave_5_060": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_061": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"gcave_5_062": {
+"size": [
+42,
+39
+],
+"dir": "props"
+},
+"gcave_5_063": {
+"size": [
+45,
+44
+],
+"dir": "props"
+},
+"gcave_5_064": {
+"size": [
+41,
+42
+],
+"dir": "props"
+},
+"gcave_5_065": {
+"size": [
+43,
+39
+],
+"dir": "props"
+},
+"gcave_5_066": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"gcave_5_067": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_068": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_069": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_070": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_071": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_072": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_073": {
+"size": [
+42,
+41
+],
+"dir": "props"
+},
+"gcave_5_074": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_075": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_076": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_077": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_078": {
+"size": [
+43,
+35
+],
+"dir": "props"
+},
+"gcave_5_079": {
+"size": [
+36,
+43
+],
+"dir": "props"
+},
+"gcave_5_080": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"gcave_5_081": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"gcave_5_082": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_083": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_084": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_085": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_086": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"gcave_5_087": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_088": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_089": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_090": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_091": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_092": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_093": {
+"size": [
+42,
+42
+],
+"dir": "props"
+},
+"gcave_5_094": {
+"size": [
+41,
+32
+],
+"dir": "props"
+},
+"gcave_5_095": {
+"size": [
+36,
+43
+],
+"dir": "props"
+},
+"gcave_5_096": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_097": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_5_098": {
+"size": [
+42,
+32
+],
+"dir": "props"
+},
+"gcave_5_099": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_5_100": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_101": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_102": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_103": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_104": {
+"size": [
+42,
+39
+],
+"dir": "props"
+},
+"gcave_5_105": {
+"size": [
+43,
+40
+],
+"dir": "props"
+},
+"gcave_5_106": {
+"size": [
+44,
+32
+],
+"dir": "props"
+},
+"gcave_5_107": {
+"size": [
+41,
+40
+],
+"dir": "props"
+},
+"gcave_5_108": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"gcave_5_109": {
+"size": [
+40,
+32
+],
+"dir": "props"
+},
+"gcave_5_110": {
+"size": [
+91,
+78
+],
+"dir": "props"
+},
+"gcave_5_111": {
+"size": [
+42,
+32
+],
+"dir": "props"
+},
+"gcave_5_112": {
+"size": [
+92,
+83
+],
+"dir": "props"
+},
+"gcave_5_113": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_114": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_115": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_116": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_117": {
+"size": [
+43,
+40
+],
+"dir": "props"
+},
+"gcave_5_118": {
+"size": [
+42,
+42
+],
+"dir": "props"
+},
+"gcave_5_119": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"gcave_5_120": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_121": {
+"size": [
+13,
+15
+],
+"dir": "props"
+},
+"gcave_5_122": {
+"size": [
+28,
+23
+],
+"dir": "props"
+},
+"gcave_5_123": {
+"size": [
+28,
+28
+],
+"dir": "props"
+},
+"gcave_5_124": {
+"size": [
+41,
+42
+],
+"dir": "props"
+},
+"gcave_5_125": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_126": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"gcave_5_127": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_128": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"gcave_5_129": {
+"size": [
+39,
+38
+],
+"dir": "props"
+},
+"gcave_5_130": {
+"size": [
+42,
+41
+],
+"dir": "props"
+},
+"gcave_5_131": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"gcave_5_132": {
+"size": [
+43,
+40
+],
+"dir": "props"
+},
+"gcave_5_133": {
+"size": [
+42,
+38
+],
+"dir": "props"
+},
+"gcave_5_134": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"gcave_5_135": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_136": {
+"size": [
+43,
+36
+],
+"dir": "props"
+},
+"gcave_5_137": {
+"size": [
+43,
+37
+],
+"dir": "props"
+},
+"gcave_5_138": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_5_139": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"gcave_5_140": {
+"size": [
+92,
+81
+],
+"dir": "props"
+},
+"gcave_5_141": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_142": {
+"size": [
+43,
+32
+],
+"dir": "props"
+},
+"gcave_5_143": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_144": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"gcave_5_145": {
+"size": [
+43,
+38
+],
+"dir": "props"
+},
+"gcave_5_146": {
+"size": [
+43,
+39
+],
+"dir": "props"
+},
+"gcave_5_147": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_5_148": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_149": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_150": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_151": {
+"size": [
+42,
+36
+],
+"dir": "props"
+},
+"gcave_5_152": {
+"size": [
+43,
+37
+],
+"dir": "props"
+},
+"gcave_5_153": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_154": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_155": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_156": {
+"size": [
+45,
+43
+],
+"dir": "props"
+},
+"gcave_5_157": {
+"size": [
+37,
+44
+],
+"dir": "props"
+},
+"gcave_5_158": {
+"size": [
+35,
+36
+],
+"dir": "props"
+},
+"gcave_5_159": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_160": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"gcave_5_161": {
+"size": [
+45,
+44
+],
+"dir": "props"
+},
+"gcave_5_162": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_163": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_164": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_165": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_166": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_167": {
+"size": [
+42,
+38
+],
+"dir": "props"
+},
+"gcave_5_168": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_5_169": {
+"size": [
+90,
+83
+],
+"dir": "props"
+},
+"gcave_5_170": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_171": {
+"size": [
+47,
+44
+],
+"dir": "props"
+},
+"gcave_5_172": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_173": {
+"size": [
+30,
+40
+],
+"dir": "props"
+},
+"gcave_5_174": {
+"size": [
+19,
+44
+],
+"dir": "props"
+},
+"gcave_5_175": {
+"size": [
+43,
+45
+],
+"dir": "props"
+},
+"gcave_5_176": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_177": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_178": {
+"size": [
+43,
+29
+],
+"dir": "props"
+},
+"gcave_5_179": {
+"size": [
+40,
+23
+],
+"dir": "props"
+},
+"gcave_5_180": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"gcave_5_181": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_182": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"gcave_5_183": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_184": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"gcave_5_185": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"gcave_5_186": {
+"size": [
+46,
+46
+],
+"dir": "props"
+},
+"gcave_5_187": {
+"size": [
+46,
+31
+],
+"dir": "props"
+},
+"gcave_5_188": {
+"size": [
+45,
+46
+],
+"dir": "props"
+},
+"gcave_5_189": {
+"size": [
+43,
+45
+],
+"dir": "props"
+},
+"gcave_5_190": {
+"size": [
+45,
+45
+],
+"dir": "props"
+},
+"gcave_5_191": {
+"size": [
+43,
+45
+],
+"dir": "props"
+},
+"gcave_5_192": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_5_193": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"gcave_5_194": {
+"size": [
+31,
+23
+],
+"dir": "props"
+},
+"gcave_5_195": {
+"size": [
+37,
+38
+],
+"dir": "props"
+},
+"gcave_5_196": {
+"size": [
+38,
+41
+],
+"dir": "props"
+},
+"gcave_5_197": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"gcave_5_198": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"gcave_5_199": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"gcave_5_200": {
+"size": [
+46,
+43
+],
+"dir": "props"
+},
+"gcave_5_201": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"gcave_5_202": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_5_203": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"gcave_5_204": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"gcave_5_205": {
+"size": [
+39,
+42
+],
+"dir": "props"
+},
+"gcave_5_206": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"gcave_5_207": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"gcave_5_208": {
+"size": [
+33,
+44
+],
+"dir": "props"
+},
+"gcave_5_209": {
+"size": [
+34,
+28
+],
+"dir": "props"
+},
+"gcave_5_210": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"gcave_5_211": {
+"size": [
+35,
+35
+],
+"dir": "props"
+},
+"gcave_5_212": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"gcave_5_213": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"gcave_5_214": {
+"size": [
+43,
+39
+],
+"dir": "props"
+},
+"gcave_5_215": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"p1": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p2": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p3": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p4": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p5": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+}
+}
+}

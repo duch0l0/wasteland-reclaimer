@@ -11,6 +11,7 @@
   ghoul_set    из seer     — Сет, правитель Некрополя: балахон
   ghoul_cobbs  из soldier  — капрал Коббс: армейская форма
   ghoul_child  из kid      — гулёнок
+  ghoul_cooper из sheriff  — Купер Говард, гуль в ковбойской шляпе и пыльнике
 
 Запуск из папки game_project:
     .venv/bin/python tools/make_ghouls.py            — сделать кадры
@@ -30,7 +31,8 @@ DIRS = ("down", "right", "up", "left")
 # id: (исходник, зерно, красить ли тёмные волосы — у каски Коббса и капюшона Сета не надо)
 GHOULS = {"ghoul_a": ("folk_c", 11, True), "ghoul_b": ("folk_e", 12, True), "ghoul_c": ("folk_g", 13, True),
           "ghoul_d": ("folk_h", 14, True), "ghoul_e": ("folk_i", 15, True), "ghoul_set": ("seer", 16, False),
-          "ghoul_cobbs": ("soldier", 17, False), "ghoul_child": ("kid", 18, True)}
+          "ghoul_cobbs": ("soldier", 17, False), "ghoul_child": ("kid", 18, True),
+          "ghoul_cooper": ("sheriff", 19, False)}
 
 
 def load(sid):
@@ -72,15 +74,16 @@ def ghoulify(src, seed, hair=True):
     return out
 
 
-def save(sid, frames):
+def save(sid, frames, native=True):
     dst = os.path.join(SPRITES, sid)
     shutil.rmtree(dst, ignore_errors=True)
     for d, lst in frames.items():
         os.makedirs(os.path.join(dst, d), exist_ok=True)
         for i, img in enumerate(lst):
             pygame.image.save(img, os.path.join(dst, d, f"{i}.png"))
-    with open(os.path.join(dst, "native"), "w") as fh:
-        fh.write("кадры уже в игровом размере\n")
+    if native:
+        with open(os.path.join(dst, "native"), "w") as fh:
+            fh.write("кадры уже в игровом размере\n")
 
 
 def preview(ids, path):
@@ -101,7 +104,7 @@ def main():
     pygame.init()
     pygame.display.set_mode((1, 1))
     for sid, (src, seed, hair) in GHOULS.items():
-        save(sid, ghoulify(src, seed, hair))
+        save(sid, ghoulify(src, seed, hair), os.path.isfile(os.path.join(SPRITES, src, "native")))
         print("готово:", sid)
     if "preview" in sys.argv:
         path = sys.argv[sys.argv.index("preview") + 1] if len(sys.argv) > sys.argv.index("preview") + 1 \

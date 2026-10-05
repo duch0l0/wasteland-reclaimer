@@ -1,0 +1,803 @@
+{
+"props": {
+"ar_greenhouse": {
+"img": "pk:wfarm/wfarm_3_008",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"ar_water_tank": {
+"img": "pk:wfarm/wfarm_3_009",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_shed": {
+"img": "pk:wfarm/wfarm_3_011",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"ar_workshop": {
+"img": "pk:wfarm/wfarm_3_012",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"ar_shack_tin": {
+"img": "pk:wfarm/wfarm_3_004",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"ar_yard": {
+"img": "pk:wfarm/wfarm_4_002",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"ar_bed0": {
+"img": "pk:wfarm/wfarm_1_053",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed1": {
+"img": "pk:wfarm/wfarm_1_054",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed2": {
+"img": "pk:wfarm/wfarm_1_080",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed3": {
+"img": "pk:wfarm/wfarm_1_081",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed4": {
+"img": "pk:wfarm/wfarm_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed5": {
+"img": "pk:wfarm/wfarm_2_018",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed6": {
+"img": "pk:wfarm/wfarm_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_bed7": {
+"img": "pk:wfarm/wfarm_2_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tub": {
+"img": "pk:wfarm/wfarm_2_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tub_b": {
+"img": "pk:wfarm/wfarm_2_037",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_barrel_plant0": {
+"img": "pk:wfarm/wfarm_5_043",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_barrel_plant1": {
+"img": "pk:wfarm/wfarm_5_044",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_barrel_plant2": {
+"img": "pk:wfarm/wfarm_5_047",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tire_plant0": {
+"img": "pk:wfarm/wfarm_5_033",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tire_plant1": {
+"img": "pk:wfarm/wfarm_5_034",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tire_plant2": {
+"img": "pk:wfarm/wfarm_5_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tire_plant3": {
+"img": "pk:wfarm/wfarm_5_037",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_trellis0": {
+"img": "pk:wfarm/wfarm_5_025",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_trellis1": {
+"img": "pk:wfarm/wfarm_5_027",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_trellis2": {
+"img": "pk:wfarm/wfarm_5_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_trellis3": {
+"img": "pk:wfarm/wfarm_5_031",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_berries": {
+"img": "pk:wfarm/wfarm_5_023",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_fruit": {
+"img": "pk:wfarm/wfarm_5_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_shelf_plants": {
+"img": "pk:wfarm/wfarm_1_085",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_shelf_plants_b": {
+"img": "pk:wfarm/wfarm_1_086",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_rbarrel0": {
+"img": "pk:wfarm/wfarm_1_007",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"ar_rbarrel1": {
+"img": "pk:wfarm/wfarm_1_036",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"ar_tires": {
+"img": "pk:wfarm/wfarm_4_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tires_b": {
+"img": "pk:wfarm/wfarm_4_037",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tarp": {
+"img": "pk:wfarm/wfarm_4_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "crate",
+"title": "ящики под брезентом"
+},
+"ar_tarp_b": {
+"img": "pk:wfarm/wfarm_4_027",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_stool": {
+"img": "pk:ucamp/ucamp_2_084",
+"block": true,
+"sight": false
+},
+"ar_laundry": {
+"img": "pk:wfarm/wfarm_3_000",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ar_tool_rack": {
+"img": "pk:wfarm/p3/8,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "tools",
+"title": "стойка с инструментами"
+},
+"ar_fertilizer": {
+"img": "pk:wfarm/p3/2,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_fence": {
+"img": "pk:wfarm/p3/3,12,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tent0": {
+"img": "pk:ucamp/ucamp_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_tent1": {
+"img": "pk:ucamp/ucamp_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_tent2": {
+"img": "pk:ucamp/ucamp_2_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_tent3": {
+"img": "pk:ucamp/ucamp_2_011",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_tent4": {
+"img": "pk:ucamp/ucamp_2_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_tent5": {
+"img": "pk:ucamp/ucamp_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"ar_cans": {
+"img": "pk:ucamp/ucamp_2_031",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стол с консервами"
+},
+"ar_water_tbl": {
+"img": "pk:ucamp/ucamp_2_032",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_well": {
+"img": "pk:desnat/desnat_3_026",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_tent_white": {
+"img": "pk:bazaar/bazaar_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ar_water_barrel": {
+"img": "pk:desnat/desnat_3_037",
+"block": true,
+"sight": false
+},
+"ar_bed": {
+"img": "pk:west/west_2_005",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ar_cot": {
+"img": "pk:ucamp/ucamp_3_027",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"ar_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"ar_chest": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "сундук"
+},
+"ar_shelf": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка"
+},
+"ar_wreck": {
+"img": "pk:zcity/zcity_2_034",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_wreck_b": {
+"img": "pk:zcity/zcity_2_036",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_van_burnt": {
+"img": "pk:zcity/zcity_2_097",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_bone_totem": {
+"img": "pk:gcave/p1/3,2,1,2",
+"block": true,
+"sight": false
+},
+"ar_skull_pole": {
+"img": "pk:gcave/p1/2,8,1,2",
+"block": true,
+"sight": false
+},
+"ar_khan_hut": {
+"img": "pk:gcave/p1/0,10,2,4",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar_spikes": {
+"img": "pk:gcave/p1/12,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_weapon_rack": {
+"img": "pk:gcave/p1/14,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "стойка с оружием"
+},
+"ar_hide": {
+"img": "pk:gcave/p1/10,8,2,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"ar_loot_pile": {
+"img": "pk:gcave/p1/10,10,2,2",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "добыча Ханов"
+},
+"ar_cave_fire": {
+"img": "pk:gcave/p1/14,5,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.4
+}
+},
+"ar_mush": {
+"img": "pk:gcave/p1/2,4,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 60,
+"color": [
+140,
+255,
+170
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"ar_mush_b": {
+"img": "pk:gcave/p1/2,5,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 60,
+"color": [
+120,
+200,
+255
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"ar_mush_c": {
+"img": "pk:gcave/p1/7,4,1,1",
+"block": true,
+"sight": false
+},
+"ar_boulder": {
+"img": "pk:gcave/p1/4,4,1,1",
+"block": true,
+"sight": false
+},
+"ar_boulder_b": {
+"img": "pk:gcave/p1/5,4,1,1",
+"block": true,
+"sight": false
+},
+"ar_boulder_c": {
+"img": "pk:gcave/p1/4,5,1,1",
+"block": true,
+"sight": false
+},
+"ar_stalagmite": {
+"img": "pk:gcave/p1/8,3,1,1",
+"block": true,
+"sight": false
+},
+"ar_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ar_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ar_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ar_outcrop": {
+"img": "pk:desnat/p1/12,4,3,2",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"ar_burnt": {
+"img": "pk:zcity/zcity_1_122",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_burnt_b": {
+"img": "pk:zcity/zcity_1_123",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar_field": {
+"img": "pk:wfarm/p5/0,2,8,2",
+"block": false,
+"sight": false,
+"foot": [
+8,
+2
+],
+"layer": "floor"
+},
+"ar_field_b": {
+"img": "pk:wfarm/p5/0,2,8,2",
+"block": false,
+"sight": false,
+"foot": [
+8,
+2
+],
+"layer": "floor"
+},
+"ar_greens": {
+"img": "pk:wfarm/p5/4,0,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"ar_greens_b": {
+"img": "pk:wfarm/p5/4,0,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"ar_hall_rug": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+}
+}
+}
