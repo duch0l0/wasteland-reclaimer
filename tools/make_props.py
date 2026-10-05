@@ -4,7 +4,7 @@
   x_grave        могильный холмик (обыскивается лопатой)
   x_cross        деревянный крест          x_tombstone  надгробие
   x_vault_door   дверь-шестерня Убежища 57 в скале (снаружи)
-  x_vault_gear   та же дверь изнутри убежища
+  x_vault_gear   та же дверь изнутри убежища (x_vault_gear12 — с номером 12, Некрополь)
   x_manhole      люк ливнёвки (спуск)      x_ladder     лестница наверх с полосой света
   x_board        доска объявлений          x_sandbags   мешки с песком (низкое укрытие)
   x_cliff        скала (кусок обрыва)      x_pipe       ржавая труба у стены
@@ -138,7 +138,7 @@ def vault_door():
     return s
 
 
-def gear(s, cx, cy, r):
+def gear(s, cx, cy, r, label="57"):
     teeth = 10
     for i in range(teeth):
         a = i / teeth * math.tau
@@ -149,14 +149,14 @@ def gear(s, cx, cy, r):
     pygame.draw.circle(s, (104, 108, 112), (cx, cy), r - 9)
     pygame.draw.circle(s, (132, 136, 140), (cx, cy), 5)
     font = pygame.font.Font(None, 20)
-    t = font.render("57", False, (230, 190, 50))
+    t = font.render(label, False, (230, 190, 50))
     s.blit(t, t.get_rect(center=(cx, cy + 1)))
 
 
-def vault_gear():
+def vault_gear(label="57"):
     s = canvas(64, 64)
     pygame.draw.circle(s, (46, 50, 58), (32, 32), 31)
-    gear(s, 32, 32, 22)
+    gear(s, 32, 32, 22, label)
     return outline(s)
 
 
@@ -339,6 +339,7 @@ PROPS = {
     "x_tombstone": (tombstone, {"foot": [1, 1]}),
     "x_vault_door": (vault_door, {"foot": [4, 2], "sight": True}),
     "x_vault_gear": (vault_gear, {"foot": [2, 1], "sight": True}),
+    "x_vault_gear12": (lambda: vault_gear("12"), {"foot": [2, 1], "sight": True}),   # Убежище 12 (Некрополь)
     "x_manhole": (manhole, {"block": False, "layer": "floor"}),
     "x_ladder": (ladder, {"block": False, "layer": "floor"}),
     "x_board": (board, {"foot": [2, 1]}),

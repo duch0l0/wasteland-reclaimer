@@ -103,6 +103,8 @@ class QuestMixin:
             self.reveal_location("hub")
         if "hub" in self.locations and "junktown" not in self.worldmap.known:   # из Хаба — караванная дорога в Джанктаун
             self.reveal_location("junktown")
+        if ("junktown" in self.locations or f.get("know_cobbs_necropolis")) and "necropolis" not in self.worldmap.known:
+            self.reveal_location("necropolis")   # архив Анны Шоу или караванщики Джанктауна — к гулям Бейкерсфилда
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 

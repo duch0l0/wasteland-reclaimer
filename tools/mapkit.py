@@ -322,7 +322,7 @@ class MapKit:
         for t in self.exits:
             assert tuple(t) in reach, f"выход {t} недоступен"
         for p in self.portals:
-            assert any(tuple(t) in reach for t in p["tiles"]), f"портал {p['to']} недоступен"
+            assert any(tuple(t) in reach for t in p["tiles"]), f"портал {p['to']} недоступен ({self.__dict__.get('id')} {p['tiles']})"
         for kind, ex, ey in self.enemies:
             for nid, nx, ny in self.npcs:
                 if nid in gap_exempt:

@@ -1,0 +1,1078 @@
+{
+"props": {
+"nc_tower0": {
+"img": "pk:zcity/zcity_5_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_tower1": {
+"img": "pk:zcity/zcity_5_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_tower2": {
+"img": "pk:zcity/zcity_5_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_tower3": {
+"img": "pk:zcity/zcity_5_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_tower4": {
+"img": "pk:zcity/zcity_5_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_tower_broken": {
+"img": "pk:zcity/zcity_5_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_shop_row": {
+"img": "pk:zcity/zcity_5_022",
+"block": true,
+"sight": true,
+"foot": [
+6,
+1
+]
+},
+"nc_shop_wide": {
+"img": "pk:zcity/zcity_5_017",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"nc_shop0": {
+"img": "pk:zcity/zcity_5_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_shop1": {
+"img": "pk:zcity/zcity_5_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_shop2": {
+"img": "pk:zcity/zcity_5_023",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_facade_low": {
+"img": "pk:zcity/zcity_5_006",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"nc_ruin_wall": {
+"img": "pk:zcity/zcity_5_009",
+"block": true,
+"sight": true,
+"foot": [
+9,
+1
+]
+},
+"nc_ruin_wall_s": {
+"img": "pk:zcity/zcity_5_010",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"nc_ruin_graffiti": {
+"img": "pk:zcity/zcity_5_016",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"nc_rubble0": {
+"img": "pk:zcity/zcity_4_007",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble1": {
+"img": "pk:zcity/zcity_4_008",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble2": {
+"img": "pk:zcity/zcity_4_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble3": {
+"img": "pk:zcity/zcity_4_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble4": {
+"img": "pk:zcity/zcity_4_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble5": {
+"img": "pk:zcity/zcity_4_023",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble6": {
+"img": "pk:zcity/zcity_4_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_rubble_s": {
+"img": "pk:zcity/zcity_5_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_bricks": {
+"img": "pk:zcity/zcity_1_122",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_bricks_b": {
+"img": "pk:zcity/zcity_1_123",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_car0": {
+"img": "pk:zcity/zcity_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_car1": {
+"img": "pk:zcity/zcity_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_car2": {
+"img": "pk:zcity/zcity_2_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_car3": {
+"img": "pk:zcity/zcity_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_car4": {
+"img": "pk:zcity/zcity_2_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck0": {
+"img": "pk:zcity/zcity_2_023",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck1": {
+"img": "pk:zcity/zcity_2_034",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck2": {
+"img": "pk:zcity/zcity_2_035",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck3": {
+"img": "pk:zcity/zcity_2_036",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck4": {
+"img": "pk:zcity/zcity_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck5": {
+"img": "pk:zcity/zcity_2_046",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck6": {
+"img": "pk:zcity/zcity_2_078",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck7": {
+"img": "pk:zcity/zcity_2_097",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_wreck8": {
+"img": "pk:zcity/zcity_2_098",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_car_pile": {
+"img": "pk:zcity/zcity_5_026",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_taxi": {
+"img": "pk:zcity/zcity_5_025",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_lamp": {
+"img": "pk:zcity/zcity_3_011",
+"block": true,
+"sight": false
+},
+"nc_lamp_b": {
+"img": "pk:zcity/zcity_3_012",
+"block": true,
+"sight": false
+},
+"nc_sign": {
+"img": "pk:zcity/zcity_3_036",
+"block": true,
+"sight": false
+},
+"nc_sign_b": {
+"img": "pk:zcity/zcity_3_039",
+"block": true,
+"sight": false
+},
+"nc_billboard0": {
+"img": "pk:zcity/zcity_4_142",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_billboard1": {
+"img": "pk:zcity/zcity_4_143",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_billboard2": {
+"img": "pk:zcity/zcity_4_145",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_tree": {
+"img": "pk:zcity/zcity_4_126",
+"block": true,
+"sight": false
+},
+"nc_tree_b": {
+"img": "pk:zcity/zcity_4_127",
+"block": true,
+"sight": false
+},
+"nc_pipes": {
+"img": "pk:zcity/zcity_4_050",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_tires": {
+"img": "pk:zcity/zcity_2_024",
+"block": true,
+"sight": false
+},
+"nc_vending": {
+"img": "pk:zcity/zcity_1_135",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат с газировкой"
+},
+"nc_subway": {
+"img": "pk:zcity/p3/8,4,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_iron_fence": {
+"img": "pk:grave/grave_2_001",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_iron_fence_b": {
+"img": "pk:grave/grave_2_003",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_crypt": {
+"img": "pk:grave/grave_2_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_crypt_b": {
+"img": "pk:grave/grave_2_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_chapel": {
+"img": "pk:grave/grave_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_dead_tree0": {
+"img": "pk:grave/grave_2_019",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_dead_tree1": {
+"img": "pk:grave/grave_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_dead_tree2": {
+"img": "pk:grave/grave_2_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_grave_statue": {
+"img": "pk:grave/grave_2_034",
+"block": true,
+"sight": false
+},
+"nc_grave_lamp": {
+"img": "pk:grave/grave_2_036",
+"block": true,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+180,
+255,
+160
+],
+"at": [
+0.5,
+0.2
+],
+"flicker": 0.4
+}
+},
+"nc_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+},
+"nc_bones_b": {
+"img": "pk:grave/grave_2_027",
+"block": false,
+"sight": false
+},
+"nc_open_grave": {
+"img": "pk:grave/grave_2_026",
+"block": true,
+"sight": false,
+"search": "grave",
+"title": "разрытая могила"
+},
+"nc_tomb0": {
+"img": "pk:grave/p2/12,1,1,1",
+"block": true,
+"sight": false
+},
+"nc_tomb1": {
+"img": "pk:grave/p2/13,1,1,1",
+"block": true,
+"sight": false
+},
+"nc_tomb2": {
+"img": "pk:grave/p2/14,1,1,1",
+"block": true,
+"sight": false
+},
+"nc_tomb3": {
+"img": "pk:grave/p2/15,1,1,1",
+"block": true,
+"sight": false
+},
+"nc_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"nc_pump": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_generator": {
+"img": "pk:ucamp/ucamp_2_057",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall0": {
+"img": "pk:ucamp/ucamp_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall1": {
+"img": "pk:ucamp/ucamp_1_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall2": {
+"img": "pk:ucamp/ucamp_1_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall3": {
+"img": "pk:ucamp/ucamp_1_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall4": {
+"img": "pk:ucamp/ucamp_1_012",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall5": {
+"img": "pk:ucamp/ucamp_1_036",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_stall6": {
+"img": "pk:ucamp/ucamp_1_054",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_gun_stall": {
+"img": "pk:ucamp/ucamp_4_012",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_tent0": {
+"img": "pk:ucamp/ucamp_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_tent1": {
+"img": "pk:ucamp/ucamp_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_tent2": {
+"img": "pk:ucamp/ucamp_2_011",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_tent3": {
+"img": "pk:ucamp/ucamp_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_shack": {
+"img": "pk:ucamp/ucamp_2_023",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_shack_b": {
+"img": "pk:ucamp/ucamp_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_shack_c": {
+"img": "pk:ucamp/ucamp_2_025",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"nc_cans": {
+"img": "pk:ucamp/ucamp_2_031",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стол с консервами"
+},
+"nc_water_tbl": {
+"img": "pk:ucamp/ucamp_2_032",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_bags": {
+"img": "pk:ucamp/ucamp_2_034",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "bag",
+"title": "рюкзаки"
+},
+"nc_barrel": {
+"img": "pk:ucamp/ucamp_2_042",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"nc_tire_pile": {
+"img": "pk:ucamp/ucamp_2_043",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_cot": {
+"img": "pk:ucamp/ucamp_3_027",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"nc_med_cab": {
+"img": "pk:ucamp/ucamp_3_031",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"search": "drawer",
+"title": "аптечный шкаф"
+},
+"nc_basin": {
+"img": "pk:sewer/sewer_1_073",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_pipes_b": {
+"img": "pk:zcity/zcity_4_120",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_crates": {
+"img": "pk:ucamp/ucamp_2_087",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"nc_worktable": {
+"img": "pk:ucamp/ucamp_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_set_dais": {
+"img": "pk:cult/cult_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_set_table": {
+"img": "pk:cult/cult_2_046",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_statue": {
+"img": "pk:cult/cult_2_094",
+"block": true,
+"sight": false
+},
+"nc_statue_b": {
+"img": "pk:cult/cult_2_121",
+"block": true,
+"sight": false
+},
+"nc_banner": {
+"img": "pk:cult/cult_2_141",
+"block": false,
+"sight": false
+},
+"nc_banner_b": {
+"img": "pk:cult/cult_2_142",
+"block": false,
+"sight": false
+},
+"nc_pillar": {
+"img": "pk:cult/cult_2_143",
+"block": true,
+"sight": true
+},
+"nc_bookcase": {
+"img": "pk:cult/cult_2_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "шкаф с бумагами"
+},
+"nc_bookcase_b": {
+"img": "pk:cult/cult_2_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "шкаф с бумагами"
+},
+"nc_candelabra": {
+"img": "pk:cult/cult_2_068",
+"block": false,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.5
+}
+},
+"nc_chest": {
+"img": "pk:cult/cult_2_134",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сундук"
+},
+"nc_sewer_gate": {
+"img": "pk:sewer/sewer_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_sewer_outlet": {
+"img": "pk:sewer/sewer_1_008",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"nc_sewer_rubble": {
+"img": "pk:sewer/sewer_1_042",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_sewer_moss": {
+"img": "pk:sewer/sewer_1_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_bunk": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nc_bunk_b": {
+"img": "pk:nbunk/nbunk_2_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "locker",
+"title": "стеллаж"
+},
+"nc_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"nc_v_desk": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nc_v_gen": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nc_hall_carpet0": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_hall_carpet1": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_hall_carpet2": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+}
+}
+}

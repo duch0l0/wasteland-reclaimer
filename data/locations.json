@@ -428,5 +428,45 @@
     "known": false,
     "music": "junktown",
     "underground": true
+  },
+  "necropolis": {
+    "name": "Некрополь",
+    "map": "data/maps/necropolis.json",
+    "known": false,
+    "music": "vats",
+    "world_pos": [
+      1200,
+      1090
+    ],
+    "world_name": "Некрополь",
+    "discover": true
+  },
+  "necropolis_hall": {
+    "name": "Зал Мёртвых",
+    "map": "data/maps/necropolis_hall.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "necropolis_cobbs": {
+    "name": "Квартира Коббса",
+    "map": "data/maps/necropolis_cobbs.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "necropolis_under": {
+    "name": "Подземка Некрополя",
+    "map": "data/maps/necropolis_under.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "vault12": {
+    "name": "Убежище 12",
+    "map": "data/maps/vault12.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
   }
 }

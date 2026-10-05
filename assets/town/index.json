@@ -4656,5 +4656,14 @@
    400
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_vault_gear12": {
+  "page": null,
+  "rect": null,
+  "size": [
+   128,
+   128
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

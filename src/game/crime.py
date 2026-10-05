@@ -39,6 +39,9 @@ ROLES = {
     # Джанктаун
     "gate_guard": "guard", "jt_guard": "guard", "hall_guard": "guard", "gizmo_thug": "brawler",
     "hunter_rourke": "elite", "cult_recruiter": "cultist",
+    # Некрополь
+    "nc_guard": "guard", "nc_guard_b": "guard", "nc_hall_guard": "guard", "nc_hall_guard_b": "guard",
+    "set": "elite", "cobbs": "elite", "cult_envoy": "cultist", "zeke": "brawler",
 }
 CULT_ZONES = {"baker_mission"}
 SPARE = {"dog", "robot", "amos", "amos_b7"}     # их не трогает и не превращает: пёс, робот, дед в келье

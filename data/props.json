@@ -463,6 +463,7 @@
     "r_streetlamp": {"img": "r12_033", "scale": 1.5, "foot": [1, 1], "light": {"r": 210, "color": [255, 165, 85], "at": [0.82, 0.1]}},
     "r_streetlamp_b": {"img": "r12_035", "scale": 1.5, "foot": [1, 1], "light": {"r": 210, "color": [255, 165, 85], "at": [0.18, 0.1]}},
     "x_fire_barrel": {"img": "r12_052", "scale": 1.5, "foot": [1, 1], "title": "бочка с огнём", "light": {"r": 170, "color": [255, 140, 60], "at": [0.5, 0.12], "flicker": 1, "flame": true}},
-    "r_burning_rubble": {"img": "r12_022", "scale": 1.5, "foot": [2, 1], "light": {"r": 190, "color": [255, 120, 50], "at": [0.5, 0.45], "flicker": 1, "flame": true}}
+    "r_burning_rubble": {"img": "r12_022", "scale": 1.5, "foot": [2, 1], "light": {"r": 190, "color": [255, 120, 50], "at": [0.5, 0.45], "flicker": 1, "flame": true}},
+    "x_vault_gear12": {"img": "x_vault_gear12", "foot": [2, 1], "sight": true}
   }
 }
