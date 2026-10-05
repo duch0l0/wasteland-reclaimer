@@ -1,0 +1,2161 @@
+{
+"slug": "desert-town-pixel-art-tileset",
+"items": {
+"destown_1_000": {
+"size": [
+44,
+91
+],
+"dir": "props"
+},
+"destown_1_001": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"destown_1_002": {
+"size": [
+41,
+90
+],
+"dir": "props"
+},
+"destown_1_003": {
+"size": [
+37,
+90
+],
+"dir": "props"
+},
+"destown_1_004": {
+"size": [
+44,
+92
+],
+"dir": "props"
+},
+"destown_1_005": {
+"size": [
+44,
+80
+],
+"dir": "props"
+},
+"destown_1_006": {
+"size": [
+40,
+78
+],
+"dir": "props"
+},
+"destown_1_007": {
+"size": [
+20,
+92
+],
+"dir": "props"
+},
+"destown_1_008": {
+"size": [
+68,
+93
+],
+"dir": "props"
+},
+"destown_1_009": {
+"size": [
+69,
+90
+],
+"dir": "props"
+},
+"destown_1_010": {
+"size": [
+45,
+94
+],
+"dir": "props"
+},
+"destown_1_011": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"destown_1_012": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"destown_1_013": {
+"size": [
+45,
+45
+],
+"dir": "props"
+},
+"destown_1_014": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"destown_1_015": {
+"size": [
+193,
+193
+],
+"dir": "props"
+},
+"destown_1_016": {
+"size": [
+44,
+91
+],
+"dir": "props"
+},
+"destown_1_017": {
+"size": [
+38,
+72
+],
+"dir": "props"
+},
+"destown_1_018": {
+"size": [
+36,
+94
+],
+"dir": "props"
+},
+"destown_1_019": {
+"size": [
+40,
+79
+],
+"dir": "props"
+},
+"destown_1_020": {
+"size": [
+34,
+90
+],
+"dir": "props"
+},
+"destown_1_021": {
+"size": [
+34,
+93
+],
+"dir": "props"
+},
+"destown_1_022": {
+"size": [
+35,
+93
+],
+"dir": "props"
+},
+"destown_1_023": {
+"size": [
+34,
+92
+],
+"dir": "props"
+},
+"destown_1_024": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"destown_1_025": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"destown_1_026": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"destown_1_027": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"destown_1_028": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"destown_1_029": {
+"size": [
+45,
+41
+],
+"dir": "props"
+},
+"destown_1_030": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"destown_1_031": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"destown_1_032": {
+"size": [
+47,
+44
+],
+"dir": "props"
+},
+"destown_1_033": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"destown_1_034": {
+"size": [
+42,
+38
+],
+"dir": "props"
+},
+"destown_1_035": {
+"size": [
+20,
+91
+],
+"dir": "props"
+},
+"destown_1_036": {
+"size": [
+36,
+90
+],
+"dir": "props"
+},
+"destown_1_037": {
+"size": [
+34,
+90
+],
+"dir": "props"
+},
+"destown_1_038": {
+"size": [
+35,
+93
+],
+"dir": "props"
+},
+"destown_1_039": {
+"size": [
+43,
+45
+],
+"dir": "props"
+},
+"destown_1_040": {
+"size": [
+45,
+44
+],
+"dir": "props"
+},
+"destown_1_041": {
+"size": [
+45,
+46
+],
+"dir": "props"
+},
+"destown_1_042": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"destown_1_043": {
+"size": [
+71,
+91
+],
+"dir": "props"
+},
+"destown_1_044": {
+"size": [
+56,
+93
+],
+"dir": "props"
+},
+"destown_1_045": {
+"size": [
+40,
+91
+],
+"dir": "props"
+},
+"destown_1_046": {
+"size": [
+39,
+22
+],
+"dir": "props"
+},
+"destown_1_047": {
+"size": [
+45,
+28
+],
+"dir": "props"
+},
+"destown_1_048": {
+"size": [
+36,
+42
+],
+"dir": "props"
+},
+"destown_1_049": {
+"size": [
+26,
+29
+],
+"dir": "props"
+},
+"destown_1_050": {
+"size": [
+38,
+39
+],
+"dir": "props"
+},
+"destown_1_051": {
+"size": [
+26,
+29
+],
+"dir": "props"
+},
+"destown_1_052": {
+"size": [
+18,
+45
+],
+"dir": "props"
+},
+"destown_1_053": {
+"size": [
+42,
+38
+],
+"dir": "props"
+},
+"destown_1_054": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"destown_1_055": {
+"size": [
+42,
+47
+],
+"dir": "props"
+},
+"destown_1_056": {
+"size": [
+43,
+47
+],
+"dir": "props"
+},
+"destown_1_057": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"destown_1_058": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"destown_1_059": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"destown_1_060": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"destown_1_061": {
+"size": [
+45,
+39
+],
+"dir": "props"
+},
+"destown_1_062": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"destown_1_063": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"destown_1_064": {
+"size": [
+45,
+140
+],
+"dir": "props"
+},
+"destown_1_065": {
+"size": [
+35,
+44
+],
+"dir": "props"
+},
+"destown_1_066": {
+"size": [
+37,
+39
+],
+"dir": "props"
+},
+"destown_1_067": {
+"size": [
+35,
+46
+],
+"dir": "props"
+},
+"destown_1_068": {
+"size": [
+43,
+37
+],
+"dir": "props"
+},
+"destown_1_069": {
+"size": [
+43,
+39
+],
+"dir": "props"
+},
+"destown_1_070": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"destown_1_071": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"destown_1_072": {
+"size": [
+45,
+46
+],
+"dir": "props"
+},
+"destown_1_073": {
+"size": [
+26,
+22
+],
+"dir": "props"
+},
+"destown_1_074": {
+"size": [
+35,
+43
+],
+"dir": "props"
+},
+"destown_1_075": {
+"size": [
+45,
+38
+],
+"dir": "props"
+},
+"destown_1_076": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"destown_1_077": {
+"size": [
+31,
+45
+],
+"dir": "props"
+},
+"destown_1_078": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"destown_1_079": {
+"size": [
+41,
+45
+],
+"dir": "props"
+},
+"destown_1_080": {
+"size": [
+45,
+43
+],
+"dir": "props"
+},
+"destown_1_081": {
+"size": [
+40,
+45
+],
+"dir": "props"
+},
+"destown_1_082": {
+"size": [
+45,
+39
+],
+"dir": "props"
+},
+"destown_1_083": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"destown_1_084": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"destown_1_085": {
+"size": [
+46,
+42
+],
+"dir": "props"
+},
+"destown_1_086": {
+"size": [
+30,
+40
+],
+"dir": "props"
+},
+"destown_1_087": {
+"size": [
+31,
+42
+],
+"dir": "props"
+},
+"destown_1_088": {
+"size": [
+46,
+38
+],
+"dir": "props"
+},
+"destown_1_089": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"destown_1_090": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"destown_1_091": {
+"size": [
+43,
+42
+],
+"dir": "props"
+},
+"destown_1_092": {
+"size": [
+32,
+32
+],
+"dir": "props"
+},
+"destown_1_093": {
+"size": [
+36,
+45
+],
+"dir": "props"
+},
+"destown_1_094": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"destown_1_095": {
+"size": [
+46,
+42
+],
+"dir": "props"
+},
+"destown_1_096": {
+"size": [
+45,
+90
+],
+"dir": "props"
+},
+"destown_1_097": {
+"size": [
+46,
+92
+],
+"dir": "props"
+},
+"destown_1_098": {
+"size": [
+44,
+92
+],
+"dir": "props"
+},
+"destown_1_099": {
+"size": [
+46,
+90
+],
+"dir": "props"
+},
+"destown_1_100": {
+"size": [
+25,
+89
+],
+"dir": "props"
+},
+"destown_1_101": {
+"size": [
+44,
+72
+],
+"dir": "props"
+},
+"destown_1_102": {
+"size": [
+30,
+40
+],
+"dir": "props"
+},
+"destown_1_103": {
+"size": [
+31,
+42
+],
+"dir": "props"
+},
+"destown_1_104": {
+"size": [
+40,
+36
+],
+"dir": "props"
+},
+"destown_1_105": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"destown_1_106": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"destown_1_107": {
+"size": [
+43,
+40
+],
+"dir": "props"
+},
+"destown_1_108": {
+"size": [
+43,
+46
+],
+"dir": "props"
+},
+"destown_1_109": {
+"size": [
+45,
+42
+],
+"dir": "props"
+},
+"destown_1_110": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"destown_1_111": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"destown_1_112": {
+"size": [
+42,
+33
+],
+"dir": "props"
+},
+"destown_1_113": {
+"size": [
+40,
+35
+],
+"dir": "props"
+},
+"destown_1_114": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"destown_1_115": {
+"size": [
+44,
+39
+],
+"dir": "props"
+},
+"destown_1_116": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"destown_1_117": {
+"size": [
+42,
+43
+],
+"dir": "props"
+},
+"destown_1_118": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"destown_1_119": {
+"size": [
+46,
+46
+],
+"dir": "props"
+},
+"destown_1_120": {
+"size": [
+45,
+45
+],
+"dir": "props"
+},
+"destown_1_121": {
+"size": [
+44,
+39
+],
+"dir": "props"
+},
+"destown_1_122": {
+"size": [
+33,
+39
+],
+"dir": "props"
+},
+"destown_1_123": {
+"size": [
+239,
+98
+],
+"dir": "props"
+},
+"destown_1_124": {
+"size": [
+40,
+38
+],
+"dir": "props"
+},
+"destown_1_125": {
+"size": [
+42,
+34
+],
+"dir": "props"
+},
+"destown_1_126": {
+"size": [
+45,
+43
+],
+"dir": "props"
+},
+"destown_1_127": {
+"size": [
+41,
+42
+],
+"dir": "props"
+},
+"destown_1_128": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"destown_1_129": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"destown_1_130": {
+"size": [
+36,
+45
+],
+"dir": "props"
+},
+"destown_1_131": {
+"size": [
+44,
+45
+],
+"dir": "props"
+},
+"destown_1_132": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"destown_1_133": {
+"size": [
+289,
+36
+],
+"dir": "props"
+},
+"destown_1_134": {
+"size": [
+38,
+27
+],
+"dir": "props"
+},
+"destown_1_135": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"destown_1_136": {
+"size": [
+46,
+43
+],
+"dir": "props"
+},
+"destown_1_137": {
+"size": [
+41,
+34
+],
+"dir": "props"
+},
+"destown_1_138": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"destown_1_139": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"destown_1_140": {
+"size": [
+36,
+94
+],
+"dir": "props"
+},
+"destown_1_141": {
+"size": [
+33,
+94
+],
+"dir": "props"
+},
+"destown_1_142": {
+"size": [
+36,
+26
+],
+"dir": "props"
+},
+"destown_1_143": {
+"size": [
+20,
+46
+],
+"dir": "props"
+},
+"destown_1_144": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"destown_1_145": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"destown_1_146": {
+"size": [
+41,
+38
+],
+"dir": "props"
+},
+"destown_1_147": {
+"size": [
+32,
+39
+],
+"dir": "props"
+},
+"destown_1_148": {
+"size": [
+35,
+40
+],
+"dir": "props"
+},
+"destown_1_149": {
+"size": [
+40,
+38
+],
+"dir": "props"
+},
+"destown_1_150": {
+"size": [
+40,
+42
+],
+"dir": "props"
+},
+"destown_1_151": {
+"size": [
+34,
+76
+],
+"dir": "props"
+},
+"destown_1_152": {
+"size": [
+40,
+38
+],
+"dir": "props"
+},
+"destown_1_153": {
+"size": [
+43,
+35
+],
+"dir": "props"
+},
+"destown_1_154": {
+"size": [
+42,
+33
+],
+"dir": "props"
+},
+"destown_1_155": {
+"size": [
+35,
+40
+],
+"dir": "props"
+},
+"destown_1_156": {
+"size": [
+34,
+40
+],
+"dir": "props"
+},
+"destown_1_157": {
+"size": [
+36,
+40
+],
+"dir": "props"
+},
+"destown_1_158": {
+"size": [
+42,
+38
+],
+"dir": "props"
+},
+"destown_1_159": {
+"size": [
+289,
+95
+],
+"dir": "props"
+},
+"destown_1_160": {
+"size": [
+17,
+78
+],
+"dir": "props"
+},
+"destown_1_161": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"destown_1_162": {
+"size": [
+44,
+22
+],
+"dir": "props"
+},
+"destown_1_163": {
+"size": [
+44,
+24
+],
+"dir": "props"
+},
+"destown_1_164": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"destown_1_165": {
+"size": [
+36,
+47
+],
+"dir": "props"
+},
+"destown_1_166": {
+"size": [
+36,
+47
+],
+"dir": "props"
+},
+"destown_1_167": {
+"size": [
+33,
+41
+],
+"dir": "props"
+},
+"destown_2_000": {
+"size": [
+768,
+482
+],
+"dir": "props"
+},
+"destown_2_001": {
+"size": [
+32,
+38
+],
+"dir": "props"
+},
+"destown_2_002": {
+"size": [
+36,
+47
+],
+"dir": "props"
+},
+"destown_2_003": {
+"size": [
+34,
+49
+],
+"dir": "props"
+},
+"destown_2_004": {
+"size": [
+42,
+44
+],
+"dir": "props"
+},
+"destown_2_005": {
+"size": [
+41,
+45
+],
+"dir": "props"
+},
+"destown_2_006": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"destown_2_007": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"destown_2_008": {
+"size": [
+16,
+23
+],
+"dir": "props"
+},
+"destown_2_009": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"destown_2_010": {
+"size": [
+36,
+34
+],
+"dir": "props"
+},
+"destown_2_011": {
+"size": [
+18,
+22
+],
+"dir": "props"
+},
+"destown_2_012": {
+"size": [
+19,
+32
+],
+"dir": "props"
+},
+"destown_2_013": {
+"size": [
+38,
+42
+],
+"dir": "props"
+},
+"destown_2_014": {
+"size": [
+37,
+34
+],
+"dir": "props"
+},
+"destown_2_015": {
+"size": [
+33,
+33
+],
+"dir": "props"
+},
+"destown_2_016": {
+"size": [
+30,
+31
+],
+"dir": "props"
+},
+"destown_2_017": {
+"size": [
+38,
+40
+],
+"dir": "props"
+},
+"destown_2_018": {
+"size": [
+35,
+44
+],
+"dir": "props"
+},
+"destown_2_019": {
+"size": [
+32,
+47
+],
+"dir": "props"
+},
+"destown_2_020": {
+"size": [
+43,
+46
+],
+"dir": "props"
+},
+"destown_2_021": {
+"size": [
+39,
+45
+],
+"dir": "props"
+},
+"destown_2_022": {
+"size": [
+22,
+23
+],
+"dir": "props"
+},
+"destown_2_023": {
+"size": [
+41,
+46
+],
+"dir": "props"
+},
+"destown_2_024": {
+"size": [
+23,
+22
+],
+"dir": "props"
+},
+"destown_2_025": {
+"size": [
+42,
+39
+],
+"dir": "props"
+},
+"destown_2_026": {
+"size": [
+17,
+18
+],
+"dir": "props"
+},
+"destown_2_027": {
+"size": [
+17,
+17
+],
+"dir": "props"
+},
+"destown_2_028": {
+"size": [
+17,
+11
+],
+"dir": "props"
+},
+"destown_2_029": {
+"size": [
+17,
+12
+],
+"dir": "props"
+},
+"destown_2_030": {
+"size": [
+38,
+47
+],
+"dir": "props"
+},
+"destown_2_031": {
+"size": [
+33,
+37
+],
+"dir": "props"
+},
+"destown_2_032": {
+"size": [
+43,
+35
+],
+"dir": "props"
+},
+"destown_2_033": {
+"size": [
+32,
+34
+],
+"dir": "props"
+},
+"destown_2_034": {
+"size": [
+41,
+40
+],
+"dir": "props"
+},
+"destown_2_035": {
+"size": [
+32,
+46
+],
+"dir": "props"
+},
+"destown_2_036": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"destown_2_037": {
+"size": [
+26,
+26
+],
+"dir": "props"
+},
+"destown_2_038": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"destown_2_039": {
+"size": [
+31,
+22
+],
+"dir": "props"
+},
+"destown_2_040": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"destown_2_041": {
+"size": [
+39,
+43
+],
+"dir": "props"
+},
+"destown_2_042": {
+"size": [
+14,
+21
+],
+"dir": "props"
+},
+"destown_2_043": {
+"size": [
+14,
+20
+],
+"dir": "props"
+},
+"destown_2_044": {
+"size": [
+17,
+22
+],
+"dir": "props"
+},
+"destown_2_045": {
+"size": [
+17,
+22
+],
+"dir": "props"
+},
+"destown_2_046": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"destown_2_047": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"destown_2_048": {
+"size": [
+38,
+28
+],
+"dir": "props"
+},
+"destown_2_049": {
+"size": [
+41,
+35
+],
+"dir": "props"
+},
+"destown_2_050": {
+"size": [
+24,
+32
+],
+"dir": "props"
+},
+"destown_2_051": {
+"size": [
+36,
+38
+],
+"dir": "props"
+},
+"destown_2_052": {
+"size": [
+36,
+47
+],
+"dir": "props"
+},
+"destown_2_053": {
+"size": [
+32,
+45
+],
+"dir": "props"
+},
+"destown_2_054": {
+"size": [
+42,
+36
+],
+"dir": "props"
+},
+"destown_2_055": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"destown_2_056": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"destown_2_057": {
+"size": [
+37,
+36
+],
+"dir": "props"
+},
+"destown_2_058": {
+"size": [
+21,
+20
+],
+"dir": "props"
+},
+"destown_2_059": {
+"size": [
+20,
+20
+],
+"dir": "props"
+},
+"destown_2_060": {
+"size": [
+43,
+44
+],
+"dir": "props"
+},
+"destown_2_061": {
+"size": [
+40,
+35
+],
+"dir": "props"
+},
+"destown_2_062": {
+"size": [
+43,
+43
+],
+"dir": "props"
+},
+"destown_2_063": {
+"size": [
+38,
+43
+],
+"dir": "props"
+},
+"destown_2_064": {
+"size": [
+21,
+19
+],
+"dir": "props"
+},
+"destown_2_065": {
+"size": [
+32,
+37
+],
+"dir": "props"
+},
+"destown_2_066": {
+"size": [
+37,
+36
+],
+"dir": "props"
+},
+"destown_2_067": {
+"size": [
+43,
+46
+],
+"dir": "props"
+},
+"destown_2_068": {
+"size": [
+41,
+46
+],
+"dir": "props"
+},
+"destown_2_069": {
+"size": [
+37,
+36
+],
+"dir": "props"
+},
+"destown_2_070": {
+"size": [
+41,
+43
+],
+"dir": "props"
+},
+"destown_2_071": {
+"size": [
+42,
+38
+],
+"dir": "props"
+},
+"destown_2_072": {
+"size": [
+33,
+28
+],
+"dir": "props"
+},
+"destown_2_073": {
+"size": [
+33,
+35
+],
+"dir": "props"
+},
+"destown_2_074": {
+"size": [
+38,
+65
+],
+"dir": "props"
+},
+"destown_2_075": {
+"size": [
+42,
+92
+],
+"dir": "props"
+},
+"destown_2_076": {
+"size": [
+43,
+94
+],
+"dir": "props"
+},
+"destown_2_077": {
+"size": [
+31,
+65
+],
+"dir": "props"
+},
+"destown_2_078": {
+"size": [
+39,
+79
+],
+"dir": "props"
+},
+"destown_2_079": {
+"size": [
+36,
+59
+],
+"dir": "props"
+},
+"destown_2_080": {
+"size": [
+32,
+39
+],
+"dir": "props"
+},
+"destown_2_081": {
+"size": [
+33,
+34
+],
+"dir": "props"
+},
+"destown_2_082": {
+"size": [
+32,
+39
+],
+"dir": "props"
+},
+"destown_2_083": {
+"size": [
+39,
+44
+],
+"dir": "props"
+},
+"destown_3_000": {
+"size": [
+141,
+192
+],
+"dir": "props"
+},
+"destown_3_001": {
+"size": [
+28,
+49
+],
+"dir": "props"
+},
+"destown_3_002": {
+"size": [
+135,
+145
+],
+"dir": "props"
+},
+"destown_3_003": {
+"size": [
+178,
+145
+],
+"dir": "props"
+},
+"destown_3_004": {
+"size": [
+192,
+142
+],
+"dir": "props"
+},
+"destown_3_005": {
+"size": [
+33,
+46
+],
+"dir": "props"
+},
+"destown_3_006": {
+"size": [
+45,
+48
+],
+"dir": "props"
+},
+"destown_3_007": {
+"size": [
+46,
+45
+],
+"dir": "props"
+},
+"destown_3_008": {
+"size": [
+88,
+45
+],
+"dir": "props"
+},
+"destown_3_009": {
+"size": [
+23,
+45
+],
+"dir": "props"
+},
+"destown_3_010": {
+"size": [
+49,
+40
+],
+"dir": "props"
+},
+"destown_3_011": {
+"size": [
+184,
+103
+],
+"dir": "props"
+},
+"destown_3_012": {
+"size": [
+134,
+192
+],
+"dir": "props"
+},
+"destown_3_013": {
+"size": [
+34,
+47
+],
+"dir": "props"
+},
+"destown_3_014": {
+"size": [
+194,
+226
+],
+"dir": "props"
+},
+"destown_3_015": {
+"size": [
+97,
+93
+],
+"dir": "props"
+},
+"destown_3_016": {
+"size": [
+95,
+92
+],
+"dir": "props"
+},
+"destown_3_017": {
+"size": [
+38,
+43
+],
+"dir": "props"
+},
+"destown_3_018": {
+"size": [
+85,
+79
+],
+"dir": "props"
+},
+"destown_3_019": {
+"size": [
+32,
+46
+],
+"dir": "props"
+},
+"destown_3_020": {
+"size": [
+28,
+46
+],
+"dir": "props"
+},
+"destown_3_021": {
+"size": [
+46,
+47
+],
+"dir": "props"
+},
+"destown_3_022": {
+"size": [
+26,
+28
+],
+"dir": "props"
+},
+"destown_3_023": {
+"size": [
+66,
+73
+],
+"dir": "props"
+},
+"destown_3_024": {
+"size": [
+96,
+35
+],
+"dir": "props"
+},
+"destown_3_025": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"destown_3_026": {
+"size": [
+40,
+43
+],
+"dir": "props"
+},
+"destown_3_027": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"destown_3_028": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"destown_3_029": {
+"size": [
+97,
+241
+],
+"dir": "props"
+},
+"destown_3_030": {
+"size": [
+38,
+45
+],
+"dir": "props"
+},
+"destown_3_031": {
+"size": [
+44,
+39
+],
+"dir": "props"
+},
+"destown_3_032": {
+"size": [
+577,
+241
+],
+"dir": "props"
+},
+"destown_3_033": {
+"size": [
+44,
+43
+],
+"dir": "props"
+},
+"destown_3_034": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"destown_3_035": {
+"size": [
+145,
+239
+],
+"dir": "props"
+},
+"destown_3_036": {
+"size": [
+625,
+145
+],
+"dir": "props"
+},
+"destown_4_000": {
+"size": [
+768,
+673
+],
+"dir": "props"
+},
+"destown_4_001": {
+"size": [
+32,
+41
+],
+"dir": "props"
+},
+"destown_4_002": {
+"size": [
+27,
+28
+],
+"dir": "props"
+},
+"destown_4_003": {
+"size": [
+39,
+30
+],
+"dir": "props"
+},
+"destown_4_004": {
+"size": [
+28,
+32
+],
+"dir": "props"
+},
+"destown_4_005": {
+"size": [
+41,
+31
+],
+"dir": "props"
+},
+"destown_4_006": {
+"size": [
+31,
+41
+],
+"dir": "props"
+},
+"destown_4_007": {
+"size": [
+22,
+30
+],
+"dir": "props"
+},
+"destown_4_008": {
+"size": [
+23,
+30
+],
+"dir": "props"
+},
+"destown_4_009": {
+"size": [
+75,
+85
+],
+"dir": "props"
+},
+"destown_4_010": {
+"size": [
+83,
+94
+],
+"dir": "props"
+},
+"destown_4_011": {
+"size": [
+86,
+95
+],
+"dir": "props"
+},
+"destown_4_012": {
+"size": [
+86,
+95
+],
+"dir": "props"
+},
+"destown_5_000": {
+"size": [
+768,
+768
+],
+"dir": "props"
+},
+"p1": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p2": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p3": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p4": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p5": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+}
+}
+}

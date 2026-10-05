@@ -1,0 +1,2665 @@
+{
+"slug": "modern-casino-pixel-art-tileset",
+"items": {
+"casino_1_000": {
+"size": [
+39,
+95
+],
+"dir": "props"
+},
+"casino_1_001": {
+"size": [
+47,
+96
+],
+"dir": "props"
+},
+"casino_1_002": {
+"size": [
+39,
+95
+],
+"dir": "props"
+},
+"casino_1_003": {
+"size": [
+47,
+96
+],
+"dir": "props"
+},
+"casino_1_004": {
+"size": [
+39,
+96
+],
+"dir": "props"
+},
+"casino_1_005": {
+"size": [
+47,
+95
+],
+"dir": "props"
+},
+"casino_1_006": {
+"size": [
+40,
+95
+],
+"dir": "props"
+},
+"casino_1_007": {
+"size": [
+47,
+95
+],
+"dir": "props"
+},
+"casino_1_008": {
+"size": [
+46,
+192
+],
+"dir": "props"
+},
+"casino_1_009": {
+"size": [
+46,
+192
+],
+"dir": "props"
+},
+"casino_1_010": {
+"size": [
+46,
+192
+],
+"dir": "props"
+},
+"casino_1_011": {
+"size": [
+46,
+192
+],
+"dir": "props"
+},
+"casino_1_012": {
+"size": [
+91,
+86
+],
+"dir": "props"
+},
+"casino_1_013": {
+"size": [
+91,
+87
+],
+"dir": "props"
+},
+"casino_1_014": {
+"size": [
+91,
+87
+],
+"dir": "props"
+},
+"casino_1_015": {
+"size": [
+45,
+289
+],
+"dir": "props"
+},
+"casino_1_016": {
+"size": [
+46,
+289
+],
+"dir": "props"
+},
+"casino_1_017": {
+"size": [
+45,
+385
+],
+"dir": "props"
+},
+"casino_1_018": {
+"size": [
+45,
+385
+],
+"dir": "props"
+},
+"casino_1_019": {
+"size": [
+46,
+96
+],
+"dir": "props"
+},
+"casino_1_020": {
+"size": [
+34,
+57
+],
+"dir": "props"
+},
+"casino_1_021": {
+"size": [
+45,
+96
+],
+"dir": "props"
+},
+"casino_1_022": {
+"size": [
+34,
+57
+],
+"dir": "props"
+},
+"casino_1_023": {
+"size": [
+53,
+96
+],
+"dir": "props"
+},
+"casino_1_024": {
+"size": [
+34,
+57
+],
+"dir": "props"
+},
+"casino_1_025": {
+"size": [
+93,
+279
+],
+"dir": "props"
+},
+"casino_1_026": {
+"size": [
+193,
+81
+],
+"dir": "props"
+},
+"casino_1_027": {
+"size": [
+46,
+96
+],
+"dir": "props"
+},
+"casino_1_028": {
+"size": [
+35,
+57
+],
+"dir": "props"
+},
+"casino_1_029": {
+"size": [
+54,
+96
+],
+"dir": "props"
+},
+"casino_1_030": {
+"size": [
+34,
+57
+],
+"dir": "props"
+},
+"casino_1_031": {
+"size": [
+53,
+96
+],
+"dir": "props"
+},
+"casino_1_032": {
+"size": [
+34,
+57
+],
+"dir": "props"
+},
+"casino_1_033": {
+"size": [
+289,
+76
+],
+"dir": "props"
+},
+"casino_1_034": {
+"size": [
+46,
+93
+],
+"dir": "props"
+},
+"casino_1_035": {
+"size": [
+42,
+66
+],
+"dir": "props"
+},
+"casino_1_036": {
+"size": [
+46,
+93
+],
+"dir": "props"
+},
+"casino_1_037": {
+"size": [
+46,
+93
+],
+"dir": "props"
+},
+"casino_1_038": {
+"size": [
+48,
+93
+],
+"dir": "props"
+},
+"casino_1_039": {
+"size": [
+48,
+94
+],
+"dir": "props"
+},
+"casino_1_040": {
+"size": [
+48,
+94
+],
+"dir": "props"
+},
+"casino_1_041": {
+"size": [
+48,
+95
+],
+"dir": "props"
+},
+"casino_1_042": {
+"size": [
+48,
+94
+],
+"dir": "props"
+},
+"casino_1_043": {
+"size": [
+48,
+95
+],
+"dir": "props"
+},
+"casino_1_044": {
+"size": [
+32,
+46
+],
+"dir": "props"
+},
+"casino_1_045": {
+"size": [
+32,
+48
+],
+"dir": "props"
+},
+"casino_1_046": {
+"size": [
+32,
+48
+],
+"dir": "props"
+},
+"casino_1_047": {
+"size": [
+32,
+48
+],
+"dir": "props"
+},
+"casino_1_048": {
+"size": [
+32,
+48
+],
+"dir": "props"
+},
+"casino_1_049": {
+"size": [
+85,
+133
+],
+"dir": "props"
+},
+"casino_1_050": {
+"size": [
+92,
+143
+],
+"dir": "props"
+},
+"casino_1_051": {
+"size": [
+92,
+48
+],
+"dir": "props"
+},
+"casino_1_052": {
+"size": [
+72,
+48
+],
+"dir": "props"
+},
+"casino_1_053": {
+"size": [
+72,
+48
+],
+"dir": "props"
+},
+"casino_1_054": {
+"size": [
+92,
+48
+],
+"dir": "props"
+},
+"casino_1_055": {
+"size": [
+48,
+41
+],
+"dir": "props"
+},
+"casino_1_056": {
+"size": [
+92,
+40
+],
+"dir": "props"
+},
+"casino_1_057": {
+"size": [
+91,
+40
+],
+"dir": "props"
+},
+"casino_1_058": {
+"size": [
+92,
+40
+],
+"dir": "props"
+},
+"casino_1_059": {
+"size": [
+92,
+40
+],
+"dir": "props"
+},
+"casino_1_060": {
+"size": [
+91,
+40
+],
+"dir": "props"
+},
+"casino_1_061": {
+"size": [
+92,
+28
+],
+"dir": "props"
+},
+"casino_1_062": {
+"size": [
+288,
+241
+],
+"dir": "props"
+},
+"casino_1_063": {
+"size": [
+31,
+46
+],
+"dir": "props"
+},
+"casino_1_064": {
+"size": [
+32,
+46
+],
+"dir": "props"
+},
+"casino_1_065": {
+"size": [
+30,
+47
+],
+"dir": "props"
+},
+"casino_1_066": {
+"size": [
+46,
+90
+],
+"dir": "props"
+},
+"casino_1_067": {
+"size": [
+46,
+90
+],
+"dir": "props"
+},
+"casino_1_068": {
+"size": [
+38,
+75
+],
+"dir": "props"
+},
+"casino_1_069": {
+"size": [
+41,
+89
+],
+"dir": "props"
+},
+"casino_1_070": {
+"size": [
+38,
+56
+],
+"dir": "props"
+},
+"casino_1_071": {
+"size": [
+38,
+52
+],
+"dir": "props"
+},
+"casino_1_072": {
+"size": [
+36,
+96
+],
+"dir": "props"
+},
+"casino_1_073": {
+"size": [
+31,
+47
+],
+"dir": "props"
+},
+"casino_2_000": {
+"size": [
+176,
+96
+],
+"dir": "props"
+},
+"casino_2_001": {
+"size": [
+384,
+91
+],
+"dir": "props"
+},
+"casino_2_002": {
+"size": [
+186,
+280
+],
+"dir": "props"
+},
+"casino_2_003": {
+"size": [
+576,
+86
+],
+"dir": "props"
+},
+"casino_2_004": {
+"size": [
+576,
+94
+],
+"dir": "props"
+},
+"casino_2_005": {
+"size": [
+187,
+89
+],
+"dir": "props"
+},
+"casino_2_006": {
+"size": [
+529,
+88
+],
+"dir": "props"
+},
+"casino_2_007": {
+"size": [
+45,
+80
+],
+"dir": "props"
+},
+"casino_2_008": {
+"size": [
+42,
+48
+],
+"dir": "props"
+},
+"casino_2_009": {
+"size": [
+42,
+97
+],
+"dir": "props"
+},
+"casino_2_010": {
+"size": [
+42,
+97
+],
+"dir": "props"
+},
+"casino_2_011": {
+"size": [
+42,
+97
+],
+"dir": "props"
+},
+"casino_2_012": {
+"size": [
+42,
+49
+],
+"dir": "props"
+},
+"casino_2_013": {
+"size": [
+44,
+76
+],
+"dir": "props"
+},
+"casino_2_014": {
+"size": [
+41,
+76
+],
+"dir": "props"
+},
+"casino_2_015": {
+"size": [
+45,
+85
+],
+"dir": "props"
+},
+"casino_2_016": {
+"size": [
+42,
+66
+],
+"dir": "props"
+},
+"casino_2_017": {
+"size": [
+192,
+97
+],
+"dir": "props"
+},
+"casino_2_018": {
+"size": [
+193,
+176
+],
+"dir": "props"
+},
+"casino_2_019": {
+"size": [
+40,
+49
+],
+"dir": "props"
+},
+"casino_2_020": {
+"size": [
+42,
+27
+],
+"dir": "props"
+},
+"casino_2_021": {
+"size": [
+40,
+49
+],
+"dir": "props"
+},
+"casino_2_022": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"casino_2_023": {
+"size": [
+232,
+89
+],
+"dir": "props"
+},
+"casino_2_024": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"casino_2_025": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"casino_2_026": {
+"size": [
+42,
+45
+],
+"dir": "props"
+},
+"casino_2_027": {
+"size": [
+26,
+43
+],
+"dir": "props"
+},
+"casino_2_028": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"casino_2_029": {
+"size": [
+17,
+39
+],
+"dir": "props"
+},
+"casino_2_030": {
+"size": [
+14,
+22
+],
+"dir": "props"
+},
+"casino_2_031": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"casino_2_032": {
+"size": [
+35,
+45
+],
+"dir": "props"
+},
+"casino_2_033": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"casino_2_034": {
+"size": [
+19,
+35
+],
+"dir": "props"
+},
+"casino_2_035": {
+"size": [
+10,
+25
+],
+"dir": "props"
+},
+"casino_2_036": {
+"size": [
+12,
+18
+],
+"dir": "props"
+},
+"casino_2_037": {
+"size": [
+17,
+40
+],
+"dir": "props"
+},
+"casino_2_038": {
+"size": [
+288,
+89
+],
+"dir": "props"
+},
+"casino_2_039": {
+"size": [
+28,
+44
+],
+"dir": "props"
+},
+"casino_2_040": {
+"size": [
+18,
+40
+],
+"dir": "props"
+},
+"casino_2_041": {
+"size": [
+17,
+24
+],
+"dir": "props"
+},
+"casino_2_042": {
+"size": [
+96,
+84
+],
+"dir": "props"
+},
+"casino_2_043": {
+"size": [
+66,
+63
+],
+"dir": "props"
+},
+"casino_2_044": {
+"size": [
+66,
+63
+],
+"dir": "props"
+},
+"casino_2_045": {
+"size": [
+66,
+63
+],
+"dir": "props"
+},
+"casino_2_046": {
+"size": [
+288,
+141
+],
+"dir": "props"
+},
+"casino_3_000": {
+"size": [
+74,
+88
+],
+"dir": "props"
+},
+"casino_3_001": {
+"size": [
+78,
+91
+],
+"dir": "props"
+},
+"casino_3_002": {
+"size": [
+75,
+90
+],
+"dir": "props"
+},
+"casino_3_003": {
+"size": [
+80,
+91
+],
+"dir": "props"
+},
+"casino_3_004": {
+"size": [
+84,
+73
+],
+"dir": "props"
+},
+"casino_3_005": {
+"size": [
+76,
+94
+],
+"dir": "props"
+},
+"casino_3_006": {
+"size": [
+76,
+77
+],
+"dir": "props"
+},
+"casino_3_007": {
+"size": [
+62,
+77
+],
+"dir": "props"
+},
+"casino_3_008": {
+"size": [
+385,
+385
+],
+"dir": "props"
+},
+"casino_3_009": {
+"size": [
+92,
+63
+],
+"dir": "props"
+},
+"casino_3_010": {
+"size": [
+92,
+63
+],
+"dir": "props"
+},
+"casino_3_011": {
+"size": [
+192,
+69
+],
+"dir": "props"
+},
+"casino_3_012": {
+"size": [
+44,
+376
+],
+"dir": "props"
+},
+"casino_3_013": {
+"size": [
+44,
+372
+],
+"dir": "props"
+},
+"casino_3_014": {
+"size": [
+36,
+366
+],
+"dir": "props"
+},
+"casino_3_015": {
+"size": [
+187,
+83
+],
+"dir": "props"
+},
+"casino_3_016": {
+"size": [
+190,
+75
+],
+"dir": "props"
+},
+"casino_3_017": {
+"size": [
+190,
+75
+],
+"dir": "props"
+},
+"casino_3_018": {
+"size": [
+36,
+459
+],
+"dir": "props"
+},
+"casino_3_019": {
+"size": [
+77,
+83
+],
+"dir": "props"
+},
+"casino_3_020": {
+"size": [
+43,
+60
+],
+"dir": "props"
+},
+"casino_3_021": {
+"size": [
+69,
+53
+],
+"dir": "props"
+},
+"casino_3_022": {
+"size": [
+77,
+87
+],
+"dir": "props"
+},
+"casino_3_023": {
+"size": [
+68,
+87
+],
+"dir": "props"
+},
+"casino_3_024": {
+"size": [
+192,
+75
+],
+"dir": "props"
+},
+"casino_3_025": {
+"size": [
+44,
+59
+],
+"dir": "props"
+},
+"casino_3_026": {
+"size": [
+46,
+78
+],
+"dir": "props"
+},
+"casino_3_027": {
+"size": [
+64,
+98
+],
+"dir": "props"
+},
+"casino_3_028": {
+"size": [
+63,
+97
+],
+"dir": "props"
+},
+"casino_3_029": {
+"size": [
+94,
+54
+],
+"dir": "props"
+},
+"casino_3_030": {
+"size": [
+43,
+50
+],
+"dir": "props"
+},
+"casino_3_031": {
+"size": [
+43,
+61
+],
+"dir": "props"
+},
+"casino_3_032": {
+"size": [
+193,
+75
+],
+"dir": "props"
+},
+"casino_3_033": {
+"size": [
+30,
+96
+],
+"dir": "props"
+},
+"casino_3_034": {
+"size": [
+97,
+97
+],
+"dir": "props"
+},
+"casino_3_035": {
+"size": [
+92,
+72
+],
+"dir": "props"
+},
+"casino_3_036": {
+"size": [
+92,
+75
+],
+"dir": "props"
+},
+"casino_3_037": {
+"size": [
+96,
+74
+],
+"dir": "props"
+},
+"casino_3_038": {
+"size": [
+31,
+96
+],
+"dir": "props"
+},
+"casino_3_039": {
+"size": [
+32,
+96
+],
+"dir": "props"
+},
+"casino_3_040": {
+"size": [
+42,
+59
+],
+"dir": "props"
+},
+"casino_3_041": {
+"size": [
+30,
+96
+],
+"dir": "props"
+},
+"casino_3_042": {
+"size": [
+30,
+96
+],
+"dir": "props"
+},
+"casino_4_000": {
+"size": [
+29,
+29
+],
+"dir": "props"
+},
+"casino_4_001": {
+"size": [
+29,
+28
+],
+"dir": "props"
+},
+"casino_4_002": {
+"size": [
+84,
+47
+],
+"dir": "props"
+},
+"casino_4_003": {
+"size": [
+576,
+118
+],
+"dir": "props"
+},
+"casino_4_004": {
+"size": [
+13,
+18
+],
+"dir": "props"
+},
+"casino_4_005": {
+"size": [
+20,
+18
+],
+"dir": "props"
+},
+"casino_4_006": {
+"size": [
+96,
+41
+],
+"dir": "props"
+},
+"casino_4_007": {
+"size": [
+46,
+58
+],
+"dir": "props"
+},
+"casino_4_008": {
+"size": [
+47,
+52
+],
+"dir": "props"
+},
+"casino_4_009": {
+"size": [
+577,
+117
+],
+"dir": "props"
+},
+"casino_4_010": {
+"size": [
+97,
+96
+],
+"dir": "props"
+},
+"casino_4_011": {
+"size": [
+289,
+92
+],
+"dir": "props"
+},
+"casino_4_012": {
+"size": [
+289,
+95
+],
+"dir": "props"
+},
+"casino_4_013": {
+"size": [
+47,
+82
+],
+"dir": "props"
+},
+"casino_4_014": {
+"size": [
+45,
+81
+],
+"dir": "props"
+},
+"casino_4_015": {
+"size": [
+47,
+86
+],
+"dir": "props"
+},
+"casino_4_016": {
+"size": [
+48,
+73
+],
+"dir": "props"
+},
+"casino_4_017": {
+"size": [
+46,
+78
+],
+"dir": "props"
+},
+"casino_4_018": {
+"size": [
+36,
+80
+],
+"dir": "props"
+},
+"casino_4_019": {
+"size": [
+46,
+89
+],
+"dir": "props"
+},
+"casino_4_020": {
+"size": [
+47,
+88
+],
+"dir": "props"
+},
+"casino_4_021": {
+"size": [
+577,
+165
+],
+"dir": "props"
+},
+"casino_4_022": {
+"size": [
+22,
+42
+],
+"dir": "props"
+},
+"casino_4_023": {
+"size": [
+14,
+43
+],
+"dir": "props"
+},
+"casino_4_024": {
+"size": [
+42,
+46
+],
+"dir": "props"
+},
+"casino_4_025": {
+"size": [
+77,
+80
+],
+"dir": "props"
+},
+"casino_4_026": {
+"size": [
+42,
+59
+],
+"dir": "props"
+},
+"casino_4_027": {
+"size": [
+69,
+51
+],
+"dir": "props"
+},
+"casino_4_028": {
+"size": [
+78,
+88
+],
+"dir": "props"
+},
+"casino_4_029": {
+"size": [
+68,
+88
+],
+"dir": "props"
+},
+"casino_4_030": {
+"size": [
+192,
+80
+],
+"dir": "props"
+},
+"casino_4_031": {
+"size": [
+34,
+46
+],
+"dir": "props"
+},
+"casino_4_032": {
+"size": [
+35,
+46
+],
+"dir": "props"
+},
+"casino_4_033": {
+"size": [
+97,
+238
+],
+"dir": "props"
+},
+"casino_4_034": {
+"size": [
+48,
+87
+],
+"dir": "props"
+},
+"casino_4_035": {
+"size": [
+47,
+86
+],
+"dir": "props"
+},
+"casino_4_036": {
+"size": [
+48,
+66
+],
+"dir": "props"
+},
+"casino_4_037": {
+"size": [
+48,
+85
+],
+"dir": "props"
+},
+"casino_4_038": {
+"size": [
+97,
+56
+],
+"dir": "props"
+},
+"casino_4_039": {
+"size": [
+94,
+88
+],
+"dir": "props"
+},
+"casino_4_040": {
+"size": [
+97,
+56
+],
+"dir": "props"
+},
+"casino_4_041": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"casino_4_042": {
+"size": [
+42,
+60
+],
+"dir": "props"
+},
+"casino_4_043": {
+"size": [
+28,
+43
+],
+"dir": "props"
+},
+"casino_4_044": {
+"size": [
+35,
+46
+],
+"dir": "props"
+},
+"casino_4_045": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"casino_4_046": {
+"size": [
+44,
+33
+],
+"dir": "props"
+},
+"casino_4_047": {
+"size": [
+84,
+84
+],
+"dir": "props"
+},
+"casino_4_048": {
+"size": [
+84,
+84
+],
+"dir": "props"
+},
+"casino_4_049": {
+"size": [
+84,
+85
+],
+"dir": "props"
+},
+"casino_4_050": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"casino_4_051": {
+"size": [
+192,
+96
+],
+"dir": "props"
+},
+"casino_4_052": {
+"size": [
+26,
+38
+],
+"dir": "props"
+},
+"casino_4_053": {
+"size": [
+27,
+39
+],
+"dir": "props"
+},
+"casino_5_000": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"casino_5_001": {
+"size": [
+190,
+82
+],
+"dir": "props"
+},
+"casino_5_002": {
+"size": [
+94,
+80
+],
+"dir": "props"
+},
+"casino_5_003": {
+"size": [
+92,
+92
+],
+"dir": "props"
+},
+"casino_5_004": {
+"size": [
+70,
+193
+],
+"dir": "props"
+},
+"casino_5_005": {
+"size": [
+70,
+193
+],
+"dir": "props"
+},
+"casino_5_006": {
+"size": [
+384,
+96
+],
+"dir": "props"
+},
+"casino_5_007": {
+"size": [
+68,
+97
+],
+"dir": "props"
+},
+"casino_5_008": {
+"size": [
+92,
+385
+],
+"dir": "props"
+},
+"casino_5_009": {
+"size": [
+190,
+69
+],
+"dir": "props"
+},
+"casino_5_010": {
+"size": [
+96,
+78
+],
+"dir": "props"
+},
+"casino_5_011": {
+"size": [
+92,
+90
+],
+"dir": "props"
+},
+"casino_5_012": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"casino_5_013": {
+"size": [
+92,
+94
+],
+"dir": "props"
+},
+"casino_5_014": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"casino_5_015": {
+"size": [
+191,
+82
+],
+"dir": "props"
+},
+"casino_5_016": {
+"size": [
+385,
+96
+],
+"dir": "props"
+},
+"casino_5_017": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"casino_5_018": {
+"size": [
+187,
+82
+],
+"dir": "props"
+},
+"casino_5_019": {
+"size": [
+190,
+96
+],
+"dir": "props"
+},
+"casino_5_020": {
+"size": [
+188,
+96
+],
+"dir": "props"
+},
+"casino_5_021": {
+"size": [
+44,
+60
+],
+"dir": "props"
+},
+"casino_5_022": {
+"size": [
+42,
+65
+],
+"dir": "props"
+},
+"casino_5_023": {
+"size": [
+90,
+49
+],
+"dir": "props"
+},
+"casino_5_024": {
+"size": [
+76,
+81
+],
+"dir": "props"
+},
+"casino_5_025": {
+"size": [
+42,
+59
+],
+"dir": "props"
+},
+"casino_5_026": {
+"size": [
+69,
+51
+],
+"dir": "props"
+},
+"casino_5_027": {
+"size": [
+76,
+85
+],
+"dir": "props"
+},
+"casino_5_028": {
+"size": [
+68,
+85
+],
+"dir": "props"
+},
+"casino_5_029": {
+"size": [
+41,
+65
+],
+"dir": "props"
+},
+"casino_5_030": {
+"size": [
+60,
+48
+],
+"dir": "props"
+},
+"casino_5_031": {
+"size": [
+41,
+64
+],
+"dir": "props"
+},
+"casino_5_032": {
+"size": [
+24,
+39
+],
+"dir": "props"
+},
+"casino_5_033": {
+"size": [
+129,
+102
+],
+"dir": "props"
+},
+"casino_5_034": {
+"size": [
+24,
+39
+],
+"dir": "props"
+},
+"casino_5_035": {
+"size": [
+96,
+55
+],
+"dir": "props"
+},
+"casino_5_036": {
+"size": [
+24,
+30
+],
+"dir": "props"
+},
+"casino_5_037": {
+"size": [
+24,
+30
+],
+"dir": "props"
+},
+"casino_5_038": {
+"size": [
+31,
+33
+],
+"dir": "props"
+},
+"casino_5_039": {
+"size": [
+96,
+55
+],
+"dir": "props"
+},
+"casino_5_040": {
+"size": [
+93,
+88
+],
+"dir": "props"
+},
+"casino_5_041": {
+"size": [
+42,
+48
+],
+"dir": "props"
+},
+"casino_5_042": {
+"size": [
+44,
+59
+],
+"dir": "props"
+},
+"casino_5_043": {
+"size": [
+189,
+188
+],
+"dir": "props"
+},
+"casino_5_044": {
+"size": [
+84,
+33
+],
+"dir": "props"
+},
+"casino_5_045": {
+"size": [
+44,
+33
+],
+"dir": "props"
+},
+"casino_5_046": {
+"size": [
+44,
+33
+],
+"dir": "props"
+},
+"casino_5_047": {
+"size": [
+24,
+39
+],
+"dir": "props"
+},
+"casino_5_048": {
+"size": [
+129,
+75
+],
+"dir": "props"
+},
+"casino_5_049": {
+"size": [
+24,
+39
+],
+"dir": "props"
+},
+"casino_5_050": {
+"size": [
+24,
+39
+],
+"dir": "props"
+},
+"casino_5_051": {
+"size": [
+129,
+114
+],
+"dir": "props"
+},
+"casino_5_052": {
+"size": [
+24,
+39
+],
+"dir": "props"
+},
+"casino_5_053": {
+"size": [
+84,
+33
+],
+"dir": "props"
+},
+"casino_5_054": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"casino_5_055": {
+"size": [
+24,
+31
+],
+"dir": "props"
+},
+"casino_5_056": {
+"size": [
+24,
+30
+],
+"dir": "props"
+},
+"casino_5_057": {
+"size": [
+31,
+36
+],
+"dir": "props"
+},
+"casino_5_058": {
+"size": [
+24,
+30
+],
+"dir": "props"
+},
+"casino_5_059": {
+"size": [
+24,
+30
+],
+"dir": "props"
+},
+"casino_5_060": {
+"size": [
+31,
+39
+],
+"dir": "props"
+},
+"casino_w1_00_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_00_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_01_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_01_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_02_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_02_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_03_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_03_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_04_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_04_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_05_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_05_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_06_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_06_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_07_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_07_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_08_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_08_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_09_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_09_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_10_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_10_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_11_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_11_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_12_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_12_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_13_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_13_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_14_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_14_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_15_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_15_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_16_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_16_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_17_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_17_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_18_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_18_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_19_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_19_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_20_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_20_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_21_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_21_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_22_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_22_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w1_23_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w1_23_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_00_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_00_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_01_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_01_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_02_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_02_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_03_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_03_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_04_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_04_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_05_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_05_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_06_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_06_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_07_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_07_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_08_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_08_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_09_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_09_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_10_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_10_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_11_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_11_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_12_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_12_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_13_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_13_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_14_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_14_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_15_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_15_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_16_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_16_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_17_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_17_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_18_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_18_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_19_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_19_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_20_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_20_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_21_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_21_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_22_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_22_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"casino_w2_23_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"casino_w2_23_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"p1": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p2": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p3": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p4": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p5": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+}
+}
+}

@@ -1,0 +1,444 @@
+{
+"props": {
+"nd_boat": {
+"img": "pk:fishv/p3/0,10,2,1",
+"block": false,
+"sight": false,
+"foot": [
+2,
+1
+],
+"layer": "floor"
+},
+"nd_boat_b": {
+"img": "pk:fishv/p3/0,11,2,1",
+"block": false,
+"sight": false,
+"foot": [
+2,
+1
+],
+"layer": "floor"
+},
+"nd_sailboat": {
+"img": "pk:fishv/p3/4,10,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"nd_fish_stall": {
+"img": "pk:fishv/p3/8,8,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nd_fish_stall_b": {
+"img": "pk:fishv/p3/10,8,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nd_meat_stall": {
+"img": "pk:fishv/p3/10,10,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nd_lighthouse": {
+"img": "pk:fishv/p3/8,10,1,2",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"nd_boatshed": {
+"img": "pk:fishv/p4/12,8,2,3",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_boatshed_b": {
+"img": "pk:fishv/p4/13,12,2,3",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_house_wood": {
+"img": "pk:fishv/p3/0,0,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_house_wood2": {
+"img": "pk:fishv/p3/2,0,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_house_thatch": {
+"img": "pk:fishv/p3/0,4,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_house_thatch2": {
+"img": "pk:fishv/p3/4,4,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_net": {
+"img": "pk:fishv/fishv_1_012",
+"block": false,
+"sight": false
+},
+"nd_fish_rack": {
+"img": "pk:fishv/fishv_1_078",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_fish_rack_b": {
+"img": "pk:fishv/fishv_1_108",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_anchor": {
+"img": "pk:fishv/fishv_1_027",
+"block": true,
+"sight": false
+},
+"nd_barrel": {
+"img": "pk:fishv/fishv_1_057",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"nd_crate": {
+"img": "pk:fishv/fishv_1_059",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"nd_lantern_post": {
+"img": "pk:fishv/p4/14,8,1,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 160,
+"color": [
+255,
+170,
+90
+],
+"at": [
+0.6,
+0.15
+],
+"flicker": 0.3
+}
+},
+"nd_wreck": {
+"img": "pk:fishv/fishv_1_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_container_r": {
+"img": "pk:wport/wport_2_007",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"nd_container_b": {
+"img": "pk:wport/wport_2_010",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"nd_container_g": {
+"img": "pk:wport/wport_2_045",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"nd_truck": {
+"img": "pk:wport/wport_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_truck_b": {
+"img": "pk:wport/wport_4_004",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"nd_tires": {
+"img": "pk:wport/wport_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_barrels": {
+"img": "pk:wport/wport_1_055",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "junk",
+"title": "бочки"
+},
+"nd_crane": {
+"img": "pk:wport/wport_3_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nd_junk": {
+"img": "pk:wport/wport_3_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "junk",
+"title": "куча хлама"
+},
+"nd_stagecoach": {
+"img": "pk:west/west_1_011",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_trough": {
+"img": "pk:west/p1/12,3,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_signboard": {
+"img": "pk:west/p1/12,4,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_cactus": {
+"img": "pk:west/p1/12,0,1,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"nd_cactus_b": {
+"img": "pk:west/p1/15,0,1,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"nd_tumbleweed": {
+"img": "pk:west/west_1_004",
+"block": false,
+"sight": false
+},
+"nd_bench": {
+"img": "pk:wrail/p1/9,2,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_wagon": {
+"img": "pk:wrail/p1/10,12,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_bar_counter": {
+"img": "pk:west/west_2_108",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"nd_piano": {
+"img": "pk:west/west_2_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"nd_cabinet": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "буфет"
+},
+"nd_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_poker": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"nd_stove": {
+"img": "pk:west/west_2_018",
+"block": true,
+"sight": false
+},
+"nd_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"nd_bed": {
+"img": "pk:west/west_2_005",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"nd_rug": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"nd_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф"
+},
+"nd_suitcases": {
+"img": "pk:wrail/wrail_1_014",
+"block": true,
+"sight": false,
+"search": "bag",
+"title": "чемоданы"
+}
+}
+}

@@ -36,6 +36,9 @@ ROLES = {
     "nick": "brawler", "hollis": "elite", "lira_baker": "elite", "scar_baker": "guard", "loner_baker": "guard",
     "anselm": "cultist", "acolyte_a": "cultist", "acolyte_b": "cultist", "silas_baker": "cultist",
     "tobias": "cultist", "iskra": "cultist", "marla": "cultist",
+    # Джанктаун
+    "gate_guard": "guard", "jt_guard": "guard", "hall_guard": "guard", "gizmo_thug": "brawler",
+    "hunter_rourke": "elite", "cult_recruiter": "cultist",
 }
 CULT_ZONES = {"baker_mission"}
 SPARE = {"dog", "robot", "amos", "amos_b7"}     # их не трогает и не превращает: пёс, робот, дед в келье

@@ -1,0 +1,452 @@
+{
+"props": {
+"hb_stall_bread": {
+"img": "pk:bazaar/bazaar_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_stall_veg": {
+"img": "pk:bazaar/bazaar_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_stall_fruit": {
+"img": "pk:bazaar/bazaar_2_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_stall_meat": {
+"img": "pk:bazaar/bazaar_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_stall_cheese": {
+"img": "pk:bazaar/bazaar_2_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_spices": {
+"img": "pk:bazaar/bazaar_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_spices_b": {
+"img": "pk:bazaar/bazaar_2_007",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_cloth": {
+"img": "pk:bazaar/bazaar_2_035",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_scarves": {
+"img": "pk:bazaar/bazaar_2_036",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_blades": {
+"img": "pk:bazaar/bazaar_2_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_shields": {
+"img": "pk:bazaar/bazaar_2_016",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_armor_rack": {
+"img": "pk:bazaar/bazaar_2_017",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_jars": {
+"img": "pk:bazaar/bazaar_2_048",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "shelf",
+"title": "кувшины"
+},
+"hb_pots": {
+"img": "pk:bazaar/bazaar_2_049",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_cart": {
+"img": "pk:bazaar/bazaar_1_023",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_cart_b": {
+"img": "pk:bazaar/bazaar_1_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_tent_red": {
+"img": "pk:bazaar/bazaar_1_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"hb_tent_white": {
+"img": "pk:bazaar/bazaar_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"hb_tent_green": {
+"img": "pk:bazaar/bazaar_1_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"hb_tent_yellow": {
+"img": "pk:bazaar/bazaar_1_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"hb_carpet_stall": {
+"img": "pk:bazaar/bazaar_1_017",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"hb_rug": {
+"img": "pk:bazaar/bazaar_1_089",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"hb_rug_b": {
+"img": "pk:bazaar/bazaar_1_103",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"hb_scales": {
+"img": "pk:bazaar/bazaar_1_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_crate": {
+"img": "pk:bazaar/bazaar_3_000",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"hb_barrel": {
+"img": "pk:desnat/desnat_3_014",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"hb_water_barrel": {
+"img": "pk:desnat/desnat_3_037",
+"block": true,
+"sight": false
+},
+"hb_palm_pot": {
+"img": "pk:bazaar/bazaar_3_206",
+"block": true,
+"sight": false
+},
+"hb_lantern": {
+"img": "pk:bazaar/bazaar_2_088",
+"block": false,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+255,
+180,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.3
+}
+},
+"hb_palm0": {
+"img": "pk:desnat/desnat_4_049",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"hb_palm1": {
+"img": "pk:desnat/desnat_4_050",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"hb_palm2": {
+"img": "pk:desnat/desnat_4_051",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"hb_palm3": {
+"img": "pk:desnat/desnat_4_052",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"hb_well": {
+"img": "pk:desnat/desnat_3_026",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_tent_shabby": {
+"img": "pk:destown/destown_3_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"hb_tent_low": {
+"img": "pk:destown/destown_3_018",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_fire": {
+"img": "pk:destown/destown_3_034",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"hb_junk": {
+"img": "pk:wport/wport_3_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "junk",
+"title": "куча хлама"
+},
+"hb_tires": {
+"img": "pk:wport/wport_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_bar": {
+"img": "pk:west/west_2_108",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"hb_bottle_shelf": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка с бутылками"
+},
+"hb_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_poker": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"hb_piano": {
+"img": "pk:west/west_2_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_bed": {
+"img": "pk:west/west_2_005",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"hb_desk": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф"
+},
+"hb_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "шкаф с бумагами"
+},
+"hb_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"hb_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true
+},
+"hb_pump": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": false
+},
+"hb_oasis": {
+"img": "pk:destown/p5/8,5,8,11",
+"block": false,
+"sight": false,
+"foot": [
+8,
+11
+],
+"layer": "floor"
+}
+}
+}

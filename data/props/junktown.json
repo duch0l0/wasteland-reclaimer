@@ -1,0 +1,1080 @@
+{
+"props": {
+"jt_shack0": {
+"img": "pk:jtown/jtown_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack1": {
+"img": "pk:jtown/jtown_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack2": {
+"img": "pk:jtown/jtown_1_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack3": {
+"img": "pk:jtown/jtown_1_016",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack4": {
+"img": "pk:jtown/jtown_1_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack5": {
+"img": "pk:jtown/jtown_1_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack6": {
+"img": "pk:jtown/jtown_1_027",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack7": {
+"img": "pk:jtown/jtown_1_043",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack8": {
+"img": "pk:jtown/jtown_1_044",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_shack9": {
+"img": "pk:jtown/jtown_1_054",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_pile_big0": {
+"img": "pk:jtown/jtown_2_001",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"jt_pile_big1": {
+"img": "pk:jtown/jtown_2_002",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"jt_pile_big2": {
+"img": "pk:jtown/jtown_2_003",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"jt_car0": {
+"img": "pk:jtown/jtown_2_008",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_car1": {
+"img": "pk:jtown/jtown_2_009",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_car2": {
+"img": "pk:jtown/jtown_2_014",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_car3": {
+"img": "pk:jtown/jtown_2_015",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_truck0": {
+"img": "pk:jtown/jtown_2_016",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_truck1": {
+"img": "pk:jtown/jtown_2_017",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_truck2": {
+"img": "pk:jtown/jtown_2_018",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_trailer": {
+"img": "pk:jtown/jtown_2_019",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_van": {
+"img": "pk:jtown/jtown_2_000",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"jt_cab": {
+"img": "pk:jtown/jtown_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"jt_jeep": {
+"img": "pk:jtown/jtown_2_011",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"jt_bike": {
+"img": "pk:jtown/jtown_2_010",
+"block": true,
+"sight": false
+},
+"jt_bike_b": {
+"img": "pk:jtown/jtown_2_022",
+"block": true,
+"sight": false
+},
+"jt_bike_c": {
+"img": "pk:jtown/jtown_2_028",
+"block": true,
+"sight": false
+},
+"jt_junk0": {
+"img": "pk:jtown/jtown_2_006",
+"block": true,
+"sight": false
+},
+"jt_junk1": {
+"img": "pk:jtown/jtown_2_007",
+"block": true,
+"sight": false
+},
+"jt_junk2": {
+"img": "pk:jtown/jtown_2_012",
+"block": true,
+"sight": false
+},
+"jt_junk3": {
+"img": "pk:jtown/jtown_2_013",
+"block": true,
+"sight": false
+},
+"jt_junk4": {
+"img": "pk:jtown/jtown_2_026",
+"block": true,
+"sight": false
+},
+"jt_junk5": {
+"img": "pk:jtown/jtown_2_027",
+"block": true,
+"sight": false
+},
+"jt_junk6": {
+"img": "pk:jtown/jtown_2_029",
+"block": true,
+"sight": false
+},
+"jt_junk7": {
+"img": "pk:jtown/jtown_2_047",
+"block": true,
+"sight": false
+},
+"jt_junk8": {
+"img": "pk:jtown/jtown_2_048",
+"block": true,
+"sight": false
+},
+"jt_junk9": {
+"img": "pk:jtown/jtown_2_049",
+"block": true,
+"sight": false
+},
+"jt_junk10": {
+"img": "pk:jtown/jtown_2_050",
+"block": true,
+"sight": false
+},
+"jt_junk11": {
+"img": "pk:jtown/jtown_2_054",
+"block": true,
+"sight": false
+},
+"jt_junk12": {
+"img": "pk:jtown/jtown_2_055",
+"block": true,
+"sight": false
+},
+"jt_tires": {
+"img": "pk:jtown/jtown_2_024",
+"block": true,
+"sight": false
+},
+"jt_tire_stack": {
+"img": "pk:jtown/jtown_5_104",
+"block": true,
+"sight": false
+},
+"jt_toxic": {
+"img": "pk:jtown/jtown_2_025",
+"block": true,
+"sight": true
+},
+"jt_toxic_spill": {
+"img": "pk:jtown/jtown_2_004",
+"block": true,
+"sight": false
+},
+"jt_fence_corr": {
+"img": "pk:jtown/jtown_1_020",
+"block": true,
+"sight": false
+},
+"jt_fence_corr_b": {
+"img": "pk:jtown/jtown_1_021",
+"block": true,
+"sight": false
+},
+"jt_fence_planks": {
+"img": "pk:jtown/jtown_1_056",
+"block": true,
+"sight": false
+},
+"jt_scrap0": {
+"img": "pk:jtown/jtown_1_022",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"jt_scrap1": {
+"img": "pk:jtown/jtown_1_023",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"jt_scrap2": {
+"img": "pk:jtown/jtown_1_031",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"jt_scrap3": {
+"img": "pk:jtown/jtown_1_038",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"jt_scrap4": {
+"img": "pk:jtown/jtown_1_039",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"jt_scrap5": {
+"img": "pk:jtown/jtown_1_050",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "куча хлама"
+},
+"jt_barrels": {
+"img": "pk:jtown/jtown_1_046",
+"block": true,
+"sight": true
+},
+"jt_crates": {
+"img": "pk:jtown/jtown_1_059",
+"block": true,
+"sight": true,
+"search": "crate",
+"title": "штабель ящиков"
+},
+"jt_crate": {
+"img": "pk:jtown/jtown_1_052",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"jt_barrel": {
+"img": "pk:jtown/jtown_1_042",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"jt_solar": {
+"img": "pk:jtown/jtown_1_058",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"jt_solar_low": {
+"img": "pk:jtown/jtown_1_015",
+"block": true,
+"sight": false
+},
+"jt_stall": {
+"img": "pk:jtown/jtown_1_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"jt_sign": {
+"img": "pk:jtown/jtown_2_038",
+"block": true,
+"sight": false
+},
+"jt_sign_b": {
+"img": "pk:jtown/jtown_2_039",
+"block": true,
+"sight": false
+},
+"jt_tent_blue": {
+"img": "pk:jtown/jtown_5_105",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_tent_brown": {
+"img": "pk:jtown/jtown_5_106",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_tarp": {
+"img": "pk:jtown/jtown_5_109",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"jt_firepit": {
+"img": "pk:jtown/jtown_4_043",
+"block": true,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+160,
+70
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.35
+}
+},
+"jt_stove": {
+"img": "pk:jtown/jtown_4_032",
+"block": true,
+"sight": true
+},
+"jt_stove_small": {
+"img": "pk:jtown/jtown_4_035",
+"block": true,
+"sight": false
+},
+"jt_sort_bins": {
+"img": "pk:jtown/jtown_4_028",
+"block": true,
+"sight": true,
+"foot": [
+8,
+1
+]
+},
+"jt_bin0": {
+"img": "pk:jtown/jtown_4_016",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "ящик с деталями"
+},
+"jt_bin1": {
+"img": "pk:jtown/jtown_4_017",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "ящик с деталями"
+},
+"jt_bin2": {
+"img": "pk:jtown/jtown_4_018",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "ящик с деталями"
+},
+"jt_bin3": {
+"img": "pk:jtown/jtown_4_019",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "ящик с деталями"
+},
+"jt_sacks": {
+"img": "pk:jtown/jtown_4_020",
+"block": true,
+"sight": false
+},
+"jt_lockers": {
+"img": "pk:jtown/jtown_4_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "шкафчики"
+},
+"jt_workbench": {
+"img": "pk:jtown/jtown_5_064",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"jt_rack": {
+"img": "pk:jtown/jtown_5_094",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_table": {
+"img": "pk:jtown/jtown_5_053",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"jt_chair": {
+"img": "pk:jtown/jtown_5_013",
+"block": true,
+"sight": false
+},
+"jt_cabinet": {
+"img": "pk:jtown/jtown_5_057",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "шкаф"
+},
+"jt_fridge": {
+"img": "pk:jtown/jtown_5_024",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "старый холодильник"
+},
+"jt_kitchen_stove": {
+"img": "pk:jtown/jtown_5_051",
+"block": true,
+"sight": false
+},
+"jt_tv": {
+"img": "pk:jtown/jtown_5_040",
+"block": true,
+"sight": false
+},
+"jt_radio": {
+"img": "pk:jtown/jtown_5_019",
+"block": true,
+"sight": false
+},
+"jt_slot0": {
+"img": "pk:casino/casino_1_000",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot1": {
+"img": "pk:casino/casino_1_001",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot2": {
+"img": "pk:casino/casino_1_002",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot3": {
+"img": "pk:casino/casino_1_003",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot4": {
+"img": "pk:casino/casino_1_004",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot5": {
+"img": "pk:casino/casino_1_005",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot6": {
+"img": "pk:casino/casino_1_006",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot7": {
+"img": "pk:casino/casino_1_007",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot_old": {
+"img": "pk:casino/casino_3_027",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_slot_old_b": {
+"img": "pk:casino/casino_3_028",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"jt_roulette": {
+"img": "pk:casino/casino_1_026",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"jt_blackjack": {
+"img": "pk:casino/casino_3_024",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"jt_poker_roul": {
+"img": "pk:casino/casino_3_032",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"jt_cashier": {
+"img": "pk:casino/casino_2_017",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"jt_stool": {
+"img": "pk:casino/casino_1_044",
+"block": true,
+"sight": false
+},
+"jt_change": {
+"img": "pk:casino/casino_1_066",
+"block": true,
+"sight": true
+},
+"jt_neon_jackpot": {
+"img": "pk:casino/casino_1_051",
+"block": false,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+255,
+200,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.1
+}
+},
+"jt_neon_cash": {
+"img": "pk:casino/casino_1_052",
+"block": false,
+"sight": false,
+"light": {
+"r": 80,
+"color": [
+120,
+255,
+140
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.1
+}
+},
+"jt_neon_arrow": {
+"img": "pk:casino/casino_1_054",
+"block": false,
+"sight": false
+},
+"jt_chips": {
+"img": "pk:casino/casino_2_009",
+"block": true,
+"sight": false
+},
+"jt_trashcan": {
+"img": "pk:casino/casino_1_065",
+"block": true,
+"sight": false
+},
+"jt_shelf0": {
+"img": "pk:store/store_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf1": {
+"img": "pk:store/store_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf2": {
+"img": "pk:store/store_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf3": {
+"img": "pk:store/store_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf4": {
+"img": "pk:store/store_2_009",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf5": {
+"img": "pk:store/store_2_010",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf6": {
+"img": "pk:store/store_2_017",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеллаж"
+},
+"jt_shelf_tools": {
+"img": "pk:store/store_2_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка с хозтоварами"
+},
+"jt_store_fridge": {
+"img": "pk:store/store_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "холодильник"
+},
+"jt_checkout": {
+"img": "pk:store/store_2_025",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"jt_op_table": {
+"img": "pk:hosp/hosp_1_001",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"jt_hosp_bed": {
+"img": "pk:hosp/hosp_1_007",
+"block": true,
+"sight": false,
+"foot": [
+3,
+1
+]
+},
+"jt_drip": {
+"img": "pk:hosp/hosp_1_010",
+"block": true,
+"sight": false
+},
+"jt_monitor": {
+"img": "pk:hosp/hosp_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"jt_med_cart": {
+"img": "pk:hosp/hosp_1_008",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "медицинская тележка"
+},
+"jt_med_shelf": {
+"img": "pk:hosp/hosp_1_009",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"search": "drawer",
+"title": "шкаф с лекарствами"
+},
+"jt_sink": {
+"img": "pk:hosp/hosp_1_013",
+"block": true,
+"sight": false
+},
+"jt_reception": {
+"img": "pk:hosp/hosp_1_024",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"jt_wait_chair": {
+"img": "pk:hosp/hosp_1_030",
+"block": true,
+"sight": false
+},
+"jt_oxygen": {
+"img": "pk:hosp/hosp_1_011",
+"block": true,
+"sight": false
+},
+"jt_biohazard": {
+"img": "pk:hosp/hosp_1_012",
+"block": true,
+"sight": false
+},
+"jt_hosp_locker": {
+"img": "pk:hosp/hosp_1_049",
+"block": true,
+"sight": true,
+"search": "drawer",
+"title": "шкафчик"
+},
+"jt_bar": {
+"img": "pk:west/west_2_108",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"jt_bottle_shelf": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка с бутылками"
+},
+"jt_wtable": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"jt_wchair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"jt_bed": {
+"img": "pk:west/west_2_005",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"jt_desk": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"jt_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф"
+},
+"jt_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "шкаф с бумагами"
+},
+"jt_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"jt_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true
+},
+"jt_casino_slab": {
+"img": "pk:jtown/p3/4,6,4,4",
+"block": false,
+"sight": false,
+"foot": [
+4,
+4
+],
+"layer": "floor"
+},
+"jt_casino_rug": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+}
+}
+}

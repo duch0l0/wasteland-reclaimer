@@ -95,6 +95,14 @@ class QuestMixin:
             self.set_stage("sq_barstow", 50)
         if cleared == 2 and st("sq_barstow") < 90:
             self.set_stage("sq_barstow", 90)
+        if f.get("baker_done") and "zzyzx" not in self.worldmap.known:   # глава 3: Зайзикс
+            self.reveal_location("zzyzx")
+        if "zzyzx" in self.locations and "needles" not in self.worldmap.known:   # из Зайзикса — дорога на Нидлс
+            self.reveal_location("needles")
+        if f.get("know_cult_convoys") and "hub" not in self.worldmap.known:   # фургоны культа идут к Хабу — акт II
+            self.reveal_location("hub")
+        if "hub" in self.locations and "junktown" not in self.worldmap.known:   # из Хаба — караванная дорога в Джанктаун
+            self.reveal_location("junktown")
         if self.inventory.has("доля Панка") and 0 < st("sq_loner") < 50:
             self.set_stage("sq_loner", 50)
 

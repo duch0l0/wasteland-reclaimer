@@ -4,7 +4,10 @@
   barstow         трасса I-15: мотель «Сансет», стоянка караванщиков (Роза), выходы на карту мира;
   barstow_depot   сортировочная: пути, платформы, водонапорная башня, контора депо — гули;
   barstow_center  центр: отель, магазин MART, кинотеатр «Мираж», руины — гули и светящиеся;
-  barstow_order   тайное святилище Ордена Тайн за кинотеатром (пускает только с брошью Ордена).
+  barstow_order   тайное святилище Ордена Тайн за кинотеатром (пускает только с брошью Ордена);
+  barstow_base    логистическая база морской пехоты (к востоку от депо): КПП, плац, автопарк,
+                  казармы, два ангара, командный бункер с журналом последних дней гарнизона —
+                  сержант Р. Холт, дед Дэкса. Район необязательный: свой флаг зачистки и награда.
 
 Переходы между локациями — порталы (жёлтые ромбы на земле), на карту мира — с трассы.
 Зачистка: когда в депо или в центре не остаётся гулей, район отмечается (clear_flag в
@@ -116,6 +119,8 @@ def build_depot():
     k.ground("Ground E1_N", 0, 12, W - 1, 12, rot=False)
     k.road_y(19, 21, 17, H - 1)
     k.portal([(x, H - 1) for x in (19, 20, 21)], "barstow", (32, 2), "Трасса")
+    k.road_x(15, 17, x0=22)                        # на восток — к базе морпехов
+    k.portal([(W - 1, y) for y in (15, 16, 17)], "barstow_base", (2, 17), "База морпехов")
 
     # грузы на платформах и у путей
     k.scatter(["Object25_N", "Object26_N", "Object17_E", "Object24_N", "Object23_N"], 1, 8, W - 2, 8, 10)
@@ -247,8 +252,62 @@ def build_order():
     return k
 
 
+# ================================================================ база морпехов
+def build_base():
+    """Логистическая база морской пехоты «Барстоу» (настоящая, в 2077 — склад армейской техники).
+    Вход с запада, от депо. Порядок мест — по пути игрока: КПП с мешками → плац → казармы (север)
+    и автопарк (юг) → два ангара (восток; во втором — толпа) → командный бункер в углу."""
+    W, H = 46, 36
+    k = Town(W, H, start=(2, 17), seed=35)
+    k.dust(0, 0, W - 1, H - 1)
+    k.road_x(16, 18, x1=12)                        # дорога от депо к КПП
+    k.portal([(0, y) for y in (16, 17, 18)], "barstow_depot", (40, 16), "Депо")
+    k.pavers(13, 6, 33, 28, broken=0.2)            # плац и проезды внутри периметра
+    # периметр: ограда с воротами на западе (КПП)
+    k.edge_line("Fence A1", [(13, y) for y in range(5, 30) if y not in (16, 17, 18)], "w")
+    k.edge_line("Fence A1", [(x, 5) for x in range(13, 45)], "n")
+    k.edge_line("Fence A1", [(x, 29) for x in range(13, 45)], "s")
+    for y in (14, 20):                             # будки КПП по сторонам ворот
+        k.obj("Object10_S", 14, y)
+    for y in (15, 19):
+        k.obj("Object16_N", 15, y)                 # шлагбаумы-заграждения
+    # казармы (север): два корпуса с крышами
+    k.building(16, 7, 24, 12, "B", floor="Ground E1_N", doors=[("s", 4, 12)], windows=[("s", 1, 21), ("s", 7, 21)])
+    k.scatter(["Object17_N", "Object14_N"], 17, 8, 23, 11, 4)
+    k.box("Object17_N", 23, 8, "шкафчик морпеха", {"крышки": 30, "стимулятор": 1})
+    k.building(26, 7, 34, 12, "B", floor="Ground E1_N", doors=[("s", 4, 12)], windows=[("s", 1, 21), ("s", 7, 21)])
+    k.scatter(["Object17_N", "Object14_N"], 27, 8, 33, 11, 4)
+    # автопарк (юг): ряды машин у ограды
+    for i, x in enumerate((16, 19, 22, 25, 28)):
+        k.car(1 + i % 6, x, 25, "N")
+    k.box("Object24_N", 31, 26, "ящик с запчастями", {"крышки": 20, "бинт": 1})
+    # ангары (восток): первый — разграблен, во втором — гнездо
+    k.building(36, 6, 44, 15, "B", floor="Ground E1_N", doors=[("w", 4, 3)], ruined=True)   # у стен C нет проломов
+    k.scatter(["Object25_N", "Object26_N", "Object24_N"], 37, 7, 43, 14, 5)
+    k.building(36, 19, 44, 28, "C", floor="Ground E1_N", doors=[("w", 4, 3)])
+    k.scatter(["Object25_E", "Object26_E"], 38, 20, 43, 27, 4)
+    # командный бункер: маленький, бетонный, в центре плаца у флагштока
+    k.building(26, 18, 32, 23, "A", floor="Ground C1_N", doors=[("s", 3, 3)], sign="КОМАНДОВАНИЕ")
+    k.terminal("Object22_S", 28, 18, "barstow_base")
+    k.box("Object26_S", 31, 19, "сейф командира", {"крышки": 120, "стимулятор": 2, "жетон сержанта Холта": 1})
+    k.obj("StreetLamp 2_N", 24, 16)                # флагшток
+    for x, y in ((14, 8), (14, 27), (35, 17)):
+        k.lamp(x, y)
+    ghouls(k, 15, 6, 34, 28, 14, glowing=2)
+    ghouls(k, 37, 7, 43, 14, 4)
+    horde(k, (34, 18, 35, 26), (40, 23), 20, "Ворота второго ангара сорваны изнутри — гарнизон базы всё ещё на посту.",
+          kinds=HORDE + ["rad_mutant"])
+    horde(k, (16, 13, 24, 15), (20, 11), 12, "Из казармы, на ходу застёгивая истлевшую форму, выбегает подъём по тревоге.")
+    k.splats(13, 6, 33, 28, 12)
+    k.grass(1, 1, W - 2, H - 2, 14)
+    k.check()
+    k.save("data/maps/barstow_base.json", hordes=k.hordes)
+    return k
+
+
 if __name__ == "__main__":
-    for name, fn in (("трасса", build_road), ("депо", build_depot), ("центр", build_center), ("святилище", build_order)):
+    for name, fn in (("трасса", build_road), ("депо", build_depot), ("центр", build_center), ("святилище", build_order),
+                     ("база морпехов", build_base)):
         m = fn()
         print(f"Барстоу, {name}: {m.W}×{m.H}, объектов {len(m.objs)}, контейнеров {len(m.containers)}, "
               f"врагов {len(m.enemies)}, NPC {len(m.npcs)}")
@@ -256,12 +315,14 @@ if __name__ == "__main__":
     path = "data/locations.json"
     L = json.load(open(path, encoding="utf-8"))
     L.pop("town_iso", None)
-    L["barstow"] = {"name": "Барстоу", "map": "data/maps/barstow.json", "world_pos": [70, 360], "known": False,
+    L["barstow"] = {"name": "Барстоу", "map": "data/maps/barstow.json", "world_pos": [1450, 1150], "known": False,
                     "music": "hub", "action": True}
     L["barstow_depot"] = {"name": "Барстоу: депо", "map": "data/maps/barstow_depot.json", "known": False,
                           "clear_flag": "barstow_depot_cleared", "music": "junktown", "action": True}
     L["barstow_center"] = {"name": "Барстоу: центр", "map": "data/maps/barstow_center.json", "known": False,
                            "clear_flag": "barstow_center_cleared", "music": "reno", "action": True}
+    L["barstow_base"] = {"name": "Барстоу: база морпехов", "map": "data/maps/barstow_base.json", "known": False,
+                         "clear_flag": "barstow_base_cleared", "music": "raiders", "action": True}
     L["barstow_order"] = {"name": "Святилище Ордена Тайн", "map": "data/maps/barstow_order.json", "known": False,
                           "music": "vats"}
     json.dump(L, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)

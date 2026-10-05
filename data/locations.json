@@ -242,5 +242,191 @@
     "known": false,
     "music": "junktown",
     "underground": true
+  },
+  "barstow_base": {
+    "name": "Барстоу: база морпехов",
+    "map": "data/maps/barstow_base.json",
+    "known": false,
+    "clear_flag": "barstow_base_cleared",
+    "music": "raiders",
+    "action": true
+  },
+  "zzyzx": {
+    "name": "Зайзикс: Бульвар Мечты",
+    "map": "data/maps/zzyzx.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      1880,
+      1140
+    ],
+    "world_name": "Зайзикс",
+    "discover": true
+  },
+  "zzyzx_bath": {
+    "name": "Купальни Зайзикса",
+    "map": "data/maps/zzyzx_bath.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "zzyzx_hotel": {
+    "name": "«Замок» Спрингера",
+    "map": "data/maps/zzyzx_hotel.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "zzyzx_cistern": {
+    "name": "Цистерна под купальнями",
+    "map": "data/maps/zzyzx_cistern.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "needles": {
+    "name": "Нидлс: Пристань",
+    "map": "data/maps/needles.json",
+    "known": false,
+    "music": "hub",
+    "world_pos": [
+      2470,
+      1470
+    ],
+    "world_name": "Нидлс",
+    "discover": true
+  },
+  "needles_bridge": {
+    "name": "Мост через Колорадо",
+    "map": "data/maps/needles_bridge.json",
+    "known": false,
+    "music": "raiders"
+  },
+  "needles_saloon": {
+    "name": "Салун «Последний паром»",
+    "map": "data/maps/needles_saloon.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
+  },
+  "needles_depot": {
+    "name": "Вокзал Санта-Фе",
+    "map": "data/maps/needles_depot.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "needles_shop": {
+    "name": "Лавка «Всё для реки»",
+    "map": "data/maps/needles_shop.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "needles_church": {
+    "name": "Церковь проповедника Эли",
+    "map": "data/maps/needles_church.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "hub": {
+    "name": "Хаб: Оазис",
+    "map": "data/maps/hub.json",
+    "known": false,
+    "music": "hub",
+    "world_pos": [
+      1020,
+      1235
+    ],
+    "world_name": "Хаб",
+    "discover": true
+  },
+  "hub_old": {
+    "name": "Хаб: Старый город",
+    "map": "data/maps/hub_old.json",
+    "known": false,
+    "music": "raiders"
+  },
+  "hub_falcon": {
+    "name": "Бар «Мальтийский сокол»",
+    "map": "data/maps/hub_falcon.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
+  },
+  "hub_water": {
+    "name": "Водная артель Веги",
+    "map": "data/maps/hub_water.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "hub_tunnels": {
+    "name": "Старый акведук",
+    "map": "data/maps/hub_tunnels.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "junktown": {
+    "name": "Джанктаун",
+    "map": "data/maps/junktown.json",
+    "known": false,
+    "music": "junktown",
+    "world_pos": [
+      880,
+      1080
+    ],
+    "world_name": "Джанктаун",
+    "discover": true
+  },
+  "junktown_dump": {
+    "name": "Свалка Джанктауна",
+    "map": "data/maps/junktown_dump.json",
+    "known": false,
+    "music": "raiders"
+  },
+  "junktown_hall": {
+    "name": "Ратуша Джанктауна",
+    "map": "data/maps/junktown_hall.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
+  },
+  "junktown_casino": {
+    "name": "Казино «Гизмо»",
+    "map": "data/maps/junktown_casino.json",
+    "known": false,
+    "music": "reno",
+    "underground": true
+  },
+  "junktown_store": {
+    "name": "Лавка Дарквотеров",
+    "map": "data/maps/junktown_store.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
+  },
+  "junktown_clinic": {
+    "name": "Клиника Анны Шоу",
+    "map": "data/maps/junktown_clinic.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
+  },
+  "junktown_cellar": {
+    "name": "Подвал клиники",
+    "map": "data/maps/junktown_cellar.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "junktown_skum": {
+    "name": "Бар «Скам-Питт»",
+    "map": "data/maps/junktown_skum.json",
+    "known": false,
+    "music": "junktown",
+    "underground": true
   }
 }

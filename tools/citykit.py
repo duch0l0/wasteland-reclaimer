@@ -167,9 +167,16 @@ class CityMap(MapKit):
             out["blocked"] = self.blocked_extra()
         return out
 
+    water_codes = ()   # коды земли, которые — вода (река, озеро): непроходимы в игре
+
     def blocked_extra(self):
-        """Непроходимые клетки, которых не видно по объектам (вода в штампах)."""
-        return sorted([list(t) for t in getattr(self, "_water", set())])
+        """Непроходимые клетки, которых не видно по объектам: вода в штампах и клетки с кодом воды."""
+        cells = set(getattr(self, "_water", set()))
+        for y, row in enumerate(self.ground):
+            for x, code in enumerate(row):
+                if code in self.water_codes:
+                    cells.add((x, y))
+        return sorted([list(t) for t in cells])
 
 
 def _cells(img):

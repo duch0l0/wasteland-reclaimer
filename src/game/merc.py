@@ -94,6 +94,10 @@ class MercMixin:
         self._spawn_npc("ruins", "dex", (12, 25))
         self._spawn_npc("ruins", "rose", (48, 24))
         self.set_stage("sq_merc", 90)
+        if self.flags.get("barstow_base_cleared"):   # Дэкс зачистил и базу морпехов — склад гарнизона в караван
+            self.inventory.add("крышки", 150)
+            self.inventory.add("аптечка армейская", 1)
+            self.log("Дэкс привёз и со склада морпехов: 150 крышек и армейскую аптечку — твоя доля.")
         self.log("Караван Розы въезжает в Пятнадцатую. Впереди — Дэкс, пыльный и довольный.")
 
     def _spawn_npc(self, loc_id, npc_id, tile):

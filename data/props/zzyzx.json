@@ -1,0 +1,545 @@
+{
+"props": {
+"zz_palm0": {
+"img": "pk:desnat/desnat_4_049",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_palm1": {
+"img": "pk:desnat/desnat_4_050",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_palm2": {
+"img": "pk:desnat/desnat_4_051",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_palm3": {
+"img": "pk:desnat/desnat_4_052",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_bush0": {
+"img": "pk:desnat/desnat_4_020",
+"block": false,
+"sight": false
+},
+"zz_bush1": {
+"img": "pk:desnat/desnat_4_021",
+"block": false,
+"sight": false
+},
+"zz_bush2": {
+"img": "pk:desnat/desnat_4_024",
+"block": false,
+"sight": false
+},
+"zz_bush3": {
+"img": "pk:desnat/desnat_4_046",
+"block": false,
+"sight": false
+},
+"zz_bush4": {
+"img": "pk:desnat/desnat_4_047",
+"block": false,
+"sight": false
+},
+"zz_bush5": {
+"img": "pk:desnat/desnat_4_048",
+"block": false,
+"sight": false
+},
+"zz_cactus0": {
+"img": "pk:destown/destown_1_000",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_cactus1": {
+"img": "pk:destown/destown_1_002",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_cactus2": {
+"img": "pk:destown/destown_1_005",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_cactus3": {
+"img": "pk:destown/destown_1_028",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_cactus4": {
+"img": "pk:destown/destown_1_039",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_cactus5": {
+"img": "pk:destown/destown_1_066",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_deadtree0": {
+"img": "pk:destown/destown_1_008",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_deadtree1": {
+"img": "pk:destown/destown_1_009",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_deadtree2": {
+"img": "pk:destown/destown_1_043",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_deadtree3": {
+"img": "pk:destown/destown_1_096",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_rock0": {
+"img": "pk:destown/destown_2_046",
+"block": true,
+"sight": false
+},
+"zz_rock1": {
+"img": "pk:destown/destown_2_047",
+"block": true,
+"sight": false
+},
+"zz_rock2": {
+"img": "pk:destown/destown_2_060",
+"block": true,
+"sight": false
+},
+"zz_rock3": {
+"img": "pk:destown/destown_2_067",
+"block": true,
+"sight": false
+},
+"zz_adobe_a": {
+"img": "pk:destown/destown_3_000",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"zz_adobe_b": {
+"img": "pk:destown/destown_3_002",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"zz_adobe_c": {
+"img": "pk:destown/destown_3_003",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"zz_adobe_big": {
+"img": "pk:destown/destown_3_014",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"zz_tent_big": {
+"img": "pk:destown/destown_3_004",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+]
+},
+"zz_tent_awning": {
+"img": "pk:destown/destown_3_011",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"zz_tent": {
+"img": "pk:destown/destown_3_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"zz_tent_small": {
+"img": "pk:destown/destown_3_018",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"zz_stall": {
+"img": "pk:destown/destown_3_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"zz_stall_b": {
+"img": "pk:destown/destown_3_032",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"zz_rug": {
+"img": "pk:destown/destown_3_008",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_well": {
+"img": "pk:desnat/desnat_3_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"zz_well_b": {
+"img": "pk:desnat/desnat_3_027",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"zz_pot0": {
+"img": "pk:desnat/desnat_3_016",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "кувшин"
+},
+"zz_pot1": {
+"img": "pk:desnat/desnat_3_041",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "кувшин"
+},
+"zz_pot2": {
+"img": "pk:desnat/desnat_3_059",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "кувшин"
+},
+"zz_pot3": {
+"img": "pk:desnat/desnat_3_085",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "кувшин"
+},
+"zz_crate": {
+"img": "pk:desnat/desnat_3_018",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"zz_barrel": {
+"img": "pk:desnat/desnat_3_014",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"zz_campfire": {
+"img": "pk:destown/destown_3_034",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"ht_bed": {
+"img": "pk:hotel/hotel_1_007",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ht_bed_single": {
+"img": "pk:hotel/hotel_1_004",
+"block": true,
+"sight": false,
+"foot": [
+1,
+2
+]
+},
+"ht_nightstand": {
+"img": "pk:hotel/hotel_1_000",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "тумбочка"
+},
+"ht_wardrobe": {
+"img": "pk:hotel/hotel_1_084",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "cloth",
+"title": "шкаф"
+},
+"ht_desk": {
+"img": "pk:hotel/hotel_1_086",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ht_desk_b": {
+"img": "pk:hotel/hotel_1_079",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ht_armchair": {
+"img": "pk:hotel/hotel_1_092",
+"block": true,
+"sight": false
+},
+"ht_lamp": {
+"img": "pk:hotel/hotel_1_102",
+"block": true,
+"sight": false
+},
+"ht_sink": {
+"img": "pk:hotel/hotel_1_095",
+"block": true,
+"sight": false
+},
+"ht_toilet": {
+"img": "pk:hotel/hotel_1_096",
+"block": true,
+"sight": false
+},
+"ht_plant": {
+"img": "pk:hotel/hotel_1_127",
+"block": true,
+"sight": false
+},
+"zz_lockers": {
+"img": "pk:wschool/p1/6,12,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"zz_tank": {
+"img": "pk:wlab/wlab_1_008",
+"block": true,
+"sight": true
+},
+"zz_vats": {
+"img": "pk:wlab/wlab_1_002",
+"block": true,
+"sight": true
+},
+"zz_desk_lab": {
+"img": "pk:wlab/wlab_1_012",
+"block": true,
+"sight": false
+},
+"zz_generator": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": false
+},
+"zz_water_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true
+},
+"zz_lake": {
+"img": "pk:destown/p5/8,5,8,11",
+"block": false,
+"sight": false,
+"foot": [
+8,
+11
+],
+"layer": "floor"
+},
+"zz_pool_a": {
+"img": "pk:pool/p1/4,4,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"zz_pool_b": {
+"img": "pk:pool/p1/4,4,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"zz_pool_c": {
+"img": "pk:pool/p1/4,4,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"zz_pool_d": {
+"img": "pk:pool/p1/4,4,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"zz_canal_a": {
+"img": "pk:pool/p1/4,8,4,4",
+"block": false,
+"sight": false,
+"foot": [
+4,
+4
+],
+"layer": "floor"
+},
+"zz_canal_b": {
+"img": "pk:pool/p1/4,8,4,4",
+"block": false,
+"sight": false,
+"foot": [
+4,
+4
+],
+"layer": "floor"
+},
+"zz_canal_c": {
+"img": "pk:pool/p1/4,8,4,4",
+"block": false,
+"sight": false,
+"foot": [
+4,
+4
+],
+"layer": "floor"
+},
+"zz_canal_d": {
+"img": "pk:pool/p1/4,8,4,4",
+"block": false,
+"sight": false,
+"foot": [
+4,
+4
+],
+"layer": "floor"
+}
+}
+}
