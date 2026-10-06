@@ -1,0 +1,1165 @@
+{
+"props": {
+"vg_tower0": {
+"img": "pk:zcity/zcity_5_000",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6
+},
+"vg_tower1": {
+"img": "pk:zcity/zcity_5_001",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6
+},
+"vg_tower2": {
+"img": "pk:zcity/zcity_5_002",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6
+},
+"vg_tower3": {
+"img": "pk:zcity/zcity_5_003",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6
+},
+"vg_tower4": {
+"img": "pk:zcity/zcity_5_005",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6
+},
+"vg_tower_broken": {
+"img": "pk:zcity/zcity_5_004",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6
+},
+"vg_lucky38": {
+"img": "pk:zcity/zcity_5_000",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"scale": 2.4,
+"light": {
+"r": 90,
+"color": [
+255,
+230,
+150
+],
+"at": [
+0.5,
+0.1
+],
+"flicker": 0.5
+}
+},
+"vg_vt_tower": {
+"img": "pk:zcity/zcity_5_004",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"scale": 2.4
+},
+"vg_casino_front": {
+"img": "pk:casino/casino_4_051",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+120,
+200
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"vg_casino_sign": {
+"img": "pk:casino/casino_4_002",
+"block": false,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+255,
+90,
+180
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"vg_jackpot": {
+"img": "pk:casino/casino_1_062",
+"block": true,
+"sight": true,
+"foot": [
+6,
+2
+],
+"light": {
+"r": 120,
+"color": [
+255,
+210,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"vg_neon_cash": {
+"img": "pk:casino/casino_1_052",
+"block": false,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+120,
+255,
+140
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"vg_neon_jp": {
+"img": "pk:casino/casino_1_054",
+"block": false,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+255,
+200,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"vg_shop_row": {
+"img": "pk:zcity/zcity_5_022",
+"block": true,
+"sight": true,
+"foot": [
+6,
+1
+]
+},
+"vg_wreck0": {
+"img": "pk:zcity/zcity_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wreck1": {
+"img": "pk:zcity/zcity_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wreck2": {
+"img": "pk:zcity/zcity_2_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wreck3": {
+"img": "pk:zcity/zcity_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wreck4": {
+"img": "pk:zcity/zcity_2_034",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wreck5": {
+"img": "pk:zcity/zcity_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wreck6": {
+"img": "pk:zcity/zcity_2_097",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_rubble0": {
+"img": "pk:zcity/zcity_4_007",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_rubble1": {
+"img": "pk:zcity/zcity_4_008",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_rubble2": {
+"img": "pk:zcity/zcity_4_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_rubble3": {
+"img": "pk:zcity/zcity_4_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_rubble4": {
+"img": "pk:zcity/zcity_4_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_rubble5": {
+"img": "pk:zcity/zcity_4_023",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_lamp": {
+"img": "pk:apark/apark_3_064",
+"block": true,
+"sight": false,
+"light": {
+"r": 140,
+"color": [
+255,
+200,
+140
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"vg_lamp_b": {
+"img": "pk:apark/apark_3_089",
+"block": true,
+"sight": false,
+"light": {
+"r": 140,
+"color": [
+255,
+200,
+140
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"vg_stall": {
+"img": "pk:jtown/jtown_1_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_stall_b": {
+"img": "pk:apark/apark_1_030",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_crate": {
+"img": "pk:bazaar/bazaar_3_000",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"vg_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф"
+},
+"vg_cooling": {
+"img": "pk:npower/npower_1_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"vg_reactor": {
+"img": "pk:npower/npower_1_007",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+],
+"light": {
+"r": 150,
+"color": [
+140,
+255,
+160
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"vg_tank_rad": {
+"img": "pk:npower/npower_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_tank_rad_b": {
+"img": "pk:npower/npower_1_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_fan": {
+"img": "pk:npower/npower_1_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_pump": {
+"img": "pk:npower/npower_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_pump_b": {
+"img": "pk:npower/npower_1_032",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_panel": {
+"img": "pk:npower/npower_2_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_panel_b": {
+"img": "pk:npower/npower_2_002",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_warn": {
+"img": "pk:npower/npower_1_069",
+"block": true,
+"sight": false
+},
+"vg_bike": {
+"img": "pk:jtown/jtown_2_010",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_bike_b": {
+"img": "pk:jtown/jtown_2_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_bike_c": {
+"img": "pk:jtown/jtown_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_wagon": {
+"img": "pk:west/west_1_012",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"vg_trough": {
+"img": "pk:west/west_1_016",
+"block": true,
+"sight": false
+},
+"vg_hay": {
+"img": "pk:west/west_1_004",
+"block": false,
+"sight": false
+},
+"vg_gallows": {
+"img": "pk:cmine/cmine_1_101",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+],
+"scale": 1.6
+},
+"vg_tires": {
+"img": "pk:ucamp/ucamp_2_043",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"vg_tent0": {
+"img": "pk:ucamp/ucamp_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_tent1": {
+"img": "pk:ucamp/ucamp_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_tent2": {
+"img": "pk:ucamp/ucamp_2_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_tent3": {
+"img": "pk:ucamp/ucamp_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_bz_spice": {
+"img": "pk:bazaar/bazaar_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_bz_cloth": {
+"img": "pk:bazaar/bazaar_2_035",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_bz_blades": {
+"img": "pk:bazaar/bazaar_2_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_bz_jars": {
+"img": "pk:bazaar/bazaar_2_048",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vg_lantern": {
+"img": "pk:bazaar/bazaar_2_088",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+180,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.3
+}
+},
+"vg_roulette": {
+"img": "pk:casino/casino_1_026",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"vg_blackjack": {
+"img": "pk:casino/casino_3_024",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"vg_poker": {
+"img": "pk:casino/casino_4_030",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"vg_slot0": {
+"img": "pk:casino/casino_1_000",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot1": {
+"img": "pk:casino/casino_1_001",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot2": {
+"img": "pk:casino/casino_1_002",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot3": {
+"img": "pk:casino/casino_1_003",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot4": {
+"img": "pk:casino/casino_1_004",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot5": {
+"img": "pk:casino/casino_1_005",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot6": {
+"img": "pk:casino/casino_1_006",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_slot7": {
+"img": "pk:casino/casino_1_007",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vg_bar": {
+"img": "pk:west/west_2_108",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"vg_bottles": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "полка с бутылками"
+},
+"vg_sofa": {
+"img": "pk:casino/casino_4_038",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_bookcase0": {
+"img": "pk:lib/lib_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"vg_bookcase1": {
+"img": "pk:lib/lib_1_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"vg_bookcase2": {
+"img": "pk:lib/lib_1_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"vg_bookcase3": {
+"img": "pk:lib/lib_1_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"vg_book_tall": {
+"img": "pk:lib/lib_1_008",
+"block": true,
+"sight": true
+},
+"vg_book_tall_b": {
+"img": "pk:lib/lib_1_024",
+"block": true,
+"sight": true
+},
+"vg_read_table": {
+"img": "pk:lib/lib_1_060",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"vg_read_table_b": {
+"img": "pk:lib/lib_1_061",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"vg_lib_lamp": {
+"img": "pk:lib/lib_1_066",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+220,
+160
+],
+"at": [
+0.5,
+0.2
+]
+}
+},
+"vg_plant": {
+"img": "pk:lib/lib_1_084",
+"block": true,
+"sight": false
+},
+"vg_plant_b": {
+"img": "pk:lib/lib_1_085",
+"block": true,
+"sight": false
+},
+"vg_desk_lib": {
+"img": "pk:lib/lib_1_112",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_painting": {
+"img": "pk:lrest/lrest_3_003",
+"block": false,
+"sight": false
+},
+"vg_painting_b": {
+"img": "pk:lrest/lrest_3_004",
+"block": false,
+"sight": false
+},
+"vg_painting_c": {
+"img": "pk:lrest/lrest_3_011",
+"block": false,
+"sight": false
+},
+"vg_wine": {
+"img": "pk:lrest/lrest_3_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "винный шкаф"
+},
+"vg_wine_b": {
+"img": "pk:lrest/lrest_3_037",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_candelabra": {
+"img": "pk:lrest/lrest_2_032",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.2
+],
+"flicker": 0.4
+}
+},
+"vg_armchair": {
+"img": "pk:lrest/lrest_1_041",
+"block": true,
+"sight": false
+},
+"vg_armchair_b": {
+"img": "pk:lrest/lrest_1_042",
+"block": true,
+"sight": false
+},
+"vg_lounge": {
+"img": "pk:lrest/lrest_2_097",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_hooks": {
+"img": "pk:cmine/cmine_1_102",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+],
+"scale": 1.5
+},
+"vg_chain": {
+"img": "pk:cmine/cmine_1_112",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_butcher": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+},
+"vg_bones_b": {
+"img": "pk:grave/grave_2_027",
+"block": false,
+"sight": false
+},
+"vg_hosp_bed": {
+"img": "pk:hosp/hosp_1_007",
+"block": true,
+"sight": false,
+"foot": [
+3,
+1
+]
+},
+"vg_med_shelf": {
+"img": "pk:hosp/hosp_1_009",
+"block": true,
+"sight": true,
+"search": "drawer",
+"title": "шкаф с лекарствами"
+},
+"vg_tent_white": {
+"img": "pk:bazaar/bazaar_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"vg_garden": {
+"img": "pk:ghouse/ghouse_3_048",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_garden_b": {
+"img": "pk:ghouse/ghouse_3_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_sewer_rubble": {
+"img": "pk:sewer/sewer_1_042",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_sewer_moss": {
+"img": "pk:sewer/sewer_1_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_vt_desk": {
+"img": "pk:aoffice/aoffice_1_000",
+"block": true,
+"sight": false
+},
+"vg_vt_desk_b": {
+"img": "pk:aoffice/aoffice_1_004",
+"block": true,
+"sight": false
+},
+"vg_cabinets": {
+"img": "pk:aoffice/aoffice_3_013",
+"block": true,
+"sight": true,
+"search": "drawer",
+"title": "картотека"
+},
+"vg_reception": {
+"img": "pk:lhotel/lhotel_1_012",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"vg_debris": {
+"img": "pk:pmall/pmall_2_042",
+"block": true,
+"sight": false
+},
+"vg_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false
+},
+"vg_console": {
+"img": "pk:npower/npower_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_console_b": {
+"img": "pk:npower/npower_2_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"vg_vre_crate": {
+"img": "pk:wlab/wlab_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_cryo": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+140,
+220,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.05
+}
+},
+"vg_tube_dead": {
+"img": "pk:wlab/wlab_3_103",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_biohazard": {
+"img": "pk:hosp/hosp_1_012",
+"block": true,
+"sight": false
+}
+}
+}

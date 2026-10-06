@@ -1,0 +1,706 @@
+{
+"props": {
+"sl_house0": {
+"img": "pk:rvill/rvill_1_000",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"sl_house1": {
+"img": "pk:rvill/rvill_1_024",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"sl_house2": {
+"img": "pk:rvill/rvill_1_026",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"sl_house3": {
+"img": "pk:rvill/rvill_1_004",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"sl_house4": {
+"img": "pk:rvill/rvill_1_041",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"sl_house5": {
+"img": "pk:rvill/rvill_1_027",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.5
+},
+"sl_chapel": {
+"img": "pk:grave/grave_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+],
+"scale": 1.2
+},
+"sl_well": {
+"img": "pk:rvill/rvill_1_060",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_tree0": {
+"img": "pk:rvill/rvill_2_010",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"sl_tree1": {
+"img": "pk:rvill/rvill_2_011",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"sl_tree2": {
+"img": "pk:rvill/rvill_2_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"sl_grass0": {
+"img": "pk:rvill/rvill_2_014",
+"block": false,
+"sight": false
+},
+"sl_grass1": {
+"img": "pk:rvill/rvill_2_015",
+"block": false,
+"sight": false
+},
+"sl_grass2": {
+"img": "pk:rvill/rvill_2_016",
+"block": false,
+"sight": false
+},
+"sl_grass3": {
+"img": "pk:rvill/rvill_2_017",
+"block": false,
+"sight": false
+},
+"sl_fence": {
+"img": "pk:west/west_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_fence_b": {
+"img": "pk:west/west_1_014",
+"block": true,
+"sight": false
+},
+"sl_crate": {
+"img": "pk:cmine/cmine_1_048",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"sl_crate_b": {
+"img": "pk:cmine/cmine_1_058",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"sl_barrel0": {
+"img": "pk:cmine/cmine_1_072",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"sl_barrel1": {
+"img": "pk:cmine/cmine_1_076",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"sl_coal": {
+"img": "pk:cmine/cmine_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_coal_b": {
+"img": "pk:cmine/cmine_1_023",
+"block": true,
+"sight": false
+},
+"sl_cart": {
+"img": "pk:cmine/cmine_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_cart_b": {
+"img": "pk:cmine/cmine_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_headframe": {
+"img": "pk:cmine/cmine_1_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_support0": {
+"img": "pk:cmine/cmine_1_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_support1": {
+"img": "pk:cmine/cmine_1_016",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_support2": {
+"img": "pk:cmine/cmine_1_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_lantern": {
+"img": "pk:cmine/cmine_1_032",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
+"sl_lantern_b": {
+"img": "pk:cmine/cmine_1_034",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
+"sl_rails": {
+"img": "pk:cmine/cmine_1_006",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"sl_rails_s": {
+"img": "pk:cmine/cmine_1_009",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"sl_loco": {
+"img": "pk:cmine/cmine_1_005",
+"block": true,
+"sight": true,
+"foot": [
+8,
+1
+]
+},
+"sl_fan": {
+"img": "pk:cmine/cmine_1_079",
+"block": true,
+"sight": false
+},
+"sl_rock": {
+"img": "pk:cmine/cmine_1_088",
+"block": true,
+"sight": false
+},
+"sl_rock_b": {
+"img": "pk:cmine/cmine_1_124",
+"block": true,
+"sight": false
+},
+"sl_danger": {
+"img": "pk:cmine/cmine_1_119",
+"block": true,
+"sight": false
+},
+"sl_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
+},
+"sl_tent_bos": {
+"img": "pk:bazaar/bazaar_1_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"sl_stall": {
+"img": "pk:jtown/jtown_1_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_firetruck": {
+"img": "pk:fstation/fstation_1_000",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"sl_firetruck_b": {
+"img": "pk:fstation/fstation_1_005",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"sl_tanker": {
+"img": "pk:fstation/fstation_1_001",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"sl_helmets": {
+"img": "pk:fstation/fstation_1_083",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "locker",
+"title": "стойка со снаряжением"
+},
+"sl_helmets_b": {
+"img": "pk:fstation/fstation_1_085",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_hose": {
+"img": "pk:fstation/fstation_1_053",
+"block": true,
+"sight": false
+},
+"sl_oxygen": {
+"img": "pk:fstation/fstation_1_048",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_extinguisher": {
+"img": "pk:fstation/fstation_1_047",
+"block": true,
+"sight": false
+},
+"sl_ladder": {
+"img": "pk:fstation/fstation_1_051",
+"block": true,
+"sight": false
+},
+"sl_medkit": {
+"img": "pk:fstation/fstation_1_061",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "аптечка"
+},
+"sl_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"sl_bookcase": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true,
+"search": "shelf",
+"title": "шкаф с бумагами"
+},
+"sl_bed": {
+"img": "pk:west/west_2_005",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"sl_bunker": {
+"img": "pk:mbase/mbase_2_004",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+]
+},
+"sl_watchtower": {
+"img": "pk:mbase/mbase_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_barracks": {
+"img": "pk:mbase/mbase_2_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"sl_hangar": {
+"img": "pk:mbase/mbase_2_015",
+"block": true,
+"sight": true,
+"foot": [
+6,
+3
+]
+},
+"sl_missile": {
+"img": "pk:mbase/mbase_2_017",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"sl_tank": {
+"img": "pk:mbase/mbase_2_002",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"sl_humvee": {
+"img": "pk:mbase/mbase_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_humvee_b": {
+"img": "pk:mbase/mbase_2_007",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"sl_ammo": {
+"img": "pk:mbase/mbase_2_001",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "армейский ящик"
+},
+"sl_ammo_b": {
+"img": "pk:mbase/mbase_2_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "ящик с патронами"
+},
+"sl_barbed": {
+"img": "pk:mbase/p1/8,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_cannon": {
+"img": "pk:mbase/mbase_3_041",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"sl_radar": {
+"img": "pk:mbase/mbase_3_008",
+"block": true,
+"sight": false
+},
+"sl_bunk0": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_bunk1": {
+"img": "pk:nbunk/nbunk_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_bunk2": {
+"img": "pk:nbunk/nbunk_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_bunk3": {
+"img": "pk:nbunk/nbunk_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"sl_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"sl_desk_pc": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_desk_pc_b": {
+"img": "pk:nbunk/nbunk_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"sl_gen": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"sl_console": {
+"img": "pk:mbase/mbase_3_010",
+"block": true,
+"sight": false
+},
+"sl_server": {
+"img": "pk:mbase/mbase_3_016",
+"block": true,
+"sight": false
+},
+"sl_machine": {
+"img": "pk:mbase/mbase_3_022",
+"block": true,
+"sight": false
+},
+"sl_machine_b": {
+"img": "pk:mbase/mbase_3_024",
+"block": true,
+"sight": false
+},
+"sl_gun_rack": {
+"img": "pk:gcave/p1/14,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "оружейная стойка"
+},
+"sl_helmet": {
+"img": "pk:mbase/p1/6,8,1,1",
+"block": false,
+"sight": false
+},
+"sl_gasmask": {
+"img": "pk:mbase/p1/7,9,1,1",
+"block": false,
+"sight": false
+},
+"sl_shells": {
+"img": "pk:mbase/mbase_3_047",
+"block": false,
+"sight": false
+},
+"sl_radio": {
+"img": "pk:mbase/p1/13,8,2,1",
+"block": false,
+"sight": false
+}
+}
+}

@@ -124,6 +124,27 @@ class QuestMixin:
         if (f.get("know_nipton_lottery") or f.get("know_brother_t_nipton") or "vault22" in self.locations) \
                 and "nipton" not in self.worldmap.known:   # голоса Иезекииля или слухи — Ниптон
             self.reveal_location("nipton")
+        if "nipton" in self.locations and "searchlight" not in self.worldmap.known:   # из Ниптона — на восток, к Сёрчлайту
+            self.reveal_location("searchlight")
+        if f.get("fort_bos_storm") and f.get("fort_cleared") and not f.get("fort_decided"):   # Форт взят с паладинами
+            for k in ("fort_bos", "recruits_free", "fort_decided", "fort_access"):
+                f[k] = True
+        if ("searchlight" in self.locations or f.get("know_zero")) and "vegas_strip" not in self.worldmap.known:
+            self.reveal_location("vegas_strip")   # хранилище «Ноль» — под башней Vault-Tec в руинах Вегаса
+        if (f.get("know_poseidon") or f.get("enclave_contact") or f.get("fort_enclave_deal")) \
+                and "poseidon7" not in self.worldmap.known:   # канал «П-7» ведёт к станции Анклава
+            self.reveal_location("poseidon7")
+        from .crime import ENCLAVE_ZONES
+        if f.get("enclave_hostile") and getattr(self, "loc", None) is not None and self.loc.id in ENCLAVE_ZONES and \
+                (self.npcs or any(not e.hostile for e in self.enemies if e.alive)):
+            self.town_turns_hostile()   # тревога на станции: угон, диверсия — все с оружием в бой
+        if (f.get("zero_fate") or f.get("brother_t_flees") or f.get("p7_deal_done") or f.get("p7_vertibird_stolen")) \
+                and "mariposa" not in self.worldmap.known:   # финал: туда, где всё началось
+            self.reveal_location("mariposa")
+        # «Ноль»: питание, коды совета и двое из Списка Марипозы (сетчатка, голос, код)
+        if f.get("zero_power") and f.get("zero_codes") and \
+                sum(bool(f.get(k)) for k in ("zero_retina", "zero_voice", "zero_code")) >= 2:
+            f["zero_open"] = True
         if self.inventory.has("жетон жребия") and not f.get("nipton_decided"):   # жетон с зазубриной — у героя, вытянут мэр
             f["nipton_token_swapped"] = True
         # Примм: улики против вдовы — две из четырёх, и она уже не может молчать

@@ -100,7 +100,10 @@ class InteractionMixin:
             self.flags["vault_cleared"] = True
         from ..location import LOCATION_DEFS
         flag = LOCATION_DEFS.get(self.loc.id, {}).get("clear_flag")
-        if flag and not self.flags.get(flag) and not any(e.alive and e.hostile for e in self.enemies):
+        # зачищено — когда враги были (или жители взялись за оружие) и никого с оружием не осталось:
+        # и враждебных, и тех, у кого есть сторона (Анклав у ворот молчит, но жив — значит, не зачищено)
+        if flag and not self.flags.get(flag) and self.enemies and \
+                not any(e.alive and (e.hostile or getattr(e, "faction", None)) for e in self.enemies):
             self.flags[flag] = True
             name = LOCATION_DEFS[self.loc.id]["name"]
             self.log(f"Район зачищен: {name}. Тишина — даже мухи не жужжат.")

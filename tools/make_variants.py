@@ -7,6 +7,7 @@
                 и фильтром, промасленная кожанка с жёлтой полосой, джинса;
   boss        — Шрам, главарь Бензо-банды: из Панка. Бритый череп, шрам через
                 всё лицо, светящийся глаз, красная кожанка, два наплечника;
+  ghoul_runner — гуль-бегун: поджарый бледный дикий гуль с жёлтыми глазами;
   radscorpion — радскорпион: тот же жук, ржаво-красный, с хвостом-жалом над спиной;
   beetle      — панцирный жук: из пса. Хитин с отливом, шов по панцирю,
                 усики, жвалы, лишняя пара лап, светящиеся глазки.
@@ -645,6 +646,33 @@ def make_feral():
     return variant("loner", fn)
 
 
+def make_runner():
+    """Гуль-бегун: тот же дикий гуль, но поджарый (уже на пятую часть) и бледный, с жёлтыми глазами —
+    бегает быстрее всех, бьёт слабее."""
+    pale = {}
+    out = {}
+    for d, frames in load("feral").items():
+        out[d] = []
+        for f in frames:
+            w, h = f.get_size()
+            img = pygame.transform.scale(f, (max(1, round(w * 0.8)), h))
+            img = pad(img, (w - img.get_width()) // 2 + 1)
+            for y in range(img.get_height()):
+                for x in range(img.get_width()):
+                    c = img.get_at((x, y))
+                    if c.a < 10 or (c.r, c.g, c.b) == INK:
+                        continue
+                    key = (c.r, c.g, c.b)
+                    if key not in pale:
+                        lum = (c.r + c.g + c.b) / 3
+                        pale[key] = (min(255, int(lum * 0.9 + 40)), min(255, int(lum * 0.85 + 34)), int(lum * 0.7 + 20))
+                    if key == (250, 230, 90):
+                        continue                         # глаза остаются жёлтыми
+                    img.set_at((x, y), (*pale[key], c.a))
+            out[d].append(img)
+    return out
+
+
 ROACH = [(20, 12, 10), (56, 28, 18), (96, 48, 26), (140, 74, 36), (186, 110, 56), (230, 160, 90)]
 
 
@@ -852,7 +880,7 @@ MAKERS = {"raider": make_raider, "gang": make_gang, "boss": make_boss, "beetle":
           "lenny": make_lenny, "merc": make_merc, "folk_a": make_folk_a, "folk_b": make_folk_b,
           "feral": make_feral, "radroach": make_roach, "turret": make_turret,
           "ghoul_kid": make_ghoul_kid, "ghoul_lady": make_ghoul_lady, "joined": make_joined,
-          "radscorpion": make_scorpion}
+          "radscorpion": make_scorpion, "ghoul_runner": make_runner}
 
 
 def preview(ids, path):

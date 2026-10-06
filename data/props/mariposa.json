@@ -1,0 +1,404 @@
+{
+"props": {
+"mp_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mp_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mp_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mp_watchtower": {
+"img": "pk:mbase/mbase_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 160,
+"color": [
+255,
+250,
+210
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"mp_barracks": {
+"img": "pk:mbase/mbase_2_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mp_bunker": {
+"img": "pk:mbase/mbase_2_004",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+]
+},
+"mp_hangar": {
+"img": "pk:mbase/mbase_2_015",
+"block": true,
+"sight": true,
+"foot": [
+6,
+3
+]
+},
+"mp_tank": {
+"img": "pk:mbase/mbase_2_002",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"mp_barbed": {
+"img": "pk:mbase/p1/8,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mp_ammo": {
+"img": "pk:mbase/mbase_2_001",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "армейский ящик"
+},
+"mp_helmet": {
+"img": "pk:mbase/p1/6,8,1,1",
+"block": false,
+"sight": false
+},
+"mp_gasmask": {
+"img": "pk:mbase/p1/7,9,1,1",
+"block": false,
+"sight": false
+},
+"mp_tent_white": {
+"img": "pk:bazaar/bazaar_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mp_cult_van": {
+"img": "pk:zcity/zcity_2_098",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mp_altar": {
+"img": "pk:cult/cult_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mp_candelabra": {
+"img": "pk:cult/cult_2_068",
+"block": false,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.5
+}
+},
+"mp_banner": {
+"img": "pk:cult/cult_2_141",
+"block": false,
+"sight": false
+},
+"mp_banner_b": {
+"img": "pk:cult/cult_2_142",
+"block": false,
+"sight": false
+},
+"mp_pillar": {
+"img": "pk:cult/cult_2_143",
+"block": true,
+"sight": true
+},
+"mp_cage": {
+"img": "pk:cult/cult_3_020",
+"block": true,
+"sight": true
+},
+"mp_cage_held": {
+"img": "pk:cult/cult_3_020",
+"block": false,
+"sight": false
+},
+"mp_vat": {
+"img": "pk:wlab/wlab_1_000",
+"block": true,
+"sight": true,
+"light": {
+"r": 130,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"mp_vats": {
+"img": "pk:wlab/wlab_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 130,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"mp_tube": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 130,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"mp_tube_b": {
+"img": "pk:wlab/wlab_3_102",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 130,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"mp_tube_broken": {
+"img": "pk:wlab/wlab_3_103",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mp_big_vat": {
+"img": "pk:npower/npower_1_007",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+],
+"light": {
+"r": 180,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.25
+}
+},
+"mp_pipes": {
+"img": "pk:npower/npower_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mp_vre_puddle": {
+"img": "pk:gcave/p1/2,4,1,1",
+"block": false,
+"sight": false,
+"light": {
+"r": 70,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
+"mp_console": {
+"img": "pk:npower/npower_2_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mp_console_b": {
+"img": "pk:npower/npower_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mp_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false
+},
+"mp_arm": {
+"img": "pk:wlab/wlab_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mp_chem": {
+"img": "pk:wlab/wlab_1_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mp_op_table": {
+"img": "pk:hosp/hosp_1_001",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"mp_biohazard": {
+"img": "pk:hosp/hosp_1_012",
+"block": true,
+"sight": false
+},
+"mp_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+},
+"mp_bones_b": {
+"img": "pk:grave/grave_2_027",
+"block": false,
+"sight": false
+},
+"mp_vre_crate": {
+"img": "pk:wlab/wlab_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+}
+}
+}

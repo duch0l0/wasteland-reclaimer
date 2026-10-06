@@ -1,0 +1,448 @@
+{
+"props": {
+"p7_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"p7_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"p7_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"p7_relay": {
+"img": "pk:fmbase/fmbase_1_012",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+],
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+80
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_command": {
+"img": "pk:fmbase/fmbase_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+120,
+255,
+160
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_control": {
+"img": "pk:fmbase/fmbase_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_satellite": {
+"img": "pk:fmbase/fmbase_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_generator": {
+"img": "pk:fmbase/fmbase_1_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+110,
+200,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_dome": {
+"img": "pk:fmbase/fmbase_1_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+110,
+200,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_turret": {
+"img": "pk:fmbase/fmbase_1_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_turret_b": {
+"img": "pk:fmbase/fmbase_1_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_pad": {
+"img": "pk:fmbase/fmbase_1_006",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"p7_tank_blue": {
+"img": "pk:fmbase/fmbase_1_004",
+"block": true,
+"sight": true,
+"light": {
+"r": 110,
+"color": [
+110,
+200,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_tank_green": {
+"img": "pk:fmbase/fmbase_1_010",
+"block": true,
+"sight": true,
+"light": {
+"r": 110,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_tank_vre": {
+"img": "pk:fmbase/fmbase_1_011",
+"block": true,
+"sight": true,
+"light": {
+"r": 110,
+"color": [
+160,
+255,
+120
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_pipeline": {
+"img": "pk:fmbase/fmbase_1_016",
+"block": true,
+"sight": true,
+"foot": [
+8,
+1
+]
+},
+"p7_suit_rack": {
+"img": "pk:fmbase/fmbase_2_080",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"p7_suit_rack_b": {
+"img": "pk:fmbase/fmbase_2_084",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"p7_suit_stand": {
+"img": "pk:fmbase/fmbase_2_085",
+"block": true,
+"sight": true
+},
+"p7_bay_door": {
+"img": "pk:fmbase/fmbase_2_081",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_vertibird": {
+"img": "pk:fmbase/p1/0,8,4,4",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+]
+},
+"p7_bay_empty": {
+"img": "pk:fmbase/p1/8,8,4,4",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+]
+},
+"p7_fence": {
+"img": "pk:mbase/p2/12,6,4,2",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"p7_console": {
+"img": "pk:npower/npower_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_console_b": {
+"img": "pk:npower/npower_2_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_console_c": {
+"img": "pk:npower/npower_2_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false
+},
+"p7_screens": {
+"img": "pk:npower/npower_2_079",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_bunk0": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_bunk1": {
+"img": "pk:nbunk/nbunk_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_bunk2": {
+"img": "pk:nbunk/nbunk_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_bunk3": {
+"img": "pk:nbunk/nbunk_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"p7_desk": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_cage": {
+"img": "pk:cult/cult_3_020",
+"block": false,
+"sight": false
+},
+"p7_chem": {
+"img": "pk:wlab/wlab_1_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_chem_b": {
+"img": "pk:wlab/wlab_1_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"p7_tube": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+160,
+255,
+120
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"p7_vre_crate": {
+"img": "pk:wlab/wlab_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"p7_ammo": {
+"img": "pk:mbase/mbase_2_001",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "ящик Анклава"
+},
+"p7_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф коменданта"
+}
+}
+}

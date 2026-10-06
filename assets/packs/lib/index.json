@@ -1,0 +1,4940 @@
+{
+"slug": "modern-library-topdown-pixel-art-tileset",
+"items": {
+"lib_1_000": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"lib_1_001": {
+"size": [
+42,
+39
+],
+"dir": "props"
+},
+"lib_1_002": {
+"size": [
+42,
+36
+],
+"dir": "props"
+},
+"lib_1_003": {
+"size": [
+26,
+36
+],
+"dir": "props"
+},
+"lib_1_004": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_005": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_006": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_007": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_008": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_009": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_010": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_011": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_012": {
+"size": [
+42,
+34
+],
+"dir": "props"
+},
+"lib_1_013": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"lib_1_014": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"lib_1_015": {
+"size": [
+26,
+33
+],
+"dir": "props"
+},
+"lib_1_016": {
+"size": [
+30,
+29
+],
+"dir": "props"
+},
+"lib_1_017": {
+"size": [
+32,
+38
+],
+"dir": "props"
+},
+"lib_1_018": {
+"size": [
+42,
+34
+],
+"dir": "props"
+},
+"lib_1_019": {
+"size": [
+24,
+36
+],
+"dir": "props"
+},
+"lib_1_020": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_021": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_022": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"lib_1_023": {
+"size": [
+88,
+89
+],
+"dir": "props"
+},
+"lib_1_024": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_1_025": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_1_026": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_1_027": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_1_028": {
+"size": [
+34,
+37
+],
+"dir": "props"
+},
+"lib_1_029": {
+"size": [
+42,
+41
+],
+"dir": "props"
+},
+"lib_1_030": {
+"size": [
+42,
+34
+],
+"dir": "props"
+},
+"lib_1_031": {
+"size": [
+28,
+41
+],
+"dir": "props"
+},
+"lib_1_032": {
+"size": [
+30,
+39
+],
+"dir": "props"
+},
+"lib_1_033": {
+"size": [
+40,
+34
+],
+"dir": "props"
+},
+"lib_1_034": {
+"size": [
+43,
+36
+],
+"dir": "props"
+},
+"lib_1_035": {
+"size": [
+32,
+29
+],
+"dir": "props"
+},
+"lib_1_036": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"lib_1_037": {
+"size": [
+88,
+91
+],
+"dir": "props"
+},
+"lib_1_038": {
+"size": [
+88,
+89
+],
+"dir": "props"
+},
+"lib_1_039": {
+"size": [
+88,
+89
+],
+"dir": "props"
+},
+"lib_1_040": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_041": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_042": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_043": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_044": {
+"size": [
+34,
+35
+],
+"dir": "props"
+},
+"lib_1_045": {
+"size": [
+39,
+36
+],
+"dir": "props"
+},
+"lib_1_046": {
+"size": [
+44,
+36
+],
+"dir": "props"
+},
+"lib_1_047": {
+"size": [
+38,
+36
+],
+"dir": "props"
+},
+"lib_1_048": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_049": {
+"size": [
+88,
+92
+],
+"dir": "props"
+},
+"lib_1_050": {
+"size": [
+88,
+90
+],
+"dir": "props"
+},
+"lib_1_051": {
+"size": [
+88,
+90
+],
+"dir": "props"
+},
+"lib_1_052": {
+"size": [
+42,
+36
+],
+"dir": "props"
+},
+"lib_1_053": {
+"size": [
+34,
+71
+],
+"dir": "props"
+},
+"lib_1_054": {
+"size": [
+40,
+77
+],
+"dir": "props"
+},
+"lib_1_055": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_056": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_057": {
+"size": [
+42,
+88
+],
+"dir": "props"
+},
+"lib_1_058": {
+"size": [
+42,
+87
+],
+"dir": "props"
+},
+"lib_1_059": {
+"size": [
+44,
+67
+],
+"dir": "props"
+},
+"lib_1_060": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"lib_1_061": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"lib_1_062": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_1_063": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_1_064": {
+"size": [
+30,
+87
+],
+"dir": "props"
+},
+"lib_1_065": {
+"size": [
+37,
+88
+],
+"dir": "props"
+},
+"lib_1_066": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_1_067": {
+"size": [
+44,
+89
+],
+"dir": "props"
+},
+"lib_1_068": {
+"size": [
+46,
+90
+],
+"dir": "props"
+},
+"lib_1_069": {
+"size": [
+44,
+88
+],
+"dir": "props"
+},
+"lib_1_070": {
+"size": [
+43,
+89
+],
+"dir": "props"
+},
+"lib_1_071": {
+"size": [
+36,
+76
+],
+"dir": "props"
+},
+"lib_1_072": {
+"size": [
+89,
+54
+],
+"dir": "props"
+},
+"lib_1_073": {
+"size": [
+90,
+54
+],
+"dir": "props"
+},
+"lib_1_074": {
+"size": [
+42,
+35
+],
+"dir": "props"
+},
+"lib_1_075": {
+"size": [
+40,
+35
+],
+"dir": "props"
+},
+"lib_1_076": {
+"size": [
+92,
+74
+],
+"dir": "props"
+},
+"lib_1_077": {
+"size": [
+80,
+28
+],
+"dir": "props"
+},
+"lib_1_078": {
+"size": [
+30,
+43
+],
+"dir": "props"
+},
+"lib_1_079": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"lib_1_080": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"lib_1_081": {
+"size": [
+32,
+33
+],
+"dir": "props"
+},
+"lib_1_082": {
+"size": [
+35,
+71
+],
+"dir": "props"
+},
+"lib_1_083": {
+"size": [
+35,
+71
+],
+"dir": "props"
+},
+"lib_1_084": {
+"size": [
+38,
+84
+],
+"dir": "props"
+},
+"lib_1_085": {
+"size": [
+42,
+86
+],
+"dir": "props"
+},
+"lib_1_086": {
+"size": [
+46,
+86
+],
+"dir": "props"
+},
+"lib_1_087": {
+"size": [
+43,
+91
+],
+"dir": "props"
+},
+"lib_1_088": {
+"size": [
+26,
+43
+],
+"dir": "props"
+},
+"lib_1_089": {
+"size": [
+27,
+43
+],
+"dir": "props"
+},
+"lib_1_090": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"lib_1_091": {
+"size": [
+26,
+43
+],
+"dir": "props"
+},
+"lib_1_092": {
+"size": [
+39,
+43
+],
+"dir": "props"
+},
+"lib_1_093": {
+"size": [
+37,
+44
+],
+"dir": "props"
+},
+"lib_1_094": {
+"size": [
+37,
+43
+],
+"dir": "props"
+},
+"lib_1_095": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"lib_1_096": {
+"size": [
+88,
+52
+],
+"dir": "props"
+},
+"lib_1_097": {
+"size": [
+18,
+67
+],
+"dir": "props"
+},
+"lib_1_098": {
+"size": [
+40,
+78
+],
+"dir": "props"
+},
+"lib_1_099": {
+"size": [
+18,
+67
+],
+"dir": "props"
+},
+"lib_1_100": {
+"size": [
+88,
+23
+],
+"dir": "props"
+},
+"lib_1_101": {
+"size": [
+88,
+22
+],
+"dir": "props"
+},
+"lib_1_102": {
+"size": [
+30,
+43
+],
+"dir": "props"
+},
+"lib_1_103": {
+"size": [
+30,
+42
+],
+"dir": "props"
+},
+"lib_1_104": {
+"size": [
+22,
+28
+],
+"dir": "props"
+},
+"lib_1_105": {
+"size": [
+30,
+41
+],
+"dir": "props"
+},
+"lib_1_106": {
+"size": [
+40,
+65
+],
+"dir": "props"
+},
+"lib_1_107": {
+"size": [
+40,
+65
+],
+"dir": "props"
+},
+"lib_1_108": {
+"size": [
+36,
+45
+],
+"dir": "props"
+},
+"lib_1_109": {
+"size": [
+39,
+45
+],
+"dir": "props"
+},
+"lib_1_110": {
+"size": [
+32,
+41
+],
+"dir": "props"
+},
+"lib_1_111": {
+"size": [
+29,
+45
+],
+"dir": "props"
+},
+"lib_1_112": {
+"size": [
+94,
+78
+],
+"dir": "props"
+},
+"lib_1_113": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"lib_1_114": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"lib_1_115": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"lib_1_116": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"lib_1_117": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"lib_1_118": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"lib_1_119": {
+"size": [
+43,
+37
+],
+"dir": "props"
+},
+"lib_1_120": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"lib_1_121": {
+"size": [
+36,
+43
+],
+"dir": "props"
+},
+"lib_1_122": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"lib_1_123": {
+"size": [
+38,
+52
+],
+"dir": "props"
+},
+"lib_1_124": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"lib_1_125": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"lib_1_126": {
+"size": [
+41,
+44
+],
+"dir": "props"
+},
+"lib_1_127": {
+"size": [
+44,
+37
+],
+"dir": "props"
+},
+"lib_1_128": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"lib_1_129": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"lib_1_130": {
+"size": [
+44,
+41
+],
+"dir": "props"
+},
+"lib_1_131": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"lib_1_132": {
+"size": [
+44,
+42
+],
+"dir": "props"
+},
+"lib_1_133": {
+"size": [
+40,
+57
+],
+"dir": "props"
+},
+"lib_1_134": {
+"size": [
+28,
+56
+],
+"dir": "props"
+},
+"lib_1_135": {
+"size": [
+32,
+64
+],
+"dir": "props"
+},
+"lib_2_000": {
+"size": [
+139,
+90
+],
+"dir": "props"
+},
+"lib_2_001": {
+"size": [
+91,
+84
+],
+"dir": "props"
+},
+"lib_2_002": {
+"size": [
+91,
+90
+],
+"dir": "props"
+},
+"lib_2_003": {
+"size": [
+92,
+79
+],
+"dir": "props"
+},
+"lib_2_004": {
+"size": [
+35,
+92
+],
+"dir": "props"
+},
+"lib_2_005": {
+"size": [
+43,
+94
+],
+"dir": "props"
+},
+"lib_2_006": {
+"size": [
+43,
+94
+],
+"dir": "props"
+},
+"lib_2_007": {
+"size": [
+90,
+89
+],
+"dir": "props"
+},
+"lib_2_008": {
+"size": [
+92,
+80
+],
+"dir": "props"
+},
+"lib_2_009": {
+"size": [
+92,
+80
+],
+"dir": "props"
+},
+"lib_2_010": {
+"size": [
+92,
+78
+],
+"dir": "props"
+},
+"lib_2_011": {
+"size": [
+92,
+78
+],
+"dir": "props"
+},
+"lib_2_012": {
+"size": [
+92,
+79
+],
+"dir": "props"
+},
+"lib_2_013": {
+"size": [
+36,
+92
+],
+"dir": "props"
+},
+"lib_2_014": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_2_015": {
+"size": [
+40,
+91
+],
+"dir": "props"
+},
+"lib_2_016": {
+"size": [
+43,
+79
+],
+"dir": "props"
+},
+"lib_2_017": {
+"size": [
+44,
+79
+],
+"dir": "props"
+},
+"lib_2_018": {
+"size": [
+92,
+77
+],
+"dir": "props"
+},
+"lib_2_019": {
+"size": [
+92,
+77
+],
+"dir": "props"
+},
+"lib_2_020": {
+"size": [
+92,
+79
+],
+"dir": "props"
+},
+"lib_2_021": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_2_022": {
+"size": [
+29,
+93
+],
+"dir": "props"
+},
+"lib_2_023": {
+"size": [
+43,
+94
+],
+"dir": "props"
+},
+"lib_2_024": {
+"size": [
+43,
+94
+],
+"dir": "props"
+},
+"lib_2_025": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_2_026": {
+"size": [
+43,
+87
+],
+"dir": "props"
+},
+"lib_2_027": {
+"size": [
+42,
+74
+],
+"dir": "props"
+},
+"lib_2_028": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_2_029": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_2_030": {
+"size": [
+92,
+77
+],
+"dir": "props"
+},
+"lib_2_031": {
+"size": [
+92,
+77
+],
+"dir": "props"
+},
+"lib_2_032": {
+"size": [
+92,
+80
+],
+"dir": "props"
+},
+"lib_2_033": {
+"size": [
+89,
+83
+],
+"dir": "props"
+},
+"lib_2_034": {
+"size": [
+41,
+89
+],
+"dir": "props"
+},
+"lib_2_035": {
+"size": [
+40,
+91
+],
+"dir": "props"
+},
+"lib_2_036": {
+"size": [
+41,
+76
+],
+"dir": "props"
+},
+"lib_2_037": {
+"size": [
+28,
+77
+],
+"dir": "props"
+},
+"lib_2_038": {
+"size": [
+30,
+72
+],
+"dir": "props"
+},
+"lib_2_039": {
+"size": [
+30,
+78
+],
+"dir": "props"
+},
+"lib_2_040": {
+"size": [
+44,
+81
+],
+"dir": "props"
+},
+"lib_2_041": {
+"size": [
+44,
+81
+],
+"dir": "props"
+},
+"lib_2_042": {
+"size": [
+90,
+76
+],
+"dir": "props"
+},
+"lib_2_043": {
+"size": [
+86,
+79
+],
+"dir": "props"
+},
+"lib_2_044": {
+"size": [
+92,
+78
+],
+"dir": "props"
+},
+"lib_2_045": {
+"size": [
+42,
+80
+],
+"dir": "props"
+},
+"lib_2_046": {
+"size": [
+40,
+76
+],
+"dir": "props"
+},
+"lib_2_047": {
+"size": [
+40,
+75
+],
+"dir": "props"
+},
+"lib_2_048": {
+"size": [
+40,
+80
+],
+"dir": "props"
+},
+"lib_2_049": {
+"size": [
+38,
+91
+],
+"dir": "props"
+},
+"lib_2_050": {
+"size": [
+40,
+83
+],
+"dir": "props"
+},
+"lib_2_051": {
+"size": [
+40,
+80
+],
+"dir": "props"
+},
+"lib_2_052": {
+"size": [
+42,
+83
+],
+"dir": "props"
+},
+"lib_2_053": {
+"size": [
+40,
+80
+],
+"dir": "props"
+},
+"lib_2_054": {
+"size": [
+40,
+80
+],
+"dir": "props"
+},
+"lib_2_055": {
+"size": [
+90,
+49
+],
+"dir": "props"
+},
+"lib_2_056": {
+"size": [
+92,
+51
+],
+"dir": "props"
+},
+"lib_2_057": {
+"size": [
+32,
+44
+],
+"dir": "props"
+},
+"lib_2_058": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_2_059": {
+"size": [
+94,
+52
+],
+"dir": "props"
+},
+"lib_2_060": {
+"size": [
+85,
+32
+],
+"dir": "props"
+},
+"lib_2_061": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_2_062": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_2_063": {
+"size": [
+30,
+31
+],
+"dir": "props"
+},
+"lib_2_064": {
+"size": [
+16,
+42
+],
+"dir": "props"
+},
+"lib_2_065": {
+"size": [
+28,
+69
+],
+"dir": "props"
+},
+"lib_2_066": {
+"size": [
+28,
+69
+],
+"dir": "props"
+},
+"lib_2_067": {
+"size": [
+92,
+82
+],
+"dir": "props"
+},
+"lib_2_068": {
+"size": [
+90,
+82
+],
+"dir": "props"
+},
+"lib_2_069": {
+"size": [
+90,
+31
+],
+"dir": "props"
+},
+"lib_2_070": {
+"size": [
+40,
+45
+],
+"dir": "props"
+},
+"lib_2_071": {
+"size": [
+40,
+45
+],
+"dir": "props"
+},
+"lib_2_072": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"lib_2_073": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"lib_2_074": {
+"size": [
+90,
+43
+],
+"dir": "props"
+},
+"lib_2_075": {
+"size": [
+90,
+42
+],
+"dir": "props"
+},
+"lib_2_076": {
+"size": [
+89,
+49
+],
+"dir": "props"
+},
+"lib_2_077": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"lib_2_078": {
+"size": [
+38,
+60
+],
+"dir": "props"
+},
+"lib_2_079": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"lib_2_080": {
+"size": [
+90,
+30
+],
+"dir": "props"
+},
+"lib_2_081": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_2_082": {
+"size": [
+40,
+45
+],
+"dir": "props"
+},
+"lib_2_083": {
+"size": [
+30,
+31
+],
+"dir": "props"
+},
+"lib_2_084": {
+"size": [
+32,
+33
+],
+"dir": "props"
+},
+"lib_2_085": {
+"size": [
+90,
+42
+],
+"dir": "props"
+},
+"lib_2_086": {
+"size": [
+91,
+82
+],
+"dir": "props"
+},
+"lib_2_087": {
+"size": [
+90,
+42
+],
+"dir": "props"
+},
+"lib_2_088": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_2_089": {
+"size": [
+40,
+33
+],
+"dir": "props"
+},
+"lib_2_090": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"lib_2_091": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"lib_2_092": {
+"size": [
+90,
+42
+],
+"dir": "props"
+},
+"lib_2_093": {
+"size": [
+89,
+49
+],
+"dir": "props"
+},
+"lib_2_094": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"lib_2_095": {
+"size": [
+40,
+46
+],
+"dir": "props"
+},
+"lib_2_096": {
+"size": [
+24,
+45
+],
+"dir": "props"
+},
+"lib_2_097": {
+"size": [
+38,
+50
+],
+"dir": "props"
+},
+"lib_2_098": {
+"size": [
+38,
+50
+],
+"dir": "props"
+},
+"lib_2_099": {
+"size": [
+40,
+35
+],
+"dir": "props"
+},
+"lib_2_100": {
+"size": [
+38,
+39
+],
+"dir": "props"
+},
+"lib_2_101": {
+"size": [
+36,
+42
+],
+"dir": "props"
+},
+"lib_2_102": {
+"size": [
+42,
+35
+],
+"dir": "props"
+},
+"lib_2_103": {
+"size": [
+90,
+42
+],
+"dir": "props"
+},
+"lib_2_104": {
+"size": [
+90,
+82
+],
+"dir": "props"
+},
+"lib_2_105": {
+"size": [
+90,
+83
+],
+"dir": "props"
+},
+"lib_3_000": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"lib_3_001": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"lib_3_002": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"lib_3_003": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"lib_3_004": {
+"size": [
+90,
+95
+],
+"dir": "props"
+},
+"lib_3_005": {
+"size": [
+90,
+95
+],
+"dir": "props"
+},
+"lib_3_006": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"lib_3_007": {
+"size": [
+42,
+95
+],
+"dir": "props"
+},
+"lib_3_008": {
+"size": [
+43,
+95
+],
+"dir": "props"
+},
+"lib_3_009": {
+"size": [
+43,
+95
+],
+"dir": "props"
+},
+"lib_3_010": {
+"size": [
+90,
+95
+],
+"dir": "props"
+},
+"lib_3_011": {
+"size": [
+90,
+95
+],
+"dir": "props"
+},
+"lib_3_012": {
+"size": [
+42,
+76
+],
+"dir": "props"
+},
+"lib_3_013": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_3_014": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_3_015": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_3_016": {
+"size": [
+42,
+65
+],
+"dir": "props"
+},
+"lib_3_017": {
+"size": [
+42,
+63
+],
+"dir": "props"
+},
+"lib_3_018": {
+"size": [
+42,
+65
+],
+"dir": "props"
+},
+"lib_3_019": {
+"size": [
+42,
+54
+],
+"dir": "props"
+},
+"lib_3_020": {
+"size": [
+42,
+54
+],
+"dir": "props"
+},
+"lib_3_021": {
+"size": [
+42,
+65
+],
+"dir": "props"
+},
+"lib_3_022": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_3_023": {
+"size": [
+42,
+65
+],
+"dir": "props"
+},
+"lib_3_024": {
+"size": [
+42,
+77
+],
+"dir": "props"
+},
+"lib_3_025": {
+"size": [
+42,
+71
+],
+"dir": "props"
+},
+"lib_3_026": {
+"size": [
+42,
+71
+],
+"dir": "props"
+},
+"lib_3_027": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_028": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_029": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_030": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_031": {
+"size": [
+42,
+49
+],
+"dir": "props"
+},
+"lib_3_032": {
+"size": [
+42,
+49
+],
+"dir": "props"
+},
+"lib_3_033": {
+"size": [
+42,
+49
+],
+"dir": "props"
+},
+"lib_3_034": {
+"size": [
+42,
+49
+],
+"dir": "props"
+},
+"lib_3_035": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_036": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_037": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_038": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_039": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_040": {
+"size": [
+42,
+49
+],
+"dir": "props"
+},
+"lib_3_041": {
+"size": [
+42,
+50
+],
+"dir": "props"
+},
+"lib_3_042": {
+"size": [
+42,
+55
+],
+"dir": "props"
+},
+"lib_3_043": {
+"size": [
+42,
+55
+],
+"dir": "props"
+},
+"lib_3_044": {
+"size": [
+90,
+55
+],
+"dir": "props"
+},
+"lib_3_045": {
+"size": [
+90,
+55
+],
+"dir": "props"
+},
+"lib_3_046": {
+"size": [
+90,
+55
+],
+"dir": "props"
+},
+"lib_3_047": {
+"size": [
+90,
+55
+],
+"dir": "props"
+},
+"lib_3_048": {
+"size": [
+90,
+55
+],
+"dir": "props"
+},
+"lib_3_049": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"lib_3_050": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"lib_3_051": {
+"size": [
+90,
+74
+],
+"dir": "props"
+},
+"lib_3_052": {
+"size": [
+90,
+75
+],
+"dir": "props"
+},
+"lib_3_053": {
+"size": [
+90,
+69
+],
+"dir": "props"
+},
+"lib_3_054": {
+"size": [
+90,
+75
+],
+"dir": "props"
+},
+"lib_3_055": {
+"size": [
+90,
+75
+],
+"dir": "props"
+},
+"lib_3_056": {
+"size": [
+90,
+75
+],
+"dir": "props"
+},
+"lib_3_057": {
+"size": [
+40,
+74
+],
+"dir": "props"
+},
+"lib_3_058": {
+"size": [
+40,
+75
+],
+"dir": "props"
+},
+"lib_3_059": {
+"size": [
+86,
+75
+],
+"dir": "props"
+},
+"lib_3_060": {
+"size": [
+86,
+75
+],
+"dir": "props"
+},
+"lib_3_061": {
+"size": [
+86,
+75
+],
+"dir": "props"
+},
+"lib_3_062": {
+"size": [
+40,
+75
+],
+"dir": "props"
+},
+"lib_3_063": {
+"size": [
+40,
+78
+],
+"dir": "props"
+},
+"lib_3_064": {
+"size": [
+86,
+76
+],
+"dir": "props"
+},
+"lib_3_065": {
+"size": [
+37,
+86
+],
+"dir": "props"
+},
+"lib_3_066": {
+"size": [
+38,
+86
+],
+"dir": "props"
+},
+"lib_3_067": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_3_068": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_3_069": {
+"size": [
+43,
+87
+],
+"dir": "props"
+},
+"lib_3_070": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_3_071": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_3_072": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_3_073": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_3_074": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"lib_3_075": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"lib_3_076": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"lib_3_077": {
+"size": [
+34,
+42
+],
+"dir": "props"
+},
+"lib_3_078": {
+"size": [
+36,
+43
+],
+"dir": "props"
+},
+"lib_3_079": {
+"size": [
+32,
+42
+],
+"dir": "props"
+},
+"lib_3_080": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"lib_3_081": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"lib_3_082": {
+"size": [
+38,
+42
+],
+"dir": "props"
+},
+"lib_3_083": {
+"size": [
+34,
+43
+],
+"dir": "props"
+},
+"lib_3_084": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"lib_3_085": {
+"size": [
+34,
+43
+],
+"dir": "props"
+},
+"lib_3_086": {
+"size": [
+34,
+42
+],
+"dir": "props"
+},
+"lib_3_087": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"lib_3_088": {
+"size": [
+30,
+44
+],
+"dir": "props"
+},
+"lib_3_089": {
+"size": [
+32,
+44
+],
+"dir": "props"
+},
+"lib_3_090": {
+"size": [
+38,
+44
+],
+"dir": "props"
+},
+"lib_3_091": {
+"size": [
+38,
+45
+],
+"dir": "props"
+},
+"lib_3_092": {
+"size": [
+38,
+45
+],
+"dir": "props"
+},
+"lib_3_093": {
+"size": [
+90,
+78
+],
+"dir": "props"
+},
+"lib_3_094": {
+"size": [
+90,
+78
+],
+"dir": "props"
+},
+"lib_3_095": {
+"size": [
+30,
+38
+],
+"dir": "props"
+},
+"lib_3_096": {
+"size": [
+29,
+40
+],
+"dir": "props"
+},
+"lib_3_097": {
+"size": [
+32,
+39
+],
+"dir": "props"
+},
+"lib_3_098": {
+"size": [
+30,
+42
+],
+"dir": "props"
+},
+"lib_3_099": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_3_100": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_3_101": {
+"size": [
+40,
+44
+],
+"dir": "props"
+},
+"lib_3_102": {
+"size": [
+34,
+29
+],
+"dir": "props"
+},
+"lib_3_103": {
+"size": [
+40,
+43
+],
+"dir": "props"
+},
+"lib_3_104": {
+"size": [
+20,
+43
+],
+"dir": "props"
+},
+"lib_3_105": {
+"size": [
+31,
+42
+],
+"dir": "props"
+},
+"lib_3_106": {
+"size": [
+38,
+43
+],
+"dir": "props"
+},
+"lib_3_107": {
+"size": [
+30,
+43
+],
+"dir": "props"
+},
+"lib_3_108": {
+"size": [
+36,
+44
+],
+"dir": "props"
+},
+"lib_3_109": {
+"size": [
+34,
+41
+],
+"dir": "props"
+},
+"lib_3_110": {
+"size": [
+32,
+43
+],
+"dir": "props"
+},
+"lib_3_111": {
+"size": [
+22,
+43
+],
+"dir": "props"
+},
+"lib_3_112": {
+"size": [
+22,
+43
+],
+"dir": "props"
+},
+"lib_3_113": {
+"size": [
+90,
+59
+],
+"dir": "props"
+},
+"lib_3_114": {
+"size": [
+90,
+59
+],
+"dir": "props"
+},
+"lib_3_115": {
+"size": [
+32,
+43
+],
+"dir": "props"
+},
+"lib_3_116": {
+"size": [
+34,
+43
+],
+"dir": "props"
+},
+"lib_3_117": {
+"size": [
+34,
+41
+],
+"dir": "props"
+},
+"lib_3_118": {
+"size": [
+32,
+39
+],
+"dir": "props"
+},
+"lib_3_119": {
+"size": [
+42,
+69
+],
+"dir": "props"
+},
+"lib_3_120": {
+"size": [
+40,
+58
+],
+"dir": "props"
+},
+"lib_3_121": {
+"size": [
+18,
+43
+],
+"dir": "props"
+},
+"lib_3_122": {
+"size": [
+21,
+44
+],
+"dir": "props"
+},
+"lib_3_123": {
+"size": [
+94,
+69
+],
+"dir": "props"
+},
+"lib_4_000": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"lib_4_001": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"lib_4_002": {
+"size": [
+41,
+28
+],
+"dir": "props"
+},
+"lib_4_003": {
+"size": [
+43,
+31
+],
+"dir": "props"
+},
+"lib_4_004": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_005": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_006": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_007": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_008": {
+"size": [
+90,
+85
+],
+"dir": "props"
+},
+"lib_4_009": {
+"size": [
+42,
+40
+],
+"dir": "props"
+},
+"lib_4_010": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"lib_4_011": {
+"size": [
+42,
+30
+],
+"dir": "props"
+},
+"lib_4_012": {
+"size": [
+42,
+28
+],
+"dir": "props"
+},
+"lib_4_013": {
+"size": [
+44,
+80
+],
+"dir": "props"
+},
+"lib_4_014": {
+"size": [
+44,
+78
+],
+"dir": "props"
+},
+"lib_4_015": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"lib_4_016": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_017": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_018": {
+"size": [
+44,
+90
+],
+"dir": "props"
+},
+"lib_4_019": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_020": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_021": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_022": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_4_023": {
+"size": [
+42,
+76
+],
+"dir": "props"
+},
+"lib_4_024": {
+"size": [
+42,
+76
+],
+"dir": "props"
+},
+"lib_4_025": {
+"size": [
+42,
+76
+],
+"dir": "props"
+},
+"lib_4_026": {
+"size": [
+42,
+76
+],
+"dir": "props"
+},
+"lib_4_027": {
+"size": [
+42,
+76
+],
+"dir": "props"
+},
+"lib_4_028": {
+"size": [
+33,
+96
+],
+"dir": "props"
+},
+"lib_4_029": {
+"size": [
+26,
+42
+],
+"dir": "props"
+},
+"lib_4_030": {
+"size": [
+32,
+41
+],
+"dir": "props"
+},
+"lib_4_031": {
+"size": [
+40,
+35
+],
+"dir": "props"
+},
+"lib_4_032": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"lib_4_033": {
+"size": [
+39,
+35
+],
+"dir": "props"
+},
+"lib_4_034": {
+"size": [
+33,
+41
+],
+"dir": "props"
+},
+"lib_4_035": {
+"size": [
+39,
+41
+],
+"dir": "props"
+},
+"lib_4_036": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_037": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_038": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_039": {
+"size": [
+90,
+65
+],
+"dir": "props"
+},
+"lib_4_040": {
+"size": [
+90,
+88
+],
+"dir": "props"
+},
+"lib_4_041": {
+"size": [
+32,
+41
+],
+"dir": "props"
+},
+"lib_4_042": {
+"size": [
+40,
+38
+],
+"dir": "props"
+},
+"lib_4_043": {
+"size": [
+42,
+33
+],
+"dir": "props"
+},
+"lib_4_044": {
+"size": [
+39,
+39
+],
+"dir": "props"
+},
+"lib_4_045": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"lib_4_046": {
+"size": [
+42,
+30
+],
+"dir": "props"
+},
+"lib_4_047": {
+"size": [
+32,
+42
+],
+"dir": "props"
+},
+"lib_4_048": {
+"size": [
+39,
+39
+],
+"dir": "props"
+},
+"lib_4_049": {
+"size": [
+36,
+41
+],
+"dir": "props"
+},
+"lib_4_050": {
+"size": [
+39,
+36
+],
+"dir": "props"
+},
+"lib_4_051": {
+"size": [
+36,
+37
+],
+"dir": "props"
+},
+"lib_4_052": {
+"size": [
+29,
+37
+],
+"dir": "props"
+},
+"lib_4_053": {
+"size": [
+90,
+90
+],
+"dir": "props"
+},
+"lib_4_054": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_055": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_4_056": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_057": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_058": {
+"size": [
+39,
+36
+],
+"dir": "props"
+},
+"lib_4_059": {
+"size": [
+34,
+42
+],
+"dir": "props"
+},
+"lib_4_060": {
+"size": [
+39,
+37
+],
+"dir": "props"
+},
+"lib_4_061": {
+"size": [
+24,
+42
+],
+"dir": "props"
+},
+"lib_4_062": {
+"size": [
+37,
+42
+],
+"dir": "props"
+},
+"lib_4_063": {
+"size": [
+28,
+38
+],
+"dir": "props"
+},
+"lib_4_064": {
+"size": [
+39,
+92
+],
+"dir": "props"
+},
+"lib_4_065": {
+"size": [
+39,
+92
+],
+"dir": "props"
+},
+"lib_4_066": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"lib_4_067": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_068": {
+"size": [
+44,
+86
+],
+"dir": "props"
+},
+"lib_4_069": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_070": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_071": {
+"size": [
+39,
+92
+],
+"dir": "props"
+},
+"lib_4_072": {
+"size": [
+43,
+93
+],
+"dir": "props"
+},
+"lib_4_073": {
+"size": [
+39,
+92
+],
+"dir": "props"
+},
+"lib_4_074": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"lib_4_075": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"lib_4_076": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"lib_4_077": {
+"size": [
+44,
+38
+],
+"dir": "props"
+},
+"lib_4_078": {
+"size": [
+29,
+38
+],
+"dir": "props"
+},
+"lib_4_079": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"lib_4_080": {
+"size": [
+90,
+92
+],
+"dir": "props"
+},
+"lib_4_081": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_4_082": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_083": {
+"size": [
+39,
+92
+],
+"dir": "props"
+},
+"lib_4_084": {
+"size": [
+42,
+74
+],
+"dir": "props"
+},
+"lib_4_085": {
+"size": [
+44,
+34
+],
+"dir": "props"
+},
+"lib_4_086": {
+"size": [
+29,
+41
+],
+"dir": "props"
+},
+"lib_4_087": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"lib_4_088": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"lib_4_089": {
+"size": [
+92,
+93
+],
+"dir": "props"
+},
+"lib_4_090": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_091": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_092": {
+"size": [
+42,
+37
+],
+"dir": "props"
+},
+"lib_4_093": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_094": {
+"size": [
+38,
+25
+],
+"dir": "props"
+},
+"lib_4_095": {
+"size": [
+90,
+92
+],
+"dir": "props"
+},
+"lib_4_096": {
+"size": [
+90,
+92
+],
+"dir": "props"
+},
+"lib_4_097": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_4_098": {
+"size": [
+42,
+64
+],
+"dir": "props"
+},
+"lib_4_099": {
+"size": [
+42,
+87
+],
+"dir": "props"
+},
+"lib_4_100": {
+"size": [
+42,
+86
+],
+"dir": "props"
+},
+"lib_4_101": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_102": {
+"size": [
+38,
+29
+],
+"dir": "props"
+},
+"lib_4_103": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_104": {
+"size": [
+42,
+36
+],
+"dir": "props"
+},
+"lib_4_105": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_106": {
+"size": [
+38,
+25
+],
+"dir": "props"
+},
+"lib_4_107": {
+"size": [
+34,
+93
+],
+"dir": "props"
+},
+"lib_4_108": {
+"size": [
+34,
+93
+],
+"dir": "props"
+},
+"lib_4_109": {
+"size": [
+38,
+42
+],
+"dir": "props"
+},
+"lib_4_110": {
+"size": [
+35,
+41
+],
+"dir": "props"
+},
+"lib_4_111": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_112": {
+"size": [
+38,
+30
+],
+"dir": "props"
+},
+"lib_4_113": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_114": {
+"size": [
+42,
+36
+],
+"dir": "props"
+},
+"lib_4_115": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"lib_4_116": {
+"size": [
+90,
+91
+],
+"dir": "props"
+},
+"lib_4_117": {
+"size": [
+44,
+87
+],
+"dir": "props"
+},
+"lib_4_118": {
+"size": [
+42,
+63
+],
+"dir": "props"
+},
+"lib_4_119": {
+"size": [
+38,
+41
+],
+"dir": "props"
+},
+"lib_4_120": {
+"size": [
+37,
+42
+],
+"dir": "props"
+},
+"lib_4_121": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_122": {
+"size": [
+38,
+25
+],
+"dir": "props"
+},
+"lib_4_123": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_4_124": {
+"size": [
+42,
+35
+],
+"dir": "props"
+},
+"lib_4_125": {
+"size": [
+34,
+92
+],
+"dir": "props"
+},
+"lib_4_126": {
+"size": [
+34,
+92
+],
+"dir": "props"
+},
+"lib_4_127": {
+"size": [
+94,
+65
+],
+"dir": "props"
+},
+"lib_5_000": {
+"size": [
+44,
+27
+],
+"dir": "props"
+},
+"lib_5_001": {
+"size": [
+88,
+46
+],
+"dir": "props"
+},
+"lib_5_002": {
+"size": [
+90,
+94
+],
+"dir": "props"
+},
+"lib_5_003": {
+"size": [
+90,
+94
+],
+"dir": "props"
+},
+"lib_5_004": {
+"size": [
+90,
+94
+],
+"dir": "props"
+},
+"lib_5_005": {
+"size": [
+90,
+94
+],
+"dir": "props"
+},
+"lib_5_006": {
+"size": [
+46,
+44
+],
+"dir": "props"
+},
+"lib_5_007": {
+"size": [
+44,
+44
+],
+"dir": "props"
+},
+"lib_5_008": {
+"size": [
+46,
+44
+],
+"dir": "props"
+},
+"lib_5_009": {
+"size": [
+28,
+37
+],
+"dir": "props"
+},
+"lib_5_010": {
+"size": [
+32,
+47
+],
+"dir": "props"
+},
+"lib_5_011": {
+"size": [
+34,
+48
+],
+"dir": "props"
+},
+"lib_5_012": {
+"size": [
+36,
+41
+],
+"dir": "props"
+},
+"lib_5_013": {
+"size": [
+36,
+46
+],
+"dir": "props"
+},
+"lib_5_014": {
+"size": [
+44,
+47
+],
+"dir": "props"
+},
+"lib_5_015": {
+"size": [
+44,
+46
+],
+"dir": "props"
+},
+"lib_5_016": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"lib_5_017": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"lib_5_018": {
+"size": [
+90,
+93
+],
+"dir": "props"
+},
+"lib_5_019": {
+"size": [
+88,
+94
+],
+"dir": "props"
+},
+"lib_5_020": {
+"size": [
+34,
+42
+],
+"dir": "props"
+},
+"lib_5_021": {
+"size": [
+42,
+42
+],
+"dir": "props"
+},
+"lib_5_022": {
+"size": [
+44,
+47
+],
+"dir": "props"
+},
+"lib_5_023": {
+"size": [
+30,
+45
+],
+"dir": "props"
+},
+"lib_5_024": {
+"size": [
+40,
+58
+],
+"dir": "props"
+},
+"lib_5_025": {
+"size": [
+40,
+58
+],
+"dir": "props"
+},
+"lib_5_026": {
+"size": [
+32,
+65
+],
+"dir": "props"
+},
+"lib_5_027": {
+"size": [
+26,
+46
+],
+"dir": "props"
+},
+"lib_5_028": {
+"size": [
+34,
+45
+],
+"dir": "props"
+},
+"lib_5_029": {
+"size": [
+36,
+40
+],
+"dir": "props"
+},
+"lib_5_030": {
+"size": [
+36,
+41
+],
+"dir": "props"
+},
+"lib_5_031": {
+"size": [
+35,
+39
+],
+"dir": "props"
+},
+"lib_5_032": {
+"size": [
+36,
+41
+],
+"dir": "props"
+},
+"lib_5_033": {
+"size": [
+41,
+41
+],
+"dir": "props"
+},
+"lib_5_034": {
+"size": [
+90,
+87
+],
+"dir": "props"
+},
+"lib_5_035": {
+"size": [
+88,
+83
+],
+"dir": "props"
+},
+"lib_5_036": {
+"size": [
+88,
+83
+],
+"dir": "props"
+},
+"lib_5_037": {
+"size": [
+88,
+83
+],
+"dir": "props"
+},
+"lib_5_038": {
+"size": [
+36,
+40
+],
+"dir": "props"
+},
+"lib_5_039": {
+"size": [
+34,
+42
+],
+"dir": "props"
+},
+"lib_5_040": {
+"size": [
+34,
+41
+],
+"dir": "props"
+},
+"lib_5_041": {
+"size": [
+40,
+41
+],
+"dir": "props"
+},
+"lib_5_042": {
+"size": [
+36,
+43
+],
+"dir": "props"
+},
+"lib_5_043": {
+"size": [
+39,
+41
+],
+"dir": "props"
+},
+"lib_5_044": {
+"size": [
+88,
+65
+],
+"dir": "props"
+},
+"lib_5_045": {
+"size": [
+90,
+86
+],
+"dir": "props"
+},
+"lib_5_046": {
+"size": [
+88,
+83
+],
+"dir": "props"
+},
+"lib_5_047": {
+"size": [
+88,
+83
+],
+"dir": "props"
+},
+"lib_5_048": {
+"size": [
+88,
+83
+],
+"dir": "props"
+},
+"lib_5_049": {
+"size": [
+42,
+66
+],
+"dir": "props"
+},
+"lib_5_050": {
+"size": [
+40,
+77
+],
+"dir": "props"
+},
+"lib_5_051": {
+"size": [
+26,
+91
+],
+"dir": "props"
+},
+"lib_5_052": {
+"size": [
+40,
+90
+],
+"dir": "props"
+},
+"lib_5_053": {
+"size": [
+42,
+62
+],
+"dir": "props"
+},
+"lib_5_054": {
+"size": [
+40,
+64
+],
+"dir": "props"
+},
+"lib_5_055": {
+"size": [
+88,
+59
+],
+"dir": "props"
+},
+"lib_5_056": {
+"size": [
+41,
+66
+],
+"dir": "props"
+},
+"lib_5_057": {
+"size": [
+46,
+67
+],
+"dir": "props"
+},
+"lib_5_058": {
+"size": [
+41,
+89
+],
+"dir": "props"
+},
+"lib_5_059": {
+"size": [
+36,
+92
+],
+"dir": "props"
+},
+"lib_5_060": {
+"size": [
+90,
+86
+],
+"dir": "props"
+},
+"lib_5_061": {
+"size": [
+40,
+69
+],
+"dir": "props"
+},
+"lib_5_062": {
+"size": [
+46,
+67
+],
+"dir": "props"
+},
+"lib_5_063": {
+"size": [
+90,
+66
+],
+"dir": "props"
+},
+"lib_5_064": {
+"size": [
+39,
+81
+],
+"dir": "props"
+},
+"lib_5_065": {
+"size": [
+38,
+85
+],
+"dir": "props"
+},
+"lib_5_066": {
+"size": [
+42,
+83
+],
+"dir": "props"
+},
+"lib_5_067": {
+"size": [
+42,
+89
+],
+"dir": "props"
+},
+"lib_5_068": {
+"size": [
+88,
+59
+],
+"dir": "props"
+},
+"lib_5_069": {
+"size": [
+90,
+54
+],
+"dir": "props"
+},
+"lib_5_070": {
+"size": [
+90,
+54
+],
+"dir": "props"
+},
+"lib_5_071": {
+"size": [
+44,
+40
+],
+"dir": "props"
+},
+"lib_5_072": {
+"size": [
+40,
+29
+],
+"dir": "props"
+},
+"lib_5_073": {
+"size": [
+93,
+57
+],
+"dir": "props"
+},
+"lib_5_074": {
+"size": [
+82,
+29
+],
+"dir": "props"
+},
+"lib_5_075": {
+"size": [
+30,
+44
+],
+"dir": "props"
+},
+"lib_5_076": {
+"size": [
+32,
+44
+],
+"dir": "props"
+},
+"lib_5_077": {
+"size": [
+42,
+35
+],
+"dir": "props"
+},
+"lib_5_078": {
+"size": [
+34,
+35
+],
+"dir": "props"
+},
+"lib_5_079": {
+"size": [
+44,
+70
+],
+"dir": "props"
+},
+"lib_5_080": {
+"size": [
+44,
+70
+],
+"dir": "props"
+},
+"lib_5_081": {
+"size": [
+82,
+91
+],
+"dir": "props"
+},
+"lib_5_082": {
+"size": [
+82,
+90
+],
+"dir": "props"
+},
+"lib_5_083": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"lib_5_084": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"lib_5_085": {
+"size": [
+33,
+46
+],
+"dir": "props"
+},
+"lib_5_086": {
+"size": [
+24,
+46
+],
+"dir": "props"
+},
+"lib_5_087": {
+"size": [
+97,
+39
+],
+"dir": "props"
+},
+"lib_5_088": {
+"size": [
+88,
+53
+],
+"dir": "props"
+},
+"lib_5_089": {
+"size": [
+19,
+68
+],
+"dir": "props"
+},
+"lib_5_090": {
+"size": [
+42,
+80
+],
+"dir": "props"
+},
+"lib_5_091": {
+"size": [
+19,
+68
+],
+"dir": "props"
+},
+"lib_5_092": {
+"size": [
+90,
+25
+],
+"dir": "props"
+},
+"lib_5_093": {
+"size": [
+90,
+25
+],
+"dir": "props"
+},
+"lib_5_094": {
+"size": [
+34,
+141
+],
+"dir": "props"
+},
+"lib_5_095": {
+"size": [
+34,
+141
+],
+"dir": "props"
+},
+"lib_5_096": {
+"size": [
+24,
+29
+],
+"dir": "props"
+},
+"lib_5_097": {
+"size": [
+32,
+34
+],
+"dir": "props"
+},
+"lib_5_098": {
+"size": [
+88,
+88
+],
+"dir": "props"
+},
+"lib_5_099": {
+"size": [
+35,
+47
+],
+"dir": "props"
+},
+"lib_5_100": {
+"size": [
+23,
+46
+],
+"dir": "props"
+},
+"lib_5_101": {
+"size": [
+97,
+39
+],
+"dir": "props"
+},
+"lib_5_102": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"lib_5_103": {
+"size": [
+24,
+44
+],
+"dir": "props"
+},
+"lib_5_104": {
+"size": [
+98,
+39
+],
+"dir": "props"
+},
+"lib_5_105": {
+"size": [
+28,
+45
+],
+"dir": "props"
+},
+"lib_5_106": {
+"size": [
+94,
+61
+],
+"dir": "props"
+},
+"lib_5_107": {
+"size": [
+94,
+72
+],
+"dir": "props"
+},
+"lib_5_108": {
+"size": [
+91,
+82
+],
+"dir": "props"
+},
+"lib_5_109": {
+"size": [
+31,
+41
+],
+"dir": "props"
+},
+"lib_5_110": {
+"size": [
+30,
+42
+],
+"dir": "props"
+},
+"lib_5_111": {
+"size": [
+22,
+28
+],
+"dir": "props"
+},
+"lib_5_112": {
+"size": [
+26,
+45
+],
+"dir": "props"
+},
+"lib_5_113": {
+"size": [
+98,
+39
+],
+"dir": "props"
+},
+"lib_5_114": {
+"size": [
+44,
+92
+],
+"dir": "props"
+},
+"lib_5_115": {
+"size": [
+44,
+92
+],
+"dir": "props"
+},
+"lib_f1_00": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_00_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_01": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_01_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_02": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_02_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_03": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_03_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_04": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_04_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_05": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_05_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_06": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_06_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_07": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_07_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_08": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_08_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_09": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_09_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_10": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_10_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_11": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_11_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_12": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_12_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_16": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_16_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_17": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_17_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_18": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_18_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_19": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_19_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_20": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_20_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_21": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_21_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_22": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_22_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_f1_23": {
+"size": [
+48,
+48
+],
+"dir": "floor"
+},
+"lib_f1_23_auto": {
+"size": [
+96,
+144
+],
+"dir": "floor"
+},
+"lib_w1_00_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_00_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_01_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_01_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_02_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_02_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_03_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_03_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_04_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_04_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_05_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_05_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_06_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_06_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_07_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_07_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_08_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_08_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_09_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_09_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_10_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_10_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_11_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_11_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_12_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_12_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_13_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_13_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_14_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_14_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_15_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_15_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_16_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_16_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_17_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_17_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_18_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_18_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_19_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_19_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_20_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_20_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_21_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_21_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_22_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_22_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"lib_w1_23_top": {
+"size": [
+96,
+144
+],
+"dir": "walls"
+},
+"lib_w1_23_face": {
+"size": [
+96,
+96
+],
+"dir": "walls"
+},
+"p1": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p2": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p3": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p4": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+},
+"p5": {
+"size": [
+768,
+768
+],
+"dir": "pages"
+}
+}
+}

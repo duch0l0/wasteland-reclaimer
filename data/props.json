@@ -473,6 +473,9 @@
     "x_vault_sign4": {"img": "x_vault_sign4", "foot": [1, 1]},
     "x_vault_door22": {"img": "x_vault_door22", "foot": [4, 2], "sight": true},
     "x_vault_gear22": {"img": "x_vault_gear22", "foot": [2, 1], "sight": true},
-    "x_vault_sign22": {"img": "x_vault_sign22", "foot": [1, 1]}
+    "x_vault_sign22": {"img": "x_vault_sign22", "foot": [1, 1]},
+    "x_vault_door0": {"img": "x_vault_door0", "foot": [4, 2], "sight": true},
+    "x_vault_gear0": {"img": "x_vault_gear0", "foot": [2, 1], "sight": true},
+    "x_vault_sign0": {"img": "x_vault_sign0", "foot": [1, 1]}
   }
 }

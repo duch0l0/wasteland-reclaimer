@@ -731,5 +731,170 @@
     "known": false,
     "music": "vats",
     "underground": true
+  },
+  "searchlight": {
+    "name": "Сёрчлайт",
+    "map": "data/maps/searchlight.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      2430,
+      870
+    ],
+    "world_name": "Сёрчлайт",
+    "discover": true
+  },
+  "searchlight_firehouse": {
+    "name": "Пожарная часть",
+    "map": "data/maps/searchlight_firehouse.json",
+    "known": false,
+    "music": "desert",
+    "underground": true
+  },
+  "searchlight_mine": {
+    "name": "Шахта Сёрчлайта",
+    "map": "data/maps/searchlight_mine.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "fort_searchlight": {
+    "name": "Форт Сёрчлайт",
+    "map": "data/maps/fort_searchlight.json",
+    "known": false,
+    "music": "lab",
+    "clear_flag": "fort_cleared"
+  },
+  "fort_bunker": {
+    "name": "Бункер Форта",
+    "map": "data/maps/fort_bunker.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vegas_strip": {
+    "name": "Руины Вегаса: Стрип",
+    "map": "data/maps/vegas_strip.json",
+    "known": false,
+    "music": "reno",
+    "world_pos": [
+      2620,
+      500
+    ],
+    "world_name": "Руины Вегаса",
+    "discover": true
+  },
+  "vegas_boots": {
+    "name": "Вегас: Сапоги Мохаве",
+    "map": "data/maps/vegas_boots.json",
+    "known": false,
+    "music": "junktown"
+  },
+  "vegas_snakes": {
+    "name": "Вегас: Змеиная родня",
+    "map": "data/maps/vegas_snakes.json",
+    "known": false,
+    "music": "raiders"
+  },
+  "vegas_den": {
+    "name": "Подвал Змей",
+    "map": "data/maps/vegas_den.json",
+    "known": false,
+    "music": "reno",
+    "underground": true
+  },
+  "vegas_palms": {
+    "name": "Вегас: Белые Ладони",
+    "map": "data/maps/vegas_palms.json",
+    "known": false,
+    "music": "hub"
+  },
+  "vegas_library": {
+    "name": "Библиотека Ладоней",
+    "map": "data/maps/vegas_library.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "vegas_tunnels": {
+    "name": "Змеиные ходы",
+    "map": "data/maps/vegas_tunnels.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "vegas_tower": {
+    "name": "Башня Vault-Tec",
+    "map": "data/maps/vegas_tower.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vegas_zero": {
+    "name": "Хранилище «Ноль»",
+    "map": "data/maps/vegas_zero.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "vegas_vault": {
+    "name": "«Ноль»: хранилище",
+    "map": "data/maps/vegas_vault.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "poseidon7": {
+    "name": "«Посейдон-7»",
+    "map": "data/maps/poseidon7.json",
+    "known": false,
+    "music": "lab",
+    "world_pos": [
+      2820,
+      900
+    ],
+    "world_name": "Ретранслятор Poseidon",
+    "discover": true,
+    "clear_flag": "p7_storm_won"
+  },
+  "poseidon7_base": {
+    "name": "«Посейдон-7»: станция",
+    "map": "data/maps/poseidon7_base.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "poseidon7_hangar": {
+    "name": "«Посейдон-7»: ангар",
+    "map": "data/maps/poseidon7_hangar.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "mariposa": {
+    "name": "База Марипоза",
+    "map": "data/maps/mariposa.json",
+    "known": false,
+    "music": "vats",
+    "world_pos": [
+      1180,
+      760
+    ],
+    "world_name": "База Марипоза",
+    "discover": true
+  },
+  "mariposa_lab": {
+    "name": "Марипоза: лаборатория",
+    "map": "data/maps/mariposa_lab.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "mariposa_vats": {
+    "name": "Марипоза: чаны",
+    "map": "data/maps/mariposa_vats.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
   }
 }

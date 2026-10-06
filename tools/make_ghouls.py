@@ -13,6 +13,7 @@
   ghoul_child  из kid      — гулёнок
   ghoul_cooper из sheriff  — Купер Говард, гуль в ковбойской шляпе и пыльнике
   spore_carrier из ghoul_c — споровик Убежища 22: тело проросло грибом
+  super_mutant из soldier  — супермутант Создателя: на треть крупнее, серо-зелёная кожа
 
 Запуск из папки game_project:
     .venv/bin/python tools/make_ghouls.py            — сделать кадры
@@ -98,6 +99,29 @@ def sporify(frames, seed=23):
     return out
 
 
+def supermutant(frames, k=1.35):
+    """Супермутант Создателя (Марипоза): тот же боец, но на треть крупнее, кожа серо-зелёная, ткань — грязная."""
+    out = {}
+    for d, lst in frames.items():
+        out[d] = []
+        for f in lst:
+            w, h = f.get_size()
+            img = pygame.transform.scale(f, (round(w * k), round(h * k)))
+            for y in range(img.get_height()):
+                for x in range(img.get_width()):
+                    c = img.get_at((x, y))
+                    if c.a < 40:
+                        continue
+                    lum = (c.r + c.g + c.b) / 3
+                    if c.r > 150 and c.r > c.g > c.b and c.r - c.b > 40:          # кожа -> серо-зелёная
+                        q = lum / 255
+                        img.set_at((x, y), (int(86 + 60 * q), int(112 + 70 * q), int(70 + 40 * q), c.a))
+                    elif lum > 40:                                                # ткань и металл — грязнее
+                        img.set_at((x, y), (int(c.r * 0.7 + 18), int(c.g * 0.7 + 16), int(c.b * 0.6 + 10), c.a))
+            out[d].append(img)
+    return out
+
+
 def save(sid, frames, native=True):
     dst = os.path.join(SPRITES, sid)
     shutil.rmtree(dst, ignore_errors=True)
@@ -132,6 +156,8 @@ def main():
         print("готово:", sid)
     save("spore_carrier", sporify(load("ghoul_c")))
     print("готово: spore_carrier")
+    save("super_mutant", supermutant(load("soldier"), 1.4))
+    print("готово: super_mutant")
     if "preview" in sys.argv:
         path = sys.argv[sys.argv.index("preview") + 1] if len(sys.argv) > sys.argv.index("preview") + 1 \
             else os.path.join(ROOT, "assets", "_preview_ghouls.png")

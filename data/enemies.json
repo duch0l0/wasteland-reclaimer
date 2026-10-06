@@ -1260,5 +1260,142 @@
     "level": 5,
     "poison": 3,
     "sprite_dir": "spore_carrier"
+  },
+  "enclave_soldier": {
+    "name": "солдат Анклава",
+    "level": 8,
+    "hp": 40,
+    "damage": 8,
+    "ac": 16,
+    "ap": 8,
+    "skill": 65,
+    "sequence": 7,
+    "aggro": 300,
+    "xp": 80,
+    "loot": {
+      "патроны": 8,
+      "стимулятор": 1
+    },
+    "ai": "ranged",
+    "range": 7,
+    "hit_verb": "стреляет в вас из плазменной винтовки",
+    "grenades": 2,
+    "stims": 1,
+    "hitbox": [
+      28,
+      32
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        40,
+        120,
+        140
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "sprite_dir": "soldier",
+    "faction": "enclave"
+  },
+  "enclave_mech": {
+    "name": "шагоход Анклава",
+    "hp": 160,
+    "damage": 16,
+    "ac": 20,
+    "ap": 8,
+    "skill": 70,
+    "sequence": 6,
+    "aggro": 360,
+    "xp": 400,
+    "loot": {
+      "патроны": 20,
+      "лом": 4,
+      "стимулятор": 1
+    },
+    "ai": "ranged",
+    "range": 8,
+    "hit_verb": "бьёт по вам из пушки",
+    "armor": 10,
+    "weak_parts": [
+      "eyes"
+    ],
+    "grenades": 1,
+    "robot": true,
+    "hitbox": [
+      56,
+      40
+    ],
+    "note": "Довоенный армейский шагоход-прототип, поднятый Анклавом со складов; пилот в открытой кабине. Броня гасит 8 урона везде, кроме кабины (прицельно — «глаза»). Бросает гранату. Пока не расставлен: охрана станции Анклава «Посейдон-7» (docs/story.md). Кадры — npc/warrior.png.",
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        90,
+        104
+      ],
+      "base": [
+        70,
+        110,
+        80
+      ],
+      "accent": [
+        220,
+        80,
+        60
+      ]
+    },
+    "level": 12,
+    "burst": 2,
+    "faction": "enclave",
+    "sprite_dir": "mech"
+  },
+  "super_mutant": {
+    "name": "супермутант",
+    "level": 10,
+    "hp": 75,
+    "damage": 12,
+    "ac": 14,
+    "ap": 8,
+    "skill": 65,
+    "sequence": 7,
+    "aggro": 300,
+    "xp": 180,
+    "loot": {
+      "патроны": 10
+    },
+    "ai": "ranged",
+    "range": 7,
+    "hit_verb": "бьёт вас прикладом размером с дверь",
+    "grenades": 2,
+    "stims": 1,
+    "hitbox": [
+      40,
+      44
+    ],
+    "art": {
+      "kind": "humanoid",
+      "size": [
+        48,
+        64
+      ],
+      "base": [
+        40,
+        120,
+        140
+      ],
+      "accent": [
+        200,
+        170,
+        140
+      ]
+    },
+    "sprite_dir": "super_mutant"
   }
 }

@@ -59,12 +59,27 @@ ROLES = {
     # Ниптон
     "groom_cal": "elite", "groom_a": "brawler", "groom_b": "brawler", "groom_c": "brawler", "brother_t": "cultist",
     "cult_guard_np": "cultist", "cult_guard_np_b": "cultist",
+    # Сёрчлайт и Форт
+    "robo_sgt": "elite", "robo_sentry": "elite", "paladin_ross": "elite", "bos_knight": "guard", "fire_chief_hope": "guard",
+    # руины Вегаса
+    "hank_spur": "elite", "boots_rider": "brawler", "boots_rider_b": "brawler", "boots_rider_c": "brawler",
+    "snake_guard": "guard", "mother_snake": "guard", "palms_doorman": "guard", "palms_cook": "brawler", "cooper_zero": "elite",
+    # «Посейдон-7»
+    "enclave_gate": "elite", "enclave_officer": "elite", "hollis_p7": "elite", "enclave_tech": "guard",
+    "enclave_trooper": "elite", "enclave_scientist": "civilian",
+    # Марипоза
+    "brother_t_mp": "elite", "cult_herald": "cultist", "mp_acolyte": "cultist", "mp_acolyte_b": "cultist",
 }
-CULT_ZONES = {"baker_mission", "primm_camp", "nipton_mine"}
-SPARE = {"dog", "robot", "amos", "amos_b7", "tobi", "np_captive"}     # их не трогает и не превращает: пёс, робот, дед в келье
+CULT_ZONES = {"baker_mission", "primm_camp", "nipton_mine", "mariposa", "mariposa_lab", "mariposa_vats"}
+SPARE = {"dog", "robot", "amos", "amos_b7", "tobi", "np_captive", "darnell", "tobi_mp", "ezekiel_mp", "nipton_bride_mp"}     # их не трогает и не превращает: пёс, робот, дед в келье
+
+
+ENCLAVE_ZONES = {"poseidon7", "poseidon7_base", "poseidon7_hangar"}   # одна тревога на всю станцию
 
 
 def faction_of(loc_id):
+    if loc_id in ENCLAVE_ZONES:
+        return "enclave"
     return "cult" if loc_id in CULT_ZONES else f"town_{loc_id}"
 
 
@@ -114,8 +129,11 @@ class CrimeMixin:
 
     def restore_town_hostility(self):
         """Вход в локацию / загрузка: город помнит нападение — бойцы враждебны, убитые мертвы."""
-        self.loc.npcs[:] = [n for n in self.npcs if not self.flags.get(f"killed_{n.npc_id}")]
-        if self.flags.get(f"town_hostile_{self.loc.id}"):
+        from ..location import NPC_IF
+        self.loc.npcs[:] = [n for n in self.npcs if not self.flags.get(f"killed_{n.npc_id}")
+                            and self.check_condition(NPC_IF.get(n.npc_id, {}))]
+        if self.flags.get(f"town_hostile_{self.loc.id}") or \
+                (self.loc.id in ENCLAVE_ZONES and self.flags.get("enclave_hostile")):
             self.town_turns_hostile()
 
     def scared_line(self, npc):
