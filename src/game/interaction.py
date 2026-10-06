@@ -25,6 +25,9 @@ class InteractionMixin:
             if npc is not None:
                 self.attack_npc(npc)
                 return
+        if self.ally is not None and not self.ally.down and reach.colliderect(self.ally.rect) \
+                and self.talk_to(self.ally, f"ally_{self.ally.type_id}"):
+            return
         for npc in self.npcs:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
                 return
@@ -131,6 +134,38 @@ class InteractionMixin:
             if not g["open"] and self.flags.get(g["flag"]):
                 self.level.open_gate(g)
 
+    def join_ally(self, ally_id):
+        """Спутник-человек (src/companion.ALLIES) идёт с героем; житель с карты уходит вместе с ним."""
+        from ..companion import ALLIES, make_ally, _place_one
+        if self.ally is not None:
+            self.dismiss_ally()
+        prof = ALLIES[ally_id]
+        home = next((n for n in self.npcs if n.npc_id == prof["npc"]), None)
+        self.ally = make_ally(ally_id)
+        if home is not None:
+            self.ally.rect.center = home.rect.center
+            self.loc.npcs[:] = [n for n in self.npcs if n is not home]
+        else:
+            _place_one(self, self.ally)
+        self.flags[f"{prof['npc']}_left"] = True
+        self.flags[f"{ally_id}_with_hero"] = True
+        self.log(f"{self.ally.name} теперь с вами. В бою действует сама; поговорить — E рядом.")
+
+    def dismiss_ally(self):
+        """Спутник-человек возвращается туда, где его встретили."""
+        if self.ally is None:
+            return
+        from ..companion import ALLIES
+        prof = ALLIES[self.ally.type_id]
+        self.flags.pop(f"{prof['npc']}_left", None)
+        for loc in self.locations.values():   # житель снова на своём месте (в следующий заход)
+            home = next((n for n in getattr(loc, "npcs_all", []) if n.npc_id == prof["npc"]), None)
+            if home is not None and home not in loc.npcs:
+                loc.npcs.append(home)
+        self.flags.pop(f"{self.ally.type_id}_with_hero", None)
+        self.log(f"{self.ally.name} уходит обратно — вас там будут ждать.")
+        self.ally = None
+
     def join_dog(self):
         """Пёс с цепи у лагеря рейдеров становится спутником."""
         from ..entities import Companion
@@ -157,7 +192,14 @@ class InteractionMixin:
         if to not in guns:
             return
         self.player.weapon = to
-        self.log(f"В руках: {self.weapon_name()}.")
+        from ..weapons import shortfall, SKILL_NAMES
+        short = shortfall(self.player, to)
+        if short:
+            w = WEAPONS[to]
+            self.log(f"В руках: {self.weapon_name()} — но не по руке: нужно {SKILL_NAMES[w.get('skill', 'guns')]} "
+                     f"{w['req']}, не хватает {short}. Мажет, очередью не стрелять.")
+        else:
+            self.log(f"В руках: {self.weapon_name()}.")
 
     def weapon_name(self):
         if self.player.weapon == "melee" and self.inventory.has("заточенный лом"):
@@ -194,7 +236,8 @@ class InteractionMixin:
         if getattr(enemy, "npc_id", None):   # убитый житель не воскреснет при следующем приходе
             self.flags[f"killed_{enemy.npc_id}"] = True
         mult = 2 if self.player.perk_rank("looter") else 1
-        loot = {item: cnt * mult for item, cnt in (enemy.loot or {}).items()}
+        from ..balance import roll_loot
+        loot = {item: cnt * mult for item, cnt in roll_loot(enemy.loot).items()}
         self.level.add_corpse(enemy, loot)
         if loot and not self.action.active:
             self.log("На теле что-то есть — можно обыскать.")

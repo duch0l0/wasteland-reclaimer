@@ -332,6 +332,34 @@ def mesa_vault():
     return outline(s)
 
 
+def rocket():
+    """Ракета REPCONN «Гелиос» на стартовом столе: белый корпус с красными кольцами, стабилизаторы,
+    кабина-иллюминатор, ферма обслуживания сбоку. Половинный размер 48×176."""
+    w, h = 48, 176
+    s = canvas(w, h)
+    cx = 22
+    rect(s, cx - 9, 34, 18, 120, (226, 226, 220))                       # корпус
+    rect(s, cx - 9, 34, 4, 120, (190, 192, 190))                        # тень на корпусе
+    for y in (60, 96, 132):
+        rect(s, cx - 9, y, 18, 4, (196, 54, 46))                       # красные кольца
+    for k in range(18):                                                  # обтекатель
+        rect(s, cx - 9 + k // 2, 34 - k, 18 - k, 1, (226, 226, 220) if k < 14 else (196, 54, 46))
+    pygame.draw.circle(s, (60, 110, 160), (cx, 46), 4)                  # иллюминатор
+    pygame.draw.circle(s, (150, 200, 240), (cx - 1, 45), 2)
+    for side in (-1, 1):                                                 # стабилизаторы
+        pts = [(cx + side * 9, 128), (cx + side * 17, 150), (cx + side * 17, 158), (cx + side * 9, 150)]
+        pygame.draw.polygon(s, (196, 54, 46), pts)
+    rect(s, cx - 6, 154, 12, 6, (70, 70, 74))                          # сопло
+    rect(s, 2, 160, w - 4, 14, (120, 118, 112))                        # стартовый стол
+    rect(s, 2, 160, w - 4, 3, (150, 148, 140))
+    for y in range(40, 160, 8):                                          # ферма обслуживания
+        rect(s, w - 8, y, 6, 1, (90, 88, 84))
+        px(s, w - 8 + (y // 8) % 6, y + 4, (90, 88, 84))
+    rect(s, w - 8, 40, 1, 120, (90, 88, 84))
+    rect(s, w - 3, 40, 1, 120, (90, 88, 84))
+    return outline(s)
+
+
 # имя -> (рисунок, описание в каталоге)
 PROPS = {
     "x_grave": (grave, {"foot": [1, 1], "search": "grave", "title": "могила"}),
@@ -352,6 +380,7 @@ PROPS = {
     "x_barrel_boom": (barrel_boom, {"foot": [1, 1], "explosive": True}),
     "x_thermometer": (thermometer, {"foot": [2, 1], "sight": True}),
     # новые — только в конец: рисунки берут случайность из общего генератора, порядок не менять
+    "x_rocket": (rocket, {"foot": [2, 1], "sight": True}),
     # Убежища 15 и 4: дверь снаружи (в скале), шестерня изнутри, табличка
     **{f"x_vault_door{n}": (lambda n=n: vault_door(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4", "22", "0")},
     **{f"x_vault_gear{n}": (lambda n=n: vault_gear(n), {"foot": [2, 1], "sight": True}) for n in ("15", "4", "22", "0")},

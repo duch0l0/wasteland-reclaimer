@@ -315,7 +315,7 @@ hl.put(BOOKS, 5, 4)
 hl.put(CLOCK, 11, 4)
 hl.put(DESK, 11, 8)
 hl.put(CHAIR, 13, 8)
-hl.box(SAFE, 21, 4, "сейф мэра", {"крышки": 150, "лицензия казино": 1},
+hl.box(SAFE, 21, 4, "сейф мэра", {"крышки": 150, "лицензия казино": 1, "дробовик «Красотка»": 1},
        requires={"item": "отмычка", "msg": "Сейф мэра. Без отмычки — никак."}, owner="mayor_darkwater")
 hl.terminal(17, 5, "junktown_hall")
 hl.put(TABLE, 3, 12)                                     # стол для совета

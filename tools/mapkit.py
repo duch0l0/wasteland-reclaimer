@@ -268,7 +268,7 @@ class MapKit:
             if y not in gaps:
                 self.put(f"vwall_{style}_{side}", x, y, check=False, allow_reserved=True)
 
-    def building(self, x0, y0, w, h, style, south=(), west=(), east=(), north=(), roof=True, sign=None):
+    def building(self, x0, y0, w, h, style, south=(), west=(), east=(), north=(), roof=True, sign=None, worn=True):
         """Здание со всеми стенами: северная — целая (north — проёмы), южная — с проёмами
         дверей (смещения от x0, чётные, проём 2 клетки), боковые — с проёмами в строках
         west/east (смещения от y0). Пол бетонный. w — чётное. Возвращает внутренность."""
@@ -286,7 +286,7 @@ class MapKit:
         for off in south:
             assert off % 2 == 0, "дверь на южной стене — с чётного смещения"
             doors.update((x0 + off, x0 + off + 1))
-        self.wall_row(WALLS_WORN[style], x0, x1, y1, gaps=doors)
+        self.wall_row((WALLS_WORN if worn else WALLS_INTACT)[style], x0, x1, y1, gaps=doors)   # worn=False — целый дом
         for side, x, gaps in (("w", x0, west), ("e", x1, east)):
             self.put(f"vwall_{style}_{side}", x, y0, force=True, allow_reserved=True)
             for y in range(y0 + 1, y1):

@@ -4773,5 +4773,14 @@
    40
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_rocket": {
+  "page": null,
+  "rect": null,
+  "size": [
+   96,
+   352
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

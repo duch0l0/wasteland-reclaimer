@@ -1,0 +1,845 @@
+{
+"props": {
+"ar2_hangar": {
+"img": "pk:mbase/mbase_2_015",
+"block": true,
+"sight": true,
+"foot": [
+6,
+3
+]
+},
+"ar2_bunker": {
+"img": "pk:mbase/mbase_2_004",
+"block": true,
+"sight": true,
+"foot": [
+4,
+3
+]
+},
+"ar2_watchtower": {
+"img": "pk:mbase/mbase_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_fuel": {
+"img": "pk:pmars/pmars_1_019",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ar2_fuel_b": {
+"img": "pk:pmars/pmars_1_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_radar": {
+"img": "pk:pmars/pmars_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 80,
+"color": [
+255,
+90,
+80
+],
+"at": [
+0.5,
+0.05
+],
+"flicker": 0.5
+}
+},
+"ar2_barbed": {
+"img": "pk:mbase/p1/8,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar2_control": {
+"img": "pk:mars/mars_2_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_dome_lab": {
+"img": "pk:mars/mars_1_000",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+170,
+230,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_dome_hab": {
+"img": "pk:mars/mars_1_001",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+170,
+230,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_greenhouse0": {
+"img": "pk:pmars/pmars_1_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+150,
+255,
+150
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_greenhouse1": {
+"img": "pk:pmars/pmars_1_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+150,
+255,
+150
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_greenhouse2": {
+"img": "pk:pmars/pmars_1_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+150,
+255,
+150
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_silo": {
+"img": "pk:mars/mars_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_silo_b": {
+"img": "pk:mars/mars_1_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module0": {
+"img": "pk:mars/mars_1_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module1": {
+"img": "pk:mars/mars_1_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module2": {
+"img": "pk:mars/mars_1_009",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module3": {
+"img": "pk:mars/mars_1_011",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module4": {
+"img": "pk:mars/mars_1_016",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module5": {
+"img": "pk:mars/mars_1_017",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_module6": {
+"img": "pk:mars/mars_1_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_airlock": {
+"img": "pk:mars/mars_1_010",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+160,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_tower": {
+"img": "pk:pmars/pmars_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 90,
+"color": [
+255,
+90,
+80
+],
+"at": [
+0.5,
+0.05
+],
+"flicker": 0.5
+}
+},
+"ar2_tower_b": {
+"img": "pk:pmars/pmars_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_rover": {
+"img": "pk:pmars/pmars_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_solar": {
+"img": "pk:pmars/p1/1,8,1,2",
+"block": true,
+"sight": false
+},
+"ar2_tank_water": {
+"img": "pk:pmars/pmars_1_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_tank_green": {
+"img": "pk:pmars/pmars_1_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_factory": {
+"img": "pk:pmars/pmars_1_008",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ar2_crate": {
+"img": "pk:pmars/pmars_1_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "crate",
+"title": "контейнер снабжения"
+},
+"ar2_crate_b": {
+"img": "pk:pmars/p1/12,14,1,1",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "ящик"
+},
+"ar2_rock": {
+"img": "pk:pmars/p1/1,1,1,1",
+"block": false,
+"sight": false
+},
+"ar2_rock_b": {
+"img": "pk:pmars/p1/2,2,1,1",
+"block": false,
+"sight": false
+},
+"ar2_boulder": {
+"img": "pk:pmars/p1/0,2,1,1",
+"block": true,
+"sight": false
+},
+"ar2_fence": {
+"img": "pk:mars/p1/12,14,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ar2_bunk0": {
+"img": "pk:mars/mars_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_bunk1": {
+"img": "pk:mars/mars_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_bunk2": {
+"img": "pk:mars/mars_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_bunk3": {
+"img": "pk:mars/mars_2_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_bunk4": {
+"img": "pk:mars/mars_2_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console0": {
+"img": "pk:mars/mars_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console1": {
+"img": "pk:mars/mars_2_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console2": {
+"img": "pk:mars/mars_2_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console3": {
+"img": "pk:mars/mars_2_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console4": {
+"img": "pk:mars/mars_2_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console5": {
+"img": "pk:mars/mars_2_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console6": {
+"img": "pk:mars/mars_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_console7": {
+"img": "pk:mars/mars_2_025",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_screen0": {
+"img": "pk:mars/mars_2_026",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_screen1": {
+"img": "pk:mars/mars_2_027",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_screen2": {
+"img": "pk:mars/mars_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_screen3": {
+"img": "pk:mars/mars_2_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_desk": {
+"img": "pk:mars/mars_2_015",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"ar2_desk_b": {
+"img": "pk:mars/mars_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar2_plant0": {
+"img": "pk:mars/mars_2_032",
+"block": true,
+"sight": false
+},
+"ar2_plant1": {
+"img": "pk:mars/mars_2_040",
+"block": true,
+"sight": false
+},
+"ar2_plant2": {
+"img": "pk:mars/mars_2_042",
+"block": true,
+"sight": false
+},
+"ar2_plant3": {
+"img": "pk:mars/mars_2_047",
+"block": true,
+"sight": false
+},
+"ar2_plant4": {
+"img": "pk:mars/mars_2_048",
+"block": true,
+"sight": false
+},
+"ar2_plant5": {
+"img": "pk:mars/mars_2_049",
+"block": true,
+"sight": false
+},
+"ar2_plant6": {
+"img": "pk:mars/mars_2_050",
+"block": true,
+"sight": false
+},
+"ar2_planter": {
+"img": "pk:mars/mars_2_051",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar2_planter_b": {
+"img": "pk:mars/mars_2_052",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar2_planter_c": {
+"img": "pk:mars/mars_2_053",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar2_locker": {
+"img": "pk:mars/mars_2_055",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "locker",
+"title": "шкафчик экипажа"
+},
+"ar2_locker_b": {
+"img": "pk:mars/mars_2_061",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "locker",
+"title": "шкафчик экипажа"
+},
+"ar2_kitchen": {
+"img": "pk:mars/mars_2_023",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"ar2_table": {
+"img": "pk:mars/mars_2_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ar2_cryo": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+140,
+220,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_cryo_b": {
+"img": "pk:wlab/wlab_3_102",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+140,
+220,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_cryo_dead": {
+"img": "pk:wlab/wlab_3_103",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ar2_vat": {
+"img": "pk:wlab/wlab_1_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+140,
+255,
+140
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_reactor": {
+"img": "pk:fmbase/fmbase_1_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+110,
+200,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"ar2_med_bed": {
+"img": "pk:hosp/hosp_1_007",
+"block": true,
+"sight": false,
+"foot": [
+3,
+1
+]
+},
+"ar2_crater0": {
+"img": "pk:pmars/p1/2,4,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ar2_crater1": {
+"img": "pk:pmars/p1/4,2,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ar2_crater2": {
+"img": "pk:pmars/p1/2,4,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ar2_crater3": {
+"img": "pk:pmars/p1/4,2,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ar2_crater4": {
+"img": "pk:pmars/p1/2,4,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+}
+}
+}

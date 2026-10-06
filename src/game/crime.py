@@ -69,9 +69,13 @@ ROLES = {
     "enclave_trooper": "elite", "enclave_scientist": "civilian",
     # Марипоза
     "brother_t_mp": "elite", "cult_herald": "cultist", "mp_acolyte": "cultist", "mp_acolyte_b": "cultist",
+    # остров Санта-Каталина
+    "harbor_master": "guard", "sailor_finn": "brawler",
+    # «Нова»
+    "purity_officer": "guard", "purity_bot": "elite", "raven_hacker": "elite", "nv_dealer": "brawler", "councillor_vale": "civilian",
 }
 CULT_ZONES = {"baker_mission", "primm_camp", "nipton_mine", "mariposa", "mariposa_lab", "mariposa_vats"}
-SPARE = {"dog", "robot", "amos", "amos_b7", "tobi", "np_captive", "darnell", "tobi_mp", "ezekiel_mp", "nipton_bride_mp"}     # их не трогает и не превращает: пёс, робот, дед в келье
+SPARE = {"dog", "robot", "amos", "amos_b7", "tobi", "np_captive", "darnell", "tobi_mp", "ezekiel_mp", "nipton_bride_mp", "rover_bot"}     # их не трогает и не превращает: пёс, робот, дед в келье
 
 
 ENCLAVE_ZONES = {"poseidon7", "poseidon7_base", "poseidon7_hangar"}   # одна тревога на всю станцию
@@ -131,6 +135,7 @@ class CrimeMixin:
         """Вход в локацию / загрузка: город помнит нападение — бойцы враждебны, убитые мертвы."""
         from ..location import NPC_IF
         self.loc.npcs[:] = [n for n in self.npcs if not self.flags.get(f"killed_{n.npc_id}")
+                            and not self.flags.get(f"{n.npc_id}_left")      # ушёл (с героем или навсегда)
                             and self.check_condition(NPC_IF.get(n.npc_id, {}))]
         if self.flags.get(f"town_hostile_{self.loc.id}") or \
                 (self.loc.id in ENCLAVE_ZONES and self.flags.get("enclave_hostile")):

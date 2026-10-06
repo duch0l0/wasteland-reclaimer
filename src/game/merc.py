@@ -38,7 +38,7 @@ class MercMixin:
                            "pending_skills": p.pending_skills},
                 "inventory": dict(self.inventory.items),
                 "loc": self.loc.id, "pos": list(p.rect.topleft),
-                "companion": self.companion}
+                "companion": self.companion, "ally": getattr(self, "ally", None)}
 
     def restore_profile(self, prof):
         p = self.player
@@ -60,6 +60,7 @@ class MercMixin:
         self.inventory.on_add = self.on_item_added
         p.inventory = self.inventory
         self.companion = prof.get("companion")
+        self.ally = prof.get("ally")
         self.enter_location(prof["loc"], at=None if prof.get("pos") is None else
                             (prof["pos"][0] // 48, prof["pos"][1] // 48))
         if prof.get("pos") is not None:
@@ -77,6 +78,7 @@ class MercMixin:
         self.other_profile = hero
         self.merc_mode = True
         self.companion = None
+        self.ally = None
         self.restore_profile(dex)
         self.log("Вы играете за наёмника Дэкса. Барстоу, трасса I-15. Где-то здесь караван Розы.")
 
@@ -86,6 +88,7 @@ class MercMixin:
             return
         self.dex_profile = self.capture_profile()
         self.dex_profile["companion"] = None
+        self.dex_profile["ally"] = None
         self.merc_mode = False
         hero, self.other_profile = self.other_profile, None
         self.restore_profile(hero)

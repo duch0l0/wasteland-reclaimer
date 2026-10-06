@@ -41,11 +41,13 @@ ANIM_FRAME_MS = 110  # скорость смены кадров анимации
 
 # --- Баланс ---
 PLAYER_SPEED = 180  # px/sec
-PLAYER_BASE_HP = 30
+PLAYER_BASE_HP = 36  # 30 было мало: первая же крысиная стая убивала героя с ломом (проверено ботом)
 PLAYER_BASE_DMG = 5
 PLAYER_ATTACK_RANGE = 46
 PLAYER_ATTACK_COOLDOWN_MS = 420
-XP_TO_LEVEL = lambda lvl: 50 * lvl * (lvl + 1)  # опыт с lvl на lvl+1: 100, 300, 600, 1000, 1500…
+# опыт с lvl на lvl+1: 100, 225, 350, 475… (каждый следующий на 125 дороже). Всего к 5-му — 1150, к 10-му — 5400,
+# к 15-му — 12 800, к 20-му — 23 300: основной сюжет ведёт к 15–18-му, всё с побочными — к ~20-му, как в Fallout 2.
+XP_TO_LEVEL = lambda lvl: 100 + 125 * (lvl - 1)
 HP_PER_LEVEL = 4
 
 ENEMY_AGGRO_RANGE = 220  # px: радиус обзора врага по умолчанию (у каждого типа свой — data/enemies.json)

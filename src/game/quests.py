@@ -1,11 +1,57 @@
 """Условия и эффекты из диалогов и терминалов, стадии квестов (data/quests.json), фракции."""
 import json
+from ..balance import roll_loot
 
 with open("data/quests.json", "r", encoding="utf-8") as f:
     QUESTS = {k: v for k, v in json.load(f).items() if not k.startswith("_")}
 
 
+# квест -> [(стадия, условие)]: условие — флаг, список флагов «любой» или «loc:<id>» (герой там бывал)
+STORY_STEPS = [
+    ("mq_list", [(10, "baker_done"), (20, ["dolores_trust", "know_vega_mariposa"]), (30, ["anna_trust", "know_cobbs_necropolis"]),
+                 (40, ["cobbs_clear", "know_set_deal"]), (50, ["know_vt_vre", "cooper_card"]),
+                 (60, ["know_enclave_hint", "know_convoy_cargo"]), (100, "loc:primm")]),
+    ("mq_zero", [(10, ["know_zero", "know_amos_manifest"]), (20, ["know_cult_race", "brother_t_flees"]),
+                 (30, ["know_poseidon", "know_general_puppet"]), (40, "loc:vegas_strip"), (50, "zero_open"),
+                 (60, "zero_fate"), (100, "game_ending")]),
+    ("sq_order", [(10, "order_found"), (100, "order_member")]),
+    ("sq_zzyzx", [(10, "loc:zzyzx"), (50, ["know_clean_slate", "springer_confessed"]), (100, ["clean_slate_off", "springer_safe", "springer_spared"])]),
+    ("sq_needles", [(10, "loc:needles"), (50, ["know_barge", "morrow_suspicious"]), (100, "know_cult_convoys")]),
+    ("sq_hub", [(10, ["dolores_tunnels", "know_cult_water"]), (50, "know_sluice"), (100, "sluice_restored")]),
+    ("sq_junktown", [(10, "know_rourke"), (50, ["know_rourke_cult", "know_gizmo_cult"]), (100, ["rourke_paid", "anna_debt_cleared"])]),
+    ("sq_necropolis", [(10, "know_set_deal"), (50, ["v12_way", "harry_job"]), (100, "set_refuses")]),
+    ("sq_aradesh", [(10, ["aradesh_job", "know_spring_cave"]), (100, "aradesh_free_water")]),
+    ("sq_boneyard", [(10, ["adytum_job", "blades_job"]), (50, ["nika_knows", "know_morpheus_deal"]), (100, "adytum_truce")]),
+    ("sq_vault15", [(10, ["know_mira", "loc:vault15"]), (50, ["v15_lower_ok", "beatrice_trust"]), (100, "v15_power")]),
+    ("sq_vault4", [(10, ["v4_open", "know_v4_science"]), (100, "v4_deal_off")]),
+    ("sq_primm", [(10, ["primm_job", "know_tobi_missing"]), (50, "mae_suspect"), (100, "tobi_home")]),
+    ("sq_goodsprings", [(10, ["know_ezekiel", "ezekiel_listened"]), (100, "gs_decided")]),
+    ("sq_vault22", [(10, ["hugo_known", "know_v22_smell"]), (50, "know_v22_spores"), (100, ["v22_decided", "hugo_joins"])]),
+    ("sq_nipton", [(10, ["know_grace", "know_lottery_past", "loc:nipton"]), (50, ["know_lottery_rigged", "nipton_mayor_caught"]),
+                   (100, "nipton_decided")]),
+    ("sq_searchlight", [(10, "fort_job"), (50, ["know_general_puppet", "know_general_orders"]), (100, "recruits_free")]),
+    ("sq_vegas", [(10, ["know_crowns", "loc:vegas_strip"]), (50, ["boots_secret", "snakes_secret", "palms_secret"]),
+                  (100, ["crowns_united", "boots_member", "snakes_member", "palms_member"])]),
+    ("sq_poseidon", [(10, "loc:poseidon7"), (50, "know_enclave_purge"),
+                     (100, ["p7_deal_done", "p7_vertibird_stolen", "p7_sabotage", "darnell_home"])]),
+    ("sq_truck", [(10, "truck_job"), (100, "truck_done")]),
+    ("sq_runaway", [(10, "runaway_job"), (100, "runaway_done")]),
+    ("sq_tag", [(10, "tag_job"), (100, "tag_done")]),
+    ("sq_bike", [(10, "bike_job"), (100, "bike_done")]),
+    ("sq_catalina", [(10, "loc:catalina"), (50, ["know_ct_tribute", "know_ct_lie"]), (100, "ct_tribute_stopped")]),
+    ("sq_nova", [(10, "loc:nova"), (50, ["know_nova_vre", "nova_rebels_ally"]), (100, "nova_decided")]),
+    ("sq_ares", [(10, "loc:repconn"), (50, "loc:ares"), (100, "ares_decided")]),
+]
+
+
 class QuestMixin:
+    def _story_cond(self, cond):
+        if isinstance(cond, list):
+            return any(self.flags.get(c) for c in cond)
+        if cond.startswith("loc:"):
+            return cond[4:] in self.locations
+        return bool(self.flags.get(cond))
+
     # ------------------------------------------------------------ квесты
     def stage(self, quest_id):
         return self.quests.get(quest_id, 0)
@@ -19,6 +65,11 @@ class QuestMixin:
         self.quests[quest_id] = stage
         if stage >= q.get("done", 10 ** 9):
             self.log(f"Задание выполнено: «{q['title']}».")
+            from ..balance import quest_caps
+            caps = quest_caps(quest_id, q.get("main"))
+            if caps:
+                self.inventory.add("крышки", caps)
+                self.log(f"Слух о сделанном расходится — благодарные люди скидываются: +{caps} крышек.")
         else:
             self.log(f"{'Новое задание' if first else 'Журнал обновлён'}: «{q['title']}» (J — журнал).")
         self.journal_sel = quest_id
@@ -97,6 +148,11 @@ class QuestMixin:
             self.set_stage("sq_barstow", 50)
         if cleared == 2 and st("sq_barstow") < 90:
             self.set_stage("sq_barstow", 90)
+        # главные квесты актов II–III и тайные места — стадии по фактам (одно можно узнать разными путями)
+        for qid, steps in STORY_STEPS:
+            for stage, cond in steps:
+                if st(qid) < stage and self._story_cond(cond):
+                    self.set_stage(qid, stage)
         if f.get("baker_done") and "zzyzx" not in self.worldmap.known:   # глава 3: Зайзикс
             self.reveal_location("zzyzx")
         if "zzyzx" in self.locations and "needles" not in self.worldmap.known:   # из Зайзикса — дорога на Нидлс
@@ -141,6 +197,12 @@ class QuestMixin:
         if (f.get("zero_fate") or f.get("brother_t_flees") or f.get("p7_deal_done") or f.get("p7_vertibird_stolen")) \
                 and "mariposa" not in self.worldmap.known:   # финал: туда, где всё началось
             self.reveal_location("mariposa")
+        if (f.get("crowns_united") or f.get("zero_fate") or f.get("know_nova")) and "nova" not in self.worldmap.known:
+            self.reveal_location("nova")   # купол к северо-востоку от Вегаса — слухи на Стрипе
+        if (f.get("know_repconn") or "vegas_strip" in self.locations) and "repconn" not in self.worldmap.known:
+            self.reveal_location("repconn")   # полигон с ракетой к югу от Вегаса
+        if f.get("know_catalina") and "catalina" not in self.worldmap.known:   # остров, который платит дань «флоту»
+            self.reveal_location("catalina")
         # «Ноль»: питание, коды совета и двое из Списка Марипозы (сетчатка, голос, код)
         if f.get("zero_power") and f.get("zero_codes") and \
                 sum(bool(f.get(k)) for k in ("zero_retina", "zero_voice", "zero_code")) >= 2:
@@ -203,6 +265,10 @@ class QuestMixin:
             self.open_document(eff["doc"])
         elif t == "slides":
             self.show_slides(eff["id"])
+        elif t == "join_ally":   # спутник-человек идёт с героем (прежний — домой)
+            self.join_ally(eff["id"])
+        elif t == "leave_ally":
+            self.dismiss_ally()
         elif t == "npc_leave":
             self.loc.npcs[:] = [n for n in self.npcs if n.npc_id != eff["npc"]]
             self.flags[f"{eff['npc']}_left"] = True
@@ -225,7 +291,7 @@ class QuestMixin:
             dead = [e for e in self.enemies if e.alive and e.pack == eff["pack"]]
             for e in dead:
                 e.hp, e.alive = 0, False
-                self.level.add_corpse(e, dict(e.loot or {}))
+                self.level.add_corpse(e, roll_loot(e.loot))
             if dead:
                 self.log("Из глубины тоннелей доносится визг, возня... потом тишина.")
             self._check_cleared()

@@ -187,10 +187,18 @@ def draw_throws(surf, combat, cam):
     for th in combat.throws:
         k = min(1.0, th["t"] / th["dur"])
         pos = th["from"].lerp(th["to"], k)
+        if th["kind"] == "rocket":   # ракета — прямо, с огненным хвостом
+            x, y = (int(c) for c in cam.p(pos.x, pos.y))
+            tail = th["from"].lerp(th["to"], max(0.0, k - 0.08))
+            tx, ty = (int(c) for c in cam.p(tail.x, tail.y))
+            pygame.draw.line(surf, (255, 160, 50), (tx, ty), (x, y), 4)
+            pygame.draw.circle(surf, (90, 95, 80), (x, y), 5)
+            continue
         lift = 4 * 60 * k * (1 - k)
         x, y = (int(c) for c in cam.p(pos.x, pos.y))
         pygame.draw.ellipse(surf, (0, 0, 0), (x - 5, y - 2, 10, 5))
-        color = (80, 100, 60) if th["kind"] == "grenade" else (150, 190, 110)
+        color = {"grenade": (80, 100, 60), "plasma": (90, 230, 120), "pulse": (110, 170, 255)}.get(
+            th["kind"], (150, 190, 110))
         pygame.draw.circle(surf, (20, 18, 14), (x, int(y - lift)), 6)
         pygame.draw.circle(surf, color, (x, int(y - lift)), 4)
         if th["kind"] == "molotov":
@@ -206,7 +214,8 @@ def draw_blasts(surf, combat, cam):
         layer = pygame.Surface((r * 2 + 4, r * 2 + 4), pygame.SRCALPHA)
         c = (r + 2, r + 2)
         a = max(0, int(255 * (1 - k)))
-        fire = (255, 140, 40) if b["kind"] != "molotov" else (255, 110, 30)
+        fire = {"molotov": (255, 110, 30), "plasma": (110, 255, 120), "pulse": (120, 180, 255)}.get(
+            b["kind"], (255, 140, 40))
         pygame.draw.circle(layer, (70, 60, 50, a // 2), c, r)
         pygame.draw.circle(layer, (*fire, a), c, max(4, int(r * (0.8 - 0.5 * k))))
         if k < 0.35:

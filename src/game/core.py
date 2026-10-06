@@ -107,6 +107,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.minimap = Minimap()
         self.gore = Gore()
         self.companion = None      # спутник (пёс) — появляется по квесту
+        self.ally = None           # спутник-человек (src/companion.ALLIES) — один за раз
         self.zoom = S.ZOOM_DEFAULT  # масштаб мира, колёсико мыши — ближе/дальше
         self.speech = None         # реплика над головой: {"ent", "text", "t"}
         self.bark_ms = 4000        # до следующей реплики жителя

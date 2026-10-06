@@ -896,5 +896,92 @@
     "known": false,
     "music": "vats",
     "underground": true
+  },
+  "catalina": {
+    "name": "Остров Санта-Каталина: Авалон",
+    "map": "data/maps/catalina.json",
+    "known": false,
+    "music": "hub",
+    "world_pos": [
+      210,
+      1420
+    ],
+    "world_name": "Остров Санта-Каталина"
+  },
+  "catalina_casino": {
+    "name": "Казино Авалона",
+    "map": "data/maps/catalina_casino.json",
+    "known": false,
+    "music": "hub",
+    "underground": true
+  },
+  "catalina_light": {
+    "name": "Маяк Авалона",
+    "map": "data/maps/catalina_light.json",
+    "known": false,
+    "music": "caves",
+    "underground": true
+  },
+  "catalina_cove": {
+    "name": "Грот у Авалона",
+    "map": "data/maps/catalina_cove.json",
+    "known": false,
+    "music": "caves"
+  },
+  "nova": {
+    "name": "«Нова»: Верхний ярус",
+    "map": "data/maps/nova.json",
+    "known": false,
+    "music": "lab",
+    "world_pos": [
+      2960,
+      380
+    ],
+    "world_name": "Купол «Нова»"
+  },
+  "nova_under": {
+    "name": "«Нова»: Нижний ярус",
+    "map": "data/maps/nova_under.json",
+    "known": false,
+    "music": "reno"
+  },
+  "nova_core": {
+    "name": "Ядро НОВЫ",
+    "map": "data/maps/nova_core.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "repconn": {
+    "name": "Полигон REPCONN",
+    "map": "data/maps/repconn.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      2680,
+      640
+    ],
+    "world_name": "Полигон REPCONN",
+    "discover": true
+  },
+  "ares": {
+    "name": "«Арес»: поверхность Марса",
+    "map": "data/maps/ares.json",
+    "known": false,
+    "music": "lab"
+  },
+  "ares_hab": {
+    "name": "«Арес»: жилой модуль",
+    "map": "data/maps/ares_hab.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "ares_lab": {
+    "name": "«Арес»: лаборатория",
+    "map": "data/maps/ares_lab.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
   }
 }

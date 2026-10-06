@@ -28,7 +28,27 @@ ICONS = {
     "assault_rifle": 72,   # автомат с деревянным прикладом
     "pistol10": 81,        # армейский пистолет деда
     "hunting_rifle": 3,    # охотничья винтовка Дэкса
+    # арсенал (src/weapons.py)
+    "sawedoff": 122, "combat_shotgun": 95, "beauty": 95, "gauss": 61, "plasma_rifle": 44,
+    "laser_rifle": 23, "stargazer": 23, "flamer": 107, "lmg": 88, "rocket_launcher": 67,
+    "minigun": 94, "mommy": 94, "plasma_grenade": 34, "pulse_grenade": 34,
 }
+# тонирование (умножение цвета): энергооружие светится, легенды — в золоте
+TINTS = {
+    "beauty": (255, 215, 120), "gauss": (150, 220, 255), "plasma_rifle": (140, 255, 150),
+    "laser_rifle": (255, 140, 130), "stargazer": (255, 220, 140), "flamer": (255, 170, 110),
+    "mommy": (255, 190, 210), "plasma_grenade": (130, 255, 140), "pulse_grenade": (140, 180, 255),
+    "laser_pistol": (255, 140, 130), "plasma_pistol": (140, 255, 150), "power_fist": (170, 190, 230),
+    "super_sledge": (255, 200, 110), "combat_armor": (120, 150, 110), "pa_t45": (190, 200, 215),
+    "pa_t51": (235, 205, 140), "pa_enclave": (110, 110, 125), "leather_armor": (190, 130, 85), "combat_helmet": (120, 150, 110),
+    "pa_helmet": (190, 200, 215), "enclave_helmet": (110, 110, 125), "spear": (230, 200, 150),
+}
+
+
+def tint(img, rgb):
+    out = img.copy()
+    out.fill((*rgb, 255), special_flags=pygame.BLEND_RGBA_MULT)
+    return out
 
 
 def objects(sheet):
@@ -66,6 +86,13 @@ PACK_ICONS = {
     "cigarettes": (3, 28), "teddy": (3, 24), "map": (3, 33), "motor_oil": (0, 6), "spring": (0, 19),
     "wrench": (0, 0), "gloves": (3, 14), "boots": (3, 15), "lighter": (2, 11), "lantern": (2, 12),
     "gunpowder": (1, 43), "toolbox": (3, 36), "knife": (2, 39), "keys": (2, 9), "medkit_big": (2, 26), "army_vest": (3, 32),
+    # арсенал и броня
+    "machete": (2, 38), "fire_axe": (3, 8), "sledge": (3, 6), "super_sledge": (3, 6), "power_fist": (3, 14),
+    "throw_knife": (3, 5), "spear": (0, 43), "smg": (1, 4), "revolver": (1, 5), "sniper": (1, 3),
+    "laser_pistol": (1, 8), "plasma_pistol": (1, 7), "cell": (1, 36), "mfc": (1, 37), "fuel": (3, 45),
+    "rocket": (1, 35), "gauss_ammo": (1, 47), "leather_armor": (3, 32), "metal_armor": (3, 35),
+    "combat_armor": (3, 32), "pa_t45": (3, 32), "pa_t51": (3, 32), "pa_enclave": (3, 32),
+    "army_helmet": (2, 4), "combat_helmet": (2, 4), "pa_helmet": (2, 4), "enclave_helmet": (2, 4),
 }
 
 
@@ -91,7 +118,10 @@ def main():
     rects = objects(sheet)
     os.makedirs(OUT, exist_ok=True)
     for name, idx in ICONS.items():
-        pygame.image.save(icon(sheet, rects[idx]), os.path.join(OUT, f"{name}.png"))
+        img = icon(sheet, rects[idx])
+        if name in TINTS:
+            img = tint(img, TINTS[name])
+        pygame.image.save(img, os.path.join(OUT, f"{name}.png"))
         print(f"{name}: объект {idx} {tuple(rects[idx])}")
     sheets = pack_icons()
     if not sheets:
@@ -99,7 +129,10 @@ def main():
         return 0
     for name, (k, idx) in PACK_ICONS.items():
         im, rs = sheets[k]
-        pygame.image.save(icon(im, rs[idx]), os.path.join(OUT, f"{name}.png"))
+        img = icon(im, rs[idx])
+        if name in TINTS:
+            img = tint(img, TINTS[name])
+        pygame.image.save(img, os.path.join(OUT, f"{name}.png"))
     print(f"иконок из наборов: {len(PACK_ICONS)}")
     return 0
 

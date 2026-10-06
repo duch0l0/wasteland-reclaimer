@@ -47,12 +47,25 @@ class BackpackMixin:
             self.inv_sel = visible[0] if visible else None
 
     def usable_items(self):
-        return [n for n in self.inventory.nonzero() if items.usable(n)]
+        return [n for n in self.inventory.nonzero() if items.usable(n) and "skill" not in items.ITEMS[n]["use"]]
 
     # ------------------------------------------------------ снаряжение
+    def wear_block(self, name):
+        """Почему эту броню пока не надеть (None — можно): тяжёлую — с опытом, силовую — с подготовкой."""
+        d = items.ITEMS.get(name, {})
+        if d.get("req_flag") and not self.flags.get(d["req_flag"]):
+            return d.get("req_msg", "Не знаете, как это надеть.")
+        if d.get("req_level", 0) > self.player.level_sys.level:
+            return f"Слишком тяжело для новичка: нужен {d['req_level']}-й уровень."
+        return None
+
     def equip(self, name):
         slot = items.slot(name)
         if not slot or not self.inventory.has(name):
+            return
+        why = self.wear_block(name)
+        if why:
+            self.log(f"{name[:1].upper() + name[1:]}: {why}")
             return
         if self.combat.active:
             self.log("Переодеваться посреди драки — плохая идея. Сначала закончите бой.")
@@ -77,7 +90,7 @@ class BackpackMixin:
         if hasattr(self, "quests"):
             self.sync_story()
         slot = items.slot(name)
-        if slot and not self.player.equipped(slot) and not self.combat.active:
+        if slot and not self.player.equipped(slot) and not self.combat.active and not self.wear_block(name):
             self.player.equipment[slot] = name
             self.log(f"Вы сразу надеваете: {name}. Поменять можно в рюкзаке (I).")
 
@@ -96,6 +109,8 @@ class BackpackMixin:
             if worn == name:
                 return ("Снять", lambda: self.unequip(slot))
             return (f"Надеть вместо: {worn}" if worn else "Надеть", lambda: self.equip(name))
+        if items.usable(name) and "skill" in items.ITEMS[name]["use"]:
+            return ("Прочитать", lambda: self.use_item(name))
         if items.usable(name):
             cost = f" ({S.AP_CRAFT} ОД)" if self.combat.active else ""
             return (f"Использовать{cost}", lambda: self.use_item(name))
@@ -155,6 +170,20 @@ class BackpackMixin:
     def use_item(self, name):
         use = items.ITEMS[name]["use"]
         p = self.player
+        if "skill" in use:   # книга навыка: читается вне боя, один раз
+            if self.combat.active:
+                self.log("Читать посреди перестрелки? Сначала закончите бой.")
+                return
+            from .. import skills
+            sid = use["skill"]
+            was = p.skill(sid)
+            p.skills[sid] = min(skills.CAP, was + use.get("amount", 5))
+            self.inventory.remove(name)
+            self.log(f"Прочитано: {name}. {skills.SKILL_BY_ID[sid]['name']}: {was} → {p.skills[sid]}.")
+            if not self.inventory.has(name):
+                visible = self.inventory_items()
+                self.inv_sel = visible[0] if visible else None
+            return
         if "rads" in use:
             if p.rads <= 0:
                 self.log("Радиации в вас нет. Пока.")

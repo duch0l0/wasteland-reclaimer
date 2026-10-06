@@ -96,11 +96,42 @@ def _item_facts(game, name):
             facts.append((f"{d['guns']:+d}% к стрельбе", (230, 110, 90) if d["guns"] < 0 else COLOR_OK))
     for key, w in WEAPONS.items():
         if w.get("item") == name:
-            facts.append((f"Урон {w['damage']}±2 · дальность {w['range']} кл.", (225, 150, 90)))
-            facts.append((f"Выстрел: {w['ap']} ОД · патроны: {game.inventory.count(w['ammo'])}", COLOR_DIM))
+            if w.get("unique"):
+                facts.append(("ЛЕГЕНДА — такой больше нет во всей пустоши", (255, 210, 90)))
+            if not w["ranged"]:
+                facts.append((f"Ближний бой: +{w.get('damage', 0)} к урону · удар {w['ap']} ОД", (225, 150, 90)))
+            elif w.get("blast"):
+                facts.append((f"Ракета рвётся у цели, задевает соседей · дальность {w['range']} кл.", (225, 150, 90)))
+            else:
+                burst = f" ×{w['burst']} очередью" if w.get("burst", 1) > 1 else ""
+                facts.append((f"Урон {w['damage']}±2{burst} · дальность {w['range']} кл.", (225, 150, 90)))
+            if w.get("pierce"):
+                facts.append((f"Прожигает {int(w['pierce'] * 100)}% брони цели", (140, 200, 255)))
+            if w.get("fire"):
+                facts.append(("Поджигает цель", (255, 150, 60)))
+            if w.get("ammo") and not w.get("thrown"):
+                facts.append((f"Выстрел: {w['ap']} ОД · {w['ammo']}: {game.inventory.count(w['ammo'])}", COLOR_DIM))
+            from ..weapons import SKILL_NAMES, skill_of
+            req = w.get("req", 0)
+            have = skill_of(game.player, key)
+            sk = SKILL_NAMES[w.get("skill", "guns")]
+            if req:
+                ok = have >= req
+                facts.append((f"Нужно: {sk} {req} (у вас {have})" + ("" if ok else " — не слушается"),
+                              COLOR_OK if ok else (230, 110, 90)))
+            else:
+                facts.append((f"Навык: {sk} (у вас {have})", COLOR_DIM))
             if game.player.weapon == key:
                 facts.append(("В руках", COLOR_HOVER))
-    guns = [w["name"] for w in WEAPONS.values() if w.get("ammo") == name]
+    if d.get("dr"):
+        facts.append((f"Гасит {d['dr']} урона с каждого попадания", (140, 170, 210)))
+    if d.get("req_level") or d.get("req_flag"):
+        why = game.wear_block(name)
+        need = f"Нужен {d['req_level']}-й уровень" if d.get("req_level") else ""
+        if d.get("req_flag"):
+            need += (" и " if need else "") + "подготовка к силовой броне"
+        facts.append((need + (" — пока не надеть" if why else ""), (230, 110, 90) if why else COLOR_OK))
+    guns = [w["name"] for w in WEAPONS.values() if w.get("ammo") == name and not w.get("thrown")]
     if guns:
         facts.append(("Для оружия: " + ", ".join(guns), (220, 190, 100)))
     if d.get("read"):
@@ -190,8 +221,11 @@ def draw_inventory(surf, game):
     lv = p.level_sys
     col_w = 196   # левая колонка до сетки: подпись слева, число справа — ничего не вылезает
     rows = [("Уровень", f"{lv.level}"), ("Опыт", f"{lv.xp}/{lv.xp_needed}"), ("HP", f"{p.hp}/{p.max_hp}"),
-            ("ОД · КБ", f"{p.max_ap} · {p.armor_class}"), ("Урон ломом", f"{p.damage}±2")]
-    skill_rows = [("Стрельба", p.guns_skill), ("Рукопашная", p.melee_skill), ("Медицина", p.skill("medicine")),
+            ("ОД · КБ", f"{p.max_ap} · {p.armor_class}" + (f" · −{p.armor}" if p.armor else "")),
+            ("Урон вблизи", f"{p.damage}±2")]
+    skill_rows = [("Стрельба", p.guns_skill), ("Тяжёлое оружие", p.weapon_skill("heavy")),
+                  ("Энергооружие", p.weapon_skill("energy")), ("Метание", p.skill("throwing")),
+                  ("Рукопашная", p.melee_skill), ("Медицина", p.skill("medicine")),
                   ("Наука", p.skill("science")), ("Красноречие", p.skill("speech")),
                   ("Выживание", p.skill("survival"))]
     y = box.y + 186
@@ -207,8 +241,8 @@ def draw_inventory(surf, game):
         surf.blit(font_tiny().render(label, True, (200, 190, 170)), (lx + 6, y))
         v = font_tiny().render(str(val), True, S.COLOR_TEXT)
         surf.blit(v, (lx + col_w - v.get_width(), y))
-        y += 16
-    y += 6
+        y += 15
+    y += 4
     surf.blit(font_small.render("Перки", True, COLOR_TITLE), (lx, y))
     y += 20
     perk_names = [PERKS_BY_ID[pid]["name"] + (f" ×{r}" if r > 1 else "") for pid, r in p.perks.items()]

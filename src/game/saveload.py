@@ -100,6 +100,7 @@ class SaveMixin:
             "dex_profile": self._profile_to_json(getattr(self, "dex_profile", None)),
             "companion": None if self.companion is None else {
                 "hp": self.companion.hp, "max_hp": self.companion.max_hp, "down": self.companion.down},
+            "ally": None if self.ally is None else {"id": self.ally.type_id, "hp": self.ally.hp},
         }
 
     @staticmethod
@@ -107,7 +108,9 @@ class SaveMixin:
         if not prof:
             return None
         c = prof.get("companion")
-        return {**prof, "companion": None if c is None else {"hp": c.hp, "max_hp": c.max_hp}}
+        a = prof.get("ally")
+        return {**prof, "companion": None if c is None else {"hp": c.hp, "max_hp": c.max_hp},
+                "ally": None if a is None else {"id": a.type_id, "hp": a.hp}}
 
     def _profile_from_json(self, prof):
         if not prof:
@@ -119,7 +122,13 @@ class SaveMixin:
             dog = Companion((0, 0), npc_animations("dog"))
             dog.hp, dog.max_hp = max(1, c["hp"]), c["max_hp"]
             c = dog
-        return {**prof, "companion": c}
+        a = prof.get("ally")
+        if a:
+            from ..companion import make_ally
+            hp = a["hp"]
+            a = make_ally(a["id"])
+            a.hp = max(1, hp)
+        return {**prof, "companion": c, "ally": a}
 
     @staticmethod
     def _loc_state(loc):
@@ -219,6 +228,12 @@ class SaveMixin:
             from ..location import npc_animations
             self.companion = Companion((0, 0), npc_animations("dog"))
             self.companion.hp, self.companion.max_hp = max(1, cs["hp"]), cs["max_hp"]
+        self.ally = None
+        al = st.get("ally")
+        if al:
+            from ..companion import make_ally
+            self.ally = make_ally(al["id"])
+            self.ally.hp = max(1, al["hp"])
         self.log_lines = list(st.get("log", []))
         self.merc_mode = st.get("merc_mode", False)
         self.other_profile = self._profile_from_json(st.get("other_profile"))

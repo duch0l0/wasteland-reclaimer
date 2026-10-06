@@ -1,0 +1,748 @@
+{
+"props": {
+"ct_palm0": {
+"img": "pk:iresort/iresort_1_027",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ct_palm1": {
+"img": "pk:iresort/iresort_1_028",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ct_palm2": {
+"img": "pk:iresort/iresort_1_015",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ct_palm_big": {
+"img": "pk:sisland/p1/12,8,1,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ct_palm_big_b": {
+"img": "pk:sisland/p1/13,8,1,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ct_umbrella0": {
+"img": "pk:iresort/iresort_1_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_umbrella1": {
+"img": "pk:iresort/iresort_1_010",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_umbrella2": {
+"img": "pk:iresort/iresort_1_011",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_umbrella3": {
+"img": "pk:iresort/iresort_1_014",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_lounger": {
+"img": "pk:iresort/iresort_1_018",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_lounger_b": {
+"img": "pk:iresort/iresort_1_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_torch": {
+"img": "pk:iresort/iresort_1_036",
+"block": true,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.1
+],
+"flicker": 0.5
+}
+},
+"ct_tiki_bar": {
+"img": "pk:iresort/iresort_1_057",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ct_tiki_shop": {
+"img": "pk:iresort/iresort_1_071",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ct_sandcastle": {
+"img": "pk:iresort/iresort_1_047",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_surf": {
+"img": "pk:iresort/iresort_1_050",
+"block": true,
+"sight": false
+},
+"ct_surf_b": {
+"img": "pk:iresort/iresort_1_051",
+"block": true,
+"sight": false
+},
+"ct_bush0": {
+"img": "pk:iresort/iresort_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_bush1": {
+"img": "pk:iresort/iresort_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_bush2": {
+"img": "pk:iresort/iresort_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_bush3": {
+"img": "pk:iresort/iresort_2_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_flower0": {
+"img": "pk:iresort/iresort_1_059",
+"block": true,
+"sight": false
+},
+"ct_flower1": {
+"img": "pk:iresort/iresort_1_060",
+"block": true,
+"sight": false
+},
+"ct_flower2": {
+"img": "pk:iresort/iresort_1_061",
+"block": true,
+"sight": false
+},
+"ct_flower3": {
+"img": "pk:iresort/iresort_1_062",
+"block": true,
+"sight": false
+},
+"ct_flower4": {
+"img": "pk:iresort/iresort_1_066",
+"block": true,
+"sight": false
+},
+"ct_flower5": {
+"img": "pk:iresort/iresort_1_067",
+"block": true,
+"sight": false
+},
+"ct_cafe0": {
+"img": "pk:iresort/iresort_2_002",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_cafe1": {
+"img": "pk:iresort/iresort_2_004",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_cafe2": {
+"img": "pk:iresort/iresort_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_cafe3": {
+"img": "pk:iresort/iresort_2_009",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_gazebo": {
+"img": "pk:iresort/iresort_4_013",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ct_stone_wall": {
+"img": "pk:iresort/iresort_4_045",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_stone_wall_b": {
+"img": "pk:iresort/iresort_4_046",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_fence": {
+"img": "pk:iresort/iresort_4_049",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_hammock": {
+"img": "pk:iresort/iresort_4_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_house0": {
+"img": "pk:town50/town50_3_000",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.7
+},
+"ct_house1": {
+"img": "pk:town50/town50_3_001",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.7
+},
+"ct_house2": {
+"img": "pk:town50/town50_3_007",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.7
+},
+"ct_house3": {
+"img": "pk:town50/town50_3_008",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.7
+},
+"ct_house_blue": {
+"img": "pk:town50/p3/10,2,2,2",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.7
+},
+"ct_boat": {
+"img": "pk:fishv/fishv_2_083",
+"block": true,
+"sight": true,
+"foot": [
+1,
+2
+]
+},
+"ct_boat_b": {
+"img": "pk:fishv/p2/12,12,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"ct_wreck": {
+"img": "pk:fishv/fishv_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ct_wreck_b": {
+"img": "pk:fishv/fishv_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ct_shipwreck": {
+"img": "pk:sisland/p1/14,8,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ct_nets": {
+"img": "pk:fishv/fishv_1_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_nets_b": {
+"img": "pk:fishv/fishv_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_fish_rack": {
+"img": "pk:fishv/fishv_1_078",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ct_fish_rack_b": {
+"img": "pk:fishv/fishv_1_079",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ct_fish_crate": {
+"img": "pk:fishv/fishv_2_008",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "crate",
+"title": "ящик с рыбой"
+},
+"ct_fish_crate_b": {
+"img": "pk:fishv/fishv_2_019",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_barrel": {
+"img": "pk:fishv/fishv_1_057",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
+"ct_barrel_b": {
+"img": "pk:fishv/fishv_1_072",
+"block": true,
+"sight": false
+},
+"ct_anchor": {
+"img": "pk:fishv/fishv_1_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_lantern": {
+"img": "pk:fishv/fishv_1_070",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
+"ct_rock": {
+"img": "pk:sisland/p1/4,0,1,1",
+"block": true,
+"sight": false
+},
+"ct_rock_b": {
+"img": "pk:sisland/p1/4,1,1,1",
+"block": true,
+"sight": false
+},
+"ct_rock_c": {
+"img": "pk:sisland/p1/5,0,1,1",
+"block": true,
+"sight": false
+},
+"ct_sea_rock": {
+"img": "pk:sisland/p1/4,9,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ct_tent": {
+"img": "pk:sisland/p1/10,11,1,1",
+"block": true,
+"sight": false
+},
+"ct_campfire": {
+"img": "pk:sisland/p1/8,12,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.4
+}
+},
+"ct_bones": {
+"img": "pk:sisland/p1/11,12,1,1",
+"block": false,
+"sight": false
+},
+"ct_lighthouse": {
+"img": "pk:rvill/rvill_1_061",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+],
+"scale": 1.8,
+"light": {
+"r": 200,
+"color": [
+255,
+250,
+200
+],
+"at": [
+0.5,
+0.05
+]
+}
+},
+"ct_chandelier": {
+"img": "pk:lrest/lrest_2_032",
+"block": true,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+220,
+160
+],
+"at": [
+0.5,
+0.2
+],
+"flicker": 0.2
+}
+},
+"ct_armchair": {
+"img": "pk:lrest/lrest_1_041",
+"block": true,
+"sight": false
+},
+"ct_armchair_b": {
+"img": "pk:lrest/lrest_1_042",
+"block": true,
+"sight": false
+},
+"ct_painting": {
+"img": "pk:lrest/lrest_3_011",
+"block": false,
+"sight": false
+},
+"ct_painting_b": {
+"img": "pk:lrest/lrest_3_012",
+"block": false,
+"sight": false
+},
+"ct_council_table": {
+"img": "pk:lib/lib_1_061",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ct_bookcase": {
+"img": "pk:lib/lib_1_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"ct_bookcase_b": {
+"img": "pk:lib/lib_1_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "книжный шкаф"
+},
+"ct_desk": {
+"img": "pk:lib/lib_1_112",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_piano": {
+"img": "pk:west/west_2_012",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф Основателя"
+},
+"ct_radio": {
+"img": "pk:npower/npower_2_079",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 70,
+"color": [
+120,
+255,
+160
+],
+"at": [
+0.5,
+0.4
+]
+}
+},
+"ct_bed": {
+"img": "pk:west/west_2_005",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ct_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ct_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"ct_pier": {
+"img": "pk:iresort/p1/0,12,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"ct_pier2": {
+"img": "pk:iresort/p1/0,12,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor"
+},
+"ct_dance_floor": {
+"img": "pk:casino/p1/8,13,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ct_navy_crate": {
+"img": "pk:pmars/pmars_1_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "ящик ВМФ"
+}
+}
+}

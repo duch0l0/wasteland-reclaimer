@@ -139,6 +139,20 @@ class Player(CombatStats):
     def guns_skill(self):
         return self.skill("guns") + 15 * self.perk_rank("steady_hand") + self.equip_mod("guns")
 
+    def weapon_skill(self, sid):
+        """Навык класса оружия: «Твёрдая рука» и бонусы снаряжения — для всего, что стреляет."""
+        if sid == "guns":
+            return self.guns_skill
+        if sid == "melee":
+            return self.melee_skill
+        bonus = 15 * self.perk_rank("steady_hand") + self.equip_mod("guns") if sid in ("heavy", "energy") else 0
+        return self.skill(sid) + bonus
+
+    @property
+    def armor(self):
+        """Порог урона от надетой брони (у силовой — заметный): гасит часть каждого попадания."""
+        return self.equip_mod("dr")
+
     @property
     def crit_bonus(self):
         return 10 * self.perk_rank("sharp_eye")
@@ -148,6 +162,9 @@ class Player(CombatStats):
         """Урон в ближнем бою (у самопала свой — см. src/weapons.py).
         Заточенный лом даёт +3, пока лежит в рюкзаке."""
         sharp = 3 if self.inventory is not None and self.inventory.has("заточенный лом") else 0
+        if self.weapon != "melee":   # с ножом, топором, кувалдой — их прибавка вместо заточки лома
+            from .weapons import WEAPONS
+            sharp = WEAPONS.get(self.weapon, {}).get("damage", 0) if not WEAPONS.get(self.weapon, {}).get("ranged") else sharp
         return (self.base_damage + max(0, (self.melee_skill - 60) // 10) + 3 * self.perk_rank("heavy_hand")
                 + sharp)
 
@@ -325,20 +342,25 @@ class Companion(CombatStats):
     range = 1
     aggro = 0
 
-    def __init__(self, pos, animations, name="Псина"):
-        self.type_id = "dog"
-        self.rect = _hitbox_in_tile(pos, (24, 20))
+    def __init__(self, pos, animations, name="Псина", profile=None):
+        """profile — спутник-человек (src/companion.ALLIES): id, имя, HP, урон, навык, ai melee/ranged, дальность."""
+        prof = profile or {}
+        self.type_id = prof.get("id", "dog")
+        self.rect = _hitbox_in_tile(pos, tuple(prof.get("hitbox", (24, 20))))
         self.anim = Animator(animations, frame_ms=S.ANIM_FRAME_MS)
-        self.name = name
-        self.hp = self.max_hp = 30
-        self.damage = 5
-        self.skill = 60
-        self.hit_verb = "вцепляется в противника"
+        self.name = prof.get("name", name)
+        self.hp = self.max_hp = prof.get("hp", 30)
+        self.damage = prof.get("damage", 5)
+        self.skill = prof.get("skill", 60)
+        self.ai = prof.get("ai", "melee")
+        self.range = prof.get("range", 1)
+        self.burst = 1
+        self.hit_verb = prof.get("hit_verb", "вцепляется в противника")
         self.facing_left = False
         self.alive = True
         self.down = False
         self.regen_ms = 0
-        self.init_combat_stats(8, 15, 7)
+        self.init_combat_stats(prof.get("ap", 8), prof.get("ac", 15), prof.get("sequence", 7))
 
     def update(self, dt_ms):
         self.anim.update(dt_ms)

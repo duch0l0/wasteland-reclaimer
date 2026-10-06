@@ -18,7 +18,7 @@ from collections import deque
 import pygame
 
 from . import settings as S
-from .weapons import WEAPONS, RANGE_PENALTY_PER_TILE
+from .weapons import WEAPONS, RANGE_PENALTY_PER_TILE, shortfall, skill_of
 
 T = S.TILE
 
@@ -53,7 +53,11 @@ PLAYER_MISS_MELEE = ["Вы промахиваетесь. Воздух повер
                      "Мимо. Цель делает вид, что так и было задумано."]
 PLAYER_MISS_RANGED = ["Выстрел уходит в молоко.",
                       "Пуля свистит мимо. Где-то вдали вздрагивает консервная банка.",
-                      "Мимо. Самопал обиженно щёлкает."]
+                      "Мимо. {gun} обиженно щёлкает."]
+PLAYER_MISS_ENERGY = ["Луч прожигает воздух. Пахнет озоном и разочарованием.",
+                      "Мимо — на стене дымится оплавленное пятно.",
+                      "{gun} шипит впустую."]
+PLAYER_MISS_THROWN = ["Бросок уходит мимо и звякает о камни.", "Мимо. Придётся поискать, куда улетело."]
 ENEMY_MISS_MELEE = ["{name} кусает воздух с большим энтузиазмом.",
                     "{name} промахивается и выглядит смущённым.",
                     "{name} бросается — и промахивается."]
@@ -70,7 +74,7 @@ VOICE = {"feral": "ghoul", "ghoul_runner": "ghoul", "rad_mutant": "ghoul", "muta
 
 def voice_of(ent):
     if getattr(ent, "ally", False):
-        return "dog"
+        return "dog" if getattr(ent, "type_id", "dog") == "dog" else "human"
     return VOICE.get(getattr(ent, "type_id", None), "human")
 
 
@@ -150,9 +154,13 @@ class Combat:
     def allies_in_combat(self):
         return [e for e in self.order if self.is_ally(e) and e.alive]
 
-    def _companion_here(self):
-        c = self.game.companion
-        return c if c is not None and c.alive and not c.down else None
+    def _party_here(self):
+        from .companion import party
+        return [c for c in party(self.game) if c.alive and not c.down]
+
+    def _party_all(self):
+        from .companion import party
+        return party(self.game)
 
     def _dist(self, a, b):
         return pygame.Vector2(a.rect.center).distance_to(b.rect.center)
@@ -187,7 +195,7 @@ class Combat:
         self.busy_ms = 0
         self.aim_menu = False
         g.craft_open = False
-        allies = [c for c in (self._companion_here(),) if c]
+        allies = self._party_here()
         if player_first:  # напал сам — ходишь первым, спутник сразу за тобой
             self.order = [p] + allies + enemies
         else:             # заметили тебя — очередь по Реакции
@@ -323,7 +331,7 @@ class Combat:
     def _obstacles(self):
         g = self.game
         return ([g.player] + [e for e in g.enemies if e.alive] + list(g.npcs)
-                + [c for c in (g.companion,) if c is not None and c.alive])
+                + [c for c in self._party_all() if c.alive])
 
     def _occupied(self, except_ent=None):
         return {tile_of(o) for o in self._obstacles() if o is not except_ent}
@@ -387,14 +395,19 @@ class Combat:
         p = self.game.player
         if ent is p:
             w = WEAPONS[p.weapon]
+            short = shortfall(p, p.weapon)        # не дорос до ствола — он не слушается
+            skill = skill_of(p, p.weapon) - 2 * short
             if w["ranged"]:
                 drill = p.perk_rank("burst_master") if w.get("burst", 1) > 1 else 0   # перк автоматчика
-                return {"ranged": True, "range": w["range"], "ap": w["ap"] - drill,
-                        "skill": p.guns_skill, "damage": w["damage"], "ammo": w["ammo"],
-                        "burst": w.get("burst", 1), "recoil": max(0, w.get("recoil", 0) - 6 * drill),
-                        "aim": w.get("aim", True),
+                heavy_pen = 1 if short and w.get("skill") == "heavy" else 0
+                return {"ranged": True, "range": w["range"], "ap": w["ap"] - drill + heavy_pen,
+                        "skill": skill, "damage": w["damage"], "ammo": w["ammo"],
+                        "burst": 1 if short else w.get("burst", 1),
+                        "recoil": max(0, w.get("recoil", 0) - 6 * drill),
+                        "aim": w.get("aim", True), "pierce": w.get("pierce", 0), "blast": w.get("blast"),
+                        "fire": w.get("fire", 0),
                         "falloff": w.get("falloff", 0), "close_bonus": w.get("close_bonus", 0)}
-            return {"ranged": False, "range": 1, "ap": w["ap"], "skill": p.melee_skill,
+            return {"ranged": False, "range": 1, "ap": w["ap"], "skill": skill,
                     "damage": p.damage, "ammo": None}
         ranged = ent.ai in ("ranged", "turret")
         return {"ranged": ranged, "range": ent.range if ranged else 1,
@@ -492,6 +505,15 @@ class Combat:
             audio.play("melee", sx, delay_ms=100, volume=1.0 if attacker is self.game.player else 0.7)
         if prof["ammo"]:
             self.game.inventory.remove(prof["ammo"], 1)
+        if prof.get("blast"):   # ракета: летит к цели и рвётся (промах — рядом с ней)
+            tile = tile_of(defender)
+            if random.randint(1, 100) > self.hit_chance(attacker, defender):
+                tile = (tile[0] + random.choice((-1, 1)), tile[1] + random.choice((-1, 0, 1)))
+            a = pygame.Vector2(attacker.rect.centerx, attacker.rect.top + 20)
+            b = pygame.Vector2(tile_center(tile))
+            self.throws.append({"from": a, "to": b, "tile": tile, "t": 0, "kind": prof["blast"], "by": attacker,
+                                "dur": 200 + int(a.distance_to(b) * 0.25)})
+            return True
         impact_ms = 140  # когда удар «доходит» до цели: вздрагивание, кровь, звук попадания
         if prof["ranged"]:
             impact_ms = self._fire_bullet(attacker, defender)
@@ -508,8 +530,9 @@ class Combat:
 
     def _shot_sound(self, attacker):
         if attacker is self.game.player:
-            return {"pistol": "shot_pipe", "shotgun": "sg_shot", "assault": "ar_shot"}.get(
-                self.game.player.weapon, "shot")
+            return {"pistol": "shot_pipe", "shotgun": "sg_shot", "sawedoff": "sg_shot", "combat_shotgun": "sg_shot",
+                    "beauty": "sg_shot", "assault": "ar_shot", "smg": "ar_shot", "lmg": "ar_shot",
+                    "minigun": "ar_shot", "mommy": "ar_shot"}.get(self.game.player.weapon, "shot")
         return "shot_turret" if getattr(attacker, "ai", "") == "turret" else "shot_enemy"
 
     def _resolve_hit(self, attacker, defender, part_idx, prof, impact_ms, penalty=0):
@@ -525,10 +548,13 @@ class Combat:
                 self._react(defender, attacker, "dodge", impact_ms)
                 return
             if is_player:
-                text = random.choice(PLAYER_MISS_RANGED if prof["ranged"] else PLAYER_MISS_MELEE)
+                w = WEAPONS[attacker.weapon]
+                pool = (PLAYER_MISS_MELEE if not prof["ranged"] else PLAYER_MISS_THROWN if w.get("thrown")
+                        else PLAYER_MISS_ENERGY if w.get("skill") == "energy" else PLAYER_MISS_RANGED)
+                text = random.choice(pool)
             else:
                 text = random.choice(ENEMY_MISS_RANGED if prof["ranged"] else ENEMY_MISS_MELEE)
-            self.game.log(text.format(name=name))
+            self.game.log(text.format(name=name, gun=self.game.weapon_name()))
             self._float(defender, "мимо", (200, 200, 190))
             if prof["ranged"]:  # промах — пуля пролетает мимо цели
                 b = self.tracers[-1]
@@ -550,6 +576,8 @@ class Combat:
         if crit:
             dmg = int(dmg * part["mult"])
         armor = 0 if crit else self.armor_blocks(defender, part_idx)  # крит находит щель в панцире
+        if prof.get("pierce"):   # луч прожигает пластины: часть брони не работает
+            armor = int(armor * (1 - prof["pierce"]))
         if is_player:
             armor = max(0, armor - 3 * attacker.perk_rank("armor_piercer"))
         absorbed = min(dmg, armor)
@@ -565,6 +593,8 @@ class Combat:
             self.game.gore.hit(self.game.level, defender.rect, attacker.rect.center,
                                "ranged" if prof["ranged"] else "melee", crit=crit, kill=not defender.alive,
                                delay_ms=impact_ms)
+        if dmg > 0 and defender.alive and prof.get("fire"):   # огнемёт: цель горит
+            self._add_dot(defender, "fire", prof["fire"], 3)
         if dmg > 0 and defender.alive and not getattr(defender, "robot", False):
             if getattr(attacker, "poison", 0):
                 self._add_dot(defender, "poison", attacker.poison, 3)
@@ -761,13 +791,23 @@ class Combat:
         return min(cands, key=lambda c: (chebyshev(here, tile_of(c)), c is not self.game.player))
 
     def _ally_turn(self, ally):
-        """Спутник: к ближайшему врагу и кусать, пока хватает ОД."""
+        """Спутник: к ближайшему врагу и бить, пока хватает ОД; стрелок — стреляет, если видит и достаёт."""
         enemies = self.enemies_in_combat()
         if not enemies:
             self.end_turn()
             return
         here = tile_of(ally)
         t = min(enemies, key=lambda e: chebyshev(here, tile_of(e)))
+        if ally.ai == "ranged":
+            can, _ = self.can_attack(ally, t)
+            if can and ally.ap >= self.attack_cost(ally) and self.attack(ally, t):
+                return
+            if not can and ally.ap >= S.AP_MOVE:
+                step = self._path_next_step(ally, t)
+                if step and self.try_step(ally, *step):
+                    return
+            self.end_turn()
+            return
         if chebyshev(here, tile_of(t)) == 1:
             if ally.ap >= self.attack_cost(ally) and self.attack(ally, t):
                 return
@@ -884,6 +924,8 @@ class Combat:
     # ------------------------------------------------------ броски и взрывы
     THROW_AP = 4
     THROW_RANGE = 6
+    GRENADES = {"grenade": "граната", "molotov": "коктейль Молотова", "plasma": "плазменная граната",
+                "pulse": "импульсная граната"}
     THROW_MS = 520
 
     def throw(self, thrower, tile, kind):
@@ -913,17 +955,23 @@ class Combat:
         g.audio.play("explosion", g.cam.p(cx, cy)[0], volume=1.0)
         g.audio.play("hit", g.cam.p(cx, cy)[0], delay_ms=60)
         fighters = [g.player] + [e for e in g.enemies if e.alive] + \
-            [c for c in (g.companion,) if c is not None and c.alive and not c.down]
+            self._party_here()
         hit = [e for e in fighters if e.alive and chebyshev(tile_of(e), tile) <= 1]
-        if kind == "molotov":
+        if kind == "pulse":   # ЭМИ: роботам — смерть, живым — щекотка
+            g.log("Синяя вспышка ЭМИ — электроника вокруг захлёбывается!")
+            for e in hit:
+                robot = getattr(e, "robot", False)
+                self.hurt(e, random.randint(25, 35) if robot else random.randint(2, 4), (120, 180, 255))
+        elif kind == "molotov":
             g.log("Бутылка разбивается — пламя разливается по земле!")
             for e in hit:
                 self.hurt(e, random.randint(3, 5), (255, 150, 60))
                 if e.alive:
                     self._add_dot(e, "fire", 3, 3)
         else:
-            g.log("БУМ! " + ("Бочка взрывается!" if kind == "barrel" else "Граната рвётся!"))
-            lo, hi = (12, 18) if kind == "barrel" else (7, 12)
+            g.log("БУМ! " + {"barrel": "Бочка взрывается!", "rocket": "Ракета рвётся!",
+                             "plasma": "Плазменная граната вспыхивает зелёным!"}.get(kind, "Граната рвётся!"))
+            lo, hi = {"barrel": (12, 18), "rocket": (18, 28), "plasma": (16, 24)}.get(kind, (7, 12))
             for e in hit:
                 dmg = random.randint(lo, hi) if tile_of(e) == tile else random.randint(lo // 2, hi // 2)
                 if e is not g.player and e.alive:
@@ -956,7 +1004,9 @@ class Combat:
         if not self.player_can_act():
             return
         g, p, t = self.game, self.game.player, self.target
-        kind = "grenade" if g.inventory.has("граната") else "molotov" if g.inventory.has("коктейль Молотова") else None
+        robot = t is not None and getattr(t, "robot", False)
+        order = (["pulse"] if robot else []) + ["plasma", "grenade", "molotov"]
+        kind = next((k for k in order if g.inventory.has(self.GRENADES[k])), None)
         if kind is None:
             g.log("Бросать нечего. Гранаты бывают у бандитов, коктейль Молотова — в крафте (C).")
             return
@@ -973,11 +1023,12 @@ class Combat:
         if p.ap < self.THROW_AP:
             g.log(f"Бросок стоит {self.THROW_AP} ОД — не хватает.")
             return
-        g.inventory.remove("граната" if kind == "grenade" else "коктейль Молотова")
+        g.inventory.remove(self.GRENADES[kind])
         tile = tile_of(t)
-        if random.randint(1, 100) > 75:  # недолёт/перелёт на клетку
+        aim = min(95, 35 + p.weapon_skill("throwing"))   # Метание: 30 — две из трёх в цель, 60 — почти всегда
+        if random.randint(1, 100) > aim:  # недолёт/перелёт на клетку
             tile = (tile[0] + random.choice((-1, 0, 1)), tile[1] + random.choice((-1, 0, 1)))
-        g.log("Вы бросаете " + ("гранату." if kind == "grenade" else "коктейль Молотова."))
+        g.log(f"Вы бросаете: {self.GRENADES[kind]}.")
         self.throw(p, tile, kind)
 
     def player_shoot_barrel(self, obj):

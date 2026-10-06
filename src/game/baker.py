@@ -19,6 +19,7 @@
 случилось, — это расставляет baker_arrive при каждом входе в район (повторно не дублируются).
 """
 from ..combat import tile_of, chebyshev
+from ..balance import roll_loot
 
 ZONES = ("baker", "baker_mission", "baker_outskirts")
 MISSION = (13, 11, 58, 38)          # двор и постройки миссии (клетки, включительно)
@@ -89,7 +90,7 @@ class BakerMixin:
         down = cult[:len(cult) // 2 + len(allies) - 1] if allies else []
         for e in down:
             e.hp, e.alive = 0, False
-            mission.level.add_corpse(e, dict(e.loot or {}))
+            mission.level.add_corpse(e, roll_loot(e.loot))
         f["baker_assault"] = True
         f["mission_gate_open"] = True
         for e in self.enemies:     # и здесь, и в миссии культ теперь враг

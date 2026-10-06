@@ -310,7 +310,7 @@ for x in (18, 19, 30, 31):                         # мостки через к�
 tn.props.append(["x_ladder", 4, 4])
 tn.portal([(4, 4)], "hub_old", (31, 38), "Наверх, в Старый город")
 tn.reserve(2, 4, 7, 8)
-tn.enemies += [["ratman", 14, 7], ["ratman", 24, 18], ["ratman", 36, 8], ["ratman", 40, 20], ["ratman_boss", 42, 6]]
+tn.enemies += [["ratman", 14, 7], ["ratman", 24, 18], ["ratman", 36, 8], ["ratman_boss", 42, 6]]
 tn.put("x_pipe", 12, 4)
 tn.put("x_pipe", 26, 4)
 # у шлюза: следы недавней работы — бочки с жёлтыми треугольниками и чужой ящик

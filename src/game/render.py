@@ -76,13 +76,15 @@ class RenderMixin:
             self.action.draw_world(surf, cam)   # гильзы и бонусы на земле
 
         # персонажи и объекты карты — вперемешку, кто ниже, тот ближе к камере
-        pal = self.companion if self.companion is not None and not self.companion.down else None
-        entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs + ([pal] if pal else [])
-        if self.companion is not None and self.companion.down:  # выбитый из боя спутник лежит
-            from ..corpse import corpse_image
-            img = corpse_image(self.companion)
-            fx, fy = cam.foot(self.companion)
-            surf.blit(img, img.get_rect(center=(fx, fy - 6)))
+        from ..companion import party
+        pals = [c for c in party(self) if not c.down]
+        entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs + pals
+        for c in party(self):
+            if c.down:  # выбитый из боя спутник лежит
+                from ..corpse import corpse_image
+                img = corpse_image(c)
+                fx, fy = cam.foot(c)
+                surf.blit(img, img.get_rect(center=(fx, fy - 6)))
         if not getattr(cam, "iso", False):   # мягкая тень под ногами — персонажи стоят на земле, а не висят
             for e in entities:
                 frame, r = sprite_of(e, cam)

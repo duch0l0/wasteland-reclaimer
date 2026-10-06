@@ -1,0 +1,765 @@
+{
+"props": {
+"nv_tower0": {
+"img": "pk:bcyber/bcyber_3_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nv_tower1": {
+"img": "pk:bcyber/bcyber_3_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nv_tower2": {
+"img": "pk:bcyber/bcyber_3_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nv_tower3": {
+"img": "pk:bcyber/bcyber_3_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"nv_house0": {
+"img": "pk:bcyber/bcyber_3_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_house1": {
+"img": "pk:bcyber/bcyber_3_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_house2": {
+"img": "pk:bcyber/bcyber_3_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_house3": {
+"img": "pk:bcyber/bcyber_3_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_house4": {
+"img": "pk:bcyber/bcyber_3_009",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_clinic": {
+"img": "pk:bcyber/p3/8,8,4,4",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"nv_shopping": {
+"img": "pk:bcyber/p3/12,8,4,4",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"nv_services": {
+"img": "pk:bcyber/p3/0,8,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"nv_office": {
+"img": "pk:bcyber/p3/4,8,4,4",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"nv_planters": {
+"img": "pk:bcyber/bcyber_2_007",
+"block": true,
+"sight": false,
+"foot": [
+4,
+2
+]
+},
+"nv_kiosk": {
+"img": "pk:bcyber/bcyber_2_008",
+"block": true,
+"sight": true
+},
+"nv_kiosk_b": {
+"img": "pk:bcyber/bcyber_2_009",
+"block": true,
+"sight": true
+},
+"nv_lamp": {
+"img": "pk:bcyber/p1/0,2,1,2",
+"block": true,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+190,
+240,
+255
+],
+"at": [
+0.5,
+0.15
+]
+}
+},
+"nv_lamp_b": {
+"img": "pk:bcyber/p1/3,2,1,2",
+"block": true,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+190,
+240,
+255
+],
+"at": [
+0.5,
+0.15
+]
+}
+},
+"nv_tree": {
+"img": "pk:bcyber/p1/0,12,2,3",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_tree_small": {
+"img": "pk:bcyber/p1/8,12,1,2",
+"block": true,
+"sight": false
+},
+"nv_bench": {
+"img": "pk:bcyber/p1/12,9,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nv_terminal": {
+"img": "pk:bcyber/p1/14,8,1,2",
+"block": true,
+"sight": false,
+"light": {
+"r": 70,
+"color": [
+150,
+230,
+255
+],
+"at": [
+0.5,
+0.4
+]
+}
+},
+"nv_sign_sector": {
+"img": "pk:bcyber/bcyber_2_019",
+"block": false,
+"sight": false
+},
+"nv_sign_clinic": {
+"img": "pk:bcyber/bcyber_2_020",
+"block": false,
+"sight": false
+},
+"nv_sign_market": {
+"img": "pk:bcyber/bcyber_2_021",
+"block": false,
+"sight": false
+},
+"nv_purity_gate": {
+"img": "pk:bcyber/p1/8,4,8,4",
+"block": true,
+"sight": true,
+"foot": [
+8,
+2
+]
+},
+"nv_hedge": {
+"img": "pk:bcyber/p1/8,8,4,1",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"nv_n_tower": {
+"img": "pk:cyber/cyber_2_005",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+120,
+200,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_n_tower_b": {
+"img": "pk:cyber/cyber_2_003",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+120,
+200,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_cyberbar": {
+"img": "pk:cyber/cyber_1_035",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+],
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+200
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_restaurant": {
+"img": "pk:cyber/cyber_2_019",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+255,
+180,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_weapons": {
+"img": "pk:cyber/cyber_2_020",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_cafe": {
+"img": "pk:cyber/cyber_3_012",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"light": {
+"r": 110,
+"color": [
+255,
+220,
+120
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_noodles": {
+"img": "pk:cyber/cyber_2_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+150,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_ramen_bar": {
+"img": "pk:cyber/cyber_3_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+120,
+160
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_stall_poster": {
+"img": "pk:cyber/cyber_3_038",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_stall_food": {
+"img": "pk:cyber/cyber_3_039",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_vending0": {
+"img": "pk:cyber/cyber_1_001",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vending1": {
+"img": "pk:cyber/cyber_1_002",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vending2": {
+"img": "pk:cyber/cyber_1_003",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vending3": {
+"img": "pk:cyber/cyber_1_004",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_neon_neon": {
+"img": "pk:cyber/cyber_2_000",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+220
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_neon_neon_b": {
+"img": "pk:cyber/cyber_2_001",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+90,
+200,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_neon_ramen": {
+"img": "pk:cyber/cyber_2_006",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+160,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_billboard": {
+"img": "pk:cyber/cyber_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+120,
+200
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_billboard_b": {
+"img": "pk:cyber/cyber_2_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+220
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_n_lamp": {
+"img": "pk:cyber/cyber_1_030",
+"block": true,
+"sight": false,
+"light": {
+"r": 130,
+"color": [
+255,
+200,
+140
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"nv_taxi": {
+"img": "pk:cyber/cyber_1_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_car": {
+"img": "pk:cyber/cyber_1_017",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_car_b": {
+"img": "pk:cyber/cyber_1_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_aerocar": {
+"img": "pk:cyber/cyber_1_012",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"nv_drone": {
+"img": "pk:cyber/cyber_1_016",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_robot": {
+"img": "pk:cyber/cyber_1_007",
+"block": true,
+"sight": false
+},
+"nv_robot_b": {
+"img": "pk:cyber/cyber_1_008",
+"block": true,
+"sight": false
+},
+"nv_trash": {
+"img": "pk:cyber/cyber_2_007",
+"block": true,
+"sight": false
+},
+"nv_puddle": {
+"img": "pk:cyber/p1/4,4,2,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"nv_holo": {
+"img": "pk:cyber/cyber_3_019",
+"block": true,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+120,
+220,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_fence": {
+"img": "pk:cyber/cyber_1_034",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"nv_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false
+},
+"nv_server_b": {
+"img": "pk:cyber/cyber_3_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nv_core_holo": {
+"img": "pk:cyber/cyber_3_060",
+"block": true,
+"sight": false,
+"light": {
+"r": 160,
+"color": [
+140,
+220,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.1
+}
+},
+"nv_lab_arm": {
+"img": "pk:cyber/cyber_3_025",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nv_tank": {
+"img": "pk:fmbase/fmbase_1_004",
+"block": true,
+"sight": true,
+"light": {
+"r": 110,
+"color": [
+120,
+200,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_tank_b": {
+"img": "pk:fmbase/fmbase_1_010",
+"block": true,
+"sight": true,
+"light": {
+"r": 110,
+"color": [
+140,
+255,
+160
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_stash": {
+"img": "pk:pmars/pmars_1_035",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "оружейный ящик"
+}
+}
+}

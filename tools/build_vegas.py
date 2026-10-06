@@ -416,7 +416,7 @@ tn.portal([(45, 25)], "vegas_tower", (4, 26), "Подвал башни Vault-Tec
 tn.reserve(42, 23, 47, 27)
 tn.put(SEWER_RUBBLE[0], 20, 6)
 tn.put(SEWER_RUBBLE[1], 36, 22)
-tn.enemies += [["ratman", 22, 8], ["ratman", 34, 20], ["ratman", 40, 8], ["feral", 26, 24], ["feral", 12, 22]]
+tn.enemies += [["ratman", 22, 8], ["ratman", 34, 20], ["mommy_mutant", 40, 8], ["feral", 26, 24], ["feral", 12, 22]]
 tn.scatter(["r_trash", "r_bones"] + SEWER_RUBBLE, 2, 3, 48, 28, 10)
 
 

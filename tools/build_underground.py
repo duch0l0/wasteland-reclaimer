@@ -82,8 +82,7 @@ terminal(21, 18, "vault_gate")
 v.pickups.append(["патроны", 4, 18, 18])
 
 # ярус Б: турель в тупике напротив гермодвери, гули, тараканы
-v.enemies += [["turret", 19, 27], ["feral", 8, 27], ["feral", 12, 30], ["feral", 30, 29],
-              ["radroach", 27, 22], ["radroach", 33, 26]]
+v.enemies += [["turret", 19, 27], ["feral", 8, 27], ["ghoul_runner", 30, 29], ["radroach", 33, 26]]   # ярус — на 2–3 уровне
 # лаборатория «Проекта Панцирь»
 terminal(4, 24, "vault_lab")
 for x, y in ((3, 28), (3, 31)):
@@ -144,8 +143,9 @@ box("crate_open", 32, 7, "кормушка крысолюдов", {"ткань":
 d.containers[-1]["on_put"] = {"item": "отравленная приманка", "effects": [
     {"type": "set_flag", "flag": "rats_poisoned"}, {"type": "kill_pack", "pack": "ratmen"}]}
 scatter(CLOTH_PILES, 28, 10, 44, 20, 4)
-d.enemies += [["ratman", 16, 15], ["ratman", 34, 17], ["ratman", 40, 12], ["ratman", 33, 18],
-              ["ratman", 43, 16], ["ratman_boss", 38, 16], ["rat", 7, 22]]
+# крысолюды: разведчик у входа, пара у поворота, гнездо с вожаком — бой по частям, а не всей стаей сразу
+# (герою первого уровня с ломом вшестером не выжить — проверено ботом tools/playthrough.py)
+d.enemies += [["ratman", 16, 15], ["ratman", 33, 18], ["ratman", 42, 12], ["ratman_boss", 40, 16], ["rat", 7, 22]]
 # решётка стока: отсюда крысолюды лезут в город
 put("bar_fence_a", 46, 12, check=False)
 d.pickups.append(["лом", 1, 45, 14])
@@ -181,7 +181,7 @@ for x in (19, 22, 25, 28, 31):
     box("crate_open", x, 11, "пустой контейнер", {})
 terminal(30, 4, "baker7_log")
 scatter(["ammo_box", "metal_sheets", "toolbox_red"], 18, 13, 33, 16, 3)
-b.enemies += [["robot_guard", 18, 18], ["robot_guard", 24, 9], ["robot_guard", 32, 14], ["turret", 20, 4]]
+b.enemies += [["robot_guard", 18, 18], ["robot_guard", 32, 14], ["turret", 20, 4]]   # двое и турель: склад берут на 3–4 уровне
 
 b.check(npc_enemy_gap=0)
 b.save("data/maps/baker7.json", style="vault", dark=170)

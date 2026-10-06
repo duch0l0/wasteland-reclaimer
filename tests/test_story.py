@@ -371,7 +371,9 @@ g.close_terminal()
 talk(g, "gena")
 caps = g.inventory.count("крышки")
 say(g, "Вода снова пресная")
-ok(g.inventory.count("крышки") == caps + 40 and g.stage("sq_water") == 100, "Гена заплатил за воду")
+from src.balance import quest_caps
+ok(g.inventory.count("крышки") == caps + 40 + quest_caps("sq_water") and g.stage("sq_water") == 100,
+   "Гена заплатил за воду (и молва — награда за выполненное задание)")
 g.dialogue.close()
 g.open_journal = None
 g.journal_open = True

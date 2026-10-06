@@ -291,7 +291,7 @@ cv.put(STALAGMITE, 41, 22)
 # тупик: кости переселенца, который первым нашёл родник; его записка — у тела
 cv.put("r_bones", 30, 31)
 cv.box("ar_tarp", 32, 31, "рюкзак переселенца", {"записка Тома": 1, "лопата": 1})
-cv.enemies += [["radscorpion", 10, 14], ["radscorpion", 17, 18], ["radscorpion", 9, 24], ["radscorpion", 31, 18],
+cv.enemies += [["radscorpion", 10, 14], ["radscorpion", 9, 24], ["radscorpion", 31, 18],
                ["radscorpion", 42, 16], ["radscorpion_queen", 36, 8]]
 cv.scatter(["r_bones"], 4, 10, 30, 21, 6)
 

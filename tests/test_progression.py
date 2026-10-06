@@ -53,13 +53,13 @@ g = Game(intro=False)
 p = g.player
 
 # ------------------------------------------------------------ опыт и уровни
-ok([S.XP_TO_LEVEL(n) for n in (1, 2, 3, 4)] == [100, 300, 600, 1000], "кривая опыта 100/300/600/1000")
+ok([S.XP_TO_LEVEL(n) for n in (1, 2, 3, 4)] == [100, 225, 350, 475], "кривая опыта 100/225/350/475")
 ok(skills.xp_for_kill(25, 1, 5) == 5 and skills.xp_for_kill(25, 5, 5) == 25 and skills.xp_for_kill(100, 8, 2) > 100,
    "за слабого — мало опыта, за сильного — с надбавкой")
 g.gain_xp(100)
 ok(p.level_sys.level == 2 and p.pending_skills == 1 and p.pending_perks == 1, "2-й уровень: навык и перк")
 fr(g)
-ok(g.perk_choices and g.perk_choices[0].get("kind") == "skill" and len(g.perk_choices) == 6, "сначала — выбор навыка (6)")
+ok(g.perk_choices and g.perk_choices[0].get("kind") == "skill" and len(g.perk_choices) == 9, "сначала — выбор навыка (9)")
 guns = p.skill("guns")
 idx = next(i for i, c in enumerate(g.perk_choices) if c["id"] == "guns")
 g.handle_key(pygame.K_1 + idx)
@@ -121,6 +121,10 @@ for _ in range(60):
     dmg_far += 999 - e2.hp
 ok(dmg_near > dmg_far * 1.6, f"вдали дробь слабее ({dmg_near} против {dmg_far})")
 p.weapon = "assault"
+p.skills["guns"] = 40
+prof = c.profile(p)
+ok(prof["burst"] == 1 and prof["skill"] < 40, "автомат не по навыку: одиночными и с штрафом к попаданию")
+p.skills["guns"] = 90
 prof = c.profile(p)
 ok(prof["burst"] == 3 and not prof["aim"], "автомат: очередь из трёх, без прицела")
 e = dummy(3)
