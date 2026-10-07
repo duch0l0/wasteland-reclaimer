@@ -264,6 +264,53 @@ def _dead_trailer(s, lvl):
     s.box("r_bones", 27, MID + 2, "останки у трейлера", {"ткань": 1})
 
 
+# ---------------- особые встречи (как в Fallout 2): странные, смешные, один раз за игру
+def _bridge(s, lvl):
+    """Хранитель моста через пересохший каньон: три вопроса — или в пропасть."""
+    s.dress(trees=1, dry=8, rocks=6)
+    for y in range(0, H):
+        if abs(y - MID) > 1:
+            s.put("x_cliff", 21, y, check=False)
+    for y in (MID - 1, MID, MID + 1):
+        s.props.append(["x_planks", 21, y])             # настил поперёк каньона
+    s.npcs.append(["bridge_keeper", 19, MID])
+    s.box("metal_chest", 24, MID - 1, "сундук хранителя", {"святая ручная граната": 1, "крышки": 120})
+    s.containers[-1]["requires"] = {"flag": "bridge_won", "msg": "Сундук прикован к мосту. Хранитель смотрит на вас."}
+
+
+def _whale(s, lvl):
+    s.dress(trees=0, dry=10, rocks=4)
+    s.put("x_whale", 18, MID - 1)
+    s.box("x_petunia", 25, MID + 2, "горшок с петунией", {"записка петунии": 1})
+    s.box("r_bones", 22, MID + 1, "туша кита", {"китовое мясо": 5, "амбра": 1})
+
+
+def _police_box(s, lvl):
+    s.dress(trees=2, dry=14, rocks=6)
+    s.box("x_police_box", 22, MID - 1, "синяя будка", {"звуковая отвёртка": 1})
+
+
+def _saucer(s, lvl):
+    s.dress(trees=0, dry=8, rocks=10)
+    s.put("x_saucer", 18, MID - 2)
+    s.box("r_bones", 23, MID + 1, "тело пришельца", {"инопланетный бластер": 1, "инопланетная батарея": 24})
+
+
+def _vault13(s, lvl):
+    s.dress(trees=3, dry=16, rocks=8)
+    s.box("r_bones", 22, MID, "скелет курьера Vault-Tec", {"водяной чип (Убежище 13)": 1, "накладная Vault-Tec": 1,
+                                                          "крышки": 13})
+
+
+# особые встречи: id → флаг «уже было» (сцена выпадает один раз)
+SPECIALS = {"bridge": "enc_bridge", "whale": "enc_whale", "police_box": "enc_police_box", "saucer": "enc_saucer",
+            "vault13": "enc_vault13"}
+
+
+def _once(enc_id):
+    return lambda f, lv, reg: not f.get(SPECIALS[enc_id])
+
+
 # вес, id, уровни [от, до], текст, сцена, условие (флаги, уровень, восток ли)
 ENCOUNTERS = [
     (24, "rats", (1, 4), "Стая крысюков. Похоже, они тоже рады встрече.", _rats, None),
@@ -287,6 +334,16 @@ ENCOUNTERS = [
     (7, "cache", (1, 20), "Брошенная тележка каравана. Караванщиков не видно. Может, оно и к лучшему.", _cache, None),
     (4, "trailer", (2, 20), "Ржавый трейлер у дороги. Дверь распахнута, внутри тихо.", _dead_trailer,
      lambda f, lv, reg: not f.get("mabel_found")),
+    (2, "bridge", (3, 20), "Пересохший каньон и шаткий мост. У моста — старик в рваном плаще. «Стой! Ответь на три вопроса».",
+     _bridge, _once("bridge")),
+    (2, "whale", (2, 20), "Посреди пустыни лежит кит. Рядом — разбитый горшок с петунией. С неба. Похоже, с неба.",
+     _whale, _once("whale")),
+    (2, "police_box", (4, 20), "Синяя будка с надписью «ПОЛИЦИЯ». Внутри что-то ритмично стонет: вворп... вворп...",
+     _police_box, _once("police_box")),
+    (2, "saucer", (6, 20), "Воронка, и в ней — серебристый диск. Огоньки ещё мигают. Внутри никого. Почти никого.",
+     _saucer, _once("saucer")),
+    (2, "vault13", (2, 20), "У камня — скелет в куртке курьера Vault-Tec. Рядом — ящик с жёлтой «13» на крышке.",
+     _vault13, _once("vault13")),
 ]
 ROADS = {"raiders", "caravan", "cache", "trailer", "mech"}
 
@@ -339,6 +396,8 @@ def make_encounter(flags, level=1, survival=20, region="mojave", rnd=random):
         text = "Патруль в белых балахонах. Старший узнаёт вас: «Это он! Огонь соединяет!»"
     if enc_id == "trailer":
         flags["mabel_found"] = True
+    if enc_id in SPECIALS:
+        flags[SPECIALS[enc_id]] = True
     return loc, text
 
 
@@ -387,7 +446,8 @@ def _spot_radio(s, lvl):
     s.put("r_derrick", 20, MID - 8)
     s.put("r_bunker_small", 24, MID - 4)
     s.put("r_water_tower_tall", 14, MID - 6)
-    s.box("metal_chest", 22, MID + 1, "ящик радиста", {"рация": 1, "батарейки": 3, "крышки": 30})
+    s.box("metal_chest", 22, MID + 1, "ящик радиста", {"рация": 1, "батарейки": 3, "крышки": 30, "таблица Морзе": 1})
+    s.npcs.append(["radio_bot", 25, MID - 1])          # «Голос в эфире»: диктор у бункера просит позывной
     s.enemy("sniper", 26, 3, W - 4, MID - 3)
     s.enemy("raider_elite", 18, MID, 30, MID + 4)
 

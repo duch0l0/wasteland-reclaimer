@@ -185,6 +185,18 @@ for k, v in E.items():
     for it, n in (v.get("loot") or {}).items():
         if n == 1 and k == "mommy_mutant":
             places.setdefault(it, []).append("враг " + k)
+_ENC = open("src/encounters.py", encoding="utf-8").read()       # особые встречи в пустоши
+for w in WEAPONS.values():
+    if w.get("unique") and f'"{w.get("item")}"' in _ENC:
+        places.setdefault(w["item"], []).append("особая встреча")
+_DLG = json.load(open("data/dialogues.json", encoding="utf-8"))   # награда в разговоре (головоломки)
+for tid, t in _DLG.items():
+    for nid, nd in t["nodes"].items():
+        for o in nd.get("options", []):
+            for e in o.get("effects", []):
+                if e["type"] == "give" and e.get("item") in {w.get("item") for w in WEAPONS.values() if w.get("unique")}:
+                    if f"разговор {tid}" not in places.get(e["item"], []):
+                        places.setdefault(e["item"], []).append(f"разговор {tid}")
 for k, w in WEAPONS.items():
     if w.get("unique"):
         ok(len(places.get(w["item"], [])) == 1, f"легенда «{w['item']}» лежит в одном месте: {places.get(w['item'])}")

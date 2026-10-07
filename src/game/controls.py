@@ -47,7 +47,9 @@ class ControlsMixin:
             elif event.type == pygame.KEYUP:
                 self.held_letters.discard(SCANCODE_TO_KEY.get(event.scancode, event.key))
             elif event.type == pygame.MOUSEWHEEL:
-                if self.mode == "local" and not (self.menu or self.term or self.slides or self.inv_open
+                if self.journal_open:
+                    self.journal_scroll = max(0, self.journal_scroll - event.y)
+                elif self.mode == "local" and not (self.menu or self.term or self.slides or self.inv_open
                                                  or self.loot or self.trade or self.journal_open
                                                  or self.dialogue.is_active()):
                     self.set_zoom(1 if event.y > 0 else -1)
@@ -77,6 +79,13 @@ class ControlsMixin:
         if self.journal_open:
             if key in (pygame.K_ESCAPE, pygame.K_j):
                 self.journal_open = False
+            elif key == pygame.K_TAB:
+                self.journal_tab = "rep" if self.journal_tab == "quests" else "quests"
+                self.journal_scroll = 0
+            elif key in (pygame.K_DOWN, pygame.K_PAGEDOWN):
+                self.journal_scroll += 1 if key == pygame.K_DOWN else 8
+            elif key in (pygame.K_UP, pygame.K_PAGEUP):
+                self.journal_scroll = max(0, self.journal_scroll - (1 if key == pygame.K_UP else 8))
             return
         if key == pygame.K_j and not self.modal_open() and not self.combat.active:
             self.journal_open = True

@@ -100,7 +100,11 @@ class TerminalMixin:
             self._apply_once(f"doc_{e['doc']}", DOCS[e["doc"]].get("effects", []))
         else:
             self.term["view"] = "entry"
-        self._apply_once(f"{self.term['id']}_{i}", e.get("effects", []))
+        if e.get("repeat"):   # рычаг/вентиль: срабатывает при каждом нажатии
+            for eff in e.get("effects", []):
+                self.apply_effect(eff)
+        else:
+            self._apply_once(f"{self.term['id']}_{i}", e.get("effects", []))
 
     def term_entry_text(self):
         t = TERMINALS[self.term["id"]]

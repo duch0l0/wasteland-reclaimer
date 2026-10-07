@@ -4782,5 +4782,50 @@
    352
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_police_box": {
+  "page": null,
+  "rect": null,
+  "size": [
+   88,
+   184
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_saucer": {
+  "page": null,
+  "rect": null,
+  "size": [
+   240,
+   120
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_whale": {
+  "page": null,
+  "rect": null,
+  "size": [
+   300,
+   128
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_petunia": {
+  "page": null,
+  "rect": null,
+  "size": [
+   44,
+   52
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_planks": {
+  "page": null,
+  "rect": null,
+  "size": [
+   96,
+   96
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

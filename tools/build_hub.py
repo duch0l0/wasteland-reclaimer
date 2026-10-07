@@ -220,6 +220,7 @@ for x0, y0 in ((3, 25), (18, 25), (38, 25), (50, 25)):
 od.scatter(["r_trash", "r_bones", "pile_cans", "pile_bottles", "pile_scrap", "r_planks"], 1, 1, W - 2, H - 2, 26)
 od.scatter(["r_dry_bush", "r_rocks"], 1, 1, W - 2, H - 2, 10)
 od.npcs += [["slum_mother", 9, 22], ["slum_old", 42, 24], ["slum_boy", 25, 18]]
+od.npcs += [["harold", 36, 30]]          # Гарольд (Fallout 1–3): вернулся из Марипозы в 2102-м — и остался
 # свалка на юго-востоке
 od.put(JUNK, 46, 34)
 od.put(JUNK, 52, 36)

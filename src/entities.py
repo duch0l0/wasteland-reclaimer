@@ -103,6 +103,8 @@ class Player(CombatStats):
         return max(5, self.max_hp - self.rads // 10)
 
     def add_rads(self, n):
+        if n > 0 and hasattr(self, "equipment"):   # костюм химзащиты гасит часть радиации (rad_res, %)
+            n = round(n * (1 - min(90, self.equip_mod("rad_res")) / 100))
         self.rads = max(0, min(self.max_hp * 10 - 50, self.rads + n))
         self.hp = min(self.hp, self.hp_cap)
 

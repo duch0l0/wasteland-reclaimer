@@ -10,6 +10,7 @@
 
   .venv/bin/python tools/playthrough.py            — пройти всё, что умеет
   .venv/bin/python tools/playthrough.py act1       — только первый акт
+  .venv/bin/python tools/playthrough.py --build energy --seed 3 --nosides   — другая сборка, бросок, без побочек
 """
 import os
 import random
@@ -32,12 +33,23 @@ from src.game import Game, saveload  # noqa: E402
 from src.combat import tile_of, rect_pos_for_tile, chebyshev  # noqa: E402
 from src.weapons import WEAPONS, shortfall, skill_of  # noqa: E402
 from src import items as ITEMS  # noqa: E402
+from src import settings as S  # noqa: E402
 
 saveload.SAVE_DIR = tempfile.mkdtemp()
 
-# сборка героя: какие навыки качать (по очереди, пока не выйдет следующий порог)
-BUILD = [("guns", 70), ("speech", 60), ("guns", 80), ("science", 55), ("speech", 75), ("medicine", 45),
-         ("guns", 100), ("science", 75), ("survival", 50), ("guns", 150)]
+# сборки героя: какие навыки качать (по очереди, пока не выйдет следующий порог)
+BUILDS = {
+    "guns": [("guns", 70), ("speech", 60), ("guns", 80), ("science", 55), ("speech", 75), ("medicine", 45),
+             ("guns", 100), ("science", 75), ("survival", 50), ("guns", 150)],
+    "energy": [("guns", 60), ("energy", 50), ("speech", 60), ("energy", 75), ("science", 55), ("energy", 100),
+               ("medicine", 45), ("energy", 130), ("science", 75), ("energy", 150)],
+    "heavy": [("guns", 60), ("heavy", 50), ("speech", 50), ("heavy", 75), ("medicine", 45), ("heavy", 100),
+              ("science", 55), ("heavy", 130), ("survival", 50), ("heavy", 150)],
+    "melee": [("melee", 80), ("speech", 55), ("melee", 100), ("medicine", 50), ("throwing", 60), ("melee", 120),
+              ("science", 55), ("survival", 50), ("melee", 150)],
+    "talker": [("speech", 75), ("science", 60), ("guns", 70), ("speech", 100), ("science", 80), ("guns", 90),
+               ("medicine", 45), ("speech", 150)],
+}
 PERK_PREF = ["steady_hand", "action_boy", "tough", "silver_tongue", "sharp_eye", "thick_skin", "burst_master",
              "hacker", "medic", "point_blank", "bonus_move", "scavenger"]
 HEALS = ["стимулятор", "аптечка армейская", "тоник", "набор", "бинт", "консервы", "вяленое мясо",
@@ -120,8 +132,11 @@ class Critic:
 
 
 class Bot:
-    def __init__(self, seed=7):
+    def __init__(self, seed=7, sides=True, build="guns"):
         random.seed(seed)
+        self.sides = sides
+        self.build_name = build
+        self.build = BUILDS[build]
         self.g = Game(intro=False)
         self.stats = {"fights": 0, "close_calls": 0, "heals_used": 0, "deaths": 0, "kills": 0}
         self.rows = []
@@ -158,7 +173,7 @@ class Bot:
         opts = g.perk_choices
         pick = None
         if opts and opts[0].get("kind") == "skill":
-            for sid, target in BUILD:
+            for sid, target in self.build:
                 if g.player.skill(sid) < target:
                     pick = next((i for i, o in enumerate(opts) if o["id"] == sid), None)
                     if pick is not None:
@@ -330,6 +345,7 @@ class Bot:
 
     def shop_here(self):
         g = self.g
+        self.buy_implants()
         for n in list(g.npcs):
             if n.npc_id in g.traders:
                 try:
@@ -356,11 +372,24 @@ class Bot:
         npc = self.find_npc(npc_id)
         if npc is None:
             raise Stuck(f"{g.loc.id}: нет жителя {npc_id}")
-        self.stand_near([tile_of(npc)])
-        g.dialogue.active_node = None
-        g.handle_key(pygame.K_e)
-        if not g.dialogue.is_active():
-            raise Stuck(f"разговор с {npc_id} не начался")
+        for attempt in range(4):
+            if g.combat.active:
+                self.fight()
+            tx, ty = tile_of(npc)
+            order = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+            dx, dy = order[attempt]
+            c = (tx + dx, ty + dy)
+            if attempt and not g.level.is_wall(*c) and not g.level.is_exit(*c):
+                g.player.rect.topleft = rect_pos_for_tile(g.player, c)
+                g.snap_camera()
+                self.fr(2)
+            else:
+                self.stand_near([tile_of(npc)])
+            g.dialogue.active_node = None
+            g.handle_key(pygame.K_e)
+            if g.dialogue.is_active():
+                return
+        raise Stuck(f"разговор с {npc_id} не начался")
 
     def say(self, part, required=True):
         g = self.g
@@ -395,7 +424,9 @@ class Bot:
                 eff = o.get("effects", [])
                 if any(e["type"] in self.BAD_EFFECTS + tuple(avoid) for e in eff):
                     continue
-                if any(e.get("flag") == goal or (e["type"] == "give" and e.get("item") == goal) for e in eff):
+                if any(e.get("flag") == goal or (e["type"] == "give" and e.get("item") == goal)
+                       or (goal.startswith("quest:") and e["type"] == "quest" and e.get("id") == goal[6:]
+                           and e.get("stage", 0) > self.g.stage(goal[6:])) for e in eff):
                     return path + [o]
                 nxt = o.get("next")
                 if nxt and nxt not in seen:
@@ -408,6 +439,7 @@ class Bot:
         g = self.g
         if g.flags.get(goal):
             return True
+        stage0 = g.stage(goal[6:]) if goal.startswith("quest:") else 0
         self.talk(npc_id)
         for _ in range(20):
             path = self.plan_talk(goal, avoid)
@@ -421,10 +453,34 @@ class Bot:
             if len(path) == 1:
                 break
         self.end_talk()
-        done = bool(g.flags.get(goal) or g.inventory.has(goal))
+        done = bool(g.flags.get(goal) or g.inventory.has(goal)
+                    or (goal.startswith("quest:") and g.stage(goal[6:]) > stage0))
         if required and not done:
             raise Stuck(f"{npc_id}: не вышло добиться «{goal}»")
         return done
+
+    def parley(self, type_id, goal):
+        """Поговорить с мирным врагом (у него свой диалог) и довести разговор до goal."""
+        g = self.g
+        e = next((e for e in g.enemies if e.alive and e.type_id == type_id and getattr(e, "talk", None)), None)
+        if e is None or e.hostile:
+            return False
+        self.stand_near([tile_of(e)])
+        e.talked = True
+        g.talk_to(e, e.talk)
+        if not g.dialogue.is_active():
+            return False
+        for _ in range(20):
+            path = self.plan_talk(goal)
+            if not path:
+                break
+            vis = g.dialogue.visible_options()
+            g.handle_key(pygame.K_1 + next(i for i, x in enumerate(vis) if x is path[0]))
+            self.fr(1)
+            if len(path) == 1:
+                break
+        self.end_talk()
+        return bool(g.flags.get(goal))
 
     def end_talk(self):
         self.g.dialogue.active_node = None
@@ -456,6 +512,10 @@ class Bot:
     def hack(self):
         g = self.g
         opts = g.lock_options()
+        known = next((fn for lbl, fn in opts if lbl.startswith("Ввести пароль")), None)
+        if known:
+            known()
+            return
         hack = next((fn for lbl, fn in opts if "Взлом" in lbl or "взлом" in lbl), None)
         if hack is None:
             return
@@ -509,6 +569,43 @@ class Bot:
         self.stand_near(box["tiles"])
         g.handle_key(pygame.K_e)
         self.fr(1)
+
+    def take_item(self, map_id, item):
+        """Сходить туда, где лежит вещь (по описанию квеста), и забрать её из ящика."""
+        g = self.g
+        self.visit(map_id)
+        box = next((c for c in g.level.containers if item in (c.get("loot") or {})), None)
+        if box is None:
+            return False
+        self.stand_near(box["tiles"])
+        g.handle_key(pygame.K_e)
+        self.fr(1)
+        return g.inventory.has(item)
+
+    def steal(self, map_id, title):
+        """Вскрыть чужое так, чтобы хозяин не видел (встать с той стороны, где он не смотрит). True — взято."""
+        g = self.g
+        if not g.inventory.has("отмычка"):
+            return False
+        self.visit(map_id, clear=False)
+        box = next((c for c in g.level.containers if c["name"].startswith(title)), None)
+        if box is None or box["opened"]:
+            return False
+        owner = next((n for n in g.npcs if n.npc_id == box.get("owner")), None)
+        spots = [(t[0] + dx, t[1] + dy) for t in box["tiles"] for dx, dy in
+                 ((0, 1), (1, 0), (-1, 0), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1))]
+        spots = [c for c in spots if not g.level.is_wall(*c) and c not in box["tiles"]]
+        for c in spots:
+            g.player.rect.topleft = rect_pos_for_tile(g.player, c)
+            if owner is None or not (pygame.Vector2(owner.rect.center).distance_to(g.player.rect.center) <= 6 * 48
+                                     and g.combat.los(owner, g.player)):
+                break
+        g.snap_camera()
+        self.fr(1)
+        g.handle_key(pygame.K_e)
+        self.fr(1)
+        self.stats["thefts"] = self.stats.get("thefts", 0) + 1
+        return box["opened"]
 
     def loot_area(self, owned_too=False):
         """Обыскать все ящики локации, к которым можно подойти (чужие — нет, это кража)."""
@@ -565,9 +662,12 @@ class Bot:
             return False
         for name in HEALS:
             if g.inventory.has(name):
+                before = g.inventory.count(name)
                 g.use_item(name)
-                self.stats["heals_used"] += 1
-                return True
+                if g.inventory.count(name) < before:     # в бою может не хватить ОД — тогда не съедено
+                    self.stats["heals_used"] += 1
+                    return True
+                return False
         return False
 
     def fight(self):
@@ -589,7 +689,9 @@ class Bot:
                 raise Stuck("бой не кончается")
             if c.player_can_act():
                 p = g.player
-                if p.hp < p.hp_cap * 0.45 and p.ap >= 2 and self.heal_if_needed(0.45):
+                urgent = p.hp < max(8, p.max_hp * 0.2)      # совсем плохо — лечиться в любом случае
+                spare = p.ap - S.AP_CRAFT >= c.attack_cost(p)  # после бинта ещё хватит на выстрел
+                if p.hp < p.hp_cap * 0.45 and p.ap >= S.AP_CRAFT and (urgent or spare) and self.heal_if_needed(0.45):
                     self.fr(1)
                     continue
                 left = c.enemies_in_combat()
@@ -672,24 +774,50 @@ class Bot:
                 self.fr(1)
 
     def clear(self, max_rounds=12, radius=None):
-        """Перебить всех враждебных в локации (по одному очагу за раз)."""
+        """Перебить всех враждебных в локации: подойти к ближнему (свободная клетка кольцом вокруг него),
+        начать бой, добить. Недосягаемых (за стеной, в воде) — пропустить. max_rounds — сколько заходов без
+        продвижения терпеть."""
         g = self.g
-        for _ in range(max_rounds):
+        skip = set()
+        stall = 0
+        for _ in range(400):
             if g.combat.active:
                 self.fight()
-            left = [e for e in g.enemies if e.alive and e.hostile]
+            left = [e for e in g.enemies if e.alive and e.hostile and id(e) not in skip]
             if not left:
                 return
             e = min(left, key=lambda e: chebyshev(tile_of(g.player), tile_of(e)))
-            try:
-                tx, ty = tile_of(e)
-                self.stand_near([(tx - 4, ty), (tx + 4, ty), (tx, ty + 4), (tx, ty - 4), (tx, ty)])
-            except Stuck:
-                return
+            hp0 = sum(x.hp for x in left)
+            tx, ty = tile_of(e)
+            ring = [(tx + dx, ty + dy) for r in (3, 2, 1, 4, 5, 6, 7, 8) for dx in range(-r, r + 1) for dy in range(-r, r + 1)
+                    if max(abs(dx), abs(dy)) == r]
+            free = [c for c in ring if not g.level.is_wall(*c) and not g.level.is_exit(*c)
+                    and c not in getattr(g.level, "blocked", ())]
+            spot = None
+            for c in free:                       # встать туда, откуда цель видна
+                g.player.rect.topleft = rect_pos_for_tile(g.player, c)
+                if g.combat.los(g.player, e):
+                    spot = c
+                    break
+            if spot is None and free:            # не видно ниоткуда — подойти вплотную (в дверь)
+                spot = min(free, key=lambda c: chebyshev(c, (tx, ty)))
+                g.player.rect.topleft = rect_pos_for_tile(g.player, spot)
+            if spot is None:
+                skip.add(id(e))
+                continue
+            g.snap_camera()
             self.fr(2)
             if not g.combat.active:
                 g.combat.start(player_first=True)
             self.fight()
+            now = sum(x.hp for x in left if x.alive)
+            if e.alive and now >= hp0:
+                stall += 1
+                if stall >= 6:
+                    skip.add(id(e))
+                    stall = 0
+            else:
+                stall = 0
 
     def check_alive(self, where):
         g = self.g
@@ -705,9 +833,10 @@ class Bot:
         g = self.g
         inv = g.inventory
         best = WEAPONS.get(g.player.weapon, {}).get("item")
-        guns = sorted((w for w in WEAPONS.values() if w.get("item") and inv.has(w["item"])),
-                      key=lambda w: -w.get("damage", 0) * w.get("burst", 1))
-        keep_guns = {w["item"] for w in guns[:2]} | {best}
+        guns = sorted((k for k, w in WEAPONS.items() if w.get("item") and inv.has(w["item"])),
+                      key=lambda k: -self.weapon_score(k, check_ammo=False))
+        keep_guns = {WEAPONS[k]["item"] for k in guns[:2]} | {best}       # то, чем владею лучше всего
+        keep_guns |= {w["item"] for w in WEAPONS.values() if w.get("unique") and w.get("item")}   # легенды — на потом
         out = []
         for name, have in inv.nonzero().items():
             cat = ITEMS.category(name)
@@ -721,8 +850,8 @@ class Bot:
                 out.append((name, have))
             elif cat == "armor" and name not in g.player.equipment.values():
                 out.append((name, have))
-            elif cat == "resource" and have > 3:
-                out.append((name, have - 3))
+            elif cat == "resource" and have > 4:
+                out.append((name, have - 4))
         return out
 
     def buy_upgrades(self):
@@ -763,6 +892,25 @@ class Bot:
             if "skill" in ITEMS.ITEMS.get(name, {}).get("use", {}) and not g.combat.active:
                 g.use_item(name)
                 self.stats["books"] = self.stats.get("books", []) + [name]
+
+    IMPLANTS = (("anna_shaw", "сердце", 1200), ("anna_shaw", "Миомеры", 1000), ("ghoul_healer", "сетка", 1500),
+                ("nv_doctor", "ускоритель", 2500))
+
+    def buy_implants(self):
+        """Лишние деньги — хирургу (как игрок, у которого к концу игры копятся крышки)."""
+        g = self.g
+        for npc, part, price in self.IMPLANTS:
+            if g.inventory.count("крышки") < price + 300 or not any(n.npc_id == npc for n in g.npcs):
+                continue
+            try:
+                self.talk(npc)
+                for p_ in ("операции", part):
+                    if not self.say(p_, required=False):
+                        break
+                self.end_talk()
+                self.stats["implants"] = self.stats.get("implants", []) + [part]
+            except Stuck:
+                pass
 
     def gear_up(self):
         g = self.g
@@ -814,8 +962,8 @@ class Bot:
             want += ["стимулятор", "бинт", "аптечка армейская"]
         if g.inventory.count("импульсная граната") < 2:
             want.append("импульсная граната")
-        want += ["изолента", "пружина"]          # на ремонт: антенна REPCONN, самоделки
-        mine = {sid for sid, _ in BUILD}
+        want += ["изолента", "пружина", "отмычка"]   # на ремонт: антенна REPCONN, самоделки; отмычки — путь Тени
+        mine = {sid for sid, _ in self.build}
         want += [n for n, d in ITEMS.ITEMS.items() if d.get("use", {}).get("skill") in mine]
         want.insert(0, "антирадин")           # пара антирадинов всегда с собой
         def enough(name):
@@ -825,6 +973,8 @@ class Bot:
                 return g.inventory.count(name) >= 150
             if name in ("изолента", "пружина"):
                 return g.inventory.count(name) >= 3
+            if name == "отмычка":
+                return g.inventory.count(name) >= 2
             if "skill" in ITEMS.ITEMS.get(name, {}).get("use", {}):
                 return g.inventory.count("крышки") < 900      # книга — когда деньги есть с запасом
             return g.inventory.count(name) >= 2
@@ -882,6 +1032,18 @@ def act1(b):
         b.end_talk()
         b.loot_area()
     b.step("Пятнадцатая: дом деда, Гена", house)
+
+    def sides_take():
+        if not b.sides:
+            return
+        b.pursue("gena", "know_pw_grandpa", required=False)        # пароль деда — у Гены
+        b.terminal("grandpa", "ЛИЧНОЕ")
+        if g.flags.get("safe_code"):
+            b.take_from("сейф деда")
+        for npc, q in (("gena", "sq_scrap"), ("turtle", "sq_turtle"), ("gena", "sq_gang"), ("blondie", "sq_lira")):
+            b.pursue(npc, "quest:" + q, required=False)
+        b.pursue("blondie", "quest:sq_lira", required=False)
+    b.step("Пятнадцатая: взять побочки", sides_take)
 
     def punk():
         b.talk("loner")
@@ -1000,10 +1162,33 @@ def act1(b):
                 b.shop(t)
     b.step("Пятнадцатая: доля Панка, закупка", back)
 
+    def sides_done():
+        if not b.sides:
+            return
+        b.go("ruins")
+        b.terminal("pump", "Состояние контуров", "[Перекрыть контур Б]")     # мёртвая вода
+        b.clear(max_rounds=12)                                               # рейдеры у пса
+        for npc, q in (("dog", "sq_dog"), ("gena", "sq_scrap"), ("turtle", "sq_turtle"), ("gena", "sq_water"),
+                       ("gena", "sq_gang"), ("silas", "sq_holywater"), ("blondie", "sq_lira")):
+            b.pursue(npc, "quest:" + q, required=False)    # банду Гена даёт после лома
+            g.sync_story()
+        if g.flags.get("q_gang_taken") and not any(g.flags.get(k) for k in ("gang_dead", "gang_left", "gang_paid")):
+            b.go("station")                                 # к Шраму: уговорить уйти, откупиться — драка последней
+            if not (b.parley("boss", "gang_left") or b.parley("boss", "gang_paid")):
+                g.make_hostile("gang")
+                b.clear()
+            b.go("ruins")
+            b.pursue("gena", "quest:sq_gang", required=False)
+    b.step("Пятнадцатая: сдать побочки", sides_done)
+
     def baker():
         g.go_world_map()
         b.go("baker")
         b.go("baker_mission")
+        if b.sides:
+            b.walk_to_map("baker")
+            b.pursue("roy", "записка Роя", required=False)
+            b.walk_to_map("baker_mission")
         b.talk("loner_baker")
         b.say("Скажу")
         b.end_talk()
@@ -1022,6 +1207,15 @@ def act1(b):
         b.say("Иди")
         b.end_talk()
         b.fr(2)
+        if b.sides:
+            if g.inventory.has("записка Роя"):
+                b.talk("marla")
+                b.say("записка", required=False)
+                b.say("Иди к нему", required=False)
+                b.end_talk()
+                b.fr(2)
+            b.walk_to_map("baker")
+            b.pursue("roy", "quest:sq_roy", required=False)
     b.step("Бейкер: Тень — Искра, ключ, дед", baker)
 
     def b7():
@@ -1048,6 +1242,13 @@ def act1b(b):
         g.go_world_map()
         b.go("barstow")                    # по дороге — Барстоу: Роза, караванщица
         b.shop_here()
+        if b.sides:
+            b.pursue("rose", "quest:sq_barstow", required=False)
+            for m in ("barstow_depot", "barstow_center", "barstow_depot"):
+                if not g.flags.get(m + "_cleared"):
+                    b.visit(m)
+            b.walk_to_map("barstow")
+            b.pursue("rose", "quest:sq_barstow", required=False)
         b.go("zzyzx")
         b.goto_portal("zzyzx_bath")
         b.pursue("nurse_ava", "ava_asked")
@@ -1061,6 +1262,9 @@ def act1b(b):
         b.goto_portal("zzyzx_bath")
         b.goto_portal("zzyzx")
         b.pursue("springer", "springer_confessed", required=False)
+        if b.sides:
+            b.take_item("zzyzx_hotel", "обрывок карты (север)")
+            b.walk_to_map("zzyzx")
         for t in ("abdul",):
             if any(n.npc_id == t for n in g.npcs) and t in g.traders:
                 b.shop(t)
@@ -1071,11 +1275,27 @@ def act1b(b):
         b.go("needles")
         b.pursue("barkeep_ned", "know_barge", required=False)
         b.pursue("kate", "know_barge", required=False)
+        if b.sides:
+            b.pursue("drunk_vic", "обрывок карты (центр)", required=False)
+            b.pursue("kate", "багор Мамаши Кейт", required=False)       # переправа: пёс, курица, кукуруза
+            b.gear_up()
         b.goto_portal("needles_bridge")
         b.terminal("needles_toll", "Особые грузы")
         if not g.flags.get("know_cult_convoys"):
             raise Stuck("журнал пошлин не прочитан")
     b.step("Нидлс: журнал пошлин", needles)
+
+    def radio():
+        if not b.sides:
+            return
+        g.reveal_location("spot_radio")       # вышку видно с трассы
+        g.go_world_map()
+        b.go("spot_radio")
+        b.clear()
+        b.take_from("ящик радиста")
+        b.read_books()
+        b.pursue("radio_bot", "radio_done", required=False)
+    b.step("Радиовышка: позывной в эфире", radio)
 
 
 def act2(b):
@@ -1094,6 +1314,9 @@ def act2(b):
         b.terminal("hub_water_ledger", "[Личное]")
         b.walk_to_map("hub")
         b.shop_here()
+        if b.sides:
+            b.pursue("hub_kid", "runaway_job", required=False)
+            b.pursue("crimson_boss", "runaway_done", required=False)
     b.step("Хаб: шлюз и Долорес Вега", hub)
 
     def junktown():
@@ -1106,12 +1329,16 @@ def act2(b):
         b.pursue("gizmo", "know_gizmo_cult", required=False)
         b.pursue("hunter_rourke", "know_rourke_cult", required=False)
         if not b.pursue("hunter_rourke", "rourke_paid", required=False):
-            b.pursue("mayor_darkwater", "rourke_paid", required=False)
+            if b.steal("junktown_casino", "сейф Гизмо"):      # книга долгов Гизмо — мэру
+                b.pursue("mayor_darkwater", "rourke_paid", required=False)
         if g.inventory.has("расписка Анны Шоу"):
             b.pursue("anna_shaw", "anna_debt_cleared", required=False)
         b.fetch("junktown_cellar", "холодильный шкаф")
         b.walk_to_map("junktown")
         b.shop_here()
+        if b.sides:
+            b.pursue("scrapper", "truck_job", required=False)
+            b.take_item("junktown_dump", "обрывок карты (юг)")
     b.step("Джанктаун: Анна Шоу и Рурк", junktown)
 
     def necropolis():
@@ -1121,9 +1348,19 @@ def act2(b):
         b.pursue("lorraine", "know_set_deal", required=False)
         b.pursue("harry_mech", "v12_way", required=False)
         b.fetch("vault12", "ящик запчастей водоочистки")
+        if b.sides:
+            b.take_from("шкафчик жильца")
+            b.read_books()                                   # стишок Хадсона: 2 → 4 → 1 → 3
+            b.terminal("v12_valves", "Схема", "вентиль 2", "вентиль 4", "вентиль 1", "вентиль 3")
+            b.take_from("шкаф Хадсона")
+            b.gear_up()
         b.pursue("harry_mech", "watershed_fixed", required=False)
         b.pursue("set", "set_refuses", required=False)
         b.pursue("cobbs", "cobbs_clear")
+        if b.sides:
+            b.pursue("gravedigger", "tag_job", required=False)
+            b.walk_to_map("necropolis")
+            b.take_from("разрытая могила")
         b.walk_to_map("necropolis")
         b.shop_here()
     b.step("Некрополь: Водораздел, Сет, Коббс", necropolis)
@@ -1147,11 +1384,19 @@ def act2(b):
         b.go("boneyard")
         b.shop_here()
         b.pursue("adytum_mayor", "adytum_job", required=False)
+        if b.sides:
+            b.pursue("sphinx", "sphinx_done", required=False)
+            b.take_from("витрина музея")
+            b.gear_up()
         b.pursue("blade_nika", "blades_job", required=False)
         b.pursue("morpheus", "know_morpheus_deal", required=False)
         b.visit("boneyard_vt")
         b.terminal("vt_server", "[Поставки «ВРЭ / разв.»]")
         b.pursue("cooper", "cooper_card", required=False)
+        if b.steal("boneyard_cathedral", "сундук на складе"):
+            b.pursue("adytum_mayor", "adytum_truce", required=False)
+        if b.sides:
+            b.pursue("cooper", "tag_done", required=False)
         b.walk_to_map("boneyard")
         b.shop_here()
     b.step("Боунъярд: серверная Vault-Tec", boneyard)
@@ -1171,7 +1416,12 @@ def act2(b):
     def vault4():
         g.go_world_map()
         b.go("vault4")
-        b.terminal("v4_intercom", "[Приложить ключ-карту директора]", "[Рассказать про погоду]")
+        b.terminal("v4_intercom", "[Приложить ключ-карту директора]", "[Представиться курьером брата Т.]",
+                   "[Рассказать про погоду]")
+        try:
+            b.take_from("ящик с печатью круга")
+        except Stuck:
+            pass
         b.pursue("overseer_sim", "know_v4_science", required=False)
         b.pursue("overseer_sim", "v4_deal_off", required=False)
     b.step("Убежище 4: Сим и сделка", vault4)
@@ -1191,6 +1441,11 @@ def act3(b):
         b.pursue("deputy_baxter", "primm_job", required=False)
         b.pursue("mae_reeves", "know_tobi_missing", required=False)
         b.terminal("reeves_archive", "Марипоза, «Ноль»", "Письмо 2077 года")
+        if b.sides and g.inventory.has("карта клада"):
+            b.read_books()
+            b.walk_to_map("primm")
+            b.take_from("камень с крестом")
+            b.gear_up()
         b.visit("primm_camp")
         b.pursue("tobi", "tobi_home", required=False)
         b.walk_to_map("primm")
@@ -1199,8 +1454,22 @@ def act3(b):
     def goodsprings():
         city("goodsprings")
         b.pursue("trudy", "know_ezekiel", required=False)
+        if b.sides:
+            b.pursue("deputy_abby", "quest:sq_murder", required=False)
+            b.take_from("тело Гаррисона")
+            for npc, goal in (("luis_cards", "clue_luis"), ("beth_waitress", "clue_contra"), ("beth_waitress", "clue_beth"),
+                              ("hank_miner", "clue_hank")):
+                b.pursue(npc, goal, required=False)
+            b.walk_to_map("goodsprings")
+            b.take_from("мусорный бак за салуном")
+            b.read_books()
+            b.pursue("deputy_abby", "револьвер «Справедливость»", required=False)
+            b.walk_to_map("goodsprings")
         b.pursue("ezekiel", "know_zero", required=False)
         b.pursue("cult_hunter", "gs_decided", required=False)
+        if b.sides:
+            b.visit("goodsprings_cave")
+            b.take_from("тайник старателей")
     b.step("Гудспрингс: Иезекииль", goodsprings)
 
     def vault22():
@@ -1220,6 +1489,9 @@ def act3(b):
         b.visit("nipton_mine")
         b.pursue("brother_t", "know_cult_race", required=False)
         b.pursue("brother_t", "brother_t_flees", required=False)
+        b.steal("nipton_hall", "сейф мэра")               # список жребия: имена вписаны заранее
+        b.walk_to_map("nipton")
+        b.pursue("mayor_carroll", "nipton_decided", required=False, avoid=("take",))
     b.step("Ниптон: жребий и брат Т.", nipton)
 
     def searchlight():
@@ -1242,8 +1514,13 @@ def act3(b):
     def vegas():
         city("vegas_strip")
         b.pursue("judge_sol", "know_crowns", required=False)
+        if b.sides:
+            b.pursue("boots_rider", "bike_job", required=False)
+            b.pursue("snake_trader", "bike_done", required=False)
         b.terminal("agatha_salon", "[Зашифрованное]")      # тайна Ладоней: Агата — из Ордена
         b.pursue("mother_agatha", "palms_codes", required=False)
+        if not g.flags.get("palms_codes") and b.steal("vegas_boots", "ящик с книгами"):   # книги Ладоней — Агате
+            b.pursue("mother_agatha", "palms_codes", required=False)
         b.terminal("snakes_ledger", "[Отдельный список]")   # тайна Змей: продают «лишних» белым
         b.pursue("mother_snake", "snakes_passage", required=False)
         b.terminal("boots_power", "[Дать ток в башню Vault-Tec]", "[Перебросить линию самому]")
@@ -1272,6 +1549,14 @@ def secrets(b):
         b.go(cid)
         b.shop_here()
 
+    def errands():
+        if not b.sides or not g.inventory.has("динамит") or g.flags.get("truck_done"):
+            return
+        g.go_world_map()
+        b.go("junktown")
+        b.pursue("scrapper", "truck_done", required=False)
+    b.step("Джанктаун: динамит для грузовика", errands)
+
     def order():
         g.go_world_map()
         b.go("ruins")                                # Мо из Пятнадцатой — связной Ордена
@@ -1279,14 +1564,20 @@ def secrets(b):
         g.go_world_map()
         b.go("barstow")
         b.visit("barstow_order")
-        b.terminal("order", "Приветствие", "Три испытания", "[Принять знак ложи]", "Хозяйка ложи")
+        b.terminal("order", "Приветствие", "Три испытания", "[Испытание I", "[Испытание II", "[Испытание III",
+                   "[Принять знак ложи]", "Хозяйка ложи")
     b.step("Ложа Ордена Тайн", order)
 
     def poseidon():
         city("poseidon7")
         b.pursue("enclave_gate", "p7_invited", required=False)
         b.visit("poseidon7_base", clear=False)
-        b.terminal("p7_comm", "Сводка разведки")
+        b.terminal("p7_comm", "Сводка разведки", "Директива с платформы", "[Отправить ложный отчёт на платформу]")
+        if b.steal("poseidon7_base", "сейф коменданта"):     # код винтокрыла открывает и стойку силовой брони
+            b.visit("poseidon7_hangar", clear=False)
+            b.take_from("стойка силовой брони")
+            b.read_books()
+            b.gear_up()
         b.pursue("darnell", "darnell_home", required=False)
     b.step("«Посейдон-7»: станция Анклава", poseidon)
 
@@ -1347,13 +1638,17 @@ ACTS = {"act1": act1, "act1b": act1b, "act2": act2, "act3": act3, "secrets": sec
 
 def main():
     args = sys.argv[1:]
-    seed = 7
-    if "--seed" in args:
-        i = args.index("--seed")
-        seed = int(args[i + 1])
-        del args[i:i + 2]
+    opts = {"--seed": "7", "--build": "guns"}
+    for k in list(opts):
+        if k in args:
+            i = args.index(k)
+            opts[k] = args[i + 1]
+            del args[i:i + 2]
+    sides = "--nosides" not in args
+    args = [a for a in args if a != "--nosides"]
     which = args or list(ACTS)
-    b = Bot(seed=seed)
+    b = Bot(seed=int(opts["--seed"]), sides=sides, build=opts["--build"])
+    print(f"бот: сборка {opts['--build']}, бросок {opts['--seed']}, {'с побочками' if sides else 'только сюжет'}")
     for name in which:
         print(f"\n===== {name} =====", flush=True)
         try:
@@ -1367,8 +1662,23 @@ def main():
         print(r)
     print(f"\nбоёв {b.stats['fights']}, убито {b.stats['kills']}, на волоске {b.stats['close_calls']}, "
           f"лечилок съедено {b.stats['heals_used']}, смертей {b.stats['deaths']}, {time.time() - b.t0:.0f} с")
+    print(f"продал на {b.stats.get('sold', 0)} крышек")
     print("купил:", ", ".join(b.stats.get("bought", [])) or "ничего")
     print("прочитал:", ", ".join(b.stats.get("books", [])) or "ничего")
+    print("импланты:", ", ".join(b.stats.get("implants", [])) or "нет")
+    import json
+    Q = {k: v for k, v in json.load(open("data/quests.json", encoding="utf-8")).items() if not k.startswith("_")}
+    g = b.g
+    done = [k for k, v in Q.items() if g.stage(k) >= v.get("done", 100)]
+    started = [k for k in Q if 0 < g.stage(k) < Q[k].get("done", 100)]
+    untouched = [k for k in Q if g.stage(k) == 0]
+    print(f"\nквесты: выполнено {len(done)} из {len(Q)}")
+    if started:
+        print("  начаты, не закончены:", ", ".join(f"{Q[k]['title']} ({g.stage(k)})" for k in started))
+    if untouched:
+        print("  не тронуты:", ", ".join(Q[k]["title"] for k in untouched))
+    ending = [k for k in ("ending_ash", "ending_steel", "ending_hands") if g.flags.get(k)]
+    print("концовка:", ending[0] if ending else "нет")
     print("\n===== ПРОБЛЕМЫ =====")
     for p in b.problems or ["нет"]:
         print(" -", p)

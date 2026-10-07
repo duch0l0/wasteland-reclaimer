@@ -32,6 +32,7 @@ ICONS = {
     "sawedoff": 122, "combat_shotgun": 95, "beauty": 95, "gauss": 61, "plasma_rifle": 44,
     "laser_rifle": 23, "stargazer": 23, "flamer": 107, "lmg": 88, "rocket_launcher": 67,
     "minigun": 94, "mommy": 94, "plasma_grenade": 34, "pulse_grenade": 34,
+    "alien_blaster": 119,
 }
 # тонирование (умножение цвета): энергооружие светится, легенды — в золоте
 TINTS = {
@@ -42,6 +43,9 @@ TINTS = {
     "super_sledge": (255, 200, 110), "combat_armor": (120, 150, 110), "pa_t45": (190, 200, 215),
     "pa_t51": (235, 205, 140), "pa_enclave": (110, 110, 125), "leather_armor": (190, 130, 85), "combat_helmet": (120, 150, 110),
     "pa_helmet": (190, 200, 215), "enclave_helmet": (110, 110, 125), "spear": (230, 200, 150),
+    "boathook": (150, 220, 210), "justice": (255, 215, 120), "voice": (150, 200, 140), "curator_coat": (190, 140, 230),
+    "hazmat": (255, 230, 90), "ranger_armor": (205, 175, 120),
+    "alien_blaster": (150, 255, 210), "alien_cell": (230, 130, 255), "holy_grenade": (255, 220, 110),
 }
 
 
@@ -93,6 +97,9 @@ PACK_ICONS = {
     "rocket": (1, 35), "gauss_ammo": (1, 47), "leather_armor": (3, 32), "metal_armor": (3, 35),
     "combat_armor": (3, 32), "pa_t45": (3, 32), "pa_t51": (3, 32), "pa_enclave": (3, 32),
     "army_helmet": (2, 4), "combat_helmet": (2, 4), "pa_helmet": (2, 4), "enclave_helmet": (2, 4),
+    # награды головоломок
+    "boathook": (0, 43), "justice": (1, 5), "voice": (1, 3), "curator_coat": (0, 14), "hazmat": (3, 0),
+    "ranger_armor": (3, 32), "alien_cell": (1, 36), "holy_grenade": (2, 50),
 }
 
 

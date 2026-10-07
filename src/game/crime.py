@@ -72,6 +72,8 @@ ROLES = {
     # остров Санта-Каталина
     "harbor_master": "guard", "sailor_finn": "brawler",
     # «Нова»
+    "sphinx": "elite", "radio_bot": "elite", "harold": "civilian", "deputy_abby": "guard", "luis_cards": "civilian",
+    "beth_waitress": "civilian", "hank_miner": "civilian",
     "purity_officer": "guard", "purity_bot": "elite", "raven_hacker": "elite", "nv_dealer": "brawler", "councillor_vale": "civilian",
 }
 CULT_ZONES = {"baker_mission", "primm_camp", "nipton_mine", "mariposa", "mariposa_lab", "mariposa_vats"}

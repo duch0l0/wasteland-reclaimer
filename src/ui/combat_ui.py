@@ -72,6 +72,8 @@ def draw_health_bars(surf, game, cam, zoom=1):
     else:
         fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp]
     for f in fighters:
+        if game.hidden_by_roof(f):
+            continue
         r = _z(visible_rect(f, cam), zoom)
         color = (90, 210, 90) if f is game.player or getattr(f, "ally", False) else (215, 60, 50)
         _bar(surf, r.centerx, health_bar_y(r), f.hp / f.max_hp if f.max_hp else 0, color)

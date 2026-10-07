@@ -235,6 +235,7 @@ class InteractionMixin:
             self.log(f"{enemy.name[:1].upper() + enemy.name[1:]} повержен.")
         if getattr(enemy, "npc_id", None):   # убитый житель не воскреснет при следующем приходе
             self.flags[f"killed_{enemy.npc_id}"] = True
+            self.on_npc_killed(enemy.npc_id)
         mult = 2 if self.player.perk_rank("looter") else 1
         from ..balance import roll_loot
         loot = {item: cnt * mult for item, cnt in roll_loot(enemy.loot).items()}

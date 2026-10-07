@@ -35,6 +35,8 @@ from .. import companion
 
 with open("data/barks.json", "r", encoding="utf-8") as _f:
     BARKS = {k: v for k, v in json.load(_f).items() if not k.startswith("_")}
+# кто не пересказывает слухи (роботы, звери, враги-собеседники)
+NO_RUMORS = {"dog", "purity_bot", "cleaner_bot", "sphinx", "radio_bot", "robo_sentry", "robo_sgt", "robot"}
 from .mouse import MouseMixin
 from .terminals import TerminalMixin
 from .slides import SlidesMixin, SLIDES
@@ -44,10 +46,12 @@ from .saveload import SaveMixin
 from .merc import MercMixin
 from .baker import BakerMixin
 from .crime import CrimeMixin
+from .reputation import ReputationMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, RenderMixin):
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, ReputationMixin,
+           RenderMixin):
     def __init__(self, intro=True, _screen=None, _prologue=False):
         """intro — начать с главного меню (для проверок без окна его пропускают).
         _screen, _prologue — для «Новой игры» из меню: то же окно, сразу пролог."""
@@ -62,6 +66,8 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.quests = {}           # стадии квестов (data/quests.json): id -> стадия
         self.journal_open = False
         self.journal_sel = None
+        self.journal_tab = "quests"   # задания | репутация
+        self.journal_scroll = 0
 
         # мир
         self.parallax = Parallax()
@@ -235,18 +241,34 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         if not p.attacking and not p.anim.busy and not any(tw["ent"] is p for tw in self.combat.tweens):
             p.anim.set_action("idle")
 
+    def bark_lines(self, npc):
+        """Что житель может сказать сейчас: свои фразы, слухи города (@город) и всей пустоши (@all).
+        Строка — всегда; {"text", "if"} — только когда условие верно (эхо поступков героя, карма, репутация)."""
+        from .reputation import town_of
+        town = town_of(self.loc.id) if self.loc else None
+        pool = list(BARKS.get(npc.npc_id, []))
+        if npc.npc_id not in NO_RUMORS:
+            pool += BARKS.get(f"@{town}", []) + BARKS.get("@all", [])
+        out = []
+        for line in pool:
+            if isinstance(line, str):
+                out.append(line)
+            elif self.check_condition(line.get("if", {})):
+                out.append(line["text"])
+        return out
+
     def _barks(self, dt_ms):
         """Жители иногда говорят что-нибудь, когда герой проходит рядом (data/barks.json)."""
         self.bark_ms -= dt_ms
         if self.bark_ms > 0 or self.speech or self.mode != "local" or self.combat.active or self.modal_open():
             return
-        near = [n for n in self.npcs if n.npc_id in BARKS
+        near = [n for n in self.npcs if not self.hidden_by_roof(n) and self.bark_lines(n)
                 and pygame.Vector2(n.rect.center).distance_to(self.player.rect.center) < 4 * S.TILE]
         if not near:
             self.bark_ms = 1500
             return
         n = random.choice(near)
-        self.speech = {"ent": n, "text": random.choice(BARKS[n.npc_id]), "t": 2600}
+        self.speech = {"ent": n, "text": random.choice(self.bark_lines(n)), "t": 2600}
         self.bark_ms = random.randint(9000, 16000)
 
     def _regen(self, dt_ms):

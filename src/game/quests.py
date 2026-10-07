@@ -38,6 +38,9 @@ STORY_STEPS = [
     ("sq_runaway", [(10, "runaway_job"), (100, "runaway_done")]),
     ("sq_tag", [(10, "tag_job"), (100, "tag_done")]),
     ("sq_bike", [(10, "bike_job"), (100, "bike_done")]),
+    ("sq_treasure", [(10, "treasure_piece"), (50, "treasure_map"), (100, "treasure_dug")]),
+    ("sq_murder", [(50, "murder_ready")]),
+    ("sq_letters", [(50, "mail_half"), (100, "mail_all")]),
     ("sq_catalina", [(10, "loc:catalina"), (50, ["know_ct_tribute", "know_ct_lie"]), (100, "ct_tribute_stopped")]),
     ("sq_nova", [(10, "loc:nova"), (50, ["know_nova_vre", "nova_rebels_ally"]), (100, "nova_decided")]),
     ("sq_ares", [(10, "loc:repconn"), (50, "loc:ares"), (100, "ares_decided")]),
@@ -65,6 +68,7 @@ class QuestMixin:
         self.quests[quest_id] = stage
         if stage >= q.get("done", 10 ** 9):
             self.log(f"Задание выполнено: «{q['title']}».")
+            self.on_quest_done(quest_id)
             from ..balance import quest_caps
             caps = quest_caps(quest_id, q.get("main"))
             if caps:
@@ -78,6 +82,17 @@ class QuestMixin:
         """Условие реплики/стартового узла: flag, not_flag, not_flags (ни одного), flags_any, item+count, no_item, perk,
         skill [навык, не меньше], min_level, stage [квест, не меньше], stage_lt [квест, меньше]."""
         if "stage" in cond and self.stage(cond["stage"][0]) < cond["stage"][1]:
+            return False
+        # карма и репутация (src/game/reputation.py)
+        if "karma_ge" in cond and self.karma < cond["karma_ge"]:
+            return False
+        if "karma_lt" in cond and self.karma >= cond["karma_lt"]:
+            return False
+        if "rep_ge" in cond and self.rep(cond["rep_ge"][0]) < cond["rep_ge"][1]:
+            return False
+        if "rep_lt" in cond and self.rep(cond["rep_lt"][0]) >= cond["rep_lt"][1]:
+            return False
+        if "title" in cond and cond["title"] not in {t[0] for t in self.titles()}:
             return False
         if "stage_lt" in cond and self.stage(cond["stage_lt"][0]) >= cond["stage_lt"][1]:
             return False
@@ -116,6 +131,8 @@ class QuestMixin:
     def sync_story(self):
         """Одни и те же факты можно узнать разными путями — здесь они сводятся в стадии квестов."""
         f, st = self.flags, self.stage
+        if hasattr(self, "sync_reputation"):
+            self.sync_reputation()
         if self.inventory.has("чей-то глаз") and 0 < st("mq_grandpa") < 20:
             self.set_stage("mq_grandpa", 20)
         if f.get("know_baker") and 40 <= st("mq_grandpa") < 50:
@@ -148,6 +165,28 @@ class QuestMixin:
             self.set_stage("sq_barstow", 50)
         if cleared == 2 and st("sq_barstow") < 90:
             self.set_stage("sq_barstow", 90)
+        # «Карта клада»: три обрывка склеиваются сами, как только все у героя
+        pieces = ("обрывок карты (север)", "обрывок карты (центр)", "обрывок карты (юг)")
+        if any(self.inventory.has(p) for p in pieces) or self.inventory.has("карта клада"):
+            f["treasure_piece"] = True
+        if all(self.inventory.has(p) for p in pieces):
+            for p in pieces:
+                self.inventory.remove(p)
+            self.inventory.add("карта клада", 1)
+            self.log("Три обрывка совпали по краям. Изолента — и у вас карта клада (рюкзак → прочитать).")
+        if self.inventory.has("карта клада"):
+            f["treasure_map"] = True
+        if self.inventory.has("броня «Пустынный рейнджер»"):
+            f["treasure_dug"] = True
+        # «Письма почтальона»: семь доставляемых писем (восьмое — Убежищу 13 — не доставить)
+        mail = sum(bool(f.get(f"mail_done_{k}")) for k in ("reeves", "darkwater", "shaw", "vault15", "springer", "grey", "house"))
+        if mail >= 4:
+            f["mail_half"] = True
+        if mail >= 7:
+            f["mail_all"] = True
+        # «Кто убил Гаррисона?»: фартук с ножом и показания — пора назвать убийцу
+        if f.get("clue_apron") and sum(bool(f.get(k)) for k in ("clue_luis", "clue_beth", "clue_hank", "clue_watch")) >= 2:
+            f["murder_ready"] = True
         # главные квесты актов II–III и тайные места — стадии по фактам (одно можно узнать разными путями)
         for qid, steps in STORY_STEPS:
             for stage, cond in steps:
@@ -221,6 +260,27 @@ class QuestMixin:
         t = eff.get("type")
         if t == "set_flag":
             self.flags[eff["flag"]] = True
+        elif t == "implant":   # операция у хирурга: навсегда, один раз (флаг implant_<id>)
+            p = self.player
+            stat, n = eff["stat"], eff["amount"]
+            if stat == "hp":
+                p.max_hp += n
+                p.hp = min(p.hp_cap, p.hp + n)
+            elif stat == "ac":
+                p.ac += n
+            elif stat == "ap":
+                p.base_ap += n
+            elif stat == "dmg":
+                p.base_damage += n
+            self.flags[f"implant_{eff['id']}"] = True
+            self.log(eff.get("text", "Операция прошла успешно."))
+        elif t == "hurt":   # сюжетный урон (сбросили в пропасть, ударило током)
+            self.player.hp = max(1, self.player.hp - eff["amount"])
+            self.log(eff.get("text", f"Вы теряете {eff['amount']} HP."))
+        elif t == "karma":
+            self.add_karma(eff["amount"], eff.get("why"))
+        elif t == "rep":
+            self.add_rep(eff["town"], eff["amount"])
         elif t == "clear_flag":
             self.flags.pop(eff["flag"], None)
         elif t == "give":

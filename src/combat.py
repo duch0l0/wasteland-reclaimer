@@ -315,7 +315,9 @@ class Combat:
         тот ушёл далеко (дальше, чем радиус, на котором враг замечает, — иначе
         бой бы начинался и заканчивался каждый кадр)."""
         p = self.game.player
-        return any(self._dist(e, p) <= e.aggro * 1.5 for e in self.enemies_in_combat())
+        reach = max(WEAPONS[p.weapon]["range"] * T, 4 * T)   # а пока герой сам достаёт врага — бой идёт
+        return any(self._dist(e, p) <= e.aggro * 1.5 or (self._dist(e, p) <= reach and self.los(e, p))
+                   for e in self.enemies_in_combat())
 
     def _nearest_enemy(self):
         enemies = self.enemies_in_combat()
@@ -428,7 +430,7 @@ class Combat:
             return (False, "нет патронов")
         if dist > prof["range"]:
             return (False, "далеко")
-        if not self.los(attacker, defender):
+        if dist > 1 and not self.los(attacker, defender):   # в упор (соседняя клетка) — всегда: кто бьёт, того и стреляют
             return (False, "нет линии огня")
         return (True, "")
 
@@ -599,7 +601,11 @@ class Combat:
             if getattr(attacker, "poison", 0):
                 self._add_dot(defender, "poison", attacker.poison, 3)
             if getattr(attacker, "rads", 0) and defender is self.game.player:
+                was = defender.rads
                 defender.add_rads(attacker.rads)
+                if defender.rads // 100 > was // 100:   # каждые 100 рад — внятное предупреждение
+                    self.game.log(f"Счётчик Гейгера захлёбывается: {defender.rads} рад — максимум HP упал на "
+                                  f"{defender.rads // 10}. Отступите и выпейте антирадин.")
                 self.game.audio.play("geiger")
                 self._float(defender, f"+{attacker.rads} рад", (140, 230, 90))
         if dmg == 0:
@@ -925,7 +931,7 @@ class Combat:
     THROW_AP = 4
     THROW_RANGE = 6
     GRENADES = {"grenade": "граната", "molotov": "коктейль Молотова", "plasma": "плазменная граната",
-                "pulse": "импульсная граната"}
+                "pulse": "импульсная граната", "holy": "святая ручная граната"}
     THROW_MS = 520
 
     def throw(self, thrower, tile, kind):
@@ -970,8 +976,9 @@ class Combat:
                     self._add_dot(e, "fire", 3, 3)
         else:
             g.log("БУМ! " + {"barrel": "Бочка взрывается!", "rocket": "Ракета рвётся!",
-                             "plasma": "Плазменная граната вспыхивает зелёным!"}.get(kind, "Граната рвётся!"))
-            lo, hi = {"barrel": (12, 18), "rocket": (18, 28), "plasma": (16, 24)}.get(kind, (7, 12))
+                             "plasma": "Плазменная граната вспыхивает зелёным!",
+                             "holy": "...три! Аллилуйя! Святая ручная граната обращает врагов в щебень!"}.get(kind, "Граната рвётся!"))
+            lo, hi = {"barrel": (12, 18), "rocket": (18, 28), "plasma": (16, 24), "holy": (45, 60)}.get(kind, (7, 12))
             for e in hit:
                 dmg = random.randint(lo, hi) if tile_of(e) == tile else random.randint(lo // 2, hi // 2)
                 if e is not g.player and e.alive:
@@ -1005,7 +1012,7 @@ class Combat:
             return
         g, p, t = self.game, self.game.player, self.target
         robot = t is not None and getattr(t, "robot", False)
-        order = (["pulse"] if robot else []) + ["plasma", "grenade", "molotov"]
+        order = (["pulse"] if robot else []) + ["holy", "plasma", "grenade", "molotov"]
         kind = next((k for k in order if g.inventory.has(self.GRENADES[k])), None)
         if kind is None:
             g.log("Бросать нечего. Гранаты бывают у бандитов, коктейль Молотова — в крафте (C).")

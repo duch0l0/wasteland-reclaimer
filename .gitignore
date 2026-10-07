@@ -22,3 +22,4 @@ npc/raw/preview_*.png
 
 # нарезка наборов бандла: в git — только используемое (tools/packs.py sync-git)
 assets/packs/
+.scratch/

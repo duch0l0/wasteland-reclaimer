@@ -48,8 +48,22 @@ class MouseMixin:
         wx, wy = self.world_pos(pos)
         return wx // T, wy // T
 
+    def hidden_by_roof(self, ent):
+        """Персонаж в здании под закрытой крышей (герой снаружи): ни реплик, ни полосок над ним не видно."""
+        roof_over = getattr(self.level, "roof_over", None)
+        r = roof_over(tile_of(ent)) if roof_over else None
+        return r is not None and r["alpha"] > 128
+
+    def under_roof(self, pos):
+        """Курсор над закрытой крышей: что под ней — не видно и не кликается, пока герой не внутри."""
+        wx, wy = self.world_pos(pos)
+        return any(r["alpha"] > 128 and "rect" in r and r["rect"].collidepoint(wx, wy)
+                   for r in getattr(self.level, "roofs", []))
+
     def entity_at_screen(self, pos):
         """Персонаж под курсором — по непрозрачным пикселям спрайта, передний первым."""
+        if self.under_roof(pos):
+            return None
         people = [e for e in self.enemies if e.alive] + list(self.npcs)
         people.sort(key=lambda e: e.rect.bottom, reverse=True)
         screen_pos, pos = pos, self.view_pos(pos)
@@ -66,6 +80,8 @@ class MouseMixin:
     def object_at_screen(self, pos):
         """Терминал или контейнер по картинке (высокий шкаф кликается и за верхнюю часть),
         иначе объект в клетке. Предметы на земле — по иконке."""
+        if self.under_roof(pos):
+            return None
         item = self.level.pickup_at(self.world_pos(pos))
         if item:
             return ("pickup", item)

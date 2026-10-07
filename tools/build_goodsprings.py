@@ -153,6 +153,7 @@ for x, y in ((28, 3), (40, 4), (30, 8), (39, 8)):
 gs.npcs += [["cult_hunter", 66, 27]]                       # брат-ловчий ждёт у восточного въезда
 gs.npcs += [["sunny", 26, 30], ["chet", 46, 22], ["mayor_pettit", 54, 22], ["gs_farmer", 55, 38], ["gs_kid", 38, 27],
             ["gs_old", 32, 22]]
+gs.box("r_trash_can", 20, 25, "мусорный бак за салуном", {"фартук в крови": 1, "ткань": 1})
 for _, x, y in gs.npcs:
     gs.reserve(x, y, x, y)
 gs.grow(1, 1, W - 2, H - 2, 9, names=CACTI + BUSHES + DEAD_TREES)
@@ -180,6 +181,9 @@ for x, y in ((3, 11), (9, 11), (3, 16), (14, 12)):
     sl.put(TABLE, x, y)
     sl.put(CHAIR, x + 2, y)
 sl.npcs += [["trudy", 6, 5], ["gs_drunk", 10, 13], ["gs_prospector", 15, 17]]
+# «Кто убил Гаррисона?»: тело у стойки, помощница шерифа и трое из того вечера
+sl.box("bag", 10, 8, "тело Гаррисона", {"часы Гаррисона": 1, "записка из кармана Гаррисона": 1, "крышки": 12})
+sl.npcs += [["deputy_abby", 12, 18], ["luis_cards", 8, 14], ["beth_waitress", 5, 9], ["hank_miner", 17, 10]]
 # задняя комната: койка, сундук, бочки — за ними мальчик
 sl.put(COT, 22, 4)
 sl.put(BARREL, 27, 9)

@@ -104,6 +104,7 @@ class LootingMixin:
                     and self.combat.los(npc, p))
             if owner == "gena" or sees:   # Гена всё видит — у него на всё свои глаза
                 self.flags[f"{owner}_robbed"] = True
+                self.on_theft_seen()
                 self.log(f"Вы чувствуете на спине чей-то взгляд... {npc.name} это так не оставит.")
             else:
                 self.log("Кажется, никто не заметил.")
@@ -115,6 +116,7 @@ class LootingMixin:
                 self.log("Кажется, никто не заметил.")
                 return True
             self.log(f"{seen[0].name.capitalize()}: Эй! Это наше!")
+            self.on_theft_seen()
             self.make_hostile(owner)
             self.close_loot()
             self.combat.start(player_first=False)

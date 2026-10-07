@@ -257,7 +257,39 @@ def art_barstow(s, rnd, game):
             pass
 
 
-ARTS = {"barstow": art_barstow, "war": art_war, "alaska": art_alaska, "mariposa": art_mariposa, "bombs": art_bombs, "vault": art_vault,
+def art_town(s, rnd, game):
+    """Город в эпилоге: закат, силуэт крыш, кое-где горят окна (у каждого города — свой рисунок)."""
+    hue = rnd.randint(0, 2)
+    top, bottom = [((70, 40, 60), (220, 140, 80)), ((40, 50, 80), (200, 160, 110)), ((90, 60, 40), (230, 180, 100))][hue]
+    _sky(s, top, bottom)
+    pygame.draw.circle(s, (255, 210, 140), (rnd.randint(W // 5, W * 4 // 5), H - 120), rnd.randint(30, 50))
+    base = H - 90
+    x = 0
+    while x < W:
+        w = rnd.randint(40, 110)
+        h = rnd.randint(30, 110)
+        pygame.draw.rect(s, (30, 24, 26), (x, base - h, w, h + 90))
+        if rnd.random() < 0.3:   # водонапорная башня, антенна или крест
+            pygame.draw.line(s, (30, 24, 26), (x + w // 2, base - h), (x + w // 2, base - h - rnd.randint(20, 50)), 3)
+        for _ in range(rnd.randint(0, 4)):
+            wx, wy = x + rnd.randint(6, max(7, w - 12)), base - h + rnd.randint(8, max(9, h - 10))
+            pygame.draw.rect(s, (255, 200, 110), (wx, wy, 6, 8))
+        x += w + rnd.randint(0, 20)
+    pygame.draw.rect(s, (24, 20, 20), (0, base, W, H - base))
+
+
+def art_wanderer(s, rnd, game):
+    """Странник уходит по трассе к горизонту."""
+    _sky(s, (40, 36, 60), (210, 150, 100))
+    pygame.draw.circle(s, (255, 220, 160), (W // 2, H - 150), 60)
+    pygame.draw.polygon(s, (60, 48, 40), [(0, H), (W // 2 - 8, H - 130), (W // 2 + 8, H - 130), (W, H)])
+    pygame.draw.polygon(s, (90, 80, 66), [(W // 2 - 3, H - 128), (W // 2 + 3, H - 128), (W // 2 + 40, H), (W // 2 - 40, H)])
+    cx, cy = W // 2 + 6, H - 112
+    pygame.draw.ellipse(s, (20, 16, 16), (cx - 4, cy - 26, 8, 9))
+    pygame.draw.rect(s, (20, 16, 16), (cx - 5, cy - 17, 10, 17))
+
+
+ARTS = {"town": art_town, "wanderer": art_wanderer, "barstow": art_barstow, "war": art_war, "alaska": art_alaska, "mariposa": art_mariposa, "bombs": art_bombs, "vault": art_vault,
         "first_years": art_first_years, "letter": art_letter, "arrival": art_arrival, "baker": art_baker}
 
 
@@ -288,6 +320,7 @@ def slide_image(name, game=None):
         if os.path.isfile(path):
             s.blit(pygame.transform.smoothscale(pygame.image.load(path).convert(), (W, H)), (0, 0))
         else:
-            ARTS.get(name, art_war)(s, random.Random(hash(name) & 0xFFFF), game)
+            seed = sum(ord(c) * (i + 1) for i, c in enumerate(name))     # «town:hub» и «town:vegas» — разные
+            ARTS.get(name.split(":")[0], art_war)(s, random.Random(seed), game)
         _CACHE[name] = _tint(s)
     return _CACHE[name]

@@ -30,7 +30,7 @@ class WorldMixin:
     def get_location(self, loc_id):
         """Локации создаются один раз и помнят, кто убит и что подобрано."""
         if loc_id not in self.locations:
-            self.locations[loc_id] = Location(loc_id)
+            self.locations[loc_id] = Location(loc_id, hero=not getattr(self, "merc_mode", False))
         return self.locations[loc_id]
 
     def place_player(self, pos):

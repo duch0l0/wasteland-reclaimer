@@ -56,20 +56,22 @@ def scale_loot(loot, act):
     return out
 
 
-# Награда крышками за выполненное побочное/городское задание (сюжетные — без неё: там платят люди).
-# В Fallout деньги приходят прежде всего за задания — без этого к акту II не на что купить патроны.
+# Награда крышками за выполненное городское задание — там, где люди сами не платят (сюжетные и побочки
+# с собственной наградой — без неё). В Fallout деньги приходят прежде всего за задания — без этого к акту II
+# не на что купить патроны.
 QUEST_ACT = {
+    "sq_zzyzx": 1, "sq_needles": 1,
     "sq_hub": 2, "sq_junktown": 2, "sq_necropolis": 2, "sq_aradesh": 2, "sq_boneyard": 2, "sq_vault15": 2, "sq_vault4": 2,
     "sq_primm": 3, "sq_goodsprings": 3, "sq_vault22": 3, "sq_nipton": 3, "sq_searchlight": 3, "sq_vegas": 3,
-    "sq_poseidon": 3, "sq_catalina": 4, "sq_nova": 4, "sq_ares": 4, "sq_order": 4,
+    "sq_poseidon": 3, "sq_catalina": 4, "sq_nova": 4, "sq_ares": 4,
 }
-QUEST_CAPS = {1: 60, 2: 150, 3: 200, 4: 250}
+QUEST_CAPS = {1: 80, 2: 120, 3: 150, 4: 150}
 
 
 def quest_caps(quest_id, main=False):
-    if main:
+    if main or quest_id not in QUEST_ACT:
         return 0
-    return QUEST_CAPS[QUEST_ACT.get(quest_id, 1)]
+    return QUEST_CAPS[QUEST_ACT[quest_id]]
 
 
 def roll_loot(loot):

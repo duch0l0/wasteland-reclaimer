@@ -123,6 +123,8 @@ def _item_facts(game, name):
                 facts.append((f"Навык: {sk} (у вас {have})", COLOR_DIM))
             if game.player.weapon == key:
                 facts.append(("В руках", COLOR_HOVER))
+    if d.get("rad_res"):
+        facts.append((f"Защита от радиации: {d['rad_res']}%", (140, 230, 90)))
     if d.get("dr"):
         facts.append((f"Гасит {d['dr']} урона с каждого попадания", (140, 170, 210)))
     if d.get("req_level") or d.get("req_flag"):

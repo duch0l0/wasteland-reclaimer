@@ -360,6 +360,93 @@ def rocket():
     return outline(s)
 
 
+def police_box():
+    """Синяя полицейская будка посреди пустыни. Внутри, говорят, больше, чем снаружи."""
+    w, h = 44, 92
+    s = canvas(w, h)
+    blue, dark, lite = (36, 66, 128), (24, 44, 92), (64, 98, 168)
+    rect(s, 4, 14, 36, 76, blue)
+    rect(s, 4, 14, 4, 76, dark)
+    rect(s, 2, 8, 40, 8, blue)                                          # карниз
+    rect(s, 6, 9, 32, 5, (20, 22, 26))                                  # табличка
+    for x in range(9, 36, 4):
+        rect(s, x, 11, 2, 1, (230, 230, 230))
+    rect(s, 18, 2, 8, 7, (230, 228, 200))                               # фонарь
+    rect(s, 20, 0, 4, 3, dark)
+    for row in range(3):                                                 # окошки
+        for col in range(2):
+            rect(s, 10 + col * 13, 20 + row * 22, 11, 16, dark)
+            if row == 0:
+                for i in range(2):
+                    for j in range(2):
+                        rect(s, 11 + col * 13 + i * 5, 21 + j * 7, 4, 6, (220, 226, 236))
+            else:
+                rect(s, 11 + col * 13, 21 + row * 22, 9, 14, lite)
+    rect(s, 21, 20, 2, 66, dark)                                         # створки
+    rect(s, 3, 88, 38, 4, (90, 84, 70))                                  # песок у основания
+    return outline(s)
+
+
+def saucer():
+    """Летающая тарелка, зарывшаяся краем в песок: серебристый диск, купол, мигающие огоньки."""
+    w, h = 120, 60
+    s = canvas(w, h)
+    pygame.draw.ellipse(s, (150, 130, 100), (0, 38, w, 22))             # воронка
+    pygame.draw.ellipse(s, (110, 94, 70), (8, 42, w - 16, 14))
+    hull = [(6, 34), (60, 18), (114, 26), (108, 40), (52, 50), (10, 44)]
+    pygame.draw.polygon(s, (176, 182, 190), hull)
+    pygame.draw.polygon(s, (130, 136, 146), [(10, 44), (52, 50), (108, 40), (110, 36), (52, 44), (10, 38)])
+    pygame.draw.ellipse(s, (120, 200, 210), (44, 6, 34, 22))            # купол
+    pygame.draw.ellipse(s, (190, 240, 245), (50, 9, 12, 7))
+    for i, x in enumerate((20, 38, 56, 74, 92)):                          # огоньки
+        pygame.draw.circle(s, (120, 255, 120) if i % 2 else (255, 90, 80), (x, 36 + (x - 60) // 12), 2)
+    pygame.draw.line(s, (60, 60, 64), (84, 26), (100, 12), 2)           # обломанная антенна
+    return outline(s)
+
+
+def whale():
+    """Кашалот, упавший с неба. Удивлённый. Очень удивлённый."""
+    w, h = 150, 64
+    s = canvas(w, h)
+    body = (96, 104, 118)
+    pygame.draw.ellipse(s, (140, 120, 92), (0, 48, w, 16))              # вмятина в песке
+    pygame.draw.ellipse(s, body, (6, 14, 112, 44))                       # туловище
+    rect(s, 10, 22, 50, 30, body)                                        # тупая голова кашалота
+    pygame.draw.ellipse(s, (150, 156, 166), (14, 40, 96, 16))            # светлое брюхо
+    pygame.draw.polygon(s, body, [(112, 30), (146, 14), (140, 30), (148, 46), (112, 42)])   # хвост
+    pygame.draw.circle(s, (20, 20, 24), (24, 30), 3)                     # глаз — удивлённый
+    pygame.draw.circle(s, (240, 240, 240), (23, 29), 1)
+    pygame.draw.line(s, (60, 64, 74), (12, 44), (40, 46), 2)             # рот
+    return outline(s)
+
+
+def petunia():
+    """Горшок с петунией. «О нет, только не снова»."""
+    w, h = 22, 26
+    s = canvas(w, h)
+    pygame.draw.polygon(s, (176, 92, 56), [(4, 14), (18, 14), (16, 25), (6, 25)])
+    rect(s, 3, 12, 16, 3, (196, 108, 66))
+    for x, y, c in ((7, 8, (210, 80, 170)), (12, 5, (230, 110, 190)), (15, 9, (200, 70, 160))):
+        pygame.draw.circle(s, c, (x, y), 3)
+        px(s, x, y, (250, 230, 120))
+    rect(s, 10, 9, 1, 4, (70, 130, 60))
+    return outline(s)
+
+
+def planks():
+    """Дощатый настил моста через каньон (лежит на земле, по нему ходят)."""
+    w, h = 48, 48
+    s = canvas(w, h)
+    for i, y in enumerate(range(2, 46, 7)):
+        c = (128, 92, 58) if i % 2 else (146, 106, 66)
+        rect(s, 0, y, w, 6, c)
+        rect(s, 0, y + 5, w, 1, (90, 62, 38))
+        px(s, 6 + (i * 13) % 34, y + 2, (70, 50, 30))
+    rect(s, 3, 0, 2, h, (96, 70, 44))                                   # верёвочные перила-бревна
+    rect(s, w - 5, 0, 2, h, (96, 70, 44))
+    return s
+
+
 # имя -> (рисунок, описание в каталоге)
 PROPS = {
     "x_grave": (grave, {"foot": [1, 1], "search": "grave", "title": "могила"}),
@@ -385,6 +472,12 @@ PROPS = {
     **{f"x_vault_door{n}": (lambda n=n: vault_door(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4", "22", "0")},
     **{f"x_vault_gear{n}": (lambda n=n: vault_gear(n), {"foot": [2, 1], "sight": True}) for n in ("15", "4", "22", "0")},
     **{f"x_vault_sign{n}": (lambda n=n: vault_sign(n), {"foot": [1, 1]}) for n in ("15", "4", "22", "0")},
+    # особые встречи в пустоши (src/encounters.py)
+    "x_police_box": (police_box, {"foot": [1, 1], "sight": True, "search": "junk", "title": "синяя будка"}),
+    "x_saucer": (saucer, {"foot": [4, 1], "sight": True, "scale": 1.5}),
+    "x_whale": (whale, {"foot": [5, 1], "sight": True, "scale": 1.7}),
+    "x_petunia": (petunia, {"foot": [1, 1], "search": "junk", "title": "горшок с петунией"}),
+    "x_planks": (planks, {"block": False, "layer": "floor"}),
 }
 
 

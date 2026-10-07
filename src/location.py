@@ -64,6 +64,9 @@ NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000"
              "cult_herald": "Глашатай Единства", "mp_acolyte": "Послушник", "mp_acolyte_b": "Послушница", "tobi_mp": "Тоби", "ezekiel_mp": "Иезекииль", "nipton_bride_mp": "«Невеста» из Ниптона", "brother_t_mp": "Брат Т.",
              "harbor_master": "Смотритель причала Оуэн", "quarantine_nurse": "Сестра Пэм", "fisher_ana": "Рыбачка Ана", "tiki_barkeep": "Бармен Коко", "island_kid": "Девочка Лили", "island_old": "Бабушка Ингрид", "sailor_finn": "Моряк Финн", "island_teacher": "Учитель Маркус", "elder_mora": "Старейшина Мора", "elder_bram": "Старейшина Брэм", "young_jude": "Джуд", "keeper_silas": "Смотритель маяка Сайлас",
              "purity_officer": "Инспектор Чистоты Лин", "purity_bot": "Робот-сканер", "councillor_vale": "Советник Вэйл", "nv_citizen": "Горожанка", "nv_citizen_b": "Горожанин", "nv_doctor": "Доктор Эрик Сун", "nv_child": "Мальчик", "raven_hacker": "Рэйвен", "noodle_cook": "Повар Мо Чен", "nv_dealer": "Торговец Шрапнель", "nv_outcast": "Отсеянный", "nv_outcast_b": "Отсеянная", "cleaner_bot": "Робот-уборщик",
+             "sphinx": "Сфинкс, экскурсовод", "bridge_keeper": "Хранитель моста", "harold": "Гарольд",
+             "lucky_bot": "Секьюритрон", "radio_bot": "Диктор-автомат", "deputy_abby": "Помощница шерифа Эбби",
+             "luis_cards": "Картёжник Луис", "beth_waitress": "Официантка Бет", "hank_miner": "Старатель Хэнк",
              "repconn_ghoul": "Гуль-техник Чет", "rover_bot": "Марсоход «Спирит-II»", "cmdr_hale": "Командир Хейл", "eng_okoro": "Инженер Окоро", "botanist_yuki": "Ботаник Юки"}
 # у кого кадры лежат в чужой папке (жители из tools/make_variants.py)
 NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "merc",
@@ -109,6 +112,8 @@ NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "me
                "cult_herald": "silas", "mp_acolyte": "acolyte", "mp_acolyte_b": "cultist", "tobi_mp": "kid", "ezekiel_mp": "ghoul_child", "nipton_bride_mp": "girl_hood", "brother_t_mp": "silas",
                "harbor_master": "folk_g", "quarantine_nurse": "healer", "fisher_ana": "folk_h", "tiki_barkeep": "barkeep", "island_kid": "girl_pink", "island_old": "folk_d", "sailor_finn": "folk_e", "island_teacher": "folk_b", "elder_mora": "seer", "elder_bram": "folk_c", "young_jude": "loner", "keeper_silas": "folk_i",
                "purity_officer": "ada", "purity_bot": "robot_guard", "councillor_vale": "detective", "nv_citizen": "blondie", "nv_citizen_b": "folk_b", "nv_doctor": "doc", "nv_child": "kid", "raven_hacker": "visor_punk", "noodle_cook": "barkeep", "nv_dealer": "gang", "nv_outcast": "ghoul_a", "nv_outcast_b": "ghoul_d", "cleaner_bot": "robot_skel",
+               "sphinx": "robot_guard", "bridge_keeper": "seer", "harold": "ghoul_c", "lucky_bot": "robot_guard", "radio_bot": "robot_guard", "deputy_abby": "sheriff", "luis_cards": "folk_b",
+               "beth_waitress": "girl_pink", "hank_miner": "folk_i",
                "repconn_ghoul": "ghoul_e", "rover_bot": "robot_skel", "cmdr_hale": "soldier", "eng_okoro": "folk_i", "botanist_yuki": "folk_a"}
 
 # жители, которые есть на карте только при условии (как у реплик): кого не спасли — тот в Марипозе
@@ -162,7 +167,7 @@ def npc_animations(npc_id):
 
 
 class Location:
-    def __init__(self, loc_id, d=None, rows=None):
+    def __init__(self, loc_id, d=None, rows=None, hero=False):
         d = d if d is not None else LOCATION_DEFS.get(loc_id, {})
         self.id = loc_id
         self.name = d.get("name", loc_id)
@@ -195,10 +200,16 @@ class Location:
                 scale_enemy(e, act)
             for box in getattr(self.level, "containers", []):
                 box["loot"] = scale_loot(box["loot"], act)
-        if d.get("action"):   # экшен (Барстоу): здоровье гулей — ровно в пулях
+        if d.get("action") and hero:   # Барстоу без Дэкса: пошаговый бой, орда для аркады героя бы смяла —
+            ghouls = [e for e in self.enemies if e.type_id in ("feral", "ghoul_runner")]   # остаётся каждый третий гуль
+            self.enemies = [e for e in self.enemies if e not in ghouls] + ghouls[::3]
+            for h in getattr(self.level, "hordes", []):   # толпы из домов — только в аркаде Дэкса
+                h["done"] = True
+        elif d.get("action"):   # экшен (Барстоу): здоровье гулей — ровно в пулях
             from .action import set_action_hp
             for e in self.enemies:
                 set_action_hp(e)
+        self.hero = hero                        # Барстоу: создана героем (поредевшая орда) или Дэксом (аркада)
         self.enemies_all = list(self.enemies)  # исходный порядок — для сохранений (ушедшие исчезают из enemies)
         self.npcs = [NPC(pos, npc_animations(nid), npc_id=nid, name=NPC_NAMES.get(nid, nid))
                      for pos, nid in self.level.npc_spawns]

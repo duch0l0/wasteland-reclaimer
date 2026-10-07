@@ -26,6 +26,8 @@ WEAPONS = {
                "item": "кувалда", "req": 85, "tier": 3},
     "power_fist": {"name": "Силовой кулак", "ranged": False, "skill": "melee", "ap": 3, "range": 1, "damage": 18,
                    "item": "силовой кулак", "req": 105, "tier": 4},
+    "boathook": {"name": "Багор Мамаши Кейт", "ranged": False, "skill": "melee", "ap": 3, "range": 1, "damage": 9,
+                 "item": "багор Мамаши Кейт", "req": 50, "tier": 2, "unique": True},
     "super_sledge": {"name": "Супер-кувалда", "ranged": False, "skill": "melee", "ap": 4, "range": 1, "damage": 26,
                      "item": "супер-кувалда", "req": 120, "tier": 5, "unique": True},
     # ---------------------------------------------------------------- стрельба (огнестрел)
@@ -56,6 +58,10 @@ WEAPONS = {
     "beauty": {"name": "«Красотка»", "ranged": True, "skill": "guns", "ap": 5, "range": 6, "damage": 18,
                "item": "дробовик «Красотка»", "ammo": "дробь", "burst": 2, "recoil": 6, "aim": False,
                "falloff": 0.12, "close_bonus": 25, "req": 80, "tier": 4, "unique": True},
+    "justice": {"name": "«Справедливость»", "ranged": True, "skill": "guns", "ap": 4, "range": 9, "damage": 18,
+                "item": "револьвер «Справедливость»", "ammo": "патроны", "req": 70, "tier": 3, "unique": True},
+    "voice": {"name": "«Голос пустоши»", "ranged": True, "skill": "guns", "ap": 6, "range": 15, "damage": 26,
+              "item": "винтовка «Голос пустоши»", "ammo": "патроны", "req": 95, "tier": 4, "unique": True},
     "sniper": {"name": "Снайперская винтовка", "ranged": True, "skill": "guns", "ap": 6, "range": 14, "damage": 22,
                "item": "снайперская винтовка", "ammo": "патроны", "req": 105, "tier": 4},
     # Гаусс: магнитный ускоритель, игла насквозь через броню. Одна на всю пустошь.
@@ -86,6 +92,9 @@ WEAPONS = {
     "stargazer": {"name": "«Звездочёт»", "ranged": True, "skill": "energy", "ap": 4, "range": 13, "damage": 22,
                   "item": "лазер «Звездочёт»", "ammo": "ядерный элемент", "pierce": 0.6, "req": 90,
                   "tier": 4, "unique": True},
+    "alien": {"name": "Инопланетный бластер", "ranged": True, "skill": "energy", "ap": 4, "range": 9, "damage": 32,
+              "item": "инопланетный бластер", "ammo": "инопланетная батарея", "pierce": 0.7, "req": 60, "tier": 5,
+              "unique": True},
     "plasma": {"name": "Плазменная винтовка", "ranged": True, "skill": "energy", "ap": 5, "range": 9, "damage": 26,
                "item": "плазменная винтовка", "ammo": "ядерный элемент", "pierce": 0.75, "req": 100, "tier": 4},
     # ---------------------------------------------------------------- метание (в руку; гранаты — клавишей G)

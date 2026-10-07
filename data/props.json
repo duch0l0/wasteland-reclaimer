@@ -477,6 +477,11 @@
     "x_vault_door0": {"img": "x_vault_door0", "foot": [4, 2], "sight": true},
     "x_vault_gear0": {"img": "x_vault_gear0", "foot": [2, 1], "sight": true},
     "x_vault_sign0": {"img": "x_vault_sign0", "foot": [1, 1]},
-    "x_rocket": {"img": "x_rocket", "foot": [2, 1], "sight": true}
+    "x_rocket": {"img": "x_rocket", "foot": [2, 1], "sight": true},
+    "x_police_box": {"img": "x_police_box", "foot": [1, 1], "sight": true, "search": "junk", "title": "синяя будка"},
+    "x_saucer": {"img": "x_saucer", "foot": [3, 1], "sight": true, "scale": 1.5},
+    "x_whale": {"img": "x_whale", "foot": [3, 1], "sight": true, "scale": 1.7},
+    "x_petunia": {"img": "x_petunia", "foot": [1, 1], "search": "junk", "title": "горшок с петунией"},
+    "x_planks": {"img": "x_planks", "block": false, "layer": "floor"}
   }
 }

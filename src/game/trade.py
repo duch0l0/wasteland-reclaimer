@@ -62,7 +62,7 @@ class TradeMixin:
                 if have <= 0:
                     continue
                 qty = min(5, have) if _packed(name) else 1  # патроны — пачками
-                mult = (1 - SILVER_TONGUE_BONUS if silver else 1) * buy_k
+                mult = (1 - SILVER_TONGUE_BONUS if silver else 1) * buy_k * self.rep_price_mult()
                 rows.append((name, qty, max(1, math.ceil(items.price(name) * qty * mult)), have))
         else:
             for name, have in self.inventory.nonzero().items():

@@ -135,7 +135,8 @@ class RenderMixin:
             screen.blit(pygame.transform.smoothscale(surf, view.size), view)
         surf = screen
 
-        if self.speech and (self.speech["ent"] in self.npcs or self.speech["ent"] is self.player):
+        if self.speech and (self.speech["ent"] in self.npcs or self.speech["ent"] is self.player) \
+                and not self.hidden_by_roof(self.speech["ent"]):
             combat_ui.draw_speech(surf, self.speech, cam, z)
         combat_ui.draw_health_bars(surf, self, cam, z)
         if combat.active:

@@ -135,6 +135,7 @@ class SaveMixin:
         lv = loc.level
         base = [c for c in lv.containers if not c.get("corpse")]
         return {
+            "hero": getattr(loc, "hero", False),
             "enemies": [{"alive": e.alive, "hp": e.hp, "pos": list(e.rect.topleft), "hostile": e.hostile,
                          "talked": e.talked, "present": e in loc.enemies} for e in loc.enemies_all],
             "npcs": [{"id": n.npc_id, "pos": list(n.rect.topleft)} for n in loc.npcs],
@@ -219,6 +220,9 @@ class SaveMixin:
         self.locations = {}
         for lid, ls in st["locations"].items():
             if lid in LOCATION_DEFS:
+                if LOCATION_DEFS[lid].get("action") and "hero" in ls:   # та же версия Барстоу, что была сохранена
+                    from ..location import Location
+                    self.locations[lid] = Location(lid, hero=ls["hero"])
                 self._restore_loc(self.get_location(lid), ls)
         self.play_ms = st.get("played_ms", 0)
         self.companion = None
@@ -280,6 +284,8 @@ class SaveMixin:
         for i in ls.get("removed", []):
             lv.remove_object(lv.objects[i])
         for cs in ls["corpses"]:
+            if cs["enemy"] >= len(loc.enemies_all):
+                continue
             enemy = loc.enemies_all[cs["enemy"]]
             box = lv.add_corpse(enemy, cs["loot"])
             box["opened"] = cs["opened"]
