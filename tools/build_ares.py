@@ -59,8 +59,8 @@ CRATES = [P("ar2_crate", "pk:pmars/pmars_1_035", foot=[2, 1], search="crate", ti
           P("ar2_crate_b", "pk:pmars/p1/12,14,1,1", search="crate", title="ящик")]
 CRATER = "pk:pmars/p1/4,2,2,2"
 CRATER_BIG = "pk:pmars/p1/2,4,2,2"
-ROCKS = [P("ar2_rock", "pk:pmars/p1/1,1,1,1", block=False), P("ar2_rock_b", "pk:pmars/p1/2,2,1,1", block=False),
-         P("ar2_boulder", "pk:pmars/p1/0,2,1,1")]
+ROCKS = [P("ar2_rock", "pk:pmars/p1/1,1,1,1", block=False, soft=14), P("ar2_rock_b", "pk:pmars/p1/2,2,1,1", block=False, soft=14),
+         P("ar2_boulder", "pk:pmars/p1/0,2,1,1", soft=14)]                  # края тают в грунт — без квадратов
 FENCE = P("ar2_fence", "pk:mars/p1/12,14,4,2", foot=[4, 1], sight=True)
 # интерьеры
 BUNKS = [P(f"ar2_bunk{i}", f"pk:mars/mars_2_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((0, 2, 3, 4, 7))]
@@ -83,7 +83,7 @@ MED_BED = P("ar2_med_bed", "pk:hosp/hosp_1_007", foot=[3, 1])
 
 SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
 CONCRETE = cells("mbase/p1", [(8, 8), (9, 9), (10, 10), (9, 8)])
-MARS = cells("pmars/p1", [(0, 0), (1, 0), (0, 1), (0, 4), (1, 4)])
+MARS = cells("pmars/p1", [(0, 0), (0, 1), (1, 0)])        # гладкий грунт; дюны (0–1, 4–5) — цельный кусок 2×2, по клетке шьются швами
 MARS_PAD = ["pk:fstation/fstation_f2_09"]
 FLOOR = ["pk:fstation/fstation_f2_04"]
 FLOOR_B = ["pk:store/p1/12,0,1,1"]
@@ -125,7 +125,7 @@ W, H = 66, 46
 mr = CityMap(city, "ares", "«Арес»: поверхность Марса", W, H, start=(32, 40), seed=272, music="lab",
              night=[150, 96, 80])                              # красное небо, тусклое солнце
 mr.tint = [255, 214, 190]
-mr.floor_code("m", *MARS)
+mr.floor_code("m", "noise:pk:pmars/p1/0,0,1,1")         # грунт — бесшовный шум в цветах марсианского тайла (без сетки)
 mr.floor_code("p", *MARS_PAD)
 mr.paint("m", 0, 0, W - 1, H - 1)
 mr.paint("p", 28, 36, 37, 44)                          # посадочная площадка

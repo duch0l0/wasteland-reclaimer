@@ -58,6 +58,27 @@ def _dirt_tiles(n=6):
     return tiles
 
 
+def _noise_tiles(src, n=6):
+    """Бесшовная земля в цветах картинки src: пиксели 2×2 средними тонами, редкие тёмные и светлые крапины."""
+    w, h = src.get_size()
+    colors = sorted((tuple(src.get_at((x, y))[:3]) for y in range(0, h, 2) for x in range(0, w, 2)
+                     if src.get_at((x, y)).a == 255), key=sum)
+    body = colors[len(colors) // 5: len(colors) * 4 // 5] or colors
+    rnd = random.Random(len(colors))
+    out = []
+    for _ in range(n):
+        t = pygame.Surface((T, T))
+        for y in range(0, T, 2):
+            for x in range(0, T, 2):
+                t.fill(rnd.choice(body), (x, y, 2, 2))
+        for _ in range(3):
+            x, y = rnd.randrange(2, T - 4, 2), rnd.randrange(2, T - 4, 2)
+            t.fill(colors[rnd.randrange(0, max(1, len(colors) // 10))], (x, y, 2, 2))
+            t.fill(colors[-rnd.randrange(1, max(2, len(colors) // 10))], (x, y - 2, 2, 2))
+        out.append(t.convert())
+    return out
+
+
 def _pixel_tile(palette, seed, detail=None):
     rnd = random.Random(seed)
     t = pygame.Surface((T, T))
@@ -148,6 +169,45 @@ def _edge_mask(mask, variant):
                 m.fill((255, 255, 255, int(255 * a ** 1.3)), (px, py, 2, 2))
         _EDGE_MASKS[key] = m
     return _EDGE_MASKS[key]
+
+
+def _crop_frame(img, k=3):
+    """Тайл с тёмной каймой по краю (плитка грунта в наборе нарисована «кирпичиком») — без каймы:
+    если край заметно темнее середины, берём середину и растягиваем обратно."""
+    w, h = img.get_size()
+    if w < 24 or h < 24:
+        return img
+    mid = pygame.transform.average_color(img, (k, k, w - 2 * k, h - 2 * k))[:3]
+    edge = [pygame.transform.average_color(img, r)[:3] for r in ((0, 0, w, 2), (0, h - 2, w, 2), (0, 0, 2, h), (w - 2, 0, 2, h))]
+    dark = sum(sum(mid) - sum(e) for e in edge) / 4
+    if dark < 24:
+        return img
+    return pygame.transform.scale(img.subsurface((k, k, w - 2 * k, h - 2 * k)), (w, h))
+
+
+def _even_tone(tiles):
+    """Варианты одной земли с разной яркостью (марсианский грунт, плитка) лежат «шахматкой». Каждый вариант
+    подтягивается к среднему цвету группы: узор остаётся разным, пятна по сетке пропадают."""
+    if len(tiles) < 2:
+        return tiles
+    avgs = [pygame.transform.average_color(t)[:3] for t in tiles]
+    mean = [sum(a[i] for a in avgs) / len(avgs) for i in range(3)]
+    out = []
+    for t, a in zip(tiles, avgs):
+        k = [mean[i] / max(1, a[i]) for i in range(3)]
+        if all(abs(x - 1) < 0.03 for x in k):
+            out.append(t)
+            continue
+        t = t.copy()
+        if all(x <= 1 for x in k):
+            t.fill(tuple(min(255, int(255 * x)) for x in k), special_flags=pygame.BLEND_RGB_MULT)
+        else:                                   # светлее нужно: доля прибавкой
+            add = tuple(max(0, int(mean[i] - a[i])) for i in range(3))
+            sub = tuple(max(0, int(a[i] - mean[i])) for i in range(3))
+            t.fill(add, special_flags=pygame.BLEND_RGB_ADD)
+            t.fill(sub, special_flags=pygame.BLEND_RGB_SUB)
+        out.append(t)
+    return out
 
 
 WALL_LIFT = T   # стены высотой в две клетки: верх стены на клетку выше её основания
@@ -338,8 +398,15 @@ class TownMap(MapBase):
         self._edge_cache = {}
         self._face = _wall_faces(self.style)
         # полы из наборов: {код: ["pk:…", …]} — варианты клетки 48×48 (заливки A2, куски страниц)
+        outdoor = not any("_" in row for row in d.get("ground", []))
         for code, imgs in d.get("floors", {}).items():
-            self._tiles[code] = [pygame.transform.scale(P.pack_image(i), (T, T)).convert() for i in imgs]
+            if imgs and imgs[0].startswith("noise:"):   # бесшовный шум в цветах тайла набора (грунт без «кирпичиков»)
+                self._tiles[code] = _noise_tiles(P.pack_image(imgs[0][6:]))
+                continue
+            raw = [P.pack_image(i) for i in imgs]
+            if outdoor:                      # улица: тёмная рамка, нарисованная в тайле, даёт сетку — срезать
+                raw = [_crop_frame(r) for r in raw]
+            self._tiles[code] = _even_tone([pygame.transform.scale(r, (T, T)).convert() for r in raw])
         # улица (без пустоты «_», как у интерьеров): края участков земли размываются в соседнюю землю
         self._feather = {}
         if not any("_" in row for row in self.ground):

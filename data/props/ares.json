@@ -391,17 +391,20 @@
 "ar2_rock": {
 "img": "pk:pmars/p1/1,1,1,1",
 "block": false,
-"sight": false
+"sight": false,
+"soft": 14
 },
 "ar2_rock_b": {
 "img": "pk:pmars/p1/2,2,1,1",
 "block": false,
-"sight": false
+"sight": false,
+"soft": 14
 },
 "ar2_boulder": {
 "img": "pk:pmars/p1/0,2,1,1",
 "block": true,
-"sight": false
+"sight": false,
+"soft": 14
 },
 "ar2_fence": {
 "img": "pk:mars/p1/12,14,4,2",

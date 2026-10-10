@@ -214,8 +214,8 @@ def image(name, darken=False):
             pygame.image.load(_img_path(d["img"])).convert_alpha()
         if img.get_size() != d["size"]:
             sc = d.get("scale", 1.0) * world_scale(name)   # целый множитель — по пикселям (пиксель-арт не мылится)
-            img = pygame.transform.scale(img, d["size"]) if float(sc).is_integer() else \
-                pygame.transform.smoothscale(img, d["size"])
+            img = pygame.transform.scale(img, d["size"]) if (float(sc).is_integer() or sc > 1) else \
+                pygame.transform.smoothscale(img, d["size"])     # увеличение — по пикселям, без мыла
         if d.get("soft") == "pond":    # водоём на улице: свой берег, без прямоугольника
             img = pond_edges(img)
         elif d.get("soft"):            # вставка на улице (пятно травы, воронка): края тают в землю

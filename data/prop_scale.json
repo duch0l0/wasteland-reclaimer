@@ -223,5 +223,163 @@
       "nc_lamp_b"
     ],
     "keep_foot": true
+  },
+  "tents": {
+    "scale": 1.5,
+    "names": [
+      "ar_tent0",
+      "ar_tent1",
+      "ar_tent2",
+      "ar_tent3",
+      "ar_tent4",
+      "ar_tent5",
+      "ar_tent_white",
+      "by_tent0",
+      "by_tent1",
+      "ct_tent",
+      "hb_tent_green",
+      "hb_tent_low",
+      "hb_tent_shabby",
+      "hb_tent_white",
+      "hb_tent_yellow",
+      "jt_tent_blue",
+      "jt_tent_brown",
+      "mp_tent_white",
+      "nc_tent0",
+      "nc_tent1",
+      "nc_tent2",
+      "nc_tent3",
+      "np_tent0",
+      "np_tent1",
+      "np_tent2",
+      "np_tent3",
+      "pr_tent_white",
+      "sl_tent_bos",
+      "v15_tent0",
+      "v15_tent1",
+      "v15_tent2",
+      "vg_tent0",
+      "vg_tent2",
+      "vg_tent_white",
+      "zz_tent",
+      "zz_tent_small"
+    ]
+  },
+  "tents_ruins": {
+    "scale": 1.3,
+    "names": [
+      "r_tent_beige",
+      "r_tent_big",
+      "r_tent_low",
+      "r_tent_purple"
+    ]
+  },
+  "trucks": {
+    "scale": 1.5,
+    "names": [
+      "ar2_rover",
+      "jt_trailer",
+      "jt_truck0",
+      "jt_truck1",
+      "jt_truck2",
+      "jt_van",
+      "mp_tank",
+      "nd_stagecoach",
+      "nd_truck_b",
+      "np_wagon",
+      "nv_6_001",
+      "nv_6_008",
+      "pr_truck",
+      "sl_humvee_b",
+      "sl_tank",
+      "vg_wagon",
+      "ws_bus"
+    ]
+  },
+  "machines": {
+    "scale": 2,
+    "names": [
+      "by_dumper",
+      "by_excavator",
+      "vg_cooling"
+    ]
+  },
+  "outposts": {
+    "scale": 2,
+    "names": [
+      "ar2_module0",
+      "ar2_module1",
+      "ar2_module2",
+      "ar2_module4",
+      "p7_command",
+      "p7_control",
+      "p7_dome",
+      "p7_generator",
+      "p7_relay"
+    ]
+  },
+  "outposts_half": {
+    "scale": 1.5,
+    "names": [
+      "ar2_airlock",
+      "ar2_dome_hab",
+      "ar2_dome_lab",
+      "ar2_watchtower",
+      "by_tanks",
+      "hb_tanks",
+      "jt_tanks",
+      "mp_watchtower",
+      "nc_crypt_b",
+      "nc_tanks",
+      "nv_6_047",
+      "nv_billboard",
+      "nv_billboard_b",
+      "nv_tree_small",
+      "sl_watchtower",
+      "t50_diner_sign",
+      "zz_water_tanks"
+    ]
+  },
+  "landmarks": {
+    "scale": 3,
+    "names": [
+      "nd_lighthouse"
+    ],
+    "keep_foot": true
+  },
+  "billboards_ruins": {
+    "scale": 1.6,
+    "names": [
+      "r_billboard"
+    ]
+  },
+  "nova_plants": {
+    "scale": 2,
+    "names": [
+      "nv_2_003",
+      "nv_6_017",
+      "nv_6_041"
+    ],
+    "keep_foot": true
+  },
+  "mars": {
+    "scale": 2.5,
+    "names": [
+      "ar2_rock",
+      "ar2_rock_b",
+      "ar2_boulder",
+      "ar2_crater0",
+      "ar2_crater1",
+      "ar2_crater2",
+      "ar2_crater3",
+      "ar2_crater4",
+      "ar2_crater5",
+      "ar2_crater6",
+      "ar2_crater7",
+      "ar2_crater8",
+      "ar2_crater9",
+      "ar2_crater10",
+      "ar2_crater11"
+    ]
   }
 }

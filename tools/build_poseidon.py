@@ -105,8 +105,8 @@ pe.put(PIPELINE, 40, 34)
 pe.put(PAD, 22, 28)
 pe.box(AMMO, 20, 33, "ящик у площадки", {"форма Анклава": 1, "патроны": 15})   # сменная форма пилотов
 # командный пункт — вход в станцию
-pe.put(COMMAND, 32, 18)
-pe.put(CONTROL, 36, 18)
+pe.put(COMMAND, 32, 17)                     # в рост (data/prop_scale.json): пятно 4×2, дверь над порталом
+pe.put(CONTROL, 37, 17)
 pe.portal([(33, 19), (34, 19)], "poseidon7_base", (20, 28), "Станция",
           requires={"flags_any": ["p7_invited", "p7_disguise", "p7_storm_won"],
                     "msg": "Солдат Анклава: «Гражданским вход воспрещён. Комендант примет вас, если пожелает»."})
