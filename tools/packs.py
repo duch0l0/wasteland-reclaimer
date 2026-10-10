@@ -223,7 +223,7 @@ def used_files():
         with open(path, encoding="utf-8") as f:
             m = json.load(f)
         for imgs in (m.get("floors") or {}).values():
-            refs.update(imgs)
+            refs.update(i.split("noise:", 1)[-1] for i in imgs)    # «noise:pk:…» — шум в цветах тайла
         for w in (m.get("walls") or {}).values():
             refs.update((w + "_top", w + "_face"))
     files = set()
