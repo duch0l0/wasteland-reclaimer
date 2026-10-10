@@ -478,6 +478,10 @@ PROPS = {
     "x_whale": (whale, {"foot": [5, 1], "sight": True, "scale": 1.7}),
     "x_petunia": (petunia, {"foot": [1, 1], "search": "junk", "title": "горшок с петунией"}),
     "x_planks": (planks, {"block": False, "layer": "floor"}),
+    # Убежище 11 (жребий): дверь в скале, шестерня изнутри, табличка
+    "x_vault_door11": (lambda: vault_door("11"), {"foot": [4, 2], "sight": True}),
+    "x_vault_gear11": (lambda: vault_gear("11"), {"foot": [2, 1], "sight": True}),
+    "x_vault_sign11": (lambda: vault_sign("11"), {"foot": [1, 1]}),
 }
 
 

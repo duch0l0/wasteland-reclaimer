@@ -340,6 +340,18 @@ class TownMap(MapBase):
         # полы из наборов: {код: ["pk:…", …]} — варианты клетки 48×48 (заливки A2, куски страниц)
         for code, imgs in d.get("floors", {}).items():
             self._tiles[code] = [pygame.transform.scale(P.pack_image(i), (T, T)).convert() for i in imgs]
+        # улица (без пустоты «_», как у интерьеров): края участков земли размываются в соседнюю землю
+        self._feather = {}
+        if not any("_" in row for row in self.ground):
+            from collections import Counter
+            counts = Counter(c for row in self.ground for c in row)
+            for code, n in counts.items():
+                if code in self.wallsets or code in "x_~" or not self._tiles.get(code):
+                    continue
+                avg = pygame.transform.average_color(self._tiles[code][0])
+                if avg[2] > avg[0] + 25:          # вода — со своими берегами, не размывать
+                    continue
+                self._feather[code] = n
         global _VOID
         if _VOID is None:
             _VOID = pygame.Surface((T, T))
@@ -469,7 +481,62 @@ class TownMap(MapBase):
                 if tile is None:
                     tile = self._edge_cache[key] = self._blend_edge(x, y, self._raw_tile(x, y), mask)
                 return tile
+        if code in self._feather:
+            return self._feathered(x, y, code)
         return self._raw_tile(x, y)
+
+    def _patch_field(self, x, y, p):
+        """Доля клеток «пятна» p в окрестности 3×3 клетки (x, y): 1 — глубоко внутри, 0 — снаружи."""
+        n = tot = 0
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                nx, ny = min(self.width - 1, max(0, x + dx)), min(self.height - 1, max(0, y + dy))
+                w = 2 if dx == 0 and dy == 0 else 1
+                tot += w
+                n += w * (self.ground[ny][nx] == p)
+        return n / tot
+
+    def _feathered(self, x, y, code):
+        """Граница двух земель (город и песок, дорога и пустырь): рисуется по сглаженному полю, а не по сетке —
+        край идёт плавной неровной линией, углы скруглены, ступенек нет."""
+        key = ("f", x, y)
+        tile = self._edge_cache.get(key)
+        if tile is not None:
+            return tile
+        near = {}
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.width and 0 <= ny < self.height:
+                    nc = self.ground[ny][nx]
+                    if nc != code and nc in self._feather:
+                        near[nc] = near.get(nc, 0) + 1
+        if not near:
+            tile = self._edge_cache[key] = self._raw_tile(x, y)
+            return tile
+        other = max(near, key=near.get)
+        patch, back = (other, code) if self._feather[other] < self._feather[code] else (code, other)
+        h = (x * 73856093) ^ (y * 19349663)
+        tile = self._tiles[back][h % len(self._tiles[back])].copy()
+        over = self._tiles[patch][h % len(self._tiles[patch])].convert_alpha()
+        f = {(i, j): self._patch_field(x + i, y + j, patch) for i in (-1, 0, 1) for j in (-1, 0, 1)}
+        rnd = random.Random(h)
+        mask = pygame.Surface((T, T), pygame.SRCALPHA)
+        B = 4
+        for py in range(0, T, B):
+            for px in range(0, T, B):
+                u, v = (px + B / 2) / T - 0.5, (py + B / 2) / T - 0.5     # от центра клетки, −0.5…0.5
+                i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
+                fu, fv = u - i0, v - j0
+                val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
+                       + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
+                val += rnd.uniform(-0.07, 0.07)
+                a = max(0.0, min(1.0, (val - 0.38) / 0.24))              # мягкая кромка шириной в треть клетки
+                mask.fill((255, 255, 255, int(255 * a)), (px, py, B, B))
+        over.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        tile.blit(over, (0, 0))
+        self._edge_cache[key] = tile
+        return tile
 
     def _blend_edge(self, x, y, base, mask):
         """Поверх клетки — земля, прозрачность которой плавно спадает от граничащих сторон

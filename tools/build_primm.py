@@ -131,12 +131,14 @@ pm.put(LAMPS[0], 26, 22)
 pm.put(LAMPS[1], 51, 22)
 pm.put(SIGNPOST, 40, 21)
 # американские горки — над восточной частью города: опоры и рельсы змейкой
-pm.put(COASTER[1], 56, 5)
-pm.put(COASTER[0], 62, 8)
-pm.put(COASTER_LOOP[0], 68, 5)
-pm.put(COASTER[1], 66, 12)
-pm.put(COASTER_LOOP[1], 72, 15)
-pm.put(COASTER[0], 56, 15)
+# трасса цельная: длинные пролёты встык, на концах — петля и кольцо (раньше висела обрывками по песку)
+for x in (54, 60, 66):
+    pm.put(COASTER[1], x, 6)
+pm.put(COASTER_LOOP[0], 72, 6)
+for x in (56, 62):
+    pm.put(COASTER[1], x, 12)
+pm.put(COASTER[0], 68, 12)
+pm.put(COASTER_LOOP[1], 72, 12)
 pm.put(TICKET, 58, 20)
 pm.put(BOOTHS[0], 63, 20)
 # юг: казино «Викки и Вэнс» с офисом шерифа; у входа — мешки с песком (помощник ждёт культ)
@@ -252,6 +254,11 @@ vk.put(BOTTLES, 11, 22)
 vk.put(BAR, 6, 24)
 vk.put(BAR, 10, 24)
 vk.npcs += [["barkeep_slim", 9, 23], ["pr_croupier", 11, 13], ["pr_gambler", 20, 13], ["pr_drunk", 16, 20]]
+# выставка: «машина смерти» Бонни и Клайда (как в Примме из New Vegas) и музейная табличка
+vk.box("r_car_red", 21, 16, "машина Бонни и Клайда", {"пистолет-пулемёт": 1, "крышки": 150, "фото Бонни Паркер": 1},
+       requires={"flag": "bc_code", "msg": "Багажник на кодовом замке: три колёсика — день, месяц, год. Код знает тот, кто читал табличку."})
+vk.put("x_board", 26, 17, check=False)
+vk.terminals.append({"prop": len(vk.props) - 1, "id": "doc:doc_bc_placard"})
 # офис шерифа: стол (здесь нашли Ривза), шкаф с делами, оружейная стойка, сейф; кровь на полу
 vk.put(OFFICE_DESK, 34, 6)
 vk.put(CHAIR, 36, 6)
@@ -304,12 +311,9 @@ cp.paint("g", 0, 17, 20, 19)
 city.road(pm, [(79, y) for y in range(25, 31)], cp, [(0, y) for y in range(16, 22)], "Лагерь у горок", "Примм", step=(1, 0))
 cp.reserve(0, 15, 6, 22)
 # старые горки над лагерем
-cp.put(COASTER[1], 4, 3)
-cp.put(COASTER[1], 12, 6)
-cp.put(COASTER_LOOP[0], 20, 3)
-cp.put(COASTER[0], 28, 4)
-cp.put(COASTER_LOOP[1], 36, 7)
-cp.put(COASTER[1], 40, 28)
+for name, x in ((COASTER[1], 2), (COASTER[1], 8), (COASTER[1], 14), (COASTER_LOOP[0], 20), (COASTER[0], 26),
+                (COASTER[1], 32), (COASTER[1], 38), (COASTER_LOOP[1], 44)):
+    cp.maybe(name, x, 6)               # одна линия горок над лагерем — без обрывков посреди песка
 # шатры по кругу, алтарь в центре, фургон с решёткой — в нём держат детей
 for x, y in ((14, 12), (24, 11), (34, 14), (14, 24), (34, 24)):
     cp.put(TENT_WHITE, x, y)
@@ -322,6 +326,27 @@ cp.box(CRATE, 45, 20, "ящик с печатью круга", {"чистая в
 cp.npcs += [["brother_job", 25, 16], ["cult_guard_pr", 20, 20], ["cult_guard_pr_b", 30, 20], ["tobi", 43, 20],
             ["cult_sister_pr", 16, 15]]
 cp.scatter(["r_dry_bush", "r_rocks", "r_bones"], 1, 1, W - 2, H - 2, 14)
+print("лагерь обжит:", cp.dress_empty([
+    [("r_tent_beige", 0, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("sack", 0, 2)],
+    [("crate", 0, 0), ("crate", 1, 0), ("barrel_wood", 3, 0), ("sack", 0, 2), ("bucket", 2, 2)],
+    [("r_tent_low", 0, 0), ("r_trash", 3, 1), ("pile_cans", 0, 2)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("r_dtree_a", 4, 0)],
+    [("r_awning", 0, 0), ("crate", 0, 2), ("barrel_wood", 3, 2)],
+], block=6, margin=1, chance=0.9))
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", pm.dress_empty([
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
+    [("r_tent_beige", 0, 0), ("r_tent_low", 3, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("barrel_wood", 0, 2)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 0, 2), ("r_trash", 3, 2)],
+    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("sack", 4, 2)],
+    [("r_water_tower_b", 3, 0), ("barrel_wood", 4, 1), ("bucket", 2, 1), ("r_barrels", 5, 1)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("x_cross", 4, 0), ("x_grave", 4, 1), ("r_dtree_a", 5, 2)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("r_barrels", 3, 1), ("pile_scrap", 0, 2)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
+], block=7, margin=1, chance=1.0))
 
 city.save()
 L = json.load(open("data/locations.json", encoding="utf-8"))

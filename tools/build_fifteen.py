@@ -61,7 +61,12 @@ BUS = P("ws_bus", "pk:wschool/wschool_4_042", sight=True, search="junk", title="
 JUNK = P("ws_junk", "pk:wschool/wschool_4_046", search="junk", title="куча хлама")
 MAT = P("ws_mat", "pk:wschool/wschool_5_031", block=False, layer="floor")
 COURT = "pk:wschool/p4/0,0,3,3"
-TRACK = "pk:wschool/p4/9,0,3,3"
+GOAL_BROKEN = P("ws_goal_broken", "pk:wschool/p4/3,6,3,2", foot=[3, 1])
+PULLUP = P("ws_pullup", "pk:wschool/p4/4,8,4,2", foot=[4, 1])
+SWINGS = P("ws_swings", "pk:wschool/p4/0,10,2,2", foot=[2, 1])
+MONKEY = P("ws_monkey_bars", "pk:wschool/p4/2,10,2,2", foot=[2, 1])
+WEIGHTS = P("ws_weights", "pk:wschool/p4/10,6,2,2", foot=[2, 1])
+BARBELL = P("ws_barbell", "pk:wschool/p4/12,6,2,2", foot=[2, 1])
 GYM_COURT = "pk:wschool/p5/0,3,3,5"
 
 CARS = [P(f"t50_car{i}", f"pk:town50/town50_1_{n:03d}") for i, n in enumerate((29, 30, 37, 38, 45, 53))]
@@ -116,8 +121,14 @@ out.hwall([FENCE], 12, 52, 27, gaps=(29, 30, 31, 32))
 out.stamp("court", COURT, 16, 21, water=False)
 out.put(HOOP, 15, 22)
 out.put(HOOP_B, 19, 22)
-out.stamp("track", TRACK, 41, 21, water=False)
-out.put(GOAL, 44, 24)
+# футбольное поле на утоптанной земле: ворота друг напротив друга, рядом — турники и «качалка» физрука
+out.put(GOAL, 40, 22)
+out.put(GOAL_BROKEN, 47, 24)
+out.put(PULLUP, 3, 25)
+out.put(WEIGHTS, 47, 20)
+out.put(BARBELL, 49, 21)
+out.put(SWINGS, 5, 21)
+out.put(MONKEY, 8, 21)
 out.put(BLEACH, 24, 22)
 out.put(BLEACH_B, 35, 24)
 for x in (21, 25, 34, 38):              # клумбы вдоль фасада, по обе стороны от дорожки к дверям

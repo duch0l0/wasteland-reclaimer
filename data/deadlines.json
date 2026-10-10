@@ -1,0 +1,230 @@
+{
+  "_doc": "Медленные последствия (src/game/clock.py): квест начат (start) — через days игровых дней, если не случилось ничего из unless, мир решает сам: effects, log. Журнал показывает, сколько осталось.",
+  "milo": {
+    "start": "milo_job",
+    "days": 3,
+    "quest": "sq_milo",
+    "unless": [
+      "milo_done",
+      "gambler_eaten"
+    ],
+    "log": "Пятница прошла. Мило продали на аукционе Змей — белым, на запад. Его стол в подвале занял другой игрок.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "milo_sold"
+      },
+      {
+        "type": "set_flag",
+        "flag": "milo_done"
+      },
+      {
+        "type": "quest",
+        "id": "sq_milo",
+        "stage": 100
+      }
+    ]
+  },
+  "luis": {
+    "start": "luis_job",
+    "days": 7,
+    "quest": "sq_luis",
+    "unless": [
+      "luis_free"
+    ],
+    "log": "Говорят, из шахты под Ниптоном ушёл фургон на запад — в Убежище 4. В клетке ехал мальчишка из Примма.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "luis_shipped"
+      },
+      {
+        "type": "quest",
+        "id": "sq_luis",
+        "stage": 100
+      }
+    ]
+  },
+  "fever": {
+    "start": "fever_job",
+    "days": 4,
+    "quest": "sq_fever",
+    "unless": [
+      "fever_cured",
+      "fever_done"
+    ],
+    "log": "Мать из Старого города не дождалась лекарства. Она пошла к сестре Мирре с кружкой.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "fever_cult"
+      },
+      {
+        "type": "set_flag",
+        "flag": "fever_cured"
+      },
+      {
+        "type": "set_flag",
+        "flag": "fever_done"
+      },
+      {
+        "type": "quest",
+        "id": "sq_fever",
+        "stage": 100
+      }
+    ]
+  },
+  "barge": {
+    "start": "barge_job",
+    "days": 10,
+    "quest": "sq_barge",
+    "unless": [
+      "barge_done"
+    ],
+    "log": "Из Нидлса пишут: у детей рыбаков язвы на руках. Вода у баржи стала теплее.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "needles_kids_sick"
+      }
+    ]
+  },
+  "hank": {
+    "start": "hank_job",
+    "days": 15,
+    "quest": "sq_hank",
+    "unless": [
+      "hank_done"
+    ],
+    "log": "На Стрипе погас один квартал: умер Хэнк Шпора. Сапоги выбрали вожаком Реда.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "hank_dead"
+      },
+      {
+        "type": "set_flag",
+        "flag": "hank_heir_red"
+      },
+      {
+        "type": "set_flag",
+        "flag": "hank_done"
+      },
+      {
+        "type": "quest",
+        "id": "sq_hank",
+        "stage": 100
+      }
+    ]
+  },
+  "noa": {
+    "start": "noa_job",
+    "days": 5,
+    "quest": "sq_noa",
+    "unless": [
+      "noa_done"
+    ],
+    "log": "Ночью стражники Морроу вывели кого-то из церкви в Нидлсе. Белый фургон уехал на запад.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "noa_taken"
+      },
+      {
+        "type": "set_flag",
+        "flag": "noa_done"
+      },
+      {
+        "type": "quest",
+        "id": "sq_noa",
+        "stage": 100
+      }
+    ]
+  },
+  "robes": {
+    "start": "robes_job",
+    "days": 3,
+    "quest": "sq_robes",
+    "unless": [
+      "robes_done"
+    ],
+    "log": "Новолуние в Джанктауне. Фургон у южных ворот постоял ночью и уехал. Утром Дина не нашла Пипа.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "robes_taken"
+      },
+      {
+        "type": "set_flag",
+        "flag": "robes_done"
+      },
+      {
+        "type": "quest",
+        "id": "sq_robes",
+        "stage": 100
+      },
+      {
+        "type": "npc_leave",
+        "npc": "jt_kid"
+      },
+      {
+        "type": "npc_leave",
+        "npc": "patient_girl"
+      }
+    ]
+  },
+  "smile_ok": {
+    "start": "smile_started",
+    "days": 3,
+    "quest": "sq_smile",
+    "need": [
+      "smile_supported"
+    ],
+    "unless": [
+      "smile_back",
+      "smile_lost"
+    ],
+    "log": "Из Бейкера: в мотеле на третью ночь мужчина плакал. Утром он назвал жену по имени.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "smile_back"
+      },
+      {
+        "type": "quest",
+        "id": "sq_smile",
+        "stage": 100
+      },
+      {
+        "type": "karma",
+        "amount": 15
+      },
+      {
+        "type": "xp",
+        "amount": 250
+      }
+    ]
+  },
+  "smile_fail": {
+    "start": "smile_started",
+    "days": 3,
+    "quest": "sq_smile",
+    "unless": [
+      "smile_back",
+      "smile_lost",
+      "smile_supported"
+    ],
+    "log": "Из Бейкера: в мотеле выломана дверь. Муж ушёл в молельню и вернулся с улыбкой шире прежнего.",
+    "effects": [
+      {
+        "type": "set_flag",
+        "flag": "smile_lost"
+      },
+      {
+        "type": "quest",
+        "id": "sq_smile",
+        "stage": 100
+      }
+    ]
+  }
+}

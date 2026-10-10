@@ -91,7 +91,7 @@ gs.floor_code("d", *DIRT)
 gs.floor_code("r", *ROAD)
 gs.floor_code("t", *STONE)
 gs.paint("s", 0, 0, W - 1, H - 1)
-gs.paint("d", 6, 14, 62, 42)                            # утоптанная земля посёлка
+gs.paint_ragged("d", 4, 12, 64, 44, depth=4)                          # утоптанная земля посёлка
 gs.paint("r", 0, 29, W - 1, 32)                         # улица
 gs.paint("r", 33, 10, 36, 29)                           # проезд к пещере
 gs.paint("t", 28, 22, 41, 28)                           # площадь у колодца
@@ -151,6 +151,7 @@ for x, y in ((28, 3), (40, 4), (30, 8), (39, 8)):
     gs.put(CACTI[0], x, y)
 
 gs.npcs += [["cult_hunter", 66, 27]]                       # брат-ловчий ждёт у восточного въезда
+gs.npcs += [["joe_cobb", 64, 33]]                          # охотник за головами — появляется, когда Ринго сознался
 gs.npcs += [["sunny", 26, 30], ["chet", 46, 22], ["mayor_pettit", 54, 22], ["gs_farmer", 55, 38], ["gs_kid", 38, 27],
             ["gs_old", 32, 22]]
 gs.box("r_trash_can", 20, 25, "мусорный бак за салуном", {"фартук в крови": 1, "ткань": 1})
@@ -230,6 +231,20 @@ for x, y in ((6, 6), (22, 13), (34, 10)):
 cv.box(CRATE, 33, 16, "тайник старателей", {"крышки": 40, "динамит": 1})
 cv.put(COT, 26, 10)
 cv.enemies += [["river_lizard", 20, 12], ["river_lizard", 30, 14], ["river_lizard", 6, 9]]
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", gs.dress_empty([
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
+    [("r_tent_beige", 0, 0), ("r_tent_low", 3, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("barrel_wood", 0, 2)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 0, 2), ("r_trash", 3, 2)],
+    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("sack", 4, 2)],
+    [("r_water_tower_b", 3, 0), ("barrel_wood", 4, 1), ("bucket", 2, 1), ("r_barrels", 5, 1)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("x_cross", 4, 0), ("x_grave", 4, 1), ("r_dtree_a", 5, 2)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("r_barrels", 3, 1), ("pile_scrap", 0, 2)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
+], block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("ezekiel",))
 L = json.load(open("data/locations.json", encoding="utf-8"))

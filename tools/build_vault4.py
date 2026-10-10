@@ -96,11 +96,8 @@ sf.reserve(21, 9, 24, 13)
 # пустой фургон культа у подножия: культ уже стучался в эту дверь
 sf.put(VAN, 30, 18)
 sf.box("hb_crate", 33, 19, "ящик с печатью круга", {"письмо смотрительнице": 1})
-for y in range(0, H, 2):
-    for x in range(0, W, 2):
-        if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & FLOOR and not (21 <= x <= 24 and 6 <= y <= 9):
-            sf.props.append([CLIFFS[(x * 3 + y * 5) % 3], x, y])
-            sf.blocked.update({(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)})
+sf.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 21 <= x <= 24 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((15, 12), (36, 10), (34, 26)):
     sf.maybe(OUTCROP, x, y)
 sf.enemies += [["radscorpion", 36, 14]]
@@ -206,6 +203,7 @@ for x, y in ((34, 22), (38, 22), (34, 27), (38, 27)):
 lw.put(BIOHAZ, 43, 21)
 lw.terminal(43, 31, "v4_vault")
 lw.enemies += [["beast", 10, 20], ["rad_mutant", 30, 15], ["joined", 25, 30], ["rad_mutant", 44, 26]]
+lw.npcs += [["marta_subject", 6, 31]]       # «Беглый субъект»: Марта из Ниптона, субъект № 12, в последней клетке
 
 city.save(gap_exempt=("v4_mutant", "v4_gardener"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

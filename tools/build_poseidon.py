@@ -14,7 +14,7 @@ nuclear-power-plant (npower), wasteland-laboratory (wlab), nbunk, cult (клет
 """
 import json
 
-from citykit import City, CityMap
+from citykit import City, CityMap, tech_scenes
 
 city = City("poseidon", "«Посейдон-7»")
 
@@ -115,11 +115,8 @@ pe.npcs += [["enclave_gate", 18, 23], ["enclave_officer", 34, 23]]
 pe.enemies += [["enclave_mech", 27, 27]]               # шагоход у ворот — молчит, пока нет тревоги
 for _, x, y in pe.npcs:
     pe.reserve(x, y, x, y)
-for y in range(0, H, 2):
-    for x in range(0, W, 2):
-        if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & FLOOR:
-            pe.props.append([CLIFFS[(x * 5 + y * 3) % 3], x, y])
-            pe.blocked.update({(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)})
+pe.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+pe.cliff_walls(CLIFFS, FLOOR, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 
 
 # ================================================================ станция
@@ -199,6 +196,8 @@ for x, y in ((4, 22), (8, 22), (12, 22), (4, 26), (8, 26)):
     hg.put(VRE_CRATE, x, y)
 hg.box(AMMO, 16, 27, "ящик Анклава", {"патроны": 30, "граната": 2, "стимулятор": 1})
 hg.enemies += [["enclave_soldier", 24, 24], ["enclave_soldier", 32, 10], ["enclave_soldier", 38, 26]]
+
+print("техзал hg:", hg.dress_empty(tech_scenes(city, "p7"), ground="M", block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("enclave_gate", "enclave_officer"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

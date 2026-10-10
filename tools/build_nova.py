@@ -31,8 +31,8 @@ def cells(page, pts):
 NEON = lambda c: {"r": 110, "color": c, "at": [0.5, 0.5], "flicker": 0.15}
 COOL = {"r": 120, "color": [190, 240, 255], "at": [0.5, 0.15]}
 # ------------------------------------------------------------ Верх
-TOWERS_W = [P(f"nv_tower{i}", f"pk:bcyber/bcyber_3_{n:03d}", foot=[2, 2], sight=True) for i, n in enumerate((4, 5, 6, 7))]
-HOUSES_W = [P(f"nv_house{i}", f"pk:bcyber/bcyber_3_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((0, 1, 2, 8, 9))]
+TOWERS_W = [P(f"nv_tower{i}", f"pk:bcyber/bcyber_3_{n:03d}", foot=[3, 2], sight=True, scale=2) for i, n in enumerate((4, 5, 6, 7))]
+HOUSES_W = [P(f"nv_house{i}", f"pk:bcyber/bcyber_3_{n:03d}", foot=[4, 2], sight=True, scale=2) for i, n in enumerate((0, 1, 2, 8, 9))]
 CLINIC = P("nv_clinic", "pk:bcyber/p3/8,8,4,4", foot=[4, 2], sight=True)
 SHOPPING = P("nv_shopping", "pk:bcyber/p3/12,8,4,4", foot=[4, 2], sight=True)
 SERVICES = P("nv_services", "pk:bcyber/p3/0,8,4,2", foot=[4, 1], sight=True)
@@ -106,9 +106,10 @@ up.reserve(0, 20, W - 1, 25)
 up.put(PURITY_GATE, 38, 36, check=False)               # пост санпропускника сбоку от шлюза — проход открыт
 up.npcs += [["purity_officer", 29, 41], ["purity_bot", 38, 41]]
 # башни по краям, дома горожан, сады
-for i, (x, y) in enumerate(((3, 3), (8, 3), (58, 3), (63, 3))):
+for i, (x, y) in enumerate(((2, 9), (7, 9), (58, 9), (63, 9))):
     up.put(TOWERS_W[i], x, y)
-for i, (x, y) in enumerate(((14, 6), (19, 6), (42, 6), (47, 6), (52, 6), (14, 13), (47, 13))):
+for i, (x, y) in enumerate(((13, 6), (19, 6), (41, 6), (47, 6), (52, 6), (13, 14), (50, 14),
+                            (12, 43), (18, 43), (44, 43), (50, 43), (56, 43), (62, 43))):   # южный ряд — жилой квартал
     up.put(HOUSES_W[i % 5], x, y)
 up.put(OFFICE, 22, 11)                                  # мэрия: «Совет Чистоты»
 up.put(SIGNS_W[0], 23, 15)
@@ -223,6 +224,47 @@ cr.enemies += [["robot_guard", 10, 15], ["robot_guard", 30, 15], ["turret", 19, 
 # «Звездочёт»: инженер купола собрал лазер из оптики обсерватории — ИИ запер его в ядре
 STASH = P("nv_stash", "pk:pmars/pmars_1_035", foot=[2, 1], search="military", title="оружейный ящик")
 cr.box(STASH, 34, 26, "ящик инженера Оками", {"лазер «Звездочёт»": 1, "ядерный элемент": 20})
+
+# ================================================================ обжить пустыри (экскурсия: «белый город голый»)
+B = lambda n, **kw: P(f"nv_{n}", f"pk:bcyber/bcyber_{n}", **kw)
+FOUNTAIN = B("6_047", foot=[2, 1], sight=True)
+PARK_TREE = B("6_017", foot=[2, 1], sight=True)
+SNOW_TREE = B("4_040", foot=[2, 1], sight=True)
+FLOWERS = B("6_032", foot=[2, 1])
+TAXI, LIMO, CAR_W, CART = B("6_001", foot=[3, 1], sight=True), B("6_019", foot=[3, 1], sight=True), \
+    B("6_008", foot=[3, 1], sight=True), B("6_024", foot=[2, 1], sight=True)
+VEND_W, BIN_W, ATM_W = B("4_020", sight=True), B("4_033"), B("4_027", sight=True)
+SOLAR = B("4_022", foot=[2, 1], sight=True)
+GREEN_WALL, GREEN_WALL_B = B("6_005", foot=[2, 1], sight=True), B("6_021", foot=[2, 1], sight=True)
+PALM_POT, FERN_POT, BALL_TREE = B("6_011"), B("6_039"), B("6_041")
+PICKUP = B("7_019", foot=[2, 1], sight=True)
+PURIFIER = B("4_024")
+DRONE_W = B("4_003", block=False)
+SIGN_SKY = B("4_028", block=False)
+LAMP_TALL = B("2_003", light=COOL)
+# сквер с фонтаном на юго-западе и стоянка аэротакси на юго-востоке
+for name, x, y in ((FOUNTAIN, 5, 33), (PARK_TREE, 2, 31), (PARK_TREE, 9, 31), (FLOWERS, 2, 36), (FLOWERS, 8, 36),
+                   (BENCH_W, 5, 36), (LAMP_TALL, 11, 34), (BALL_TREE, 1, 34),
+                   (TAXI, 57, 32), (LIMO, 57, 34), (CAR_W, 61, 36), (CART, 62, 32), (SIGN_SKY, 55, 32),
+                   (LAMP_TALL, 55, 36), (BIN_W, 65, 34), (VEND_W, 54, 38), (ATM_W, 55, 38)):
+    up.put(name, x, y)
+print("обжито наверху:", up.dress_empty([
+    [(FOUNTAIN, 1, 1), (PARK_TREE, 4, 0), (FLOWERS, 0, 3), (BENCH_W, 3, 3), (LAMP_TALL, 5, 2)],
+    [(TAXI, 0, 0), (LIMO, 0, 2), (SIGN_SKY, 4, 0), (LAMP_TALL, 4, 2)],
+    [(VEND_W, 0, 0), (BIN_W, 1, 0), (ATM_W, 2, 0), (PALM_POT, 4, 0), (BENCH_W, 0, 2), (DRONE_W, 3, 2)],
+    [(SOLAR, 0, 0), (SOLAR, 2, 0), (SOLAR, 4, 0), (SOLAR, 0, 2), (SOLAR, 2, 2), (PURIFIER, 4, 2)],
+    [(GREEN_WALL, 0, 0), (GREEN_WALL_B, 2, 0), (FERN_POT, 4, 0), (FLOWERS, 0, 2), (BALL_TREE, 3, 2)],
+    [(PICKUP, 0, 0), (BALL_TREE, 3, 0), (CART, 0, 2), (BIN_W, 3, 2)],
+    [(SNOW_TREE, 0, 0), (BALL_TREE, 3, 0), (BENCH_W, 0, 2), (FLOWERS, 3, 2), (PALM_POT, 5, 1)],
+    [(CAR_W, 0, 0), (CART, 3, 2), (LAMP_TALL, 0, 2), (BIN_W, 5, 0)],
+], ground="w", block=7, margin=1, chance=1.0))
+print("обжито внизу:", dn.dress_empty([
+    [(CARS[1], 0, 0), (TRASH, 3, 0), (PUDDLE, 0, 2), (LAMP_N, 4, 2)],
+    [(STALLS_N[1], 0, 0), (VENDING[0], 3, 0), (TRASH, 0, 2), (NEON_SIGNS[2], 2, 2)],
+    [(ROBOTS[0], 0, 0), (TRASH, 2, 1), (PUDDLE, 3, 2), (STEAM, 0, 3)],
+    [(DRONE, 0, 0), (CARS[0], 0, 2), (LAMP_N, 3, 0)],
+    [(BILLBOARDS[0], 0, 0), (TRASH, 3, 1), (VENDING[2], 0, 2), (PUDDLE, 2, 3)],
+], ground="d", block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("purity_officer", "purity_bot"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

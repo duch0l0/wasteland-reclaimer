@@ -5,81 +5,90 @@
 "block": true,
 "sight": true,
 "foot": [
-2,
+3,
 2
-]
+],
+"scale": 2
 },
 "nv_tower1": {
 "img": "pk:bcyber/bcyber_3_005",
 "block": true,
 "sight": true,
 "foot": [
-2,
+3,
 2
-]
+],
+"scale": 2
 },
 "nv_tower2": {
 "img": "pk:bcyber/bcyber_3_006",
 "block": true,
 "sight": true,
 "foot": [
-2,
+3,
 2
-]
+],
+"scale": 2
 },
 "nv_tower3": {
 "img": "pk:bcyber/bcyber_3_007",
 "block": true,
 "sight": true,
 "foot": [
-2,
+3,
 2
-]
+],
+"scale": 2
 },
 "nv_house0": {
 "img": "pk:bcyber/bcyber_3_000",
 "block": true,
 "sight": true,
 "foot": [
-2,
-1
-]
+4,
+2
+],
+"scale": 2
 },
 "nv_house1": {
 "img": "pk:bcyber/bcyber_3_001",
 "block": true,
 "sight": true,
 "foot": [
-2,
-1
-]
+4,
+2
+],
+"scale": 2
 },
 "nv_house2": {
 "img": "pk:bcyber/bcyber_3_002",
 "block": true,
 "sight": true,
 "foot": [
-2,
-1
-]
+4,
+2
+],
+"scale": 2
 },
 "nv_house3": {
 "img": "pk:bcyber/bcyber_3_008",
 "block": true,
 "sight": true,
 "foot": [
-2,
-1
-]
+4,
+2
+],
+"scale": 2
 },
 "nv_house4": {
 "img": "pk:bcyber/bcyber_3_009",
 "block": true,
 "sight": true,
 "foot": [
-2,
-1
-]
+4,
+2
+],
+"scale": 2
 },
 "nv_clinic": {
 "img": "pk:bcyber/p3/8,8,4,4",
@@ -760,6 +769,176 @@
 ],
 "search": "military",
 "title": "оружейный ящик"
+},
+"nv_6_047": {
+"img": "pk:bcyber/bcyber_6_047",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_6_017": {
+"img": "pk:bcyber/bcyber_6_017",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_4_040": {
+"img": "pk:bcyber/bcyber_4_040",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_6_032": {
+"img": "pk:bcyber/bcyber_6_032",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nv_6_001": {
+"img": "pk:bcyber/bcyber_6_001",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"nv_6_019": {
+"img": "pk:bcyber/bcyber_6_019",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"nv_6_008": {
+"img": "pk:bcyber/bcyber_6_008",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"nv_6_024": {
+"img": "pk:bcyber/bcyber_6_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_4_020": {
+"img": "pk:bcyber/bcyber_4_020",
+"block": true,
+"sight": true
+},
+"nv_4_033": {
+"img": "pk:bcyber/bcyber_4_033",
+"block": true,
+"sight": false
+},
+"nv_4_027": {
+"img": "pk:bcyber/bcyber_4_027",
+"block": true,
+"sight": true
+},
+"nv_4_022": {
+"img": "pk:bcyber/bcyber_4_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_6_005": {
+"img": "pk:bcyber/bcyber_6_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_6_021": {
+"img": "pk:bcyber/bcyber_6_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_6_011": {
+"img": "pk:bcyber/bcyber_6_011",
+"block": true,
+"sight": false
+},
+"nv_6_039": {
+"img": "pk:bcyber/bcyber_6_039",
+"block": true,
+"sight": false
+},
+"nv_6_041": {
+"img": "pk:bcyber/bcyber_6_041",
+"block": true,
+"sight": false
+},
+"nv_7_019": {
+"img": "pk:bcyber/bcyber_7_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"nv_4_024": {
+"img": "pk:bcyber/bcyber_4_024",
+"block": true,
+"sight": false
+},
+"nv_4_003": {
+"img": "pk:bcyber/bcyber_4_003",
+"block": false,
+"sight": false
+},
+"nv_4_028": {
+"img": "pk:bcyber/bcyber_4_028",
+"block": false,
+"sight": false
+},
+"nv_2_003": {
+"img": "pk:bcyber/bcyber_2_003",
+"block": true,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+190,
+240,
+255
+],
+"at": [
+0.5,
+0.15
+]
+}
 }
 }
 }

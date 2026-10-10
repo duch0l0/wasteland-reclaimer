@@ -33,9 +33,10 @@ def _sorted_frames(folder):
     )
 
 
-def load_directional_animations(root_dir):
+def load_directional_animations(root_dir, recolor=None):
     """Кадры по четырём направлениям (root_dir/down, left, right, up) или None.
-    Фазы шага: 0 и 2 — шаг, 1 и 3 — стоит; стоячий кадр идёт в idle."""
+    Фазы шага: 0 и 2 — шаг, 1 и 3 — стоит; стоячий кадр идёт в idle.
+    recolor — перекраска кадров (вариант жителя с общим листом), до того как из них соберутся боевые кадры."""
     result = {}
     scale = 1 if os.path.isfile(os.path.join(root_dir, "native")) else SPRITE_SCALE  # крупные листы (пёс)
     for d in ("down", "left", "right", "up"):
@@ -48,6 +49,8 @@ def load_directional_animations(root_dir):
                 img = pygame.image.load(os.path.join(folder, f)).convert_alpha()
             except Exception:
                 continue
+            if recolor:
+                img = recolor(img)
             w, h = img.get_size()
             frames.append(pygame.transform.scale(img, (w * scale, h * scale)) if scale != 1 else img)
         if not frames:
@@ -203,10 +206,41 @@ def _load_frame_folder(folder, size):
     return frames or None
 
 
-def load_humanoid_animations(root_dir, size, base_color, accent_color, frames_per_action=6):
+# варианты жителей с общим листом: (сдвиг оттенка одежды и волос, насыщенность) — кожа не трогается
+# (сдвиг оттенка, насыщенность, яркость): только земляные тона — выцветшее, темнее, светлее, рыжее, оливковее
+VARIANTS = [(0, 1.0, 1.0), (18, 0.85, 1.0), (-18, 0.85, 0.95), (0, 0.5, 1.0), (0, 0.8, 0.78), (28, 0.65, 0.9),
+            (-28, 0.7, 1.08), (8, 0.4, 0.88)]
+
+
+def recolor_variant(img, variant):
+    """Перекрасить одежду и волосы: всё насыщенное, кроме тонов кожи, — по оттенку и насыщенности варианта."""
+    shift, sat, val = VARIANTS[variant % len(VARIANTS)]
+    if not shift and sat == 1.0 and val == 1.0:
+        return img
+    out = img.copy()
+    px = pygame.PixelArray(out)
+    w, h = out.get_size()
+    c = pygame.Color(0)
+    for x in range(w):
+        for y in range(h):
+            col = out.unmap_rgb(px[x, y])
+            if col.a < 30:
+                continue
+            c.r, c.g, c.b, c.a = col.r, col.g, col.b, col.a
+            hh, ss, vv, aa = c.hsva
+            skin = 5 <= hh <= 42 and 18 <= ss <= 70 and vv >= 45
+            if ss < 14 or skin:
+                continue
+            c.hsva = ((hh + shift) % 360, max(0, min(100, ss * sat)), max(0, min(100, vv * val)), aa)
+            px[x, y] = c
+    del px
+    return out
+
+
+def load_humanoid_animations(root_dir, size, base_color, accent_color, frames_per_action=6, variant=0):
     """Возвращает dict {'idle': [surf,...], 'walk': [...], 'attack': [...]}
-    или анимации по направлениям, если они нарезаны."""
-    directional = load_directional_animations(root_dir)
+    или анимации по направлениям, если они нарезаны. variant — перекраска для жителей с общим листом."""
+    directional = load_directional_animations(root_dir, (lambda im: recolor_variant(im, variant)) if variant else None)
     if directional:
         return directional
     result = {}

@@ -3,7 +3,7 @@ import json
 
 import pygame
 
-from ..ui.slides_ui import slide_text, typed_chars
+from ..ui.slides_ui import slide_text, typed_chars, paginate
 
 with open("data/slides.json", "r", encoding="utf-8") as f:
     SLIDES = {k: v for k, v in json.load(f).items() if not k.startswith("_")}
@@ -15,8 +15,8 @@ class SlidesMixin:
         slides = []
         for sl in d["slides"]:  # абзацы с условиями отбираются в момент показа
             parts = [p for p in sl["parts"] if self.check_condition(p.get("if", {}))]
-            if parts:
-                slides.append({**sl, "parts": parts})
+            for page in (paginate(parts) if parts else []):   # не влезает — та же картинка, следующая страница
+                slides.append({**sl, "parts": page})
         self.slides = {"id": show_id, "list": slides, "i": 0, "t": 0}
         self.autowalk = None
 

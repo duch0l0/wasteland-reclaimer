@@ -36,6 +36,26 @@ def _wrap(font, text, width):
     return out
 
 
+LINES = 7   # строк текста под картинкой
+
+
+def paginate(parts):
+    """Абзацы слайда — по страницам, чтобы текст не обрезался: каждая страница не длиннее LINES строк."""
+    body = _font("dejavuserif", 21)
+    pages, cur, used = [], [], 0
+    for p in parts:
+        n = len(_wrap(body, p["text"], ART_W)) + (1 if cur else 0)   # пустая строка между абзацами
+        if cur and used + n > LINES:
+            pages.append(cur)
+            cur, used = [], 0
+            n -= 1
+        cur.append(p)
+        used += n
+    if cur:
+        pages.append(cur)
+    return pages
+
+
 def slide_text(slide):
     return "\n\n".join(p["text"] for p in slide["parts"])
 
@@ -64,7 +84,7 @@ def draw_slides(surf, game):
     y += 46
     body = _font("dejavuserif", 21)
     text = slide_text(slide)[:typed_chars(show)]
-    for line in _wrap(body, text, ART_W)[:7]:
+    for line in _wrap(body, text, ART_W)[:LINES]:
         surf.blit(body.render(line, True, (235, 220, 190)), (ax, y))
         y += 28
     # точки прогресса и подсказки

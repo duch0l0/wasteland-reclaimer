@@ -133,6 +133,9 @@ class CityMap(MapKit):
     def building(self, *a, **kw):
         return self._loosely(super().building, *a, **kw)
 
+    def dress_empty(self, *a, **kw):
+        return self._loosely(super().dress_empty, *a, **kw)
+
     def maybe(self, name, x, y, **kw):
         """Необязательный объект: встанет — хорошо, нет — пропускается."""
         return self._loosely(self.put, name, x, y, **kw)
@@ -157,8 +160,20 @@ class CityMap(MapKit):
             self._reach = None
 
     # -------------------------------------------------------- запись
+    def gate(self, name, x, y, flag, msg, key=None):
+        """Гермодверь/бронедверь: объект-дверь, закрытый, пока не поставлен флаг (пульт, ключ, динамит)."""
+        assert self.put(name, x, y, check=False, allow_reserved=True), f"дверь {name} не встала в {x, y}"
+        if not hasattr(self, "gates"):
+            self.gates = []
+        self.gates.append({"prop": len(self.props) - 1, "flag": flag, "msg": msg, **({"key": key} if key else {})})
+
+    def gate_tiles(self):
+        return [t for g in getattr(self, "gates", []) for t in self.footprint(*self.props[g["prop"]])]
+
     def extra(self):
         out = {"floors": self.floors, "walls": self.walls}
+        if getattr(self, "gates", None):
+            out["gates"] = self.gates
         if self.night:
             out["night"] = self.night
         if self.tint:
@@ -253,7 +268,7 @@ class City:
         with open(loc_path, "r", encoding="utf-8") as f:
             locs = json.load(f)
         for m in self.maps:
-            reach = m.check(gap_exempt=gap_exempt, npc_enemy_gap=0 if m.interior else 6)
+            reach = m.check(gap_exempt=gap_exempt, npc_enemy_gap=0 if m.interior else 6, passable=m.gate_tiles())
             m.save(os.path.join("data", "maps", f"{m.id}.json"), **m.extra())
             entry = {"name": m.name, "map": f"data/maps/{m.id}.json", "known": m.known, "music": m.music}
             if m.world_pos:
@@ -266,3 +281,26 @@ class City:
                   f"доступно клеток {len(reach)}")
         with open(loc_path, "w", encoding="utf-8") as f:
             json.dump(locs, f, ensure_ascii=False, indent=2)
+
+
+def tech_scenes(city, pre):
+    """Сценки для пустых технических залов (хранилища, ядра, ангары, лаборатории): ряды серверных стоек,
+    пульты, рабочие места с мониторами, огнетушитель. Объекты — из набора атомной станции (npower)."""
+    def P(n, foot=(2, 1), **kw):
+        name = f"{pre}_tech_{n}"
+        city.prop(name, f"pk:npower/npower_{n}", foot=list(foot), sight=True, **kw)
+        return name
+    rack, rack2, rack3 = P("2_073"), P("2_079"), P("2_080")
+    tall = P("2_042", foot=(1, 1))
+    desk, desk2, desk3 = P("2_036"), P("2_047"), P("2_060")
+    work, work2 = P("2_066"), P("2_074")
+    fire = P("2_057", foot=(1, 1))
+    glow = {"r": 70, "color": [120, 220, 160], "at": [0.5, 0.3], "flicker": 0.08}
+    console = P("2_026", light=glow)
+    return [
+        [(rack, 0, 0), (rack2, 2, 0), (rack3, 4, 0), (tall, 0, 2)],
+        [(desk, 0, 0), (desk2, 2, 0), (fire, 5, 0), (work, 0, 2)],
+        [(console, 1, 1), (tall, 0, 0), (tall, 4, 0), (desk3, 3, 2)],
+        [(work, 0, 0), (work2, 2, 0), (rack, 0, 2), (fire, 4, 2)],
+        [(rack2, 0, 0), (rack3, 2, 0), (desk, 0, 2), (desk2, 2, 2)],
+    ]

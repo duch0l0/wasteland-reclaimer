@@ -15,7 +15,7 @@ wasteland-laboratory (wlab), nuclear-power-plant (npower).
 """
 import json
 
-from citykit import City, CityMap
+from citykit import City, CityMap, tech_scenes
 
 city = City("ares", "«Арес»")
 
@@ -234,6 +234,8 @@ lb.put(REACTOR, 36, 24)
 # стенд прототипа: винтовка Гаусса — единственная уцелевшая на пустоши. Охрана проекта ещё на посту.
 lb.box(LOCKERS[0], 36, 4, "стенд прототипа «Арес»", {"винтовка Гаусса": 1, "ЭМ-патрон": 24})
 lb.enemies += [["robot_guard", 30, 8], ["robot_guard", 20, 20], ["turret", 37, 8]]
+
+print("техзал lb:", lb.dress_empty(tech_scenes(city, "ar5"), ground="F", block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("repconn_ghoul",))
 L = json.load(open("data/locations.json", encoding="utf-8"))

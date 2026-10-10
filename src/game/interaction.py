@@ -1,6 +1,8 @@
 """Разговоры, контейнеры, двери, смена оружия, перки и награды за убийства."""
 import pygame
 
+from .. import settings as S
+
 from .. import perks
 from ..weapons import WEAPONS, available
 
@@ -14,6 +16,7 @@ class InteractionMixin:
             # собеседник поворачивается к игроку
             speaker.anim.face(self.player.rect.centerx - speaker.rect.centerx,
                               self.player.rect.centery - speaker.rect.centery)
+            self.reveal_from_node()
             return True
         return False
 
@@ -32,6 +35,12 @@ class InteractionMixin:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
                 return
         term = self.level.terminal_near(self.player.rect)
+        box = self.level.container_near(self.player.rect)
+        if term and term["id"] and box:   # рядом и терминал, и ящик — открывается тот, что ближе (поровну — терминал)
+            me = pygame.Vector2(self.player.rect.center)
+            d = lambda tiles: min(me.distance_to(((x + 0.5) * S.TILE, (y + 0.5) * S.TILE)) for x, y in tiles)
+            if d(box["tiles"]) + 4 < d(term["tiles"]):
+                term = None
         if term and term["id"]:
             self.open_terminal(term["id"])
             return
@@ -39,7 +48,6 @@ class InteractionMixin:
         if talker:
             self.talk_to(talker, talker.talk)
             return
-        box = self.level.container_near(self.player.rect)
         if box:
             self.open_container(box)
             return
@@ -137,6 +145,9 @@ class InteractionMixin:
     def join_ally(self, ally_id):
         """Спутник-человек (src/companion.ALLIES) идёт с героем; житель с карты уходит вместе с ним."""
         from ..companion import ALLIES, make_ally, _place_one
+        if self.flags.get(f"{ally_id}_quit"):      # ушёл от героя за его поступки — второй раз не пойдёт
+            self.log(f"{ALLIES[ally_id]['name']} качает головой: «Нет. Мы это уже проходили».")
+            return
         if self.ally is not None:
             self.dismiss_ally()
         prof = ALLIES[ally_id]
@@ -202,6 +213,8 @@ class InteractionMixin:
             self.log(f"В руках: {self.weapon_name()}.")
 
     def weapon_name(self):
+        if getattr(self, "ring", None):     # на ринге — только кулаки
+            return "кулаки"
         if self.player.weapon == "melee" and self.inventory.has("заточенный лом"):
             return "Заточенный лом"
         return WEAPONS[self.player.weapon]["name"]

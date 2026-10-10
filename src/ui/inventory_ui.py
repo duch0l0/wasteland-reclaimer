@@ -14,6 +14,7 @@ from .. import settings as S
 from .. import items
 from .. import loader
 from ..perks import PERKS_BY_ID
+from .. import skills
 from ..weapons import WEAPONS
 from .common import (fonts, font_tiny, wrap_text, panel, button, close_button, hotspot,
                      COLOR_TITLE, COLOR_DIM, COLOR_OK, COLOR_HOVER, PANEL_H)
@@ -148,6 +149,22 @@ def _item_facts(game, name):
     return facts
 
 
+def _info_card(surf, rect, title, sub, desc):
+    """Карточка навыка или перка — вместо предмета, пока курсор на строке слева."""
+    font, font_small = fonts()
+    pygame.draw.rect(surf, (26, 22, 18), rect, border_radius=6)
+    pygame.draw.rect(surf, CELL_BORDER, rect, 1, border_radius=6)
+    x, y, w = rect.x + 14, rect.y + 14, rect.w - 28
+    for line in wrap_text(font, title, w)[:2]:
+        surf.blit(font.render(line, True, COLOR_TITLE), (x, y))
+        y += 24
+    surf.blit(font_tiny().render(sub, True, COLOR_DIM), (x, y))
+    y += 26
+    for line in wrap_text(font_small, desc, w)[:12]:
+        surf.blit(font_small.render(line, True, (215, 205, 185)), (x, y))
+        y += 20
+
+
 def _card(surf, rect, game, name):
     font, font_small = fonts()
     pygame.draw.rect(surf, (26, 22, 18), rect, border_radius=6)
@@ -225,11 +242,12 @@ def draw_inventory(surf, game):
     rows = [("Уровень", f"{lv.level}"), ("Опыт", f"{lv.xp}/{lv.xp_needed}"), ("HP", f"{p.hp}/{p.max_hp}"),
             ("ОД · КБ", f"{p.max_ap} · {p.armor_class}" + (f" · −{p.armor}" if p.armor else "")),
             ("Урон вблизи", f"{p.damage}±2")]
-    skill_rows = [("Стрельба", p.guns_skill), ("Тяжёлое оружие", p.weapon_skill("heavy")),
-                  ("Энергооружие", p.weapon_skill("energy")), ("Метание", p.skill("throwing")),
-                  ("Рукопашная", p.melee_skill), ("Медицина", p.skill("medicine")),
-                  ("Наука", p.skill("science")), ("Красноречие", p.skill("speech")),
-                  ("Выживание", p.skill("survival"))]
+    skill_rows = [("Стрельба", p.guns_skill, "guns"), ("Тяжёлое оружие", p.weapon_skill("heavy"), "heavy"),
+                  ("Энергооружие", p.weapon_skill("energy"), "energy"), ("Метание", p.skill("throwing"), "throwing"),
+                  ("Рукопашная", p.melee_skill, "melee"), ("Ловкость рук", p.skill("steal"), "steal"),
+                  ("Медицина", p.skill("medicine"), "medicine"), ("Наука", p.skill("science"), "science"),
+                  ("Красноречие", p.skill("speech"), "speech"), ("Выживание", p.skill("survival"), "survival")]
+    about = None         # навык или перк под курсором — его описание в карточке справа
     y = box.y + 186
     for label, val in rows:
         surf.blit(font_tiny().render(label, True, COLOR_DIM), (lx, y))
@@ -239,7 +257,10 @@ def draw_inventory(surf, game):
     y += 4
     surf.blit(font_small.render("Навыки", True, COLOR_TITLE), (lx, y))
     y += 20
-    for label, val in skill_rows:
+    for label, val, sid in skill_rows:
+        if hotspot(pygame.Rect(lx, y - 1, col_w, 15), lambda: game.open_journal_tab("char")):
+            about = (label, f"Навык: {val}", skills.SKILL_BY_ID[sid]["desc"] + " Клик — все навыки и перки (журнал).")
+            pygame.draw.rect(surf, (60, 52, 38), pygame.Rect(lx, y - 1, col_w, 15))
         surf.blit(font_tiny().render(label, True, (200, 190, 170)), (lx + 6, y))
         v = font_tiny().render(str(val), True, S.COLOR_TEXT)
         surf.blit(v, (lx + col_w - v.get_width(), y))
@@ -247,11 +268,17 @@ def draw_inventory(surf, game):
     y += 4
     surf.blit(font_small.render("Перки", True, COLOR_TITLE), (lx, y))
     y += 20
-    perk_names = [PERKS_BY_ID[pid]["name"] + (f" ×{r}" if r > 1 else "") for pid, r in p.perks.items()]
-    if len(perk_names) > 3:
-        perk_names = perk_names[:2] + [f"…и ещё {len(perk_names) - 2}"]
-    for line in perk_names or ["пока нет"]:
-        surf.blit(font_tiny().render(line, True, (200, 190, 170) if perk_names else COLOR_DIM), (lx + 6, y))
+    perks = [(pid, PERKS_BY_ID[pid]["name"] + (f" ×{r}" if r > 1 else "")) for pid, r in p.perks.items()]
+    fit = max(1, (box.bottom - 40 - y) // 16)
+    if len(perks) > fit:          # не влезают — последняя строка ведёт в журнал, где видны все
+        perks = perks[:fit - 1] + [(None, f"…и ещё {len(perks) - fit + 1} — клик")]
+    for pid, line in perks or [(None, "пока нет")]:
+        r = pygame.Rect(lx, y - 1, col_w, 16)
+        if p.perks and hotspot(r, lambda: game.open_journal_tab("char")):
+            pygame.draw.rect(surf, (60, 52, 38), r)
+            about = ((PERKS_BY_ID[pid]["name"], "Перк", PERKS_BY_ID[pid]["desc"] + " Клик — все перки (журнал).") if pid
+                    else ("Перки", f"Всего: {len(p.perks)}", "Клик — журнал, вкладка «Персонаж»: все перки и навыки с описаниями."))
+        surf.blit(font_tiny().render(line, True, (200, 190, 170) if p.perks else COLOR_DIM), (lx + 6, y))
         y += 16
     caps = loader.item_icon("крышки", (24, 24), halo=False)
     surf.blit(caps, (lx, box.bottom - 34))
@@ -297,4 +324,8 @@ def draw_inventory(surf, game):
 
     # ---- справа: карточка предмета (под курсором или выбранного)
     cx = gx + COLS * (CELL + GAP) + 10
-    _card(surf, pygame.Rect(cx, box.y + 42, box.right - cx - 14, box.h - 56), game, hovered or game.inv_sel)
+    card = pygame.Rect(cx, box.y + 42, box.right - cx - 14, box.h - 56)
+    if about and not hovered:
+        _info_card(surf, card, *about)
+    else:
+        _card(surf, card, game, hovered or game.inv_sel)

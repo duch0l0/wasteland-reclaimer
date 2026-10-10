@@ -53,7 +53,7 @@ def draw_panel(surf, game):
         cost = combat.attack_cost(p)
         hint = f"ЛКМ — идти/атака ({cost} ОД) · ПКМ — прицельно ({cost + 1}) · Tab — цель · G — бросок · бочка — выстрел"
     else:
-        hint = "ЛКМ — идти, говорить, обыскать, напасть · E — действие · Esc — выход"
+        hint = "ЛКМ — идти, говорить, обыскать · ПКМ — меню действий · K — карманы · J — журнал"
     parts = hint.split(" · ")
     while len(parts) > 1 and font_tiny().size(" · ".join(parts))[0] > LOG_W - 24:
         parts.pop()  # не влезает в колонку лога — отбрасываем последние подсказки
@@ -109,6 +109,10 @@ def draw_panel(surf, game):
     else:
         surf.blit(font_small.render(f"Крышки: {game.inventory.count('крышки')}", True, (210, 200, 170)),
                   (x0, box.y + 52))
+        if hasattr(game, "clock_text"):   # день, день недели и час (src/game/clock.py)
+            night = game.is_night()
+            ct = font_small.render(("☾ " if night else "") + game.clock_text(), True, (170, 175, 210) if night else DIM)
+            surf.blit(ct, (right - ct.get_width(), box.y + 52))
 
     # ---- кнопки: ширина по подписи; если с клавишами не влезают — без клавиш
     enabled = not game.modal_open()

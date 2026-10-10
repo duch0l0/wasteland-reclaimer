@@ -21,7 +21,7 @@ luxury-restaurant (lrest), abandoned-coal-mine (cmine), junkyard (jtown), bazaar
 """
 import json
 
-from citykit import City, CityMap
+from citykit import City, CityMap, tech_scenes
 
 city = City("vegas", "Руины Вегаса")
 NIGHT = [70, 76, 120]
@@ -197,6 +197,11 @@ for x, y in ((31, 22), (48, 22), (31, 33), (48, 33)):
     st.put(LAMPS[(x + y) % 2], x, y)
 for i, (x, y) in enumerate(((20, 25), (56, 30), (38, 14), (40, 42), (24, 30))):
     st.maybe(WRECKS[i % len(WRECKS)], x, y)
+# люк в подвал разрушенного «Первого банка Мохаве» — «Последний банк Вегаса»
+st.props.append(["x_manhole", 22, 38])
+st.portal([(22, 38)], "vegas_bank", (6, 5), "Люк в подвал банка",
+          requires={"flag": "know_bank", "msg": "Тяжёлый люк с гербом банка. Заварен изнутри? Нет — просто никто не знает, что он открывается."})
+st.reserve(21, 37, 23, 39)
 st.npcs += [["judge_sol", 40, 32], ["strip_trader", 28, 36], ["strip_drunk", 50, 36], ["grey_buyer", 32, 30],
             ["strip_kid", 47, 24]]
 for _, x, y in st.npcs:
@@ -489,6 +494,26 @@ vt.put(TUBE_DEAD, 14, 17)
 vt.put(TUBE_DEAD, 24, 17)
 vt.terminal(21, 20, "cryo_capsule")
 vt.npcs += [["cooper_zero", 26, 22]]
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", st.dress_empty([
+    [("vg_rubble1", 0, 0), ("vg_debris", 2, 1), ("r_car_wreck", 0, 3), ("x_fire_barrel", 4, 1)],
+    [("vg_lantern", 0, 0), ("r_tent_low", 1, 0), ("pile_cans", 3, 2), ("r_trash", 0, 2)],
+    [("vg_rubble2", 0, 0), ("x_fire_barrel", 3, 1), ("r_bones", 2, 3), ("r_streetlamp", 5, 0)],
+    [("by_wreck1", 0, 0), ("vg_debris", 3, 2), ("x_fire_barrel", 0, 2)],
+    [("r_dumpster", 0, 0), ("pile_junk", 2, 0), ("x_fire_barrel", 4, 1), ("r_trash", 0, 2)],
+    [("r_streetlamp", 0, 0), ("by_car_pile", 1, 1), ("pile_tires", 4, 1)],
+], block=7, margin=1, chance=1.0))
+print("обжито у Сапогов:", bt.dress_empty([
+    [("r_army_truck", 0, 0), ("x_fire_barrel", 4, 2), ("pile_tires", 0, 2)],
+    [("r_sandbag_row", 0, 0), ("r_sandbag_row", 2, 0), ("x_fire_barrel", 1, 2), ("r_barrels", 4, 1)],
+    [("pile_scrap", 0, 0), ("pile_junk", 2, 0), ("r_streetlamp", 4, 0), ("crate", 0, 2)],
+    [("r_tent_low", 0, 0), ("campfire", 2, 2), ("r_logs", 3, 2), ("barrel_wood", 0, 2)],
+], block=7, margin=1, chance=1.0))
+
+print("техзал zr:", zr.dress_empty(tech_scenes(city, "vg"), ground="M", block=7, margin=1, chance=1.0))
+print("техзал vt:", vt.dress_empty(tech_scenes(city, "vg"), ground="M", block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("cooper_zero",))
 L = json.load(open("data/locations.json", encoding="utf-8"))

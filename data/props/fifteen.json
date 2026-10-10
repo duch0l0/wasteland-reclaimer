@@ -189,6 +189,60 @@
 "sight": false,
 "layer": "floor"
 },
+"ws_goal_broken": {
+"img": "pk:wschool/p4/3,6,3,2",
+"block": true,
+"sight": false,
+"foot": [
+3,
+1
+]
+},
+"ws_pullup": {
+"img": "pk:wschool/p4/4,8,4,2",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"ws_swings": {
+"img": "pk:wschool/p4/0,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ws_monkey_bars": {
+"img": "pk:wschool/p4/2,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ws_weights": {
+"img": "pk:wschool/p4/10,6,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ws_barbell": {
+"img": "pk:wschool/p4/12,6,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
 "t50_car0": {
 "img": "pk:town50/town50_1_029",
 "block": true,
@@ -295,16 +349,6 @@
 },
 "court": {
 "img": "pk:wschool/p4/0,0,3,3",
-"block": false,
-"sight": false,
-"foot": [
-3,
-3
-],
-"layer": "floor"
-},
-"track": {
-"img": "pk:wschool/p4/9,0,3,3",
 "block": false,
 "sight": false,
 "foot": [

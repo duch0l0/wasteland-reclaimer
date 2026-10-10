@@ -76,16 +76,26 @@ class ControlsMixin:
         if self.loot:
             self.loot_key(key)
             return
+        if self.ctx_menu:
+            self.ctx_key(key)
+            return
+        if self.fishing:
+            self.fishing_key(key)
+            return
         if self.journal_open:
             if key in (pygame.K_ESCAPE, pygame.K_j):
                 self.journal_open = False
             elif key == pygame.K_TAB:
-                self.journal_tab = "rep" if self.journal_tab == "quests" else "quests"
+                tabs = ["quests", "rep", "char"]
+                self.journal_tab = tabs[(tabs.index(self.journal_tab) + 1) % len(tabs)]
                 self.journal_scroll = 0
             elif key in (pygame.K_DOWN, pygame.K_PAGEDOWN):
                 self.journal_scroll += 1 if key == pygame.K_DOWN else 8
             elif key in (pygame.K_UP, pygame.K_PAGEUP):
                 self.journal_scroll = max(0, self.journal_scroll - (1 if key == pygame.K_UP else 8))
+            return
+        if key == pygame.K_k and self.mode == "local" and not self.modal_open():   # K — карманы жителя рядом
+            self.pickpocket()
             return
         if key == pygame.K_j and not self.modal_open() and not self.combat.active:
             self.journal_open = True
@@ -219,3 +229,4 @@ class ControlsMixin:
             return
         for eff in self.dialogue.choose(idx):
             self.apply_effect(eff)
+        self.reveal_from_node()

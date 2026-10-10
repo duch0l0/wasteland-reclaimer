@@ -5,6 +5,7 @@
   земля — идти туда (по пути в обход стен);
   NPC — подойти и заговорить;  ящик/дверь — подойти и открыть;
   враг — напасть (если рядом и виден — сразу бой, первый ход ваш; иначе подойти).
+ПКМ вне боя — меню действий, как в Fallout 2 (src/game/ctxmenu.py).
 В бою, в свой ход:
   ЛКМ по клетке — идти (1 ОД за клетку, путь и цена видны под курсором);
   ЛКМ по врагу — атаковать (в ближнем бою сначала подойти);
@@ -120,6 +121,13 @@ class MouseMixin:
 
     # ------------------------------------------------------------- клики
     def handle_click(self, pos, button):
+        if self.ctx_menu:                       # меню действий: клик по пункту — выполнить, мимо — закрыть
+            key = hotspot_at(pos)
+            if callable(key) and getattr(key, "ctx", False):
+                key()
+            else:
+                self.ctx_menu = None
+            return
         key = hotspot_at(pos)
         if key is not None:
             self.last_button = button  # обыск: ЛКМ — вся стопка, ПКМ — одна штука
@@ -147,6 +155,8 @@ class MouseMixin:
             self._combat_click(pos, button)
         elif button == 1:
             self._explore_click(pos)
+        elif button == 3:
+            self.open_ctx_menu(pos)
 
     def _explore_click(self, pos):
         target = self.entity_at_screen(pos)
@@ -402,7 +412,7 @@ class MouseMixin:
         if target in self.npcs and pygame.key.get_mods() & pygame.KMOD_SHIFT:
             return (f"Напасть: {target.name}", (235, 120, 100), None, None)
         if target in self.npcs:
-            return (f"Говорить: {target.name} (Shift — напасть)", (230, 220, 190), None, None)
+            return (f"Говорить: {target.name} · ПКМ — действия", (230, 220, 190), None, None)
         if target is not None and target.talk and not target.hostile:
             return (f"Говорить: {target.name}", (230, 220, 190), None, None)
         if target is not None:
@@ -420,7 +430,7 @@ class MouseMixin:
                 label = "Читать: доска объявлений" if what["id"].startswith("doc:") else "Терминал RobCo"
             else:
                 label = "Дверь: заперта"
-            return (label, (230, 220, 190), None, None)
+            return (label + " · ПКМ — действия", (230, 220, 190), None, None)
         portal = getattr(self.level, "portal_at", lambda *_: None)(*tile)
         if portal:
             return (f"Переход: {portal['label']}", (240, 210, 120), None, tile)

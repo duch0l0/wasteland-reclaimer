@@ -59,7 +59,7 @@ ok(skills.xp_for_kill(25, 1, 5) == 5 and skills.xp_for_kill(25, 5, 5) == 25 and 
 g.gain_xp(100)
 ok(p.level_sys.level == 2 and p.pending_skills == 1 and p.pending_perks == 1, "2-й уровень: навык и перк")
 fr(g)
-ok(g.perk_choices and g.perk_choices[0].get("kind") == "skill" and len(g.perk_choices) == 9, "сначала — выбор навыка (9)")
+ok(g.perk_choices and g.perk_choices[0].get("kind") == "skill" and len(g.perk_choices) == 10, "сначала — выбор навыка (10)")
 guns = p.skill("guns")
 idx = next(i for i, c in enumerate(g.perk_choices) if c["id"] == "guns")
 g.handle_key(pygame.K_1 + idx)

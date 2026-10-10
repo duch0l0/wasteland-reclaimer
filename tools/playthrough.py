@@ -34,6 +34,7 @@ from src.combat import tile_of, rect_pos_for_tile, chebyshev  # noqa: E402
 from src.weapons import WEAPONS, shortfall, skill_of  # noqa: E402
 from src import items as ITEMS  # noqa: E402
 from src import settings as S  # noqa: E402
+import bot_sides as SQ  # noqa: E402
 
 saveload.SAVE_DIR = tempfile.mkdtemp()
 
@@ -132,6 +133,8 @@ class Critic:
 
 
 class Bot:
+    Stuck = Stuck
+
     def __init__(self, seed=7, sides=True, build="guns"):
         random.seed(seed)
         self.sides = sides
@@ -144,6 +147,7 @@ class Bot:
         self.t0 = time.time()
         self.critic = Critic(self)
         self.read_docs = set()
+        self.side_fails = []
 
     # ------------------------------------------------------------ кадры и окна
     def fr(self, n=2):
@@ -221,13 +225,22 @@ class Bot:
         for _ in range(4):
             if g.combat.active:
                 self.fight()
+            if g.term:                 # забытый терминал или ящик держат окно — порог не сработает
+                g.close_terminal()
+            g.loot = None
             g.dialogue.active_node = None
             g.player.rect.topleft = rect_pos_for_tile(g.player, tuple(sorted(p["tiles"])[0]))
             self.fr(4)
             if g.loc.id == to:
                 break
         if g.loc.id != to:
-            raise Stuck(f"переход {g.loc.id} → {to} не сработал ({(p.get('requires') or {}).get('msg', '')})")
+            busy = [k for k in ("dialogue", "perk_choices", "combat", "slides", "term", "loot", "trade", "inv_open",
+                                "journal_open", "craft_open", "ctx_menu", "fishing", "menu", "game_over")
+                    if (g.dialogue.is_active() if k == "dialogue" else g.combat.active if k == "combat"
+                        else getattr(g, k, None))]
+            raise Stuck(f"переход {g.loc.id} → {to} не сработал ({(p.get('requires') or {}).get('msg', '')}) "
+                        f"[на месте: {tile_of(g.player)}, портал {sorted(p['tiles'])[0]}, открыто: {busy}, "
+                        f"диалог: {g.dialogue.active_id}/{g.dialogue.active_node}]")
         self.critic.on_enter()
 
     def walk_to_map(self, target):
@@ -346,6 +359,7 @@ class Bot:
     def shop_here(self):
         g = self.g
         self.buy_implants()
+        self.lessons()
         for n in list(g.npcs):
             if n.npc_id in g.traders:
                 try:
@@ -485,6 +499,82 @@ class Bot:
     def end_talk(self):
         self.g.dialogue.active_node = None
 
+    def chat(self, npc_id, *parts):
+        """Разговор по готовой цепочке реплик (как в тестах квестов). Часть — строка или кортеж вариантов:
+        берётся первый, что виден (реплика с проверкой навыка — если навык есть)."""
+        g = self.g
+        self.talk(npc_id)
+        for part in parts:
+            if not g.dialogue.is_active():
+                break
+            alts = part if isinstance(part, tuple) else (part,)
+            if not any(self.say(a, required=False) for a in alts):
+                opts = [g.dialogue.option_label(o) for o in g.dialogue.visible_options()]
+                self.end_talk()
+                raise Stuck(f"{npc_id}: нет реплики {alts} среди {opts}")
+        self.end_talk()
+        self.fr(2)
+
+    def side(self, name, fn):
+        """Побочный квест: не вышел — записать и идти дальше (сюжет важнее)."""
+        g = self.g
+        try:
+            fn()
+        except Stuck as ex:
+            self.side_fails.append(f"{name}: {ex}")
+            print(f"   ~ побочка «{name}» не вышла: {ex}", flush=True)
+            g.dialogue.active_node = None
+            if g.term:
+                g.close_terminal()
+            g.loot = None
+            g.trade = None
+            if not g.player.alive or g.game_over:
+                raise
+            return False
+        self.stats["sides_done"] = self.stats.get("sides_done", []) + [name]
+        return True
+
+    def buy_from(self, trader_id, item, n=1):
+        """Купить у торговца нужное квесту (если он рядом и денег хватает)."""
+        g = self.g
+        self.talk(trader_id)
+        self.end_talk()
+        g.open_trade(trader_id)
+        if not g.trade:
+            return False
+        g.trade["tab"] = "buy"
+        while g.inventory.count(item) < n:
+            row = next((r for r in g.trade_rows() if r[0] == item), None)
+            if row is None or g.inventory.count("крышки") < row[2]:
+                break
+            g._buy(*row[:3])
+        g.trade = None
+        return g.inventory.count(item) >= n
+
+    TEACHERS = {"guns": "arms_seller", "melee": "neal", "heavy": "sl_trader", "energy": "strip_trader",
+                "throwing": "rose", "steal": "decker", "medicine": "ghoul_healer", "science": "jt_tinker",
+                "speech": "mother_snake", "survival": "chet"}
+
+    def lessons(self):
+        """Платные уроки у мастера своего навыка — когда деньги есть с запасом (как сделал бы игрок)."""
+        g = self.g
+        for sid, _ in self.build:
+            npc = self.TEACHERS.get(sid)
+            if not npc or not any(n.npc_id == npc for n in g.npcs) or g.flags.get(f"lesson_{npc}_done"):
+                continue
+            try:
+                self.talk(npc)
+                ask = next((o["label"] for o in g.dialogue.visible_options() if o.get("next") == "lessons"), None)
+                if ask and self.say(ask, required=False):
+                    while g.inventory.count("крышки") >= 700 and any(
+                            self.say(w, required=False) for w in ("Первый урок", "Второй урок", "Третий урок")):
+                        self.stats["lessons"] = self.stats.get("lessons", 0) + 1
+                        if not self.say("Ещё урок", required=False):
+                            break
+                self.end_talk()
+            except Stuck:
+                self.end_talk()
+
     def terminal(self, tid, *parts):
         g = self.g
         t = next((t for t in g.level.terminals if t["id"] == tid), None)
@@ -497,6 +587,9 @@ class Bot:
             raise Stuck(f"{g.loc.id}: нет терминала {tid}")
         self.stand_near(t["tiles"])
         g.handle_key(pygame.K_e)
+        if not g.term or g.term.get("id") != tid:   # E открыл соседний ящик — терминал открыть напрямую, как кликом
+            g.loot = None
+            g.open_terminal(tid)
         for part in parts:
             entries = g.term_entries()
             idx = next((i for i, (_, e) in enumerate(entries) if part in e["label"]), None)
@@ -569,6 +662,10 @@ class Bot:
         self.stand_near(box["tiles"])
         g.handle_key(pygame.K_e)
         self.fr(1)
+        if g.term and not g.loot:          # рядом терминал, и E открыл его — закрыть и открыть ящик напрямую
+            g.close_terminal()
+            g.open_container(box)
+            self.fr(1)
 
     def take_item(self, map_id, item):
         """Сходить туда, где лежит вещь (по описанию квеста), и забрать её из ящика."""
@@ -633,7 +730,9 @@ class Bot:
         burst = 1 if short else w.get("burst", 1)
         if check_ammo and ammo and g.inventory.count(ammo) < 15 * burst:   # мало патронов — очередями не сорить
             burst = 1
-        dmg = (p.damage + w.get("damage", 0)) if not w["ranged"] else (w.get("damage", 0) or 23)
+        base = p.base_damage + max(0, (p.melee_skill - 60) // 10) + 3 * p.perk_rank("heavy_hand")
+        sharp = 3 if wid == "melee" and g.inventory.has("заточенный лом") else 0
+        dmg = (base + w.get("damage", 0) + sharp) if not w["ranged"] else (w.get("damage", 0) or 23)
         dmg = max(1, dmg - int(armor * (1 - w.get("pierce", 0))))
         hit = max(0.05, min(0.95, (skill_of(p, wid) - 2 * short - 25) / 100))
         return dmg * burst * hit * (1.6 if w["ranged"] else 1) * (0.3 if w.get("thrown") else 1) / w["ap"] * 4
@@ -686,7 +785,13 @@ class Bot:
         while c.active and g.player.alive:
             n += 1
             if n > 30000:
-                raise Stuck("бой не кончается")
+                from src.companion import party
+                me = tile_of(g.player)
+                foes = [f"{e.type_id}@{tile_of(e)} hp{e.hp} {'бежит ' if getattr(e, 'retreated', False) else ''}"
+                        f"d{chebyshev(me, tile_of(e))} {'видит' if c.los(e, g.player) else 'не видит'}"
+                        for e in c.enemies_in_combat()]
+                pals = [f"{a.name} {'выбит' if a.down else 'в строю'}" for a in party(g)]
+                raise Stuck(f"бой не кончается [герой {me}, раунд {c.round}, {g.loc.id}; враги: {foes}; спутники: {pals}]")
             if c.player_can_act():
                 p = g.player
                 urgent = p.hp < max(8, p.max_hp * 0.2)      # совсем плохо — лечиться в любом случае
@@ -716,6 +821,10 @@ class Bot:
                     if step:
                         before = tile_of(p)
                         c.player_step(*step)
+                        for _ in range(30):
+                            if not c.tweens:
+                                break
+                            self.fr(1)
                         if tile_of(p) != before:
                             self.fr(1)
                             continue
@@ -729,6 +838,10 @@ class Bot:
                     if step:
                         before = tile_of(p)
                         c.player_step(*step)
+                        for _ in range(30):       # шаг — анимация: клетка сменится, когда она доиграет
+                            if not c.tweens:
+                                break
+                            self.fr(1)
                         if tile_of(p) == before:
                             c.end_turn()
                     else:
@@ -828,6 +941,32 @@ class Bot:
     # ------------------------------------------------------------ торговля
     KEEP_MISC = ("отмычка", "лопата")
 
+    _quest_items = None
+
+    @classmethod
+    def quest_items(cls):
+        """Вещи, о которых спрашивают в разговорах (условие item / items_all / items_any) — их не продают."""
+        if cls._quest_items is None:
+            import json
+            found = set()
+
+            def walk(x):
+                if isinstance(x, dict):
+                    if isinstance(x.get("item"), str) and x.get("type") is None:
+                        found.add(x["item"])
+                    for k in ("items_all", "items_any"):
+                        found.update(x.get(k) or [])
+                    for v in x.values():
+                        walk(v)
+                elif isinstance(x, list):
+                    for v in x:
+                        walk(v)
+            with open("data/dialogues.json", encoding="utf-8") as fh:
+                walk(json.load(fh))
+            found.discard("крышки")
+            cls._quest_items = found
+        return cls._quest_items
+
     def junk(self):
         """Что продать: ценный хлам, лишние стволы, броня хуже надетой. Сюжетное (цена 0) не трогаем."""
         g = self.g
@@ -841,7 +980,7 @@ class Bot:
         for name, have in inv.nonzero().items():
             cat = ITEMS.category(name)
             price = ITEMS.price(name)
-            if price <= 0 or name == "крышки":
+            if price <= 0 or name == "крышки" or name in self.quest_items():
                 continue
             if cat == "misc" and name not in self.KEEP_MISC and "use" not in ITEMS.ITEMS[name]:
                 out.append((name, have))
@@ -900,7 +1039,7 @@ class Bot:
         """Лишние деньги — хирургу (как игрок, у которого к концу игры копятся крышки)."""
         g = self.g
         for npc, part, price in self.IMPLANTS:
-            if g.inventory.count("крышки") < price + 300 or not any(n.npc_id == npc for n in g.npcs):
+            if g.inventory.count("крышки") < price + 100 or not any(n.npc_id == npc for n in g.npcs):
                 continue
             try:
                 self.talk(npc)
@@ -1233,6 +1372,11 @@ def act1(b):
         b.fr(3)
     b.step("«Бейкер-7»: склад и роботы", b7)
 
+    def baker_sides():
+        if b.sides:
+            SQ.baker(b)
+    b.step("Бейкер: побочки", baker_sides)
+
 
 def act1b(b):
     """Зайзикс и Нидлс — хвост первого акта, дорога к Хабу."""
@@ -1279,6 +1423,9 @@ def act1b(b):
             b.pursue("drunk_vic", "обрывок карты (центр)", required=False)
             b.pursue("kate", "багор Мамаши Кейт", required=False)       # переправа: пёс, курица, кукуруза
             b.gear_up()
+        if b.sides:
+            SQ.needles(b)
+        b.walk_to_map("needles")
         b.goto_portal("needles_bridge")
         b.terminal("needles_toll", "Особые грузы")
         if not g.flags.get("know_cult_convoys"):
@@ -1317,6 +1464,7 @@ def act2(b):
         if b.sides:
             b.pursue("hub_kid", "runaway_job", required=False)
             b.pursue("crimson_boss", "runaway_done", required=False)
+            SQ.hub_start(b)
     b.step("Хаб: шлюз и Долорес Вега", hub)
 
     def junktown():
@@ -1339,6 +1487,7 @@ def act2(b):
         if b.sides:
             b.pursue("scrapper", "truck_job", required=False)
             b.take_item("junktown_dump", "обрывок карты (юг)")
+            SQ.junktown(b)
     b.step("Джанктаун: Анна Шоу и Рурк", junktown)
 
     def necropolis():
@@ -1361,6 +1510,7 @@ def act2(b):
             b.pursue("gravedigger", "tag_job", required=False)
             b.walk_to_map("necropolis")
             b.take_from("разрытая могила")
+            SQ.necropolis(b)
         b.walk_to_map("necropolis")
         b.shop_here()
     b.step("Некрополь: Водораздел, Сет, Коббс", necropolis)
@@ -1393,10 +1543,13 @@ def act2(b):
         b.visit("boneyard_vt")
         b.terminal("vt_server", "[Поставки «ВРЭ / разв.»]")
         b.pursue("cooper", "cooper_card", required=False)
+        if b.sides:
+            SQ.boneyard_before(b)
         if b.steal("boneyard_cathedral", "сундук на складе"):
             b.pursue("adytum_mayor", "adytum_truce", required=False)
         if b.sides:
             b.pursue("cooper", "tag_done", required=False)
+            SQ.boneyard(b)
         b.walk_to_map("boneyard")
         b.shop_here()
     b.step("Боунъярд: серверная Vault-Tec", boneyard)
@@ -1426,6 +1579,14 @@ def act2(b):
         b.pursue("overseer_sim", "v4_deal_off", required=False)
     b.step("Убежище 4: Сим и сделка", vault4)
 
+    def rounds():
+        if not b.sides:
+            return
+        SQ.hub_finish(b)
+        SQ.ferals_finish(b)
+        SQ.needles_finish(b)
+    b.step("Обход: Хаб, Некрополь, Нидлс", rounds)
+
 
 def act3(b):
     """Акт III «Мохаве»: шесть городов, «Ноль» под Вегасом, финал в Марипозе."""
@@ -1449,6 +1610,8 @@ def act3(b):
         b.visit("primm_camp")
         b.pursue("tobi", "tobi_home", required=False)
         b.walk_to_map("primm")
+        if b.sides:
+            SQ.primm(b)
     b.step("Примм: пропавший Тоби", primm)
 
     def goodsprings():
@@ -1468,8 +1631,10 @@ def act3(b):
         b.pursue("ezekiel", "know_zero", required=False)
         b.pursue("cult_hunter", "gs_decided", required=False)
         if b.sides:
+            SQ.goodsprings(b)
             b.visit("goodsprings_cave")
             b.take_from("тайник старателей")
+            SQ.goodsprings_after_cave(b)
     b.step("Гудспрингс: Иезекииль", goodsprings)
 
     def vault22():
@@ -1492,6 +1657,9 @@ def act3(b):
         b.steal("nipton_hall", "сейф мэра")               # список жребия: имена вписаны заранее
         b.walk_to_map("nipton")
         b.pursue("mayor_carroll", "nipton_decided", required=False, avoid=("take",))
+        if b.sides:
+            SQ.nipton(b)
+            SQ.luis_home(b)
     b.step("Ниптон: жребий и брат Т.", nipton)
 
     def searchlight():
@@ -1514,6 +1682,8 @@ def act3(b):
     def vegas():
         city("vegas_strip")
         b.pursue("judge_sol", "know_crowns", required=False)
+        if b.sides:
+            SQ.vegas(b)
         if b.sides:
             b.pursue("boots_rider", "bike_job", required=False)
             b.pursue("snake_trader", "bike_done", required=False)
@@ -1550,11 +1720,13 @@ def secrets(b):
         b.shop_here()
 
     def errands():
-        if not b.sides or not g.inventory.has("динамит") or g.flags.get("truck_done"):
+        if not b.sides:
             return
-        g.go_world_map()
-        b.go("junktown")
-        b.pursue("scrapper", "truck_done", required=False)
+        if g.inventory.has("динамит") and not g.flags.get("truck_done"):
+            g.go_world_map()
+            b.go("junktown")
+            b.pursue("scrapper", "truck_done", required=False)
+        SQ.bell_finish(b)
     b.step("Джанктаун: динамит для грузовика", errands)
 
     def order():
@@ -1598,6 +1770,7 @@ def secrets(b):
         b.visit("nova_core")
         b.take_from("ящик инженера Оками")
         b.terminal("nova_core", "[Червь Рэйвен")
+        b.side("«Нова»: лавка Шрапнели", lambda: (b.visit("nova_under", clear=False), b.shop_here()))
     b.step("«Нова»: ядро и «Звездочёт»", nova)
 
     def ares():
@@ -1666,6 +1839,10 @@ def main():
     print("купил:", ", ".join(b.stats.get("bought", [])) or "ничего")
     print("прочитал:", ", ".join(b.stats.get("books", [])) or "ничего")
     print("импланты:", ", ".join(b.stats.get("implants", [])) or "нет")
+    print("уроков у мастеров:", b.stats.get("lessons", 0))
+    print("побочки по сценарию:", len(b.stats.get("sides_done", [])), "вышли;", len(b.side_fails), "нет")
+    for f in b.side_fails:
+        print("   ~", f)
     import json
     Q = {k: v for k, v in json.load(open("data/quests.json", encoding="utf-8")).items() if not k.startswith("_")}
     g = b.g

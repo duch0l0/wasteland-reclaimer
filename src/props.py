@@ -111,7 +111,9 @@ def image(name, darken=False):
         img = pack_image(d["img"]) if d["img"].startswith("pk:") else \
             pygame.image.load(_img_path(d["img"])).convert_alpha()
         if img.get_size() != d["size"]:
-            img = pygame.transform.smoothscale(img, d["size"])
+            sc = d.get("scale", 1.0)       # целый множитель — по пикселям (пиксель-арт не мылится)
+            img = pygame.transform.scale(img, d["size"]) if float(sc).is_integer() else \
+                pygame.transform.smoothscale(img, d["size"])
         if darken:
             img = img.copy()
             img.fill((150, 140, 130, 255), special_flags=pygame.BLEND_RGBA_MULT)

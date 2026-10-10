@@ -55,9 +55,11 @@ class WorldMixin:
         if loc_id.startswith("baker") and loc_id != "baker7":
             self.baker_arrive(loc_id)
         self.restore_town_hostility()   # город помнит нападение: стража враждебна, убитые мертвы
+        self.apply_world_changes()      # решения героя видны на карте (data/world_changes.json)
         self.sync_gates()
         self.mode = "local"
         self.log(f"Вы входите: {self.loc.name}.")
+        self.ally_on_enter()
         seen = f"seen_{loc_id}"
         if d.get("arrival_slides") and not self.flags.get(seen):   # первый приход — слайды о городе
             self.flags[seen] = True
@@ -105,6 +107,14 @@ class WorldMixin:
 
     def update_world_map(self, dt_ms):
         self.worldmap.chance_mult = max(0.4, 1 - (self.player.skill("survival") - 20) / 150)
+        if self.worldmap.target:   # в пути время бежит по расстоянию (src/game/clock.py)
+            from ..worldmap import TRAVEL_SPEED
+            from .clock import MAP_MIN_PER_UNIT
+            self._travel_acc = getattr(self, "_travel_acc", 0.0) + TRAVEL_SPEED * dt_ms / 1000 * MAP_MIN_PER_UNIT
+            if self._travel_acc >= 10:
+                whole = int(self._travel_acc)
+                self._travel_acc -= whole
+                self.advance_time(whole)
         event = self.worldmap.update(dt_ms)
         for lid in self.worldmap.discovered:   # прошли рядом с придорожным местом
             self.log(f"Вы замечаете в стороне от дороги: {LOCATION_DEFS[lid]['name']}. Отмечено на карте.")
@@ -137,6 +147,14 @@ class WorldMixin:
         if LOCATION_DEFS[loc_id].get("world_pos"):
             self.worldmap.reveal(LOCATION_DEFS[loc_id]["world_pos"], 90)
         self.log(f"На карте отмечено: {LOCATION_DEFS[loc_id]['name']}.")
+
+    def reveal_from_node(self):
+        """Житель рассказал о месте — оно появляется на карте мира (поле "reveal" у реплики диалога)."""
+        if not self.dialogue.is_active():
+            return
+        for lid in self.dialogue.current_node().get("reveal", []):
+            if lid not in self.worldmap.known and lid in LOCATION_DEFS:
+                self.reveal_location(lid)
 
     # ------------------------------------------------------------ камера
     def view_size(self):

@@ -2,7 +2,7 @@
 import pygame
 
 from .. import settings as S
-from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui, loot_ui, menu_ui
+from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journal_ui, slides_ui, loot_ui, menu_ui, ctx_ui, fishing_ui
 from ..ui.common import fonts, begin_frame, PANEL_H
 from ..entities import sprite_of
 from .. import fonts as fontlib
@@ -78,9 +78,10 @@ class RenderMixin:
         # персонажи и объекты карты — вперемешку, кто ниже, тот ближе к камере
         from ..companion import party
         pals = [c for c in party(self) if not c.down]
-        entities = [self.player] + [e for e in self.enemies if e.alive] + self.npcs + pals
-        for c in party(self):
-            if c.down:  # выбитый из боя спутник лежит
+        hero = [self.player] if self.player.alive else []      # погибший герой лежит, как убитые враги
+        entities = hero + [e for e in self.enemies if e.alive] + self.npcs + pals
+        for c in party(self) + ([] if hero else [self.player]):
+            if c is self.player or c.down:  # выбитый из боя спутник (и погибший герой) лежит
                 from ..corpse import corpse_image
                 img = corpse_image(c)
                 fx, fy = cam.foot(c)
@@ -135,7 +136,8 @@ class RenderMixin:
             screen.blit(pygame.transform.smoothscale(surf, view.size), view)
         surf = screen
 
-        if self.speech and (self.speech["ent"] in self.npcs or self.speech["ent"] is self.player) \
+        if self.speech and (self.speech["ent"] in self.npcs or self.speech["ent"] is self.player
+                            or self.speech["ent"] in party(self)) \
                 and not self.hidden_by_roof(self.speech["ent"]):
             combat_ui.draw_speech(surf, self.speech, cam, z)
         combat_ui.draw_health_bars(surf, self, cam, z)
@@ -150,6 +152,10 @@ class RenderMixin:
         hud.draw_panel(surf, self)
         if combat.active and combat.aim_menu:
             combat_ui.draw_aim_menu(surf, combat)
+        if self.ctx_menu:
+            ctx_ui.draw_ctx_menu(surf, self)
+        if self.fishing:
+            fishing_ui.draw_fishing(surf, self)
 
         if self.dialogue.is_active():
             name = getattr(self.dialogue_speaker, "name", "???")

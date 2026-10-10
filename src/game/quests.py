@@ -36,11 +36,42 @@ STORY_STEPS = [
                      (100, ["p7_deal_done", "p7_vertibird_stolen", "p7_sabotage", "darnell_home"])]),
     ("sq_truck", [(10, "truck_job"), (100, "truck_done")]),
     ("sq_runaway", [(10, "runaway_job"), (100, "runaway_done")]),
+    ("sq_falcon", [(10, "falcon_job"), (50, "know_falcon_decker"), (100, "falcon_done")]),
+    ("sq_fever", [(10, "fever_job"), (50, "fever_cured"), (100, "fever_done")]),
+    ("sq_blue", [(10, "blue_job"), (50, "know_blue_seller"), (100, "blue_done")]),
+    ("sq_gizmo", [(10, "gizmo_offer"), (50, ["mayor_knows", "gizmo_peace", "mayor_poisoned"]), (100, "gizmo_done")]),
+    ("sq_robes", [(10, "robes_job"), (100, "robes_done")]),
+    ("sq_fox", [(10, "fox_job"), (50, ["fox_reel", "fox_projector"]), (100, "fox_done")]),
+    ("sq_ferals", [(10, "ferals_job"), (50, ["ferals_clue", "ferals_journal"]), (100, "ferals_done")]),
+    ("sq_beach", [(10, "beach_job"), (50, "beach_known"), (100, "beach_done")]),
+    ("sq_karl", [(10, "karl_job"), (50, "karl_harmonica"), (100, "karl_done")]),
+    ("sq_letters_by", [(10, "lt_job"), (50, "lt_letters"), (100, "lt_done")]),
+    ("sq_bell", [(10, "bell_job"), (50, "know_cult_beacon"), (100, "bell_done")]),
+    ("sq_luis", [(10, ["luis_job", "luis_rita"]), (50, "luis_free"), (100, "luis_home")]),
+    ("sq_irma", [(10, "irma_name"), (50, "irma_job"), (100, "irma_done")]),
+    ("sq_fair", [(10, "fair_job"), (100, "fair_done")]),
+    ("sq_hank", [(10, "hank_job"), (50, ["know_hank_zz", "know_zz_truth"]), (100, "hank_done")]),
+    ("sq_coin", [(10, "coin_job"), (50, "coin_fake"), (100, "coin_done")]),
+    ("sq_milo", [(10, "milo_job"), (100, ["milo_done", "gambler_eaten"])]),
+    ("sq_barge", [(10, "barge_job"), (50, "barge_vic"), (100, "barge_done")]),
+    ("sq_noa", [(10, "noa_job"), (50, "noa_talked"), (100, "noa_done")]),
+    ("sq_ringo", [(10, "ringo_job"), (100, "ringo_done")]),
+    ("sq_spring", [(10, "spring_job"), (50, "gs_cave_cleared"), (100, "spring_done")]),
+    ("sq_coaster", [(10, "coaster_job"), (50, "coaster_power"), (100, "coaster_done")]),
+    ("sq_bonnie", [(10, "bonnie_job"), (100, "bc_code")]),
+    ("sq_smile", [(10, "smile_job"), (50, "smile_started"), (100, ["smile_back", "smile_lost"])]),
+    ("sq_thermo", [(10, "thermo_job"), (100, "thermo_done")]),
+    ("sq_fred", [(10, "fred_job"), (50, ["fred_vera", "know_dice"]), (100, "fred_done")]),
     ("sq_tag", [(10, "tag_job"), (100, "tag_done")]),
     ("sq_bike", [(10, "bike_job"), (100, "bike_done")]),
     ("sq_treasure", [(10, "treasure_piece"), (50, "treasure_map"), (100, "treasure_dug")]),
     ("sq_murder", [(50, "murder_ready")]),
     ("sq_letters", [(50, "mail_half"), (100, "mail_all")]),
+    ("sq_caravans", [(30, "caravans_lead"), (60, "caravans_picture")]),
+    ("sq_harold", [(10, "harold_story"), (50, "know_cargo_bay"), (100, "know_master_vat")]),
+    ("sq_water_war", [(50, "clue_middleman")]),
+    ("sq_vault11", [(10, "know_vault11"), (50, "know_v11_truth")]),
+    ("sq_heist", [(50, "bank_vault_open")]),
     ("sq_catalina", [(10, "loc:catalina"), (50, ["know_ct_tribute", "know_ct_lie"]), (100, "ct_tribute_stopped")]),
     ("sq_nova", [(10, "loc:nova"), (50, ["know_nova_vre", "nova_rebels_ally"]), (100, "nova_decided")]),
     ("sq_ares", [(10, "loc:repconn"), (50, "loc:ares"), (100, "ares_decided")]),
@@ -98,9 +129,29 @@ class QuestMixin:
             return False
         if "flags_any" in cond and not any(self.flags.get(f) for f in cond["flags_any"]):
             return False
+        if "flag_eq" in cond and self.flags.get(cond["flag_eq"][0], 0) != cond["flag_eq"][1]:   # счётчик ровно N
+            return False
+        if "items_all" in cond and not all(self.inventory.has(i) for i in cond["items_all"]):
+            return False
+        if "flag_ge" in cond and self.flags.get(cond["flag_ge"][0], 0) < cond["flag_ge"][1]:   # счётчик не меньше N
+            return False
+        if "night" in cond and self.is_night() != cond["night"]:          # ночь: 20:00–5:00
+            return False
+        if "weekday" in cond and (self.game_day() - 1) % 7 != cond["weekday"]:   # 0 — пн … 6 — вс
+            return False
+        if "weekly_free" in cond and self.flags.get(f"{cond['weekly_free']}_w{(self.game_day() - 1) // 7}"):
+            return False
+        if "at" in cond and not (getattr(self, "loc", None) and self.loc.id.startswith(cond["at"])):   # герой здесь
+            return False
+        if "count_flags" in cond:      # хотя бы N из списка: [[флаги], N]
+            names, need = cond["count_flags"]
+            if sum(1 for n in names if self.flags.get(n)) < need:
+                return False
         if "flags_all" in cond and not all(self.flags.get(f) for f in cond["flags_all"]):
             return False
         if "no_item" in cond and self.inventory.has(cond["no_item"]):
+            return False
+        if "items_any" in cond and not any(self.inventory.has(i) for i in cond["items_any"]):   # отмычка или ключ
             return False
         if "flag" in cond and not self.flags.get(cond["flag"]):
             return False
@@ -116,6 +167,8 @@ class QuestMixin:
             if not (cond["perk"] == "silver_tongue" and self.player.skill("speech") >= SPEECH_FOR_TONGUE):
                 return False
         if "skill" in cond and self.player.skill(cond["skill"][0]) < cond["skill"][1]:
+            return False
+        if "skill_lt" in cond and self.player.skill(cond["skill_lt"][0]) >= cond["skill_lt"][1]:   # не хватает навыка
             return False
         if "min_level" in cond and self.player.level_sys.level < cond["min_level"]:
             return False
@@ -133,6 +186,10 @@ class QuestMixin:
         f, st = self.flags, self.stage
         if hasattr(self, "sync_reputation"):
             self.sync_reputation()
+        if hasattr(self, "check_deadlines"):
+            self.check_deadlines()          # квест взят — срок пошёл сразу (src/game/clock.py)
+        if getattr(self, "mode", None) == "local" and getattr(self, "loc", None) is not None:
+            self.apply_world_changes()      # решение принято здесь же — город меняется сразу
         if self.inventory.has("чей-то глаз") and 0 < st("mq_grandpa") < 20:
             self.set_stage("mq_grandpa", 20)
         if f.get("know_baker") and 40 <= st("mq_grandpa") < 50:
@@ -165,6 +222,21 @@ class QuestMixin:
             self.set_stage("sq_barstow", 50)
         if cleared == 2 and st("sq_barstow") < 90:
             self.set_stage("sq_barstow", 90)
+        if self.inventory.has("кинолента «Атомный рейнджер»"):
+            f["fox_reel"] = True
+        if self.inventory.has("журнал Дейва"):
+            f["ferals_journal"] = True
+        if self.inventory.has("пачка писем «родным»"):
+            f["lt_letters"] = True
+        for crown in ("boots", "snakes", "palms"):      # вступил в Корону — первая ступень ранга
+            if f.get(f"{crown}_member") and not f.get(f"{crown}_rank"):
+                f[f"{crown}_rank"] = 1
+            if f.get(f"{crown}_rank") == 4:
+                f[f"{crown}_hand_t"] = True                 # правая рука — голос на совете Корон
+        if f.get("grooms_turned"):                       # «женихи» открыли клетки в шахте — Луис бежит домой сам
+            f["luis_free"] = True
+        if self.inventory.has("кости Гизмо"):            # «Последняя стена»: улика в руках, как бы ни досталась
+            f["know_dice"] = True
         # «Карта клада»: три обрывка склеиваются сами, как только все у героя
         pieces = ("обрывок карты (север)", "обрывок карты (центр)", "обрывок карты (юг)")
         if any(self.inventory.has(p) for p in pieces) or self.inventory.has("карта клада"):
@@ -184,6 +256,12 @@ class QuestMixin:
             f["mail_half"] = True
         if mail >= 7:
             f["mail_all"] = True
+        # «Пропавшие караваны»: улики складываются в картину (три из пяти — и уже видно, кто за этим стоит)
+        clues = sum(bool(f.get(k)) for k in ("clue_arrow", "clue_route", "clue_toll", "clue_survivor", "clue_cargo"))
+        if f.get("caravans_job") and clues >= 1:
+            f["caravans_lead"] = True
+        if f.get("caravans_job") and clues >= 3:
+            f["caravans_picture"] = True
         # «Кто убил Гаррисона?»: фартук с ножом и показания — пора назвать убийцу
         if f.get("clue_apron") and sum(bool(f.get(k)) for k in ("clue_luis", "clue_beth", "clue_hank", "clue_watch")) >= 2:
             f["murder_ready"] = True
@@ -226,6 +304,8 @@ class QuestMixin:
                 f[k] = True
         if ("searchlight" in self.locations or f.get("know_zero")) and "vegas_strip" not in self.worldmap.known:
             self.reveal_location("vegas_strip")   # хранилище «Ноль» — под башней Vault-Tec в руинах Вегаса
+        if f.get("know_vault11") and "vault11" not in self.worldmap.known:   # устав Ярмарки — «выжившая из Убежища 11»
+            self.reveal_location("vault11")
         if (f.get("know_poseidon") or f.get("enclave_contact") or f.get("fort_enclave_deal")) \
                 and "poseidon7" not in self.worldmap.known:   # канал «П-7» ведёт к станции Анклава
             self.reveal_location("poseidon7")
@@ -259,7 +339,18 @@ class QuestMixin:
     def _apply_effect(self, eff):
         t = eff.get("type")
         if t == "set_flag":
-            self.flags[eff["flag"]] = True
+            self.flags[eff["flag"]] = eff.get("value", True)     # value — счётчик (ранг в Короне и т.п.)
+        elif t == "disable_enemies":   # пульт охраны: выключить турели / увести роботов в чужой локации
+            loc = self.get_location(eff["loc"])
+            n = 0
+            for e in loc.enemies:
+                if e.alive and e.type_id in eff["types"]:
+                    e.alive = False
+                    n += 1
+            loc.enemies[:] = [e for e in loc.enemies if e.alive]
+            if eff.get("flag"):
+                self.flags[eff["flag"]] = True
+            self.log(eff.get("text", f"Отключено: {n}."))
         elif t == "implant":   # операция у хирурга: навсегда, один раз (флаг implant_<id>)
             p = self.player
             stat, n = eff["stat"], eff["amount"]
@@ -284,11 +375,11 @@ class QuestMixin:
         elif t == "clear_flag":
             self.flags.pop(eff["flag"], None)
         elif t == "give":
-            self.inventory.add(eff["item"], eff["count"])
-            self.log(f"Получено: {eff['item']} ×{eff['count']}")
+            self.inventory.add(eff["item"], eff.get("count", 1))
+            self.log(f"Получено: {eff['item']} ×{eff.get('count', 1)}")
         elif t == "take":
-            self.inventory.remove(eff["item"], eff["count"])
-            self.log(f"Отдано: {eff['item']} ×{eff['count']}")
+            self.inventory.remove(eff["item"], eff.get("count", 1))
+            self.log(f"Отдано: {eff['item']} ×{eff.get('count', 1)}")
         elif t == "xp":
             if not self.merc_mode:   # за Дэкса опыта нет
                 self.log(f"+{eff['amount']} опыта.")
@@ -329,6 +420,47 @@ class QuestMixin:
             self.join_ally(eff["id"])
         elif t == "leave_ally":
             self.dismiss_ally()
+        elif t == "pocket_drop":   # вещь ушла из кармана жителя (отдал сам)
+            self.pocket(eff["npc"]).pop(eff["item"], None)
+        elif t == "rads":     # сюжетное облучение (нырнул к бочкам)
+            self.player.add_rads(eff["amount"])
+            self.log(f"Счётчик Гейгера захлёбывается: +{eff['amount']} рад.")
+        elif t == "ring_fight":   # ринг «Скам-Питта» (src/game/ring.py)
+            self.dialogue.close()
+            self.ring_fight(eff.get("bet", 0), eff.get("dive", False))
+        elif t == "take_any_book":   # отдать одну любую книгу (Ладоням в библиотеку)
+            book = next((n for n in self.inventory.items if n.startswith(("книга", "журнал «")) and
+                         n != "журнал Дейва"), None)
+            if book:
+                self.inventory.remove(book, 1)
+                self.log(f"Отдано: {book}.")
+        elif t == "caravan_go":    # Крэйн нанимает охранником (src/game/caravan.py)
+            self.dialogue.close()
+            self.caravan_start(eff["dest"])
+        elif t == "caravan_out":
+            self.caravan_out(eff["ev"], eff["opt"])
+        elif t == "caravan_end":
+            self.caravan_end()
+        elif t == "inc":       # счётчик +1 (экспонаты музея и т.п.)
+            self.flags[eff["flag"]] = self.flags.get(eff["flag"], 0) + eff.get("by", 1)
+        elif t == "train":     # платный урок у мастера: навык +amount, полдня занятий
+            from .. import skills
+            p, sid = self.player, eff["skill"]
+            was = p.skill(sid)
+            p.skills[sid] = min(skills.CAP, was + eff.get("amount", 5))
+            self.advance_time(eff.get("hours", 6) * 60)
+            self.log(f"Урок окончен. {skills.SKILL_BY_ID[sid]['name']}: {was} → {p.skills[sid]}.")
+        elif t == "fishing":      # рыбалка у причала Нидлса (src/game/fishing.py)
+            self.dialogue.close()
+            self.fishing_start()
+        elif t == "rest":          # отдых: время идёт, раны затягиваются (кино в «Фоксе», ночлег)
+            self.advance_time(eff["hours"] * 60)
+            self.player.hp = self.player.hp_cap
+            self.log(f"Прошло {eff['hours']} ч. Вы отдохнули.")
+        elif t == "weekly":        # раз в игровую неделю (ярмарка по воскресеньям)
+            self.flags[f"{eff['name']}_w{(self.game_day() - 1) // 7}"] = True
+        elif t == "log":
+            self.log(eff["text"])
         elif t == "npc_leave":
             self.loc.npcs[:] = [n for n in self.npcs if n.npc_id != eff["npc"]]
             self.flags[f"{eff['npc']}_left"] = True

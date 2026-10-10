@@ -302,9 +302,48 @@ def _vault13(s, lvl):
                                                           "крышки": 13})
 
 
+def _cafe(s, lvl):
+    """«Кафе несбывшихся надежд» (Fallout 2): закусочная, которой нет на картах. Странник в синем
+    комбинезоне с «13» на спине помнит то, что случится через сорок лет; пёс в ошейнике ждёт не вас."""
+    s.dress(trees=1, dry=6, rocks=4)
+    s.put("r_shanty_big", 17, MID - 7)
+    s.put("r_billboard", 27, MID - 7)
+    s.put("campfire", 21, MID + 1)
+    s.npcs.append(["cafe_stranger", 20, MID - 1])
+    s.npcs.append(["cafe_dog", 23, MID])
+
+
+def _gunrunners(s, lvl):
+    """Фургон «Оружейников» (Fallout 1, Gun Runners): дорогое и сильное — не по руке, пока не вырос навык."""
+    s.dress(trees=2)
+    s.put("r_army_truck", 19, MID - 6)
+    s.put("r_sandbag_row", 25, MID + 2)
+    s.npcs.append(["gun_runner", 22, MID - 1])
+    s.npcs.append(["gun_runner_guard", 26, MID - 3])
+
+
+def _punishers(s, lvl):
+    """Каратели культа: герой слишком часто вставал у Единства на пути. Письмо брата Т. — на старшем."""
+    s.dress(trees=3)
+    s.put("r_car_wreck", 24, MID - 5)
+    for kind in ("cult_guard", "cultist", "cultist", "cult_guard"):
+        s.enemy(kind, 22, MID - 5, W - 6, MID + 5)
+    s.box("r_bones", 27, MID + 3, "сумка старшего карателя", {"письмо карателям": 1, "святая вода": 2,
+                                                             "стимулятор": 1})
+
+
+CULT_GRUDGES = ("blue_arrested", "robes_mayor", "robes_flee", "bell_blown", "bell_jammed", "bell_bos", "karl_home",
+                "luis_free", "noa_ferried", "noa_stays", "lt_mayor", "cult_hostile", "brother_t_flees")
+
+
+def _cult_angry(f, lv, reg):
+    return not f.get("enc_punishers") and sum(1 for k in CULT_GRUDGES if f.get(k)) >= 2
+
+
 # особые встречи: id → флаг «уже было» (сцена выпадает один раз)
 SPECIALS = {"bridge": "enc_bridge", "whale": "enc_whale", "police_box": "enc_police_box", "saucer": "enc_saucer",
-            "vault13": "enc_vault13"}
+            "vault13": "enc_vault13", "cafe": "enc_cafe", "gunrunners": "enc_gunrunners",
+            "punishers": "enc_punishers"}
 
 
 def _once(enc_id):
@@ -344,6 +383,12 @@ ENCOUNTERS = [
      _saucer, _once("saucer")),
     (2, "vault13", (2, 20), "У камня — скелет в куртке курьера Vault-Tec. Рядом — ящик с жёлтой «13» на крышке.",
      _vault13, _once("vault13")),
+    (2, "cafe", (3, 20), "Посреди пустыни — закусочная с горящей вывеской «Несбывшиеся надежды». Вчера её здесь не было. "
+     "Завтра, наверное, тоже не будет.", _cafe, _once("cafe")),
+    (3, "gunrunners", (5, 20), "Армейский грузовик, мешки с песком, табличка: «ОРУЖЕЙНИКИ. Скидок нет. Вопросов тоже».",
+     _gunrunners, _once("gunrunners")),
+    (12, "punishers", (4, 20), "Белые балахоны встают из-за машины. Без улыбок. «Брат Т. просил передать привет».",
+     _punishers, _cult_angry),
 ]
 ROADS = {"raiders", "caravan", "cache", "trailer", "mech"}
 
@@ -389,6 +434,10 @@ def make_encounter(flags, level=1, survival=20, region="mojave", rnd=random):
     else:
         build(s, level)
     loc = Location(f"encounter:{enc_id}", d={"name": "Пустошь", "map": s.to_map(), "encounter": True})
+    if enc_id == "punishers":
+        for e in loc.enemies:
+            e.hostile = True
+            e.talk = None
     if enc_id == "cult" and flags.get("cult_hostile"):
         for e in loc.enemies:
             e.hostile = True
@@ -477,6 +526,7 @@ def _spot_toll(s, lvl):
     s.put("r_sandbag_row", 24, MID - 1)
     s.put("x_fire_barrel", 22, MID - 3)
     s.box("r_barrels", 30, MID, "касса рейдеров", {"крышки": 60, "патроны": 10, "сигареты": 2})
+    s.box("r_car_wreck", 14, MID + 4, "сожжённый фургон каравана", {"стрела Ханов": 1, "обрывок накладной": 1})
     for kind in ("raider", "raider", "raider_elite", "raider"):
         s.enemy(kind, 20, 3, W - 6, H - 4)
 

@@ -1,0 +1,534 @@
+{
+  "_doc": "Город меняется на глазах: src/game/worldchanges.py. Для локации — список {if, add, remove, hide_npc}; add ставит объект рядом с якорем (npc:<id>, prop:<имя> или [x, y]); doc — объект читается кликом.",
+  "hub_old": [
+    {
+      "if": {
+        "flag": "fever_tap"
+      },
+      "add": [
+        {
+          "prop": "hb_pump",
+          "near": "npc:slum_old",
+          "r": 4
+        },
+        {
+          "prop": "bucket",
+          "near": "npc:slum_mother",
+          "r": 3
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "fever_filter"
+      },
+      "add": [
+        {
+          "prop": "bucket",
+          "near": "npc:slum_old",
+          "r": 3
+        },
+        {
+          "prop": "x_board",
+          "near": "npc:slum_old",
+          "r": 5,
+          "doc": "doc_wc_well"
+        }
+      ]
+    }
+  ],
+  "hub": [
+    {
+      "if": {
+        "flags_any": [
+          "blue_arrested",
+          "blue_decker"
+        ]
+      },
+      "add": [
+        {
+          "prop": "jt_sacks",
+          "near": "npc:arms_seller",
+          "r": 5
+        },
+        {
+          "prop": "x_board",
+          "near": "npc:hub_guard",
+          "r": 4,
+          "doc": "doc_wc_blue"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "bell_bos"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:bos_scout",
+          "r": 3,
+          "doc": "doc_wc_bos"
+        }
+      ]
+    }
+  ],
+  "hub_falcon": [
+    {
+      "if": {
+        "flags_any": [
+          "falcon_returned",
+          "falcon_truth"
+        ]
+      },
+      "add": [
+        {
+          "prop": "nc_statue_b",
+          "near": "npc:falcon_barkeep",
+          "r": 3,
+          "doc": "doc_wc_falcon"
+        }
+      ]
+    }
+  ],
+  "junktown": [
+    {
+      "if": {
+        "flag": "robes_mayor"
+      },
+      "add": [
+        {
+          "prop": "ar_van_burnt",
+          "near": "npc:gate_guard",
+          "r": 7
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "mayor_poisoned"
+      },
+      "add": [
+        {
+          "prop": "x_grave",
+          "near": "npc:jt_old_scav",
+          "r": 5,
+          "doc": "doc_wc_mayor_grave"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "gizmo_exiled"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:gate_guard",
+          "r": 4,
+          "doc": "doc_wc_vera"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "gizmo_treaty"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:gate_guard",
+          "r": 4,
+          "doc": "doc_wc_treaty"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "gizmo_statue"
+      },
+      "add": [
+        {
+          "prop": "cu_statue",
+          "near": "npc:jt_old_scav",
+          "r": 6,
+          "doc": "doc_wc_gizmo_statue"
+        }
+      ]
+    }
+  ],
+  "junktown_casino": [
+    {
+      "if": {
+        "flag": "gizmo_exiled"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:croupier",
+          "r": 3,
+          "doc": "doc_wc_vera"
+        }
+      ]
+    }
+  ],
+  "necropolis": [
+    {
+      "if": {
+        "flag": "fox_truth"
+      },
+      "add": [
+        {
+          "prop": "nc_billboard0",
+          "near": "npc:nc_old",
+          "r": 4,
+          "doc": "doc_wc_fox"
+        },
+        {
+          "prop": "bench_7",
+          "near": "npc:nc_old",
+          "r": 3
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "beach_told"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:water_queue",
+          "r": 3,
+          "doc": "doc_wc_water_free"
+        }
+      ]
+    }
+  ],
+  "necropolis_under": [
+    {
+      "if": {
+        "flag": "ferals_burned"
+      },
+      "add": [
+        {
+          "prop": "r_burning_rubble",
+          "near": "npc:under_ghoul_b",
+          "r": 5
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "ferals_humane"
+      },
+      "add": [
+        {
+          "prop": "hb_pots",
+          "near": "npc:under_ghoul_b",
+          "r": 3
+        }
+      ]
+    }
+  ],
+  "boneyard": [
+    {
+      "if": {
+        "flag": "bell_blown"
+      },
+      "add": [
+        {
+          "prop": "brick_pile_a",
+          "near": "npc:cult_foreman",
+          "r": 5
+        },
+        {
+          "prop": "rubble_heap",
+          "near": "npc:cult_foreman",
+          "r": 6
+        },
+        {
+          "prop": "r_pole_broken",
+          "near": "npc:cult_foreman",
+          "r": 6
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "lt_truth"
+      },
+      "add": [
+        {
+          "prop": "v22_tomato",
+          "near": "npc:adytum_farmer",
+          "r": 3
+        },
+        {
+          "prop": "x_board",
+          "near": "npc:adytum_farmer",
+          "r": 4,
+          "doc": "doc_wc_tomas"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "bell_bos"
+      },
+      "add": [
+        {
+          "prop": "rubble_rebar",
+          "near": "npc:cult_foreman",
+          "r": 5
+        },
+        {
+          "prop": "ar_burnt",
+          "near": "npc:cult_worker",
+          "r": 5
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag_ge": [
+          "museum_count",
+          1
+        ]
+      },
+      "add": [
+        {
+          "prop": "nc_statue",
+          "near": "npc:sphinx",
+          "r": 3
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag_ge": [
+          "museum_count",
+          3
+        ]
+      },
+      "add": [
+        {
+          "prop": "nc_statue_b",
+          "near": "npc:sphinx",
+          "r": 4
+        },
+        {
+          "prop": "x_board",
+          "near": "npc:sphinx",
+          "r": 3,
+          "doc": "doc_wc_museum"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag_ge": [
+          "museum_count",
+          5
+        ]
+      },
+      "add": [
+        {
+          "prop": "cu_statue",
+          "near": "npc:sphinx",
+          "r": 5
+        }
+      ]
+    }
+  ],
+  "nipton": [
+    {
+      "if": {
+        "flag": "fair_done"
+      },
+      "add": [
+        {
+          "prop": "np_bunting",
+          "near": "npc:np_crier",
+          "r": 4
+        },
+        {
+          "prop": "table_3",
+          "near": "npc:np_crier",
+          "r": 4
+        },
+        {
+          "prop": "x_board",
+          "near": "npc:np_crier",
+          "r": 5,
+          "doc": "doc_wc_fair"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "irma_dead_lie"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:grace_widow",
+          "r": 3,
+          "doc": "doc_wc_grace_sold"
+        }
+      ]
+    }
+  ],
+  "vegas_strip": [
+    {
+      "if": {
+        "flag": "coin_returned"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:judge_sol",
+          "r": 3,
+          "doc": "doc_wc_sol"
+        }
+      ]
+    }
+  ],
+  "vegas_boots": [
+    {
+      "if": {
+        "flag": "hank_dead"
+      },
+      "add": [
+        {
+          "prop": "x_grave",
+          "near": "npc:boots_engineer",
+          "r": 5,
+          "doc": "doc_wc_hank_grave"
+        }
+      ]
+    }
+  ],
+  "needles": [
+    {
+      "if": {
+        "flag": "barge_done"
+      },
+      "add": [
+        {
+          "prop": "nd_fish_rack",
+          "near": "npc:fisher_joe",
+          "r": 4
+        },
+        {
+          "prop": "x_board",
+          "near": "npc:fishmonger",
+          "r": 3,
+          "doc": "doc_wc_fish"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "kate_jack_boat"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:kate",
+          "r": 3,
+          "doc": "doc_wc_jack_boat"
+        }
+      ]
+    }
+  ],
+  "needles_church": [
+    {
+      "if": {
+        "flag": "noa_stays"
+      },
+      "add": [
+        {
+          "prop": "candles",
+          "near": "npc:noa_runaway",
+          "r": 2
+        },
+        {
+          "prop": "candles",
+          "near": "npc:noa_runaway",
+          "r": 3
+        }
+      ]
+    }
+  ],
+  "goodsprings": [
+    {
+      "if": {
+        "flag": "ringo_town"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:gs_old",
+          "r": 4,
+          "doc": "doc_wc_noon"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "chet_shamed"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:chet",
+          "r": 3,
+          "doc": "doc_wc_chet"
+        }
+      ]
+    }
+  ],
+  "primm": [
+    {
+      "if": {
+        "flag": "coaster_ok"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:pr_mechanic",
+          "r": 4,
+          "doc": "doc_wc_coaster"
+        }
+      ]
+    },
+    {
+      "if": {
+        "flag": "coaster_crash"
+      },
+      "add": [
+        {
+          "prop": "crossed_planks",
+          "near": "npc:pr_mechanic",
+          "r": 4
+        }
+      ]
+    }
+  ],
+  "baker": [
+    {
+      "if": {
+        "flag": "thermo_fixed"
+      },
+      "add": [
+        {
+          "prop": "x_board",
+          "near": "npc:nick",
+          "r": 4,
+          "doc": "doc_wc_thermo"
+        }
+      ]
+    }
+  ]
+}

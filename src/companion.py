@@ -95,7 +95,7 @@ def update(game, dt_ms):
 
 def _update_one(game, c, dt_ms):
     c.update(dt_ms)
-    if game.combat.active:
+    if game.combat.active or not game.player.alive:   # герой погиб — спутник не встаёт и никуда не бежит
         return
     if c.down:  # после боя поднимается
         c.down, c.alive, c.hp = False, True, max(1, c.hp)

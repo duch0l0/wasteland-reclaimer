@@ -51,6 +51,8 @@ class LootingMixin:
         have = box["loot"].get(name, 0)
         if have <= 0:
             return
+        if box.get("pocket") is not None and not self.pocket_roll(box["pocket"], name):
+            return   # поймали за руку — окно закрыто
         if not self._theft_check(box):
             return
         n = have if count is None else min(count, have)
@@ -65,6 +67,11 @@ class LootingMixin:
         have = self.inventory.count(name)
         if have <= 0:
             return
+        pocket = self.loot["box"].get("pocket")
+        if pocket is not None:
+            if not self.pocket_roll(pocket, name, plant=True):
+                return
+            count = 1                          # подбрасывают по одной вещи
         n = have if count is None else min(count, have)
         self.inventory.remove(name, n)
         box = self.loot["box"]
@@ -72,6 +79,9 @@ class LootingMixin:
         if weapon_for_item(name) == self.player.weapon and not self.inventory.has(name):
             self.player.weapon = "melee"
         self.log(f"Положено: {name}" + (f" ×{n}" if n > 1 else "") + f" ({box['name']})")
+        if box.get("pocket") is not None:
+            self.pocket_planted(box["pocket"], name)
+            return
         hook = box.get("on_put")
         if hook and hook["item"] == name:   # сюжетный тайник: положил нужное — что-то случилось
             box["on_put"] = None

@@ -111,7 +111,7 @@ ar.floor_code("s", *SAND)
 ar.floor_code("g", *GRAVEL)
 ar.floor_code("k", *CRACK)
 ar.paint("s", 0, 0, W - 1, H - 1)
-ar.paint("k", 8, 6, 62, 44)                            # утоптанная земля лагеря
+ar.paint_ragged("k", 5, 3, 65, 47, depth=4)            # утоптанная земля лагеря — край рваный, в песок
 ar.paint("g", 0, 23, W - 1, 26)                        # колея от въезда до каньона
 ar.exits = [(0, y) for y in range(23, 27)]
 ar.reserve(0, 22, W - 1, 27)
@@ -255,11 +255,8 @@ cn.portal([(49, 3), (50, 3), (51, 3)], "aradesh_cave", (6, 36), "Пещера")
 cn.reserve(48, 3, 52, 6)
 cn.enemies += [["radscorpion", 48, 9], ["radscorpion", 38, 7]]
 # стены каньона — скалы сплошь вокруг дна (клетки 2×2, ни одна не заходит на дно)
-for y in range(0, H, 2):
-    for x in range(0, W, 2):
-        if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & FLOOR:
-            cn.props.append([CLIFFS[(x * 7 + y * 3) % 3], x, y])
-            cn.blocked.update({(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)})
+cn.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+cn.cliff_walls(CLIFFS, FLOOR, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((24, 7), (40, 20), (57, 39), (23, 28)):
     cn.maybe(OUTCROP, x, y)
 cn.scatter(BOULDERS + ["r_bones", "r_dry_bush"], 1, 1, W - 2, H - 2, 26)
@@ -294,6 +291,33 @@ cv.box("ar_tarp", 32, 31, "рюкзак переселенца", {"записк�
 cv.enemies += [["radscorpion", 10, 14], ["radscorpion", 9, 24], ["radscorpion", 31, 18],
                ["radscorpion", 42, 16], ["radscorpion_queen", 36, 8]]
 cv.scatter(["r_bones"], 4, 10, 30, 21, 6)
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+# юго-восток: двор мастерской — хлам под брезентом, покрышки, стойка с инструментом, бочки
+for name, x, y in ((YARD, 40, 38), (TOOL_RACK, 45, 37), (TIRES[1], 44, 41), (RUST_BARRELS[0], 47, 41),
+                   (TARP[0], 49, 38), (FERT, 52, 41), (SHED, 54, 34), (WATER_TANK, 50, 33), (LAUNDRY, 40, 33)):
+    ar.maybe(name, x, y)
+print("обжито в лагере:", ar.dress_empty([
+    [(TENTS[0], 0, 0), (TENTS[2], 3, 0), (CAMPFIRE, 1, 2), (BENCH, 0, 3), (BENCH, 3, 3)],
+    [(TIRE_PLANTS[0], 0, 0), (TIRE_PLANTS[1], 2, 0), (BARREL_PLANTS[0], 0, 2), (TRELLIS[0], 2, 2), (WATER_BARREL, 4, 1)],
+    [(LAUNDRY, 0, 0), (TUBS[0], 0, 2), (BENCH, 3, 2)],
+    [(TENTS[4], 0, 0), (BEDS[0], 3, 0), (TARP[1], 0, 2), (TIRES[0], 3, 2)],
+    [(TRELLIS[1], 0, 0), (TRELLIS[2], 2, 0), (FRUIT[0], 0, 2), (FRUIT[1], 2, 2), (FENCE, 4, 0)],
+    [(WATER_TANK, 0, 0), (TUBS[1], 3, 0), (BARREL_PLANTS[1], 0, 2), (FERT, 3, 2)],
+    [(TENTS[5], 0, 0), (GOODS[1], 3, 0), (CHAIR, 3, 1), (TIRE_PLANTS[2], 0, 2)],
+], ground="k", block=6, margin=1, chance=1.0))
+print("обжито по краям:", ar.dress_empty([
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
+    [("r_tent_beige", 0, 0), ("r_tent_low", 3, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("barrel_wood", 0, 2)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 0, 2), ("r_trash", 3, 2)],
+    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("sack", 4, 2)],
+    [("r_water_tower_b", 3, 0), ("barrel_wood", 4, 1), ("bucket", 2, 1), ("r_barrels", 5, 1)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("x_cross", 4, 0), ("x_grave", 4, 1), ("r_dtree_a", 5, 2)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("r_barrels", 3, 1), ("pile_scrap", 0, 2)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
+], ground="s", block=6, margin=1, chance=1.0))
 
 city.save(gap_exempt=("unity_sister", "settler_kai"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

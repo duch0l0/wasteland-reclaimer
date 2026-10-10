@@ -104,7 +104,10 @@ class MapBase:
         img = corpse_image(enemy)
         rect = img.get_rect(center=(enemy.rect.centerx, enemy.rect.bottom - 6))
         tile = (enemy.rect.centerx // S.TILE, enemy.rect.centery // S.TILE)
+        fb = enemy.anim.frames_by_action
+        src = (fb.get("idle_down") or fb.get("idle"))[0]
         box = {"tile": tile, "tiles": [tile], "name": f"тело: {enemy.name}", "who": enemy.name, "enemy": enemy,
+               "fall": {"src": src, "left": getattr(enemy, "facing_left", False), "t0": pygame.time.get_ticks()},
                "loot": dict(loot),
                "owner": None, "requires": None, "opened": False, "corpse": {"img": img, "rect": rect}}
         self.corpses.append(box)
@@ -119,9 +122,20 @@ class MapBase:
                 return c
         return None
 
+    FALL_MS = 320
+
     def draw_corpses(self, surf, cam):
+        now = pygame.time.get_ticks()
         for c in self.corpses:
             r = c["corpse"]["rect"]
+            fall = c.get("fall")
+            el = now - fall["t0"] if fall else self.FALL_MS
+            if el < self.FALL_MS:     # падает: стоячий кадр заваливается на бок и темнеет
+                k = el / self.FALL_MS
+                img = pygame.transform.rotate(fall["src"], (90 if fall["left"] else -90) * k * k)
+                img.fill((255 - int(105 * k), 255 - int(120 * k), 255 - int(125 * k), 255), special_flags=pygame.BLEND_RGBA_MULT)
+                surf.blit(img, img.get_rect(midbottom=(r.centerx - int(cam.x), r.bottom - 4 - int(cam.y))))
+                continue
             surf.blit(c["corpse"]["img"], (r.x - int(cam.x), r.y - int(cam.y)))
 
     def container_at(self, tile):

@@ -35,7 +35,7 @@ NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000"
              "healer_girl": "Целительница Лоис", "merchant_zz": "Торговец Абдул", "bath_pilgrim": "Паломница",
              "bath_pilgrim_b": "Паломник", "guest_widow": "Вдова Харпер",
              "kate": "Мамаша Кейт", "captain_morrow": "Капитан Морроу", "river_guard": "Страж Билли",
-             "fisher_joe": "Рыбак Джо", "fishmonger": "Торговка Пег", "preacher_eli": "Проповедник Эли",
+             "fisher_joe": "Рыбак Джо", "fishmonger": "Торговка Пег", "preacher_eli": "Проповедник Эли", "noa_runaway": "Беглянка Ноа", "joe_cobb": "Джо Кобб", "cafe_stranger": "Странник «13»", "cafe_dog": "Пёс в ошейнике", "gun_runner": "Оружейник Тэд", "gun_runner_guard": "Охрана Оружейников",
              "needles_girl": "Лиззи", "drunk_vic": "Пьяница Вик", "morrow_scout": "Дозорный стражи",
              "barkeep_ned": "Бармен Нед", "gambler_lou": "Картёжник Лу", "river_guard_off": "Стражник",
              "shopkeeper_rosa": "Лавочница Роуз",
@@ -64,7 +64,7 @@ NPC_NAMES = {"gena": "Ржавый Гена", "robot": "Почтальон-3000"
              "cult_herald": "Глашатай Единства", "mp_acolyte": "Послушник", "mp_acolyte_b": "Послушница", "tobi_mp": "Тоби", "ezekiel_mp": "Иезекииль", "nipton_bride_mp": "«Невеста» из Ниптона", "brother_t_mp": "Брат Т.",
              "harbor_master": "Смотритель причала Оуэн", "quarantine_nurse": "Сестра Пэм", "fisher_ana": "Рыбачка Ана", "tiki_barkeep": "Бармен Коко", "island_kid": "Девочка Лили", "island_old": "Бабушка Ингрид", "sailor_finn": "Моряк Финн", "island_teacher": "Учитель Маркус", "elder_mora": "Старейшина Мора", "elder_bram": "Старейшина Брэм", "young_jude": "Джуд", "keeper_silas": "Смотритель маяка Сайлас",
              "purity_officer": "Инспектор Чистоты Лин", "purity_bot": "Робот-сканер", "councillor_vale": "Советник Вэйл", "nv_citizen": "Горожанка", "nv_citizen_b": "Горожанин", "nv_doctor": "Доктор Эрик Сун", "nv_child": "Мальчик", "raven_hacker": "Рэйвен", "noodle_cook": "Повар Мо Чен", "nv_dealer": "Торговец Шрапнель", "nv_outcast": "Отсеянный", "nv_outcast_b": "Отсеянная", "cleaner_bot": "Робот-уборщик",
-             "sphinx": "Сфинкс, экскурсовод", "bridge_keeper": "Хранитель моста", "harold": "Гарольд",
+             "sphinx": "Сфинкс, экскурсовод", "bridge_keeper": "Хранитель моста", "harold": "Гарольд", "marta_subject": "Субъект № 12", "marta_home": "Марта", "billy": "Стражник Билли", "caravan_lars": "Охранник Ларс",
              "lucky_bot": "Секьюритрон", "radio_bot": "Диктор-автомат", "deputy_abby": "Помощница шерифа Эбби",
              "luis_cards": "Картёжник Луис", "beth_waitress": "Официантка Бет", "hank_miner": "Старатель Хэнк",
              "repconn_ghoul": "Гуль-техник Чет", "rover_bot": "Марсоход «Спирит-II»", "cmdr_hale": "Командир Хейл", "eng_okoro": "Инженер Окоро", "botanist_yuki": "Ботаник Юки"}
@@ -84,7 +84,7 @@ NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "me
                "pilgrim_maria": "folk_d", "pilgrim_timmy": "kid", "healer_girl": "acolyte", "merchant_zz": "healer",
                "bath_pilgrim": "folk_h", "bath_pilgrim_b": "folk_c", "guest_widow": "folk_f",
                "kate": "folk_d", "captain_morrow": "desert_guard", "river_guard": "soldier", "fisher_joe": "folk_e",
-               "fishmonger": "folk_h", "preacher_eli": "monk", "needles_girl": "girl_pink", "drunk_vic": "folk_c",
+               "fishmonger": "folk_h", "preacher_eli": "monk", "noa_runaway": "girl_hood", "joe_cobb": "merc", "cafe_stranger": "scout", "cafe_dog": "dog", "gun_runner": "redarmor", "gun_runner_guard": "soldier", "needles_girl": "girl_pink", "drunk_vic": "folk_c",
                "morrow_scout": "scout", "barkeep_ned": "barkeep", "gambler_lou": "detective",
                "river_guard_off": "redarmor", "shopkeeper_rosa": "seer",
                "dolores": "folk_f", "water_clerk": "detective", "hub_guard": "soldier", "hub_guard_b": "soldier",
@@ -112,12 +112,15 @@ NPC_SPRITES = {"marta": "folk_a", "dale": "folk_b", "rose": "folk_a", "dex": "me
                "cult_herald": "silas", "mp_acolyte": "acolyte", "mp_acolyte_b": "cultist", "tobi_mp": "kid", "ezekiel_mp": "ghoul_child", "nipton_bride_mp": "girl_hood", "brother_t_mp": "silas",
                "harbor_master": "folk_g", "quarantine_nurse": "healer", "fisher_ana": "folk_h", "tiki_barkeep": "barkeep", "island_kid": "girl_pink", "island_old": "folk_d", "sailor_finn": "folk_e", "island_teacher": "folk_b", "elder_mora": "seer", "elder_bram": "folk_c", "young_jude": "loner", "keeper_silas": "folk_i",
                "purity_officer": "ada", "purity_bot": "robot_guard", "councillor_vale": "detective", "nv_citizen": "blondie", "nv_citizen_b": "folk_b", "nv_doctor": "doc", "nv_child": "kid", "raven_hacker": "visor_punk", "noodle_cook": "barkeep", "nv_dealer": "gang", "nv_outcast": "ghoul_a", "nv_outcast_b": "ghoul_d", "cleaner_bot": "robot_skel",
-               "sphinx": "robot_guard", "bridge_keeper": "seer", "harold": "ghoul_c", "lucky_bot": "robot_guard", "radio_bot": "robot_guard", "deputy_abby": "sheriff", "luis_cards": "folk_b",
+               "sphinx": "robot_guard", "bridge_keeper": "seer", "harold": "ghoul_c", "marta_subject": "ghoul_lady", "marta_home": "ghoul_lady", "billy": "desert_guard", "caravan_lars": "merc", "lucky_bot": "robot_guard", "radio_bot": "robot_guard", "deputy_abby": "sheriff", "luis_cards": "folk_b",
                "beth_waitress": "girl_pink", "hank_miner": "folk_i",
                "repconn_ghoul": "ghoul_e", "rover_bot": "robot_skel", "cmdr_hale": "soldier", "eng_okoro": "folk_i", "botanist_yuki": "folk_a"}
 
 # жители, которые есть на карте только при условии (как у реплик): кого не спасли — тот в Марипозе
-NPC_IF = {"tobi_mp": {"not_flag": "tobi_home"},
+NPC_IF = {"marta_subject": {"not_flag": "marta_free"}, "np_captive": {"not_flags": ["luis_free", "luis_shipped"]}, "joe_cobb": {"flag": "ringo_job", "not_flag": "ringo_done"},
+          "gs_drunk": {"not_flags": ["ringo_dead", "ringo_handed"]}, "noa_runaway": {"not_flags": ["noa_ferried", "noa_bribed", "noa_sold", "noa_taken"]},
+          "snake_gambler": {"not_flags": ["gambler_eaten", "milo_boots", "milo_sold"]}, "hank_spur": {"not_flag": "hank_dead"},"khan_chief": {"not_flag": "khans_wiped"}, "khan_a": {"not_flag": "khans_wiped"},
+          "khan_b": {"not_flag": "khans_wiped"},"tobi_mp": {"not_flag": "tobi_home"},
           "ezekiel_mp": {"flag": "ezekiel_to_cult"},
           "nipton_bride_mp": {"not_flag": "nipton_decided"},
           "brother_t_mp": {"not_flags": ["killed_brother_t", "killed_brother_t_mp"]}}
@@ -152,6 +155,15 @@ def make_enemy(pos, type_id, iso=False):
     return Enemy(pos, enemy_animations(type_id), type_id, ENEMY_DEFS[type_id])
 
 
+def npc_variant(npc_id):
+    """Житель с общим листом (пятнадцать «folk_c» в разных городах) — свой оттенок одежды и волос, всегда один и тот же."""
+    import zlib
+    sheet = NPC_SPRITES.get(npc_id, npc_id)
+    if sheet == npc_id or list(NPC_SPRITES.values()).count(sheet) < 2:
+        return 0
+    return zlib.crc32(npc_id.encode()) % 8
+
+
 def npc_animations(npc_id):
     """Кадры NPC — assets/sprites/<npc_id>/ (см. tools/slice_sprites.py), иначе плейсхолдер."""
     key = f"npc:{npc_id}"
@@ -161,8 +173,12 @@ def npc_animations(npc_id):
             _ANIM_CACHE[key] = loader.load_creature_animations(
                 folder, (44, 56), (120, 125, 135), (230, 190, 60), kind="humanoid")
         else:
-            _ANIM_CACHE[key] = loader.load_humanoid_animations(
-                folder, loader.FRAME_SIZE, base_color=(70, 90, 110), accent_color=(190, 180, 150))
+            v = npc_variant(npc_id)
+            shared = f"sheet:{folder}:{v}"           # одинаковый лист и вариант — одни кадры на всех
+            if shared not in _ANIM_CACHE:
+                _ANIM_CACHE[shared] = loader.load_humanoid_animations(
+                    folder, loader.FRAME_SIZE, base_color=(70, 90, 110), accent_color=(190, 180, 150), variant=v)
+            _ANIM_CACHE[key] = _ANIM_CACHE[shared]
     return _ANIM_CACHE[key]
 
 

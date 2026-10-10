@@ -1,0 +1,264 @@
+{
+"props": {
+"v11_cliff0": {
+"img": "pk:desnat/p1/8,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v11_cliff1": {
+"img": "pk:desnat/p1/10,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v11_cliff2": {
+"img": "pk:desnat/p1/12,14,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"v11_bunk0": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_bunk1": {
+"img": "pk:nbunk/nbunk_2_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_bunk2": {
+"img": "pk:nbunk/nbunk_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_bunk3": {
+"img": "pk:nbunk/nbunk_2_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_locker": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "шкафчик"
+},
+"v11_desk_pc": {
+"img": "pk:nbunk/nbunk_2_016",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v11_desk_pc_b": {
+"img": "pk:nbunk/nbunk_2_017",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v11_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v11_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"v11_throne": {
+"img": "pk:lrest/lrest_1_041",
+"block": true,
+"sight": false
+},
+"v11_poster0": {
+"img": "pk:lrest/lrest_3_011",
+"block": false,
+"sight": false
+},
+"v11_poster1": {
+"img": "pk:lrest/lrest_3_012",
+"block": false,
+"sight": false
+},
+"v11_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false
+},
+"v11_server_b": {
+"img": "pk:npower/npower_2_036",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v11_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф смотрителя"
+},
+"v11_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+},
+"v11_bones_b": {
+"img": "pk:grave/grave_2_027",
+"block": false,
+"sight": false
+},
+"v11_tech_2_073": {
+"img": "pk:npower/npower_2_073",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_079": {
+"img": "pk:npower/npower_2_079",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_080": {
+"img": "pk:npower/npower_2_080",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_042": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"v11_tech_2_036": {
+"img": "pk:npower/npower_2_036",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_047": {
+"img": "pk:npower/npower_2_047",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_060": {
+"img": "pk:npower/npower_2_060",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_066": {
+"img": "pk:npower/npower_2_066",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_074": {
+"img": "pk:npower/npower_2_074",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"v11_tech_2_057": {
+"img": "pk:npower/npower_2_057",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"v11_tech_2_026": {
+"img": "pk:npower/npower_2_026",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 70,
+"color": [
+120,
+220,
+160
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.08
+}
+}
+}
+}

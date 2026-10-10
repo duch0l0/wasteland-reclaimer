@@ -658,7 +658,8 @@
     "map": "data/maps/goodsprings_cave.json",
     "known": false,
     "music": "caves",
-    "underground": true
+    "underground": true,
+    "clear_flag": "gs_cave_cleared"
   },
   "vault22": {
     "name": "Убежище 22",
@@ -980,6 +981,39 @@
   "ares_lab": {
     "name": "«Арес»: лаборатория",
     "map": "data/maps/ares_lab.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "vault11": {
+    "name": "Убежище 11",
+    "map": "data/maps/vault11.json",
+    "known": false,
+    "music": "desert",
+    "world_pos": [
+      2330,
+      820
+    ],
+    "world_name": "Убежище 11",
+    "discover": true
+  },
+  "vault11_hall": {
+    "name": "Убежище 11: зал выборов",
+    "map": "data/maps/vault11_hall.json",
+    "known": false,
+    "music": "lab",
+    "underground": true
+  },
+  "vault11_core": {
+    "name": "Убежище 11: вычислительный центр",
+    "map": "data/maps/vault11_core.json",
+    "known": false,
+    "music": "vats",
+    "underground": true
+  },
+  "vegas_bank": {
+    "name": "Первый банк Мохаве: подвал",
+    "map": "data/maps/vegas_bank.json",
     "known": false,
     "music": "vats",
     "underground": true

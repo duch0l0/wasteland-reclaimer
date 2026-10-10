@@ -48,7 +48,16 @@ QUEST_TOWN = {
     "sq_vault15": "vault15", "sq_vault4": "vault4", "sq_primm": "primm", "sq_treasure": "primm",
     "sq_goodsprings": "goodsprings", "sq_murder": "goodsprings", "sq_vault22": "vault22", "sq_nipton": "nipton",
     "sq_searchlight": "searchlight", "sq_vegas": "vegas", "sq_bike": "vegas", "sq_catalina": "catalina",
-    "sq_nova": "nova",
+    "sq_nova": "nova", "sq_caravans": "hub", "sq_water_war": "junktown", "sq_vault11": "nipton", "sq_heist": "vegas", "sq_subject": "nipton",
+    "sq_falcon": "hub", "sq_fever": "hub", "sq_blue": "hub",
+    "sq_fox": "necropolis", "sq_ferals": "necropolis", "sq_beach": "necropolis",
+    "sq_karl": "boneyard", "sq_letters_by": "boneyard", "sq_bell": "boneyard",
+    "sq_luis": "nipton", "sq_irma": "nipton", "sq_fair": "nipton",
+    "sq_hank": "vegas", "sq_coin": "vegas", "sq_milo": "vegas",
+    "sq_barge": "needles", "sq_noa": "needles",
+    "sq_ringo": "goodsprings", "sq_spring": "goodsprings",
+    "sq_coaster": "primm", "sq_bonnie": "primm", "sq_smile": "baker", "sq_thermo": "baker",
+    "sq_gizmo": "junktown", "sq_robes": "junktown", "sq_fred": "junktown",
 }
 
 # поступки: флаг → карма (срабатывает один раз, когда флаг появился)
@@ -64,7 +73,8 @@ KARMA_FLAGS = {
     "nipton_mayor_exposed": 50, "nipton_bribed": -50, "nipton_mayor_drawn": 20, "recruits_free": 50,
     "gambler_eaten": -70, "snakes_member": -20, "darnell_home": 40, "p7_deal_done": -40, "p7_sabotage": 20,
     "ct_tribute_stopped": 50, "murder_justice": 30, "murder_mercy": 25, "murder_wrong": -50,
-    "sphinx_done": 5, "radio_done": 5, "mail_done_reeves": 3, "mail_done_darkwater": 3, "mail_done_shaw": 5, "mail_done_vault15": 3,
+    "sphinx_done": 5, "radio_done": 5, "caravans_wrong": -10, "junktown_pump": 25, "billy_turned": 20, "caravans_truth": 20, "khans_warned": 5,
+    "mail_done_reeves": 3, "mail_done_darkwater": 3, "mail_done_shaw": 5, "mail_done_vault15": 3,
     "mail_done_springer": 3, "mail_done_grey": 3, "mail_done_house": 3, "sisters_reconciled": 25, "told_widow": 5, "told_pilgrim": 3, "danny_told": 15, "doris_delivered": 10,
     "beggar_sent_anna": 5, "ending_ash": 50, "ending_steel": 30, "ending_hands": -60,
 }
@@ -91,6 +101,15 @@ REP_RANKS = [(100, "Идол"), (50, "Друг"), (15, "Свой"), (-14, "Чу�
 
 # особые звания за дела — (id, название, описание, условие)
 TITLES = [
+    ("boots_hand", "Правая рука Сапогов", "Четвёртая ступень у Сапогов Мохаве: кодекс — для того, чтобы думать.",
+     {"flag_eq": ["boots_rank", 4]}),
+    ("snakes_hand", "Правая рука Змей", "Перстень Матери-Змеи с изумрудом — все в подвале знают, чей ты.",
+     {"flag_eq": ["snakes_rank", 4]}),
+    ("palms_hand", "Перчатка Агаты", "Ладони Вегаса доверили тебе руки — и перестали есть людей.", {"flag_eq": ["palms_rank", 4]}),
+    ("caravan_partner", "Партнёр Красного каравана", "Пять чистых рейсов подряд: три вьюка ушло — три пришло.",
+     {"flag": "caravan_partner"}),
+    ("patron", "Попечитель музея", "Пять экспонатов из пустоши — в Музей естествознания Лос-Анджелеса.", {"flag": "museum_key"}),
+    ("ring_champ", "Чемпион Джанктауна", "Пять нокаутов на ринге «Скам-Питта».", {"flag": "ring_champion"}),
     ("gravedigger", "Гробокопатель", "Раскопал могилу Колбасы, пустую могилу Некрополя и клад у Примма.",
      {"flags_all": ["tag_done", "treasure_dug"], "stage": ["sq_kolbasa", 100]}),
     ("detective", "Детектив Гудспрингса", "Нашёл убийцу Гаррисона.", {"flags_any": ["murder_justice", "murder_mercy"]}),
@@ -104,6 +123,10 @@ TITLES = [
     ("butcher", "Мясник", "Убил больше десятка мирных жителей.", {"killed_civ": 10}),
     ("orderly", "Брат ложи", "Принят в Орден Тайн.", {"flag": "order_member"}),
     ("grail", "Рыцарь Моста", "Знал, что спросить у Хранителя моста.", {"flag": "bridge_won"}),
+    ("homecoming", "Проводник домой", "Вернул в Ниптон Марту из клетки Убежища 4.", {"flag": "marta_home"}),
+    ("heister", "Медвежатник", "Вскрыл Первый банк Мохаве с командой — без единого выстрела.", {"flag": "bank_crew"}),
+    ("tactician", "Тактик", "Взял Форт, не дав турелям и роботам сделать ни выстрела.", {"flags_all": ["fort_turrets_off", "fort_robots_away", "recruits_free"]}),
+    ("sleuth", "Сыщик трассы 15", "Нашёл, кто продавал караваны, — не тронув невиновных.", {"flag": "caravans_truth"}),
     ("postman", "Почтальон пустоши", "Доставил все письма 2077 года, которые ещё можно было доставить.", {"flag": "mail_all"}),
     ("courier", "Курьер поневоле", "Нашёл чип, который так и не доехал до Убежища 13.", {"flag": "know_vault13_chip"}),
     ("whale", "Свидетель кита", "Видел кита, упавшего с неба. И петунию.", {"flag": "enc_whale"}),
@@ -202,4 +225,5 @@ class ReputationMixin:
         """Свой — скидка, чужак — наценка: −15%…+15% к цене покупки."""
         town = town_of(self.loc.id) if getattr(self, "loc", None) else None
         r = self.rep(town) if town else 0
-        return 1 - max(-0.15, min(0.15, r / 400))
+        inflation = 1.15 if self.flags.get("bank_looted") else 1.0   # мешки из банка Вегаса обесценили крышки
+        return (1 - max(-0.15, min(0.15, r / 400))) * inflation

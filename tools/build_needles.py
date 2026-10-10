@@ -246,7 +246,7 @@ b.put(BARRELS, 5, 11)
 b.put("x_fire_barrel", 9, 12, allow_reserved=True)
 b.put("x_fire_barrel", 9, 18, allow_reserved=True)
 b.terminal(4, 10, "needles_toll")
-b.npcs += [["captain_morrow", 11, 14], ["river_guard", 12, 16]]
+b.npcs += [["captain_morrow", 11, 14], ["river_guard", 12, 16], ["billy", 14, 17]]
 b.enemies += [["raider_elite", 54, 14], ["raider", 57, 16], ["raider", 59, 13], ["sniper", 60, 15]]
 b.box(CRATE, 5, 20, "ящик Речной стражи", {"патроны": 15, "дробь": 6, "бинт": 2}, owner="captain_morrow")
 b.put("r_car_wreck", 22, 14, allow_reserved=True)
@@ -276,7 +276,7 @@ for x, y in ((4, 11), (10, 11), (17, 11), (4, 16), (17, 16)):
 sl.put(RUG, 11, 16)
 sl.npcs += [["gambler_lou", 6, 12], ["river_guard_off", 18, 17]]
 sl.box(SAFE, 24, 4, "сейф салуна", {"крышки": 140, "сигареты": 3},
-       requires={"item": "отмычка", "msg": "Старый банковский сейф. Без отмычки — никак."})
+       requires={"items_any": ["отмычка", "ключ от сейфа салуна"], "msg": "Старый банковский сейф. Без отмычки — никак."})
 
 
 # ================================================================ вокзал
@@ -300,7 +300,8 @@ dp.box("cabinet_small", 4, 4, "касса", {"крышки": 30, "билет д�
 # багажное отделение: чемоданы и ящики вдоль стен — логово ящеров
 for x, y in ((22, 4), (25, 4), (27, 4)):
     dp.put(SUITCASES, x, y)
-dp.box(CRATE, 22, 16, "почтовый мешок 2077 года", {"письмо": 1, "плюшевый мишка": 1, "консервы": 1})
+dp.box(CRATE, 22, 16, "почтовый мешок 2077 года", {"письмо": 1, "плюшевый мишка": 1, "консервы": 1,
+                                                    "кинолента «Пески Мохаве»": 1})
 dp.put(BARRELS, 26, 16)
 dp.enemies += [["river_lizard", 24, 10], ["river_lizard", 27, 12], ["radroach", 23, 14]]
 
@@ -338,6 +339,7 @@ for y in (7, 9, 11):
     ch.put("bench_7", 3, y)
     ch.put("bench_7", 10, y)
 ch.box("cabinet_small", 13, 4, "ящик для пожертвований", {"крышки": 35, "бинт": 1})
+ch.npcs += [["noa_runaway", 2, 5]]         # беглянка из конвоя культа прячется за кафедрой
 
 city.save(gap_exempt=("captain_morrow", "river_guard", "barkeep_ned", "gambler_lou", "river_guard_off",
                       "kate", "fisher_joe", "fishmonger", "shopkeeper_rosa"))

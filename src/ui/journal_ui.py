@@ -6,6 +6,7 @@ from .common import hotspot, wrap_text, close_button, PANEL_H
 from .terminal_ui import _mono, _crt_overlay, GREEN, GREEN_DIM, BG
 
 AMBER = (235, 200, 110)
+TABS = (("quests", "ЗАДАНИЯ"), ("rep", "РЕПУТАЦИЯ"), ("char", "ПЕРСОНАЖ"))
 
 
 def journal_list(game):
@@ -31,7 +32,7 @@ def draw_journal(surf, game):
     f, fs, ft = _mono(22), _mono(17), _mono(15)
     surf.blit(f.render("ПИП-БОЙ 2000", True, GREEN), (box.x + 24, box.y + 16))
     tx = box.x + 220
-    for tab, label in (("quests", "ЗАДАНИЯ"), ("rep", "РЕПУТАЦИЯ")):   # вкладки: клик или Tab
+    for tab, label in TABS:   # вкладки: клик или Tab
         img = fs.render(label, True, BG if game.journal_tab == tab else GREEN)
         r = pygame.Rect(tx, box.y + 14, img.get_width() + 20, 28)
         hover = hotspot(r, lambda tab=tab: (setattr(game, "journal_tab", tab), setattr(game, "journal_scroll", 0)))
@@ -44,7 +45,13 @@ def draw_journal(surf, game):
     pygame.draw.line(surf, GREEN_DIM, (box.x + 20, box.y + 52), (box.right - 20, box.y + 52))
     if game.journal_tab == "rep":
         draw_reputation(surf, game, box)
-        surf.blit(ft.render("J или Esc — закрыть · Tab — задания", True, GREEN_DIM), (box.x + 24, box.bottom - 30))
+        surf.blit(ft.render("J или Esc — закрыть · Tab — персонаж", True, GREEN_DIM), (box.x + 24, box.bottom - 30))
+        surf.blit(_crt_overlay(box.size), box)
+        return
+    if game.journal_tab == "char":
+        draw_character(surf, game, box)
+        surf.blit(ft.render("J или Esc — закрыть · колесо/↑↓ — листать · Tab — задания", True, GREEN_DIM),
+                  (box.x + 24, box.bottom - 30))
         surf.blit(_crt_overlay(box.size), box)
         return
 
@@ -86,6 +93,11 @@ def draw_journal(surf, game):
     surf.blit(f.render(d["title"].upper(), True, AMBER if d.get("main") else GREEN), (x, y))
     y += 40
     cur = game.stage(q)
+    left = game.deadline_left(q) if hasattr(game, "deadline_left") else None
+    if left is not None:          # медленное последствие: сколько осталось (src/game/clock.py)
+        days, hours = left // 1440, left % 1440 // 60
+        surf.blit(fs.render(f"⏳ Осталось: {days} дн. {hours} ч. Потом мир решит сам.", True, AMBER), (x, y))
+        y += 30
     stages = sorted((int(k), v) for k, v in d["stages"].items() if int(k) <= cur)
     for i, (num, text) in enumerate(reversed(stages)):
         latest = i == 0
@@ -132,3 +144,57 @@ def draw_reputation(surf, game, box):
         surf.blit(fs.render(f"★ {name}", True, AMBER), (x, y))
         surf.blit(ft.render(desc, True, GREEN_DIM), (x + 260, y + 2))
         y += 26
+
+
+def character_lines(game):
+    """Строки вкладки «Персонаж»: навыки с пояснениями, перки с описаниями, как делать главное."""
+    from ..skills import SKILLS
+    from ..perks import PERKS_BY_ID
+    p = game.player
+    vals = {"guns": p.guns_skill, "heavy": p.weapon_skill("heavy"), "energy": p.weapon_skill("energy"),
+            "melee": p.melee_skill}
+    out = [("head", "НАВЫКИ")]
+    for s in SKILLS:
+        out.append(("name", f"{s['name']:<18} {vals.get(s['id'], p.skill(s['id'])):>4}"))
+        out.append(("desc", s["desc"]))
+    out.append(("gap", ""))
+    out.append(("head", "ПЕРКИ"))
+    if not p.perks:
+        out.append(("desc", "Пока нет. Перк выбирается на каждом чётном уровне."))
+    for pid, r in p.perks.items():
+        d = PERKS_BY_ID[pid]
+        out.append(("name", d["name"] + (f" ×{r}" if r > 1 else "")))
+        out.append(("desc", d["desc"]))
+    out.append(("gap", ""))
+    out.append(("head", "КАК ЭТО ДЕЛАЕТСЯ"))
+    for line in ("ПКМ по жителю, ящику, двери, предмету — меню действий: говорить, осмотреть, обокрасть, напасть.",
+                 "Кража: подойти к жителю и нажать K (или ПКМ → «Обокрасть»). Взять из карманов — украсть, "
+                 "положить — подбросить. Со спины легче, при свидетелях — труднее; ценные вещи стерегут.",
+                 "Shift + ЛКМ по жителю — напасть. Город это увидит.",
+                 "В бою ПКМ по врагу — прицельная атака: голова, глаза, руки, ноги."):
+        out.append(("desc", line))
+    return out
+
+
+def draw_character(surf, game, box):
+    fs, ft = _mono(17), _mono(15)
+    x, y, w = box.x + 30, box.y + 66, box.w - 60
+    rows = []
+    for kind, text in character_lines(game):
+        font = ft if kind == "desc" else fs
+        for line in (wrap_text(font, text, w - 24) if text else [""]):
+            rows.append((kind, line))
+    fit = max(1, (box.bottom - 50 - y) // 20)
+    game.journal_scroll = max(0, min(game.journal_scroll, len(rows) - fit))
+    if game.journal_scroll:
+        surf.blit(ft.render("▲", True, GREEN_DIM), (box.right - 40, y))
+    if game.journal_scroll + fit < len(rows):
+        surf.blit(ft.render("▼", True, GREEN_DIM), (box.right - 40, box.bottom - 70))
+    for kind, line in rows[game.journal_scroll:game.journal_scroll + fit]:
+        if kind == "head":
+            surf.blit(fs.render(line, True, AMBER), (x, y))
+        elif kind == "name":
+            surf.blit(fs.render(line, True, GREEN), (x + 8, y))
+        else:
+            surf.blit(ft.render(line, True, GREEN_DIM), (x + 24, y + 1))
+        y += 20

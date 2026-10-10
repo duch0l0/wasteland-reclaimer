@@ -105,11 +105,8 @@ for i, (x, y) in enumerate(((12, 14), (12, 18), (28, 14), (28, 18))):
     sf.put(ROWS[i], x, y)
 sf.put(TOMATO[0], 32, 22)
 sf.put(CUCUMBER[0], 13, 22)
-for y in range(0, H, 2):
-    for x in range(0, W, 2):
-        if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & FLOOR and not (21 <= x <= 24 and 6 <= y <= 9):
-            sf.props.append([CLIFFS[(x * 7 + y) % 3], x, y])
-            sf.blocked.update({(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)})
+sf.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 21 <= x <= 24 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 sf.npcs += [["v22_gardener_out", 17, 16]]
 sf.grow(10, 8, 38, 30, 6, names=TREES)
 sf.scatter(GRASS, 10, 8, 38, 30, 24)

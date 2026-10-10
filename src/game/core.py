@@ -47,10 +47,18 @@ from .merc import MercMixin
 from .baker import BakerMixin
 from .crime import CrimeMixin
 from .reputation import ReputationMixin
+from .pickpocket import PickpocketMixin
+from .ctxmenu import CtxMenuMixin
+from .allyvoice import AllyVoiceMixin
+from .worldchanges import WorldChangesMixin
+from .ring import RingMixin
+from .caravan import CaravanMixin
+from .fishing import FishingMixin
+from .clock import ClockMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, ReputationMixin,
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, ReputationMixin, PickpocketMixin, CtxMenuMixin, AllyVoiceMixin, WorldChangesMixin, RingMixin, CaravanMixin, FishingMixin, ClockMixin,
            RenderMixin):
     def __init__(self, intro=True, _screen=None, _prologue=False):
         """intro — начать с главного меню (для проверок без окна его пропускают).
@@ -66,8 +74,13 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.quests = {}           # стадии квестов (data/quests.json): id -> стадия
         self.journal_open = False
         self.journal_sel = None
+        self.bombs = []            # подброшенный динамит: тикает в чужом кармане
         self.journal_tab = "quests"   # задания | репутация
         self.journal_scroll = 0
+        self.ctx_menu = None          # меню действий по ПКМ (src/game/ctxmenu.py)
+        self.ring = None              # бой на ринге «Скам-Питта» (src/game/ring.py)
+        self.caravan = None           # рейс охранником Красного каравана (src/game/caravan.py)
+        self.fishing = None           # рыбалка у причала Нидлса (src/game/fishing.py)
 
         # мир
         self.parallax = Parallax()
@@ -169,10 +182,15 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self._hero_key = key
             self.player.anim.frames_by_action = hero_look.animations(*key)
 
+    def open_journal_tab(self, tab):
+        """Из рюкзака — сразу в журнал на нужную вкладку (клик по навыку или перку)."""
+        self.inv_open = False
+        self.journal_open, self.journal_tab, self.journal_scroll = True, tab, 0
+
     def modal_open(self):
         return bool(self.dialogue.is_active() or self.craft_open or self.inv_open or self.trade
                     or self.game_over or self.perk_choices or self.term or self.slides or self.journal_open
-                    or self.loot or self.menu)
+                    or self.loot or self.menu or self.ctx_menu or self.fishing)
 
     # --------------------------------------------------------------- кадр
     def update(self, dt_ms):
@@ -205,6 +223,11 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             if self.speech["t"] <= 0:
                 self.speech = None
         self._barks(dt_ms)
+        self.update_ally_voice(dt_ms)
+        self.update_fishing(dt_ms)
+        if not self.combat.active:
+            self.tick_clock(dt_ms)
+        self.update_bombs(dt_ms)
         busy = self.modal_open() or self.combat.active
         wander.update(self, dt_ms, frozen=busy)
         if busy:

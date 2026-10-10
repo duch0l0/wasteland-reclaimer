@@ -355,7 +355,7 @@ for x in (10, 22, 31):                                   # колонны пла
 un.put(CAMPFIRE, 18, 18)
 un.put(TENTS[1], 4, 18)
 un.put(TENTS[3], 34, 19)
-un.box(MED_CAB, 39, 9, "аптечный шкаф", {"бинт": 2, "антирадин": 1}, owner="ghoul_healer")
+un.box(MED_CAB, 39, 9, "аптечный шкаф", {"бинт": 2, "антирадин": 1, "журнал Дейва": 1}, owner="ghoul_healer")
 un.npcs += [["zeke", 21, 11], ["ghoul_healer", 38, 11], ["under_barkeep", 13, 17], ["under_ghoul", 25, 13],
             ["under_ghoul_b", 30, 17]]
 # старый тоннель: койки, бочки, костёр — здесь живут те, кому не хватило места наверху
@@ -409,7 +409,8 @@ v.put(LOCKER, 37, 4)
 for y in (16, 21, 26):
     v.put(BUNKS[0], 3, y)
     v.put(BUNKS[0], 9, y)
-v.box(LOCKER, 14, 15, "шкафчик жильца", {"консервы": 1, "антирадин": 1, "записка инженера Хадсона": 1})
+v.box(LOCKER, 14, 15, "шкафчик жильца", {"консервы": 1, "антирадин": 1, "записка инженера Хадсона": 1,
+                                        "кинолента «Атомный рейнджер»": 1})
 # атриум: кости у стены — здесь собрались, когда поняли, что дверь не закроется
 v.put(V_DESK, 18, 17)
 for x, y in ((18, 26), (24, 29), (27, 24)):
@@ -428,6 +429,15 @@ v.terminal(35, 31, "v12_valves")
 v.box(LOCKER, 38, 31, "шкаф Хадсона", {"костюм «Гуль»": 1, "антирадин": 2},
       requires={"flag": "valves_done", "msg": "Шкаф за щитом вентилей. Пока трубы под давлением — не подойти."})
 v.enemies += [["feral", 8, 23], ["feral", 22, 27], ["feral", 37, 30], ["rad_mutant", 34, 29]]
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", nc.dress_empty([
+    [("nc_tomb0", 0, 0), ("nc_tomb1", 2, 0), ("nc_grave_lamp", 1, 2)],
+    [("nc_campfire", 0, 0), ("pile_rags", 2, 0), ("barrel_wood", 0, 2)],
+    [("r_car_wreck", 0, 0), ("r_trash", 3, 1)],
+    [("pile_junk", 0, 0), ("x_fire_barrel", 2, 1), ("pile_cans", 0, 2)],
+]))
 
 city.save(gap_exempt=("nc_guard", "nc_guard_b", "cult_envoy", "harry_mech", "water_queue", "water_queue_b"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

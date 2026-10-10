@@ -103,6 +103,8 @@ hb.floor_code("s", *SAND)
 hb.floor_code("g", *GRAVEL)
 hb.floor_code("p", *PLAZA)
 hb.paint("s", 0, 0, W - 1, H - 1)
+hb.floor_code("k", *CRACK)
+hb.paint_ragged("k", 3, 3, W - 4, H - 3, depth=5)         # утоптанная земля города — песок только по краям
 hb.exits = [(0, y) for y in range(27, 32)] + [(W - 1, y) for y in range(27, 32)]
 hb.paint("g", 0, 27, W - 1, 31)                         # караванная дорога через весь город
 hb.paint("p", 24, 14, 54, 26)                           # площадь у оазиса
@@ -113,7 +115,7 @@ hb.portal([(x, H - 1) for x in (37, 38, 39, 40)], "hub_old", (32, 1), "Стар�
 
 hb.npcs += [["dolores", 36, 9], ["hub_guard", 20, 25], ["hub_guard_b", 58, 33], ["crimson_boss", 64, 36],
             ["spice_seller", 28, 24], ["arms_seller", 49, 24], ["cult_preacher", 13, 36], ["bos_scout", 70, 22],
-            ["hub_kid", 44, 34], ["water_clerk", 34, 12]]
+            ["hub_kid", 44, 34], ["water_clerk", 34, 12], ["caravan_lars", 67, 38]]
 for _, x, y in hb.npcs:
     hb.reserve(x, y, x, y)
 
@@ -205,8 +207,8 @@ for x, y in ((14, 16), (48, 17), (26, 31)):
     od.put(FIRE, x, y)
 # притон Декера: кирпичный дом на юго-западе, перед ним — охрана
 od.building(4, 32, 12, 9, "brick", north=(4,))
-od.box(SAFE, 13, 37, "сейф Декера", {"крышки": 160, "стимулятор": 2, "отмычка": 2},
-       requires={"item": "отмычка", "msg": "Сейф Декера. Без отмычки и крепких нервов — никак."}, owner="decker")
+od.box(SAFE, 13, 37, "сейф Декера", {"крышки": 160, "стимулятор": 2, "отмычка": 2, "гроссбух Декера": 1, "статуэтка сокола": 1},
+       requires={"items_any": ["отмычка", "ключ от сейфа Декера"], "msg": "Сейф Декера. Без отмычки и крепких нервов — никак."}, owner="decker")
 # дворы трущоб: заборы из хлама, верёвки с тряпьём, ящики, бочки — тесно, как в настоящих трущобах
 for x0, y0 in ((3, 12), (18, 12), (38, 12), (52, 12)):
     od.hwall(["fence_broken", "plank_fence_b", "post_fence_a", "chain_broken_a"], x0, x0 + 8, y0 + 5, gaps=(x0 + 3, x0 + 4))
@@ -319,6 +321,20 @@ tn.put(BARREL, 38, 17)
 tn.put(BARREL, 40, 17)
 tn.box(CRATE, 42, 22, "ящик с печатью круга", {"образец ВРЭ": 1, "листовка Единства": 1})
 tn.terminal(34, 16, "hub_sluice")
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", hb.dress_empty([
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
+    [("r_tent_beige", 0, 0), ("r_tent_low", 3, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("barrel_wood", 0, 2)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 0, 2), ("r_trash", 3, 2)],
+    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("sack", 4, 2)],
+    [("r_water_tower_b", 3, 0), ("barrel_wood", 4, 1), ("bucket", 2, 1), ("r_barrels", 5, 1)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("x_cross", 4, 0), ("x_grave", 4, 1), ("r_dtree_a", 5, 2)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("r_barrels", 3, 1), ("pile_scrap", 0, 2)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
+], block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("dolores", "water_clerk", "falcon_barkeep", "hub_guard", "decker", "falcon_gambler",
                       "falcon_drunk", "falcon_singer"))

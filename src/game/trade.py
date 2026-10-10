@@ -7,7 +7,7 @@ from .. import items
 from ..weapons import weapon_for_item
 from .controls import number_key
 
-SELL_RATE = 0.5          # торговец покупает за полцены
+SELL_RATE = 0.4          # торговец берёт за 40% цены — добыча не кормит лучше квестов
 SILVER_TONGUE_BONUS = 0.2
 RESTOCK_MS = 8 * 60 * 1000   # через столько игрового времени торговец пополняет товар и кассу
 

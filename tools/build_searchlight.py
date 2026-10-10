@@ -122,7 +122,7 @@ sl.floor_code("s", *SAND)
 sl.floor_code("d", *DIRT)
 sl.floor_code("r", *ROAD)
 sl.paint("s", 0, 0, W - 1, H - 1)
-sl.paint("d", 4, 4, 58, 42)
+sl.paint_ragged("d", 2, 2, 60, 44, depth=4)
 sl.paint("r", 0, 21, W - 1, 24)                         # улица посёлка и дорога на Форт
 sl.paint("r", 28, 6, 31, 21)                            # к копру
 sl.exits = [(0, y) for y in range(21, 25)]
@@ -287,6 +287,7 @@ ft.put(BUNKER, 52, 34)
 ft.portal([(53, 37), (54, 37)], "fort_bunker", (23, 5), "Бункер",
           requires={"flag": "fort_access", "msg": "Робот-часовой: «Вход в бункер — только для личного состава. Предъявите жетон»."})
 ft.reserve(52, 37, 56, 39)
+ft.terminal(48, 38, "fort_security")          # пульт охраны у бункера: турели, часовые, арсенал — до штурма
 for _, x, y in ft.npcs:
     ft.reserve(x, y, x, y)
 ft.scatter(["r_rocks", "r_dry_bush"], 1, 1, 9, H - 2, 6)
@@ -344,6 +345,20 @@ for x in (34, 37, 40, 43):
 bk.put(MACHINE[1], 44, 20)
 bk.terminal(39, 20, "general_core")
 bk.enemies += [["turret", 36, 18], ["turret", 43, 18], ["robot_guard", 38, 30], ["robot_guard", 44, 23]]
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", sl.dress_empty([
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
+    [("r_tent_beige", 0, 0), ("r_tent_low", 3, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("barrel_wood", 0, 2)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 0, 2), ("r_trash", 3, 2)],
+    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("sack", 4, 2)],
+    [("r_water_tower_b", 3, 0), ("barrel_wood", 4, 1), ("bucket", 2, 1), ("r_barrels", 5, 1)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("x_cross", 4, 0), ("x_grave", 4, 1), ("r_dtree_a", 5, 2)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("r_barrels", 3, 1), ("pile_scrap", 0, 2)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
+], block=6, margin=1, chance=1.0))
 
 city.save(gap_exempt=("robo_sgt", "recruit_danny", "recruit_b", "recruit_c", "recruit_d", "recruit_e", "robo_sentry",
                       "recruit_f"))

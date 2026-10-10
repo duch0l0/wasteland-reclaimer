@@ -15,7 +15,7 @@ ACT_PREFIXES = {
     1: ("ruins", "fifteen", "drain", "vault57", "baker", "barstow", "zzyzx", "needles", "station", "spot", "cellar",
         "school", "den", "gas"),
     2: ("hub", "junktown", "necropolis", "vault12", "aradesh", "boneyard", "vault15", "vault4"),
-    3: ("primm", "goodsprings", "vault22", "nipton", "searchlight", "fort", "vegas", "poseidon", "mariposa", "repconn"),
+    3: ("primm", "goodsprings", "vault22", "vault11", "nipton", "searchlight", "fort", "vegas", "poseidon", "mariposa", "repconn"),
     4: ("catalina", "nova", "ares"),   # тайные места — уровень третьего акта и выше
 }
 # (×HP, +урон, +навык, +уровень, ×опыт)

@@ -83,6 +83,55 @@ class MapKit:
             for x in range(max(0, x0), min(self.W, x1 + 1)):
                 self.ground[y][x] = code
 
+    def paint_ragged(self, code, x0, y0, x1, y1, depth=3):
+        """Участок с рваным краем: каждая сторона гуляет на 0..depth клеток внутрь — утоптанная земля
+        лагеря, асфальт, поле не обрываются ровным прямоугольником. Свой генератор — остальная карта не сдвигается."""
+        import random as _r
+        rnd = _r.Random(x0 * 7919 + y0 * 104729 + x1 * 31 + y1)
+
+        def wobble(n):
+            v, out = rnd.randint(0, depth), []
+            for _ in range(n):
+                v = max(0, min(depth, v + rnd.choice((-1, 0, 0, 1))))
+                out.append(v)
+            return out
+        top, bot = wobble(x1 - x0 + 1), wobble(x1 - x0 + 1)
+        left, right = wobble(y1 - y0 + 1), wobble(y1 - y0 + 1)
+        for y in range(max(0, y0), min(self.H, y1 + 1)):
+            for x in range(max(0, x0), min(self.W, x1 + 1)):
+                i, j = x - x0, y - y0
+                if j >= top[i] and y1 - y >= bot[i] and i >= left[j] and x1 - x >= right[j]:
+                    self.ground[y][x] = code
+
+    def cliff_walls(self, cliffs, floor, skip=lambda x, y: False, decor=(), thick=2, decor_chance=0.08, plateau=None):
+        """Скалы вокруг дна (каньон, долина у убежища). Глыбы 2×2 стоят только по краю обрыва: внешний ряд —
+        сплошь, второй — через раз; дальше — непроходимое плато с редкими камнями и кустами. Рисунок глыбы —
+        случайный, а не по сетке, поэтому стена не похожа на ряды одинаковых кубиков."""
+        import random as _r
+        rnd = _r.Random(self.W * 1000 + self.H)
+        floor = set(floor)
+        cells = [(x, y) for y in range(0, self.H, 2) for x in range(0, self.W, 2)
+                 if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & floor and not skip(x, y)]
+
+        def ring(x, y):          # сколько 2×2-шагов до дна (1 — у самого края)
+            for r in range(1, thick + 1):
+                d = 2 * r
+                if any((tx, ty) in floor for tx in range(x - d, x + 2 + d) for ty in range(y - d, y + 2 + d)):
+                    return r
+            return 0
+        for x, y in cells:
+            tiles = {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)}
+            self.blocked.update(tiles)
+            if plateau:              # верх плато — каменистая земля, не песок дна: видно, что туда не пройти
+                for tx, ty in tiles:
+                    if tx < self.W and ty < self.H:
+                        self.ground[ty][tx] = plateau
+            r = ring(x, y)
+            if r == 1 or (r == 2 and rnd.random() < 0.55):
+                self.props.append([rnd.choice(cliffs), x, y])
+            elif decor and rnd.random() < decor_chance:
+                self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
+
     def reserve(self, x0, y0, x1, y1):
         for y in range(y0, y1 + 1):
             for x in range(x0, x1 + 1):
@@ -154,6 +203,50 @@ class MapKit:
             self.containers.append({"prop": len(self.props) - 1, "name": inf.get("title", "ящик"),
                                     "loot": self.roll_loot(inf["search"]), "owner": owner})
         return True
+
+    def dress_empty(self, scenes, ground=None, block=8, margin=2, chance=0.85, max_uses=2):
+        """Обжить пустыри (docs/city_plan.md, экскурсия по городам): участок block×block, где нет ни объекта, ни
+        жителя, ни прохода, получает маленькую цельную сценку — стоянку, кучу хлама, огородик, остов машины.
+        scenes — [[(объект, dx, dy), …], …]; сценка ставится целиком или частично (что не влезло — пропускается),
+        только на «свою» землю (ground), не в резерв и не перекрывая путь."""
+        if ground is None:      # «своя» земля — самая частая на карте (песок, асфальт, гравий)
+            from collections import Counter
+            ground = Counter(c for row in self.ground for c in row if c != "x").most_common(1)[0][0]
+        busy = set(self.reserved) | set(self.blocked)
+        for e in self.props:            # трава и камешки участок не занимают — сценка их обойдёт
+            if e[0] not in PLANTS and e[0] not in STONES:
+                busy.update(self.footprint(e[0], e[1], e[2]))
+        for n in self.npcs + self.enemies:
+            busy.update((n[1] + dx, n[2] + dy) for dx in range(-2, 3) for dy in range(-2, 3))
+        for p in self.portals:
+            for (tx, ty) in p["tiles"]:
+                busy.update((tx + dx, ty + dy) for dx in range(-3, 4) for dy in range(-3, 4))
+        for (tx, ty) in self.exits:
+            busy.update((tx + dx, ty + dy) for dx in range(-3, 4) for dy in range(-3, 4))
+        placed = 0
+        for by in range(1, self.H - block, block):
+            for bx in range(1, self.W - block, block):
+                area = [(bx + i, by + j) for i in range(block) for j in range(block)]
+                core = [(bx + i, by + j) for i in range(margin - 1, block - margin + 1)
+                        for j in range(margin - 1, block - margin + 1)]
+                if any(t in busy for t in core) or sum(t in busy for t in area) > block * block // 4:
+                    continue    # середина занята или участок и так обжит
+                if sum(1 for x, y in area if self.ground[y][x] in ground) < len(area) * 0.9:
+                    continue
+                if self.rnd.random() > chance:
+                    continue
+                used = self.__dict__.setdefault("_scene_uses", {})
+                pool = [sc for sc in scenes if sc is not getattr(self, "_last_scene", None)
+                        and used.get(id(sc), 0) < max_uses]
+                if not pool:            # все сценки уже по max_uses раз — дальше пусть будет пусто, чем клоны
+                    break
+                scene = self._last_scene = self.rnd.choice(pool)   # подряд не повторяется, всего — не больше max_uses
+                used[id(scene)] = used.get(id(scene), 0) + 1
+                ox, oy = bx + margin, by + margin
+                for name, dx, dy in scene:
+                    if self.put(name, ox + dx, oy + dy):
+                        placed += 1
+        return placed
 
     def terminal(self, x, y, tid):
         """Терминал RobCo (стол с монитором) — содержимое в data/terminals.json."""

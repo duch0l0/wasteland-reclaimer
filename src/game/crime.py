@@ -72,7 +72,7 @@ ROLES = {
     # остров Санта-Каталина
     "harbor_master": "guard", "sailor_finn": "brawler",
     # «Нова»
-    "sphinx": "elite", "radio_bot": "elite", "harold": "civilian", "deputy_abby": "guard", "luis_cards": "civilian",
+    "sphinx": "elite", "radio_bot": "elite", "harold": "civilian", "marta_subject": "civilian", "marta_home": "civilian", "billy": "guard", "caravan_lars": "civilian", "deputy_abby": "guard", "luis_cards": "civilian",
     "beth_waitress": "civilian", "hank_miner": "civilian",
     "purity_officer": "guard", "purity_bot": "elite", "raven_hacker": "elite", "nv_dealer": "brawler", "councillor_vale": "civilian",
 }
@@ -139,6 +139,14 @@ class CrimeMixin:
         self.loc.npcs[:] = [n for n in self.npcs if not self.flags.get(f"killed_{n.npc_id}")
                             and not self.flags.get(f"{n.npc_id}_left")      # ушёл (с героем или навсегда)
                             and self.check_condition(NPC_IF.get(n.npc_id, {}))]
+        # кто по условию появляется позже (охотник приехал за должником) — возвращается из полного списка карты
+        here = {n.npc_id for n in self.npcs} | {getattr(e, "npc_id", None) for e in self.enemies}
+        ally = getattr(getattr(self, "ally", None), "type_id", None)
+        for n in getattr(self.loc, "npcs_all", []):
+            if (n.npc_id in NPC_IF and n.npc_id not in here and n.npc_id != ally
+                    and not self.flags.get(f"killed_{n.npc_id}") and not self.flags.get(f"{n.npc_id}_left")
+                    and self.check_condition(NPC_IF[n.npc_id])):
+                self.loc.npcs.append(n)
         if self.flags.get(f"town_hostile_{self.loc.id}") or \
                 (self.loc.id in ENCLAVE_ZONES and self.flags.get("enclave_hostile")):
             self.town_turns_hostile()

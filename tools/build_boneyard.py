@@ -209,6 +209,8 @@ by.enemies += [["feral", 24, 41], ["feral", 30, 52], ["feral", 6, 36]]
 by.npcs += [["sphinx", 31, 45]]
 by.box(CRATE, 33, 45, "витрина музея", {"плащ куратора": 1, "крышки": 80},
        requires={"flag": "sphinx_done", "msg": "Витрина под током. Табличка: «Экспонаты выдаёт экскурсовод»."})
+by.box(CRATE, 27, 43, "запасник музея", {"лазерная винтовка": 1, "энергоячейка": 30, "крышки": 200},
+       requires={"flag": "museum_key", "msg": "Дверца запасника. Табличка: «Только для попечителей»."})
 
 # юго-восток: стройка «Детей Единства» — забор, бытовки, леса, экскаватор, прожекторы; вход в фундамент
 by.hwall(SITE_FENCE, 50, 80, 36, gaps=(56, 57, 58))
@@ -328,8 +330,9 @@ ct.npcs += [["morpheus", 14, 20], ["cult_listener", 7, 11], ["cult_listener_b", 
 # склад: ящики с цементом и водой, сундук — в нём куртки «Лезвий» и ножи с их меткой
 for x, y in ((28, 4), (31, 4), (34, 4), (28, 9), (31, 9)):
     ct.put(CRATE, x, y)
-ct.box(CHEST, 33, 14, "сундук на складе", {"куртка «Лезвий»": 1, "приказ брата Т.": 1},
-       requires={"item": "отмычка", "msg": "Сундук на замке. Брат-кладовщик носит ключ на поясе."}, owner="morpheus")
+ct.box(CHEST, 33, 14, "сундук на складе", {"куртка «Лезвий»": 1, "приказ брата Т.": 1,
+                                          "пачка писем «родным»": 1},
+       requires={"items_any": ["отмычка", "ключ от склада Собора"], "msg": "Сундук на замке. Брат-кладовщик носит ключ на поясе."}, owner="morpheus")
 ct.put(TANKS, 29, 22)
 
 
@@ -376,11 +379,22 @@ vt.terminal(30, 12, "vt_server")
 # кабинет директора: стол, сейф, доска с планом убежищ — здесь сидит Купер
 vt.put(DESKS[2], 37, 7)
 vt.put(WHITEBOARD, 35, 4)
-vt.box(SAFE, 41, 4, "сейф директора", {"ключ-карта Vault-Tec": 1, "крышки": 90},
+vt.box(SAFE, 41, 4, "сейф директора", {"ключ-карта Vault-Tec": 1, "крышки": 90, "кинолента «Блестящие пистолеты Техаса»": 1},
        requires={"flag": "cooper_card", "msg": "Сейф директора. Купер сидит на нём верхом и не собирается слезать."})
 vt.put(PLANT, 34, 15)
 vt.npcs += [["cooper", 39, 11]]
 vt.enemies += [["feral", 6, 12], ["feral", 18, 7], ["robot_guard", 28, 14], ["feral", 30, 26], ["feral", 8, 26]]
+
+
+# пустыри обживаются сценками (экскурсия по городам показала голый песок)
+print("обжито:", by.dress_empty([
+    [("vg_rubble1", 0, 0), ("vg_debris", 2, 1), ("r_car_wreck", 0, 3), ("x_fire_barrel", 4, 1)],
+    [("vg_lantern", 0, 0), ("r_tent_low", 1, 0), ("pile_cans", 3, 2), ("r_trash", 0, 2)],
+    [("vg_rubble2", 0, 0), ("x_fire_barrel", 3, 1), ("r_bones", 2, 3), ("r_streetlamp", 5, 0)],
+    [("by_wreck1", 0, 0), ("vg_debris", 3, 2), ("x_fire_barrel", 0, 2)],
+    [("r_dumpster", 0, 0), ("pile_junk", 2, 0), ("x_fire_barrel", 4, 1), ("r_trash", 0, 2)],
+    [("r_streetlamp", 0, 0), ("by_car_pile", 1, 1), ("pile_tires", 4, 1)],
+], block=7, margin=1, chance=1.0))
 
 city.save(gap_exempt=("cooper", "adytum_guard", "adytum_guard_b", "adytum_farmer"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

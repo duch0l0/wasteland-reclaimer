@@ -1,0 +1,42 @@
+{
+"props": {
+"bk_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false
+},
+"bk_desk": {
+"img": "pk:lrest/lrest_1_061",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"bk_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false
+},
+"bk_crates": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"bk_bones": {
+"img": "pk:grave/grave_2_022",
+"block": false,
+"sight": false
+}
+}
+}

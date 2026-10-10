@@ -136,6 +136,34 @@ loc, text = visit(g, "vault13")
 take(g, "скелет курьера Vault-Tec")
 ok(g.inventory.has("водяной чип (Убежище 13)"), "скелет курьера Vault-Tec — водяной чип для Убежища 13")
 
+# кафе «Несбывшиеся надежды»: странник «13» просит закопать чип
+loc, text = visit(g, "cafe")
+ok("Несбывшиеся надежды" in text and g.flags.get("enc_cafe"), "кафе, которого нет на картах — один раз")
+talk(g, "cafe_dog"); say(g, "Пойдёшь"); say(g, "...")
+talk(g, "cafe_stranger"); say(g, "водяной чип"); say(g, "закопать"); say(g, "...")
+ok(g.flags.get("chip_buried") and g.inventory.has("кожанка с «13»") and not g.inventory.has("водяной чип (Убежище 13)"),
+   "чип закопан под вывеской — кожанка с «13» на время")
+
+# Оружейники: сильное, дорогое, не по руке
+loc, text = visit(g, "gunrunners")
+talk(g, "gun_runner"); say(g, "Покажи товар")
+stock = g.traders["gun_runner"]["stock"] if g.trade else {}
+ok(g.trade and g.trade["id"] == "gun_runner" and "снайперская винтовка" in stock and "плазменный пистолет" in stock,
+   "у Оружейников — снайперская винтовка и плазма")
+g.trade = None
+
+# каратели культа: только тому, кто дважды встал у культа на пути
+from src.encounters import _cult_angry  # noqa: E402
+ok(not _cult_angry({"blue_arrested": True}, 10, "mojave"), "одна обида — карателей нет")
+ok(_cult_angry({"blue_arrested": True, "bell_blown": True}, 10, "mojave"), "две обиды — каратели вышли на дорогу")
+loc, text = visit(g, "punishers")
+ok(g.enemies and all(e.hostile for e in g.enemies), "каратели нападают сразу")
+for e in g.enemies:
+    e.alive = False
+take(g, "сумка старшего карателя")
+ok(g.inventory.has("письмо карателям"), "письмо брата Т.: «принесите его в Марипозу целым»")
+ok(not _cult_angry(dict(g.flags, blue_arrested=True, bell_blown=True), 10, "mojave"), "каратели — один раз")
+
 # святая граната рвёт сильнее всех
 e = encounters.Location  # noqa
 from src.location import make_enemy  # noqa: E402

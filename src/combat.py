@@ -49,7 +49,7 @@ CRIT_TEXT = {
               "{name} получает туда, куда не принято. Пропускает ход, думает о жизни."],
 }
 PLAYER_MISS_MELEE = ["Вы промахиваетесь. Воздух повержен.",
-                     "Вы машете ломом. Цель не впечатлена.",
+                     "Вы машете: {gun}. Цель не впечатлена.",
                      "Мимо. Цель делает вид, что так и было задумано."]
 PLAYER_MISS_RANGED = ["Выстрел уходит в молоко.",
                       "Пуля свистит мимо. Где-то вдали вздрагивает консервная банка.",
@@ -156,6 +156,8 @@ class Combat:
 
     def _party_here(self):
         from .companion import party
+        if getattr(self.game, "ring", None):     # на ринге — один на один
+            return []
         return [c for c in party(self.game) if c.alive and not c.down]
 
     def _party_all(self):
@@ -256,6 +258,8 @@ class Combat:
             return
         if ent is self.game.player:
             ent.free_steps = 2 if ent.perk_rank("bonus_move") else 0
+            if getattr(self.game, "ring", None) and self.game.ring_turn():   # договорился лечь — лёг
+                return
             self._check_new_enemies()
             if not self._still_threatened():
                 self.end("Враги потеряли вас из виду. Бой окончен.")
@@ -585,6 +589,9 @@ class Combat:
         absorbed = min(dmg, armor)
         dmg -= absorbed
         defender.apply_damage(dmg)
+        if not defender.alive and getattr(self.game, "ring", None) and self.game.ring_ko(defender):
+            self._float(defender, "НОКАУТ!", (255, 220, 90))
+            return
         if dmg > 0 and defender.alive:
             self._react(defender, attacker, "hit", impact_ms)
         if dmg > 0:  # звук попадания — вместе с вздрагиванием цели

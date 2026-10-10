@@ -97,7 +97,9 @@ g.journal_open = True
 g.journal_tab = "rep"
 fr(g)
 g.handle_key(pygame.K_TAB)
-ok(g.journal_tab == "quests", "Tab переключает вкладки журнала")
+fr(g)
+g.handle_key(pygame.K_TAB)
+ok(g.journal_tab == "quests", "Tab переключает вкладки журнала: репутация → персонаж → задания")
 for _ in range(20):
     g.handle_key(pygame.K_DOWN)
 fr(g)
