@@ -92,7 +92,7 @@ BOULDERS = [P("ar_boulder", "pk:gcave/p1/4,4,1,1"), P("ar_boulder_b", "pk:gcave/
             P("ar_boulder_c", "pk:gcave/p1/4,5,1,1")]
 STALAGMITE = P("ar_stalagmite", "pk:gcave/p1/8,3,1,1")
 CLIFFS = [P(f"ar_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True) for i, x in enumerate((8, 10, 12))]
-OUTCROP = P("ar_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True)
+OUTCROP = P("ar_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keybg=True)
 RUBBLE = [P("ar_burnt", "pk:zcity/zcity_1_122", foot=[2, 1]), P("ar_burnt_b", "pk:zcity/zcity_1_123", foot=[2, 1])]
 
 SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
@@ -255,7 +255,7 @@ cn.portal([(49, 3), (50, 3), (51, 3)], "aradesh_cave", (6, 36), "Пещера")
 cn.reserve(48, 3, 52, 6)
 cn.enemies += [["radscorpion", 48, 9], ["radscorpion", 38, 7]]
 # стены каньона — скалы сплошь вокруг дна (клетки 2×2, ни одна не заходит на дно)
-cn.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+cn.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 cn.cliff_walls(CLIFFS, FLOOR, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((24, 7), (40, 20), (57, 39), (23, 28)):
     cn.maybe(OUTCROP, x, y)

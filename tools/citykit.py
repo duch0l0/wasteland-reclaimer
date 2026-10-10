@@ -288,7 +288,49 @@ class City:
         b.portal(b_tiles, a.id, (a_tiles[0][0] - step[0], a_tiles[0][1] - step[1]), label_ba)
 
     # -------------------------------------------------------- запись
+    def furnish_sparse(self):
+        """Голые интерьеры (меньше 4 объектов на 100 клеток пола) получают обстановку по стилю места:
+        техзал (убежища, бункеры, лаборатории), жильё (салуны, ратуши, конторы), подземелье (стоки, туннели)."""
+        TECH = ("vault", "fort_bunker", "ares", "nova_core", "poseidon7", "mariposa_lab", "vegas_tower", "vegas_vault",
+                "vegas_zero", "vegas_bank", "boneyard_vt", "baker7")
+        SEWER = ("hub_tunnels", "vegas_tunnels", "zzyzx_cistern", "drain")
+        CAVE = ("aradesh_cave", "goodsprings_cave", "nipton_mine", "searchlight_mine")
+        TECH = TECH + ("mariposa_vats",)
+        home = [
+            [("table_2", 0, 0), ("chair_0", 0, 1), ("chair_1", 1, 1)],
+            [("shelf_wood", 0, 0), ("barrel_wood", 2, 0), ("sack", 0, 2)],
+            [("sofa", 0, 0), ("round_table_42", 0, 2), ("armchair", 2, 2)],
+            [("crate", 0, 0), ("crate_b", 1, 0), ("sack", 0, 1), ("barrel_wood", 2, 1)],
+            [("table_3", 0, 0), ("stool_1", 2, 0), ("shelf_metal_tall", 3, 0)],
+        ]
+        sewer = [
+            [("rubble_a", 0, 0), ("x_puddle", 2, 2), ("barrel_wood", 3, 0)],
+            [("pile_scrap", 0, 0), ("x_puddle", 0, 2), ("sack", 3, 1)],
+            [("rubble_heap", 0, 0), ("crate_b", 3, 1)],
+            [("pile_bags", 0, 0), ("barrel_wood", 3, 0), ("x_puddle", 2, 2)],
+        ]
+        for m in self.maps:
+            if not m.interior:
+                continue
+            walk = sum(1 for y in range(m.H) for x in range(m.W)
+                       if m.ground[y][x] in m.floors and (x, y) not in m.blocked)
+            if not walk or 100 * len(m.props) / walk >= 4:
+                continue
+            style = ("tech" if m.id.startswith(TECH) else "sewer" if m.id.startswith(SEWER)
+                     else "cave" if m.id.startswith(CAVE) else "home")
+            cave = [[("rock", 0, 0), ("stones_12", 2, 1)], [("bones_a" if "bones_a" in P.CATALOG else "r_bones", 0, 0), ("rock", 2, 0)],
+                    [("stones_19", 0, 0), ("x_puddle", 1, 1)], [("crate_b", 0, 0), ("pickaxe", 1, 0), ("sack", 0, 1)]]
+            scenes = {"tech": lambda: tech_scenes(self, f"{self.id}_f"), "sewer": lambda: sewer, "cave": lambda: cave,
+                      "home": lambda: home}[style]()
+            fl = "".join(m.floors) or m.ground[m.H // 2][m.W // 2]
+            n = m.dress_empty(scenes, ground=fl, block=6, margin=1, chance=0.75, max_uses=3)
+            if 100 * (len(m.props)) / walk < 4:             # тесные комнаты — участки поменьше
+                small = [sc[:2] for sc in scenes]
+                n += m.dress_empty(small, ground=fl, block=4, margin=0, chance=0.6, max_uses=3)
+            print(f"   {m.id}: обставлено ({style}) +{n}")
+
     def save(self, gap_exempt=()):
+        self.furnish_sparse()
         os.makedirs(os.path.join(ROOT, "data", "props"), exist_ok=True)
         with open(os.path.join(ROOT, "data", "props", f"{self.id}.json"), "w", encoding="utf-8") as f:
             json.dump({"props": self.props}, f, ensure_ascii=False, indent=0)

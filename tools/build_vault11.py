@@ -64,7 +64,7 @@ sf.reserve(19, 9, 22, 13)
 for x, y in ((16, 18), (27, 14), (25, 22)):
     sf.maybe("r_rocks", x, y)
 sf.maybe(BONES[0], 18, 15)
-sf.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 19 <= x <= 22 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 sf.enemies += [["radroach", 24, 18], ["radroach", 17, 22]]
 

@@ -729,7 +729,8 @@
 "foot": [
 3,
 2
-]
+],
+"keybg": true
 },
 "ar_burnt": {
 "img": "pk:zcity/zcity_1_122",

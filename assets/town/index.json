@@ -4854,5 +4854,89 @@
    40
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_cliff_side_e": {
+  "size": [
+   48,
+   48
+  ]
+ },
+ "x_cliff_side_w": {
+  "size": [
+   48,
+   48
+  ]
+ },
+ "x_cliff_side_e0": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_e1": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_e2": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_e3": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_w0": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_w1": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_w2": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_w3": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_e4": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_e5": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_w4": {
+  "size": [
+   80,
+   48
+  ]
+ },
+ "x_cliff_side_w5": {
+  "size": [
+   80,
+   48
+  ]
  }
 }

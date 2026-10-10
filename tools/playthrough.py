@@ -240,7 +240,9 @@ class Bot:
                         else getattr(g, k, None))]
             raise Stuck(f"переход {g.loc.id} → {to} не сработал ({(p.get('requires') or {}).get('msg', '')}) "
                         f"[на месте: {tile_of(g.player)}, портал {sorted(p['tiles'])[0]}, открыто: {busy}, "
-                        f"диалог: {g.dialogue.active_id}/{g.dialogue.active_node}]")
+                        f"диалог: {g.dialogue.active_id}/{g.dialogue.active_node}; режим {g.mode}, автоход {bool(g.autowalk)}, "
+                        f"экшен {g.action.active}, жив {g.player.alive}, стоп-кадр {g.combat.hitstop_ms}, "
+                        f"портал под ногами {bool(g.level.portal_at(*tile_of(g.player)))}]")
         self.critic.on_enter()
 
     def walk_to_map(self, target):
@@ -358,15 +360,16 @@ class Bot:
 
     def shop_here(self):
         g = self.g
-        self.buy_implants()
-        self.lessons()
-        for n in list(g.npcs):
+        for n in list(g.npcs):            # сначала ствол своего навыка, патроны и лечение — потом роскошь
             if n.npc_id in g.traders:
                 try:
                     self.stand_near([tile_of(n)])
                     self.shop(n.npc_id)
                 except Stuck:
                     pass
+        if self.own_weapon_ok():
+            self.buy_implants()
+            self.lessons()
 
     def find_npc(self, npc_id):
         g = self.g
@@ -736,6 +739,19 @@ class Bot:
         dmg = max(1, dmg - int(armor * (1 - w.get("pierce", 0))))
         hit = max(0.05, min(0.95, (skill_of(p, wid) - 2 * short - 25) / 100))
         return dmg * burst * hit * (1.6 if w["ranged"] else 1) * (0.3 if w.get("thrown") else 1) / w["ap"] * 4
+
+    def own_weapon_ok(self):
+        """Есть ли ствол (или клинок) своего главного навыка, к которому есть заряды."""
+        g = self.g
+        main = self.build[0][0] if self.build_name != "heavy" else "heavy"
+        main = {"guns": "guns", "energy": "energy", "heavy": "heavy", "melee": "melee"}.get(self.build_name, main)
+        if self.build_name == "talker":
+            return True
+        for wid, w in WEAPONS.items():
+            if w.get("skill") == main and (not w.get("item") or g.inventory.has(w["item"])) and wid != "melee":
+                if not w.get("ammo") or g.inventory.count(w["ammo"]) >= 20:
+                    return True
+        return main == "melee" and False
 
     def best_weapon(self):
         """Лучшее, что слушается и чем есть стрелять."""
@@ -1694,6 +1710,22 @@ def act3(b):
             b.pursue("mother_agatha", "palms_codes", required=False)
         b.terminal("snakes_ledger", "[Отдельный список]")   # тайна Змей: продают «лишних» белым
         b.pursue("mother_snake", "snakes_passage", required=False)
+        if not g.flags.get("snakes_passage"):          # книгу не взломал — путь родни: гость, чертёж, пропуск
+            b.pursue("mother_snake", "snakes_job1_taken", required=False)
+            b.visit("vegas_strip", clear=False)
+            b.pursue("grey_buyer", "snakes_job1", required=False)
+            if not g.inventory.has("чертёж электростанции"):
+                if not g.inventory.has("отмычка"):
+                    b.visit("vegas_strip", clear=False)
+                    for t in ("strip_trader", "snake_trader"):
+                        try:
+                            b.buy_from(t, "отмычка")
+                        except Stuck:
+                            pass
+                b.steal("vegas_boots", "сейф электростанции")
+                print("   чертёж:", g.inventory.has("чертёж электростанции"), "отмычка:", g.inventory.has("отмычка"), flush=True)
+            b.visit("vegas_snakes", clear=False)
+            b.pursue("mother_snake", "snakes_passage", required=False)
         b.terminal("boots_power", "[Дать ток в башню Vault-Tec]", "[Перебросить линию самому]")
         b.visit("vegas_tunnels")                    # «Мамочка» поёт колыбельные
         b.visit("vegas_tower")

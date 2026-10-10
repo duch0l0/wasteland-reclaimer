@@ -31,7 +31,7 @@ def cells(page, pts):
 
 
 CLIFFS = [P(f"v15_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True) for i, x in enumerate((8, 10, 12))]
-OUTCROP = P("v15_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True)
+OUTCROP = P("v15_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keybg=True)
 TENTS = [P(f"v15_tent{i}", f"pk:ucamp/ucamp_2_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((3, 8, 19, 21))]
 SHACK = P("v15_shack", "pk:ucamp/ucamp_2_024", foot=[2, 1], sight=True)
 CAMPFIRE = P("v15_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1],
@@ -110,7 +110,7 @@ sf.box(LOOT, 48, 33, "добыча Шакалов", {"крышки": 60, "пат
 sf.npcs += [["jackal_boss", 43, 30], ["captive_mira", 33, 34], ["jackal_a", 37, 31], ["jackal_b", 46, 33],
             ["jackal_c", 51, 31]]                       # Шакалы торгуют, пока им выгодно; драка — по слову вожака
 # скалы вокруг долины
-sf.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 24 <= x <= 27 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((16, 10), (40, 12), (18, 24)):
     sf.maybe(OUTCROP, x, y)

@@ -215,7 +215,7 @@ cp.portal([(32, 5), (33, 5), (34, 5)], "nipton_mine", (6, 26), "Старая ш�
 cp.reserve(31, 5, 35, 9)
 cp.put(LANTERN, 30, 7)
 cp.put(LANTERN, 36, 7)
-cp.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+cp.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 cp.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 31 <= x <= 35 and 4 <= y <= 6, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 cp.npcs += [["groom_cal", 34, 21], ["groom_a", 28, 17], ["groom_b", 40, 24], ["groom_c", 26, 30]]
 cp.scatter(["r_bones", "r_rocks", "r_dry_bush"], 14, 6, 50, 34, 14)

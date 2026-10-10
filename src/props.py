@@ -159,6 +159,48 @@ def pond_edges(img):
     return out
 
 
+def key_background(img, tol=46):
+    """Кусок страницы с «подложкой» (скала на квадрате песка): фон, связанный с краем картинки и похожий
+    по цвету на края, становится прозрачным; кромка у самого предмета — полупрозрачная, без ступенек."""
+    from collections import deque
+    w, h = img.get_size()
+    out = img.convert_alpha().copy()
+    edge = [out.get_at((x, 0)) for x in range(0, w, 4)] + [out.get_at((x, h - 1)) for x in range(0, w, 4)] + \
+           [out.get_at((0, y)) for y in range(0, h, 4)] + [out.get_at((w - 1, y)) for y in range(0, h, 4)]
+    edge = [c for c in edge if c.a > 200]
+    if not edge:
+        return out
+    ref = [sum(c[i] for c in edge) / len(edge) for i in range(3)]
+
+    def bg(c):
+        return c.a < 20 or sum(abs(c[i] - ref[i]) for i in range(3)) < tol
+    seen = [[False] * h for _ in range(w)]
+    q = deque((x, y) for x in range(w) for y in (0, h - 1)) + deque((x, y) for y in range(h) for x in (0, w - 1)) \
+        if False else deque([(x, y) for x in range(w) for y in (0, h - 1)] + [(x, y) for y in range(h) for x in (0, w - 1)])
+    clear = []
+    while q:
+        x, y = q.popleft()
+        if seen[x][y]:
+            continue
+        seen[x][y] = True
+        if not bg(out.get_at((x, y))):
+            continue
+        clear.append((x, y))
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < w and 0 <= ny < h and not seen[nx][ny]:
+                q.append((nx, ny))
+    gone = set(clear)
+    for x, y in clear:
+        out.set_at((x, y), (0, 0, 0, 0))
+    for x, y in clear:                       # полупрозрачная кайма на один пиксель — мягкий контур
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in gone:
+                c = out.get_at((nx, ny))
+                if c.a == 255:
+                    out.set_at((nx, ny), (c.r, c.g, c.b, 200))
+    return out
+
+
 def explosive(obj):
     """Взрывается ли объект карты (красная бочка). Изометрических тайлов в каталоге нет — не взрываются."""
     return obj.get("name") in CATALOG and bool(CATALOG[obj["name"]].get("explosive"))
@@ -216,6 +258,8 @@ def image(name, darken=False):
             sc = d.get("scale", 1.0) * world_scale(name)   # целый множитель — по пикселям (пиксель-арт не мылится)
             img = pygame.transform.scale(img, d["size"]) if (float(sc).is_integer() or sc > 1) else \
                 pygame.transform.smoothscale(img, d["size"])     # увеличение — по пикселям, без мыла
+        if d.get("keybg"):              # скала/камень на квадрате песка — песок прозрачный
+            img = key_background(img)
         if d.get("soft") == "pond":    # водоём на улице: свой берег, без прямоугольника
             img = pond_edges(img)
         elif d.get("soft"):            # вставка на улице (пятно травы, воронка): края тают в землю

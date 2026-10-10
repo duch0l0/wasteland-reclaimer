@@ -119,6 +119,7 @@ class MapKit:
                 if any((tx, ty) in floor for tx in range(x - d, x + 2 + d) for ty in range(y - d, y + 2 + d)):
                     return r
             return 0
+        south_cells = set()
         for x, y in cells:
             tiles = {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)}
             self.blocked.update(tiles)
@@ -127,10 +128,30 @@ class MapKit:
                     if tx < self.W and ty < self.H:
                         self.ground[ty][tx] = plateau
             r = ring(x, y)
-            if r == 1 or (r == 2 and rnd.random() < 0.55):
-                self.props.append([rnd.choice(cliffs), x, y])
+            if r == 1:
+                south = any((tx, y + 2) in floor or (tx, y + 3) in floor for tx in (x, x + 1))
+                if south:         # фасад обрыва — только там, где дно ниже (южный край), как видит камера
+                    south_cells.add((x, y))
+                else:             # боковой край: каменная стенка обрыва по кромке плато (видно, что это гора)
+                    for tx, ty in tiles:
+                        if (tx + 1, ty) in floor:
+                            self.props.append([f"x_cliff_side_e{rnd.randrange(6)}", tx, ty, 16, 0])   # картинка 80 px: край клетки — посередине
+                        elif (tx - 1, ty) in floor:
+                            self.props.append([f"x_cliff_side_w{rnd.randrange(6)}", tx, ty, -16, 0])
+                        elif any((tx + dx, ty - 1) in floor for dx in (-1, 0, 1)) and rnd.random() < 0.5:
+                            self.props.append([rnd.choice(("rock", "stones_12", "stones_19")), tx, ty,
+                                               rnd.randint(-10, 10), rnd.randint(-6, 6)])   # северная кромка — камни
             elif decor and rnd.random() < decor_chance:
                 self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
+
+        # куски обрыва в наборе: левый край, середина, правый край — ряд собирается без щелей
+        for x, y in sorted(south_cells):
+            self.props.append([cliffs[1 if len(cliffs) > 1 else 0], x, y])   # цельный кусок — без щелей торцов
+            for tx, ty in ((x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)):   # на углу боковая стенка — до низа обрыва
+                if (tx + 1, ty) in floor:
+                    self.props.append([f"x_cliff_side_e{rnd.randrange(6)}", tx, ty, 16, 0])
+                elif (tx - 1, ty) in floor:
+                    self.props.append([f"x_cliff_side_w{rnd.randrange(6)}", tx, ty, -16, 0])
 
     def reserve(self, x0, y0, x1, y1):
         for y in range(y0, y1 + 1):

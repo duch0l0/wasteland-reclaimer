@@ -197,6 +197,11 @@ for x, y in ((31, 22), (48, 22), (31, 33), (48, 33)):
     st.put(LAMPS[(x + y) % 2], x, y)
 for i, (x, y) in enumerate(((20, 25), (56, 30), (38, 14), (40, 42), (24, 30))):
     st.maybe(WRECKS[i % len(WRECKS)], x, y)
+# Стрип: фонари по тротуарам в шахматном порядке, у обочин — брошенные машины; проезжая часть свободна
+for i, y in enumerate((4, 11, 18, 36, 44, 51)):
+    st.maybe(LAMPS[i % 2], 35 if i % 2 else 44, y, allow_reserved=True)
+for i, (x, y) in enumerate(((36, 7), (41, 21), (36, 39), (41, 47))):
+    st.maybe(WRECKS[(i + 3) % len(WRECKS)], x, y, allow_reserved=True)
 # люк в подвал разрушенного «Первого банка Мохаве» — «Последний банк Вегаса»
 st.props.append(["x_manhole", 22, 38])
 st.portal([(22, 38)], "vegas_bank", (6, 5), "Люк в подвал банка",

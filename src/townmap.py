@@ -563,6 +563,63 @@ class TownMap(MapBase):
                 n += w * (self.ground[ny][nx] == p)
         return n / tot
 
+    def _blend_codes(self, x, y, codes, h):
+        """Смесь земель: вес каждой — по сглаженному полю (непрерывно через границы клеток), веса нормируются,
+        текстуры складываются. Соседние клетки сходятся без шва, сколько бы земель ни встречалось."""
+        N = 12
+        fields = {c: {(i, j): self._patch_field(x + i, y + j, c) for i in (-1, 0, 1) for j in (-1, 0, 1)} for c in codes}
+        rnd = random.Random(h)
+        grid = {c: [[0.0] * N for _ in range(N)] for c in codes}
+        for py in range(N):
+            for px in range(N):
+                u, v = (px + 0.5) / N - 0.5, (py + 0.5) / N - 0.5
+                i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
+                fu, fv = u - i0, v - j0
+                jit = rnd.uniform(-0.05, 0.05)
+                ws = {}
+                for c in codes:
+                    f = fields[c]
+                    val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
+                           + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
+                    ws[c] = max(0.0, min(1.0, (val + jit - 0.3) / 0.4)) ** 2
+                tot = sum(ws.values()) or 1.0
+                for c in codes:
+                    grid[c][py][px] = ws[c] / tot
+        out = pygame.Surface((T, T))
+        out.fill((0, 0, 0))
+        for c in codes:
+            small = pygame.Surface((N, N))
+            for py in range(N):
+                for px in range(N):
+                    g = int(255 * grid[c][py][px] + 0.5)
+                    small.set_at((px, py), (g, g, g))
+            if not any(grid[c][py][px] for py in range(N) for px in range(N)):
+                continue
+            tex = self._tiles[c][h % len(self._tiles[c])].copy()
+            tex.blit(pygame.transform.smoothscale(small, (T, T)), (0, 0), special_flags=pygame.BLEND_RGB_MULT)
+            out.blit(tex, (0, 0), special_flags=pygame.BLEND_RGB_ADD)
+        return out
+
+    def _patch_overlay(self, x, y, patch, h):
+        """Картинка земли patch, прозрачная там, где по сглаженному полю её нет (мягкая неровная кромка)."""
+        over = self._tiles[patch][h % len(self._tiles[patch])].convert_alpha()
+        f = {(i, j): self._patch_field(x + i, y + j, patch) for i in (-1, 0, 1) for j in (-1, 0, 1)}
+        rnd = random.Random(h ^ (ord(patch[0]) * 7919))
+        N = 12                                         # маска считается на сетке 12×12 и плавно растягивается
+        small = pygame.Surface((N, N), pygame.SRCALPHA)
+        for py in range(N):
+            for px in range(N):
+                u, v = (px + 0.5) / N - 0.5, (py + 0.5) / N - 0.5
+                i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
+                fu, fv = u - i0, v - j0
+                val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
+                       + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
+                val += rnd.uniform(-0.05, 0.05)
+                a = max(0.0, min(1.0, (val - 0.3) / 0.4))
+                small.set_at((px, py), (255, 255, 255, int(255 * a)))
+        over.blit(pygame.transform.smoothscale(small, (T, T)), (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        return over
+
     def _feathered(self, x, y, code):
         """Граница двух земель (город и песок, дорога и пустырь): рисуется по сглаженному полю, а не по сетке —
         край идёт плавной неровной линией, углы скруглены, ступенек нет."""
@@ -581,27 +638,14 @@ class TownMap(MapBase):
         if not near:
             tile = self._edge_cache[key] = self._raw_tile(x, y)
             return tile
-        other = max(near, key=near.get)
-        patch, back = (other, code) if self._feather[other] < self._feather[code] else (code, other)
+        codes = {code}                               # все земли, чьё поле дотягивается до клетки (окно 5×5)
+        for dy in range(-2, 3):
+            for dx in range(-2, 3):
+                nx, ny = min(self.width - 1, max(0, x + dx)), min(self.height - 1, max(0, y + dy))
+                if self.ground[ny][nx] in self._feather:
+                    codes.add(self.ground[ny][nx])
         h = (x * 73856093) ^ (y * 19349663)
-        tile = self._tiles[back][h % len(self._tiles[back])].copy()
-        over = self._tiles[patch][h % len(self._tiles[patch])].convert_alpha()
-        f = {(i, j): self._patch_field(x + i, y + j, patch) for i in (-1, 0, 1) for j in (-1, 0, 1)}
-        rnd = random.Random(h)
-        mask = pygame.Surface((T, T), pygame.SRCALPHA)
-        B = 4
-        for py in range(0, T, B):
-            for px in range(0, T, B):
-                u, v = (px + B / 2) / T - 0.5, (py + B / 2) / T - 0.5     # от центра клетки, −0.5…0.5
-                i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
-                fu, fv = u - i0, v - j0
-                val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
-                       + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
-                val += rnd.uniform(-0.07, 0.07)
-                a = max(0.0, min(1.0, (val - 0.38) / 0.24))              # мягкая кромка шириной в треть клетки
-                mask.fill((255, 255, 255, int(255 * a)), (px, py, B, B))
-        over.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
-        tile.blit(over, (0, 0))
+        tile = self._blend_codes(x, y, sorted(codes), h)
         self._edge_cache[key] = tile
         return tile
 

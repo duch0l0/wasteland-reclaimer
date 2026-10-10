@@ -30,7 +30,7 @@ def cells(page, pts):
 
 
 CLIFFS = [P(f"v4_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True) for i, x in enumerate((8, 10, 12))]
-OUTCROP = P("v4_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True)
+OUTCROP = P("v4_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keybg=True)
 VAN = P("v4_van", "pk:zcity/zcity_2_097", foot=[2, 1], sight=True)
 # жилой ярус
 BUNKS = [P(f"v4_bunk{i}", f"pk:nbunk/nbunk_2_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((0, 1, 2, 3))]
@@ -96,7 +96,7 @@ sf.reserve(21, 9, 24, 13)
 # пустой фургон культа у подножия: культ уже стучался в эту дверь
 sf.put(VAN, 30, 18)
 sf.box("hb_crate", 33, 19, "ящик с печатью круга", {"письмо смотрительнице": 1})
-sf.floor_code("Q", *["pk:desnat/p1/10,4,1,1", "pk:desnat/p1/11,4,1,1", "pk:desnat/p1/10,5,1,1", "pk:desnat/p1/11,5,1,1"])
+sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 21 <= x <= 24 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((15, 12), (36, 10), (34, 26)):
     sf.maybe(OUTCROP, x, y)
