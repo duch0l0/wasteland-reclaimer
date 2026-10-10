@@ -300,6 +300,9 @@ class Enemy(CombatStats):
         self.hostile = self.faction is None
         self.talk = d.get("talk")         # id диалога: такой враг сначала заговаривает
         self.pack = d.get("pack")         # стая: вся стая рядом вступает в бой разом
+        self.role = d.get("role")         # роль в отряде (src/ai_roles.py): медик, снайпер, пулемётчик…
+        self.medkits = d.get("medkits", 3 if self.role == "medic" else 0)
+        self.hidden = self.role == "ambush"   # засада: не видна, пока герой не подойдёт
         self.talked = False
         self.facing_left = False
         self.alive = True

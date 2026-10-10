@@ -70,7 +70,7 @@ def draw_health_bars(surf, game, cam, zoom=1):
     if combat.active:
         fighters = [f for f in combat.order if f.alive]
     else:
-        fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp]
+        fighters = [e for e in game.enemies if e.alive and e.hp < e.max_hp and not getattr(e, "hidden", False)]
     for f in fighters:
         if game.hidden_by_roof(f):
             continue
@@ -244,3 +244,85 @@ def draw_darkness(surf, center, dark=200, radius=420):
         _DARK[key] = mask
     mask = _DARK[key]
     surf.blit(mask, (center[0] - mask.get_width() // 2, center[1] - mask.get_height() // 2))
+
+
+# ------------------------------------------------------------ роли врагов (src/ai_roles.py)
+ROLE_BADGE = {"medic": ("+", (70, 170, 90)), "commander": ("К", (200, 160, 40)), "sniper": ("С", (180, 50, 50)),
+              "gunner": ("П", (170, 90, 40)), "grenadier": ("Г", (150, 110, 60)), "shield": ("Щ", (90, 110, 150)),
+              "runner": ("!", (200, 120, 40)), "flanker": ("Ф", (120, 80, 150)), "cover": ("У", (110, 120, 110)),
+              "ambush": ("З", (90, 90, 90))}
+
+
+def draw_role_badges(surf, game, cam, zoom=1):
+    """Значок роли слева от полоски HP и щит, если враг сейчас за укрытием от героя."""
+    combat = game.combat
+    if not combat.active:
+        return
+    _, font_small = fonts()
+    me = game.player
+    shooters = [e for e in combat.enemies_in_combat() if e.ai in ("ranged", "turret") and not getattr(e, "hidden", False)]
+    covered = sum(1 for e in shooters if combat.in_cover(e, me))
+    if covered and me.alive:                   # герой за укрытием: щит и от скольких стрелков прикрыт
+        r = _z(visible_rect(me, cam), zoom)
+        x, y = r.centerx - 26, health_bar_y(r) + 2
+        pts = [(x - 6, y - 7), (x + 6, y - 7), (x + 6, y), (x, y + 7), (x - 6, y)]
+        pygame.draw.polygon(surf, (20, 16, 12), [(px + 1, py + 1) for px, py in pts])
+        pygame.draw.polygon(surf, (120, 200, 130), pts)
+        if len(shooters) > 1:
+            t = font_small.render(f"{covered}/{len(shooters)}", True, (200, 235, 200))
+            surf.blit(t, t.get_rect(midright=(x - 9, y)))
+    for f in combat.enemies_in_combat():
+        if getattr(f, "hidden", False) or game.hidden_by_roof(f):
+            continue
+        r = _z(visible_rect(f, cam), zoom)
+        y = health_bar_y(r) + 2
+        x = r.centerx - 26
+        role = getattr(f, "role", None)
+        if role in ROLE_BADGE:
+            glyph, col = ROLE_BADGE[role]
+            pygame.draw.circle(surf, (20, 16, 12), (x, y), 8)
+            pygame.draw.circle(surf, col, (x, y), 7)
+            t = font_small.render(glyph, True, (250, 245, 230))
+            surf.blit(t, t.get_rect(center=(x, y)))
+            x -= 18
+        if combat.in_cover(game.player, f):
+            pts = [(x - 6, y - 7), (x + 6, y - 7), (x + 6, y), (x, y + 7), (x - 6, y)]
+            pygame.draw.polygon(surf, (20, 16, 12), [(px + 1, py + 1) for px, py in pts])
+            pygame.draw.polygon(surf, (170, 180, 190), pts)
+        if getattr(f, "broken", False):
+            t = font_small.render("бежит", True, (230, 200, 120))
+            surf.blit(t, t.get_rect(midleft=(r.centerx + 22, y + 12)))
+
+
+def draw_role_warnings(surf, combat, cam):
+    """Предупреждения, на которые можно ответить: луч снайпера и сектор пулемётчика."""
+    if not combat.active:
+        return
+    from .. import ai_roles
+    from ..combat import tile_of
+    T = S.TILE
+    pulse = 0.6 + 0.4 * abs(((pygame.time.get_ticks() // 8) % 200) - 100) / 100
+    for e in combat.enemies_in_combat():
+        if getattr(e, "role", None) == "sniper" and getattr(e, "aiming", None) is not None and e.aiming.alive:
+            a, b = cam.p(*e.rect.center), cam.p(*e.aiming.rect.center)
+            pygame.draw.line(surf, (int(255 * pulse), 30, 30), a, b, 2)
+            pygame.draw.circle(surf, (255, 40, 40), (int(b[0]), int(b[1])), 5, 1)
+        if getattr(e, "role", None) == "gunner" and getattr(e, "overwatch", None):
+            gx, gy = tile_of(e)
+            rng = e.overwatch["range"]
+            shade = pygame.Surface((T, T), pygame.SRCALPHA)
+            shade.fill((230, 60, 40, int(55 * pulse)))
+            for ty in range(gy - rng, gy + rng + 1):
+                for tx in range(gx - rng, gx + rng + 1):
+                    if ai_roles.in_sector(combat, e, (tx, ty)):
+                        sx, sy = cam.p(tx * T, ty * T)
+                        surf.blit(shade, (int(sx), int(sy)))
+
+
+def draw_sparks(surf, combat, cam):
+    for sp in combat.sparks:
+        k = 1 - sp["t"] / sp["life"]
+        x, y = cam.p(sp["pos"].x, sp["pos"].y)
+        col = (255, int(200 + 55 * k), int(120 * k))
+        tail = sp["vel"] * 18
+        pygame.draw.line(surf, col, (x, y), (x - tail.x, y - tail.y), 2 if k > 0.5 else 1)

@@ -155,6 +155,35 @@ def make_enemy(pos, type_id, iso=False):
     return Enemy(pos, enemy_animations(type_id), type_id, ENEMY_DEFS[type_id])
 
 
+# роли в отрядах (src/ai_roles.py): чем дальше по игре, тем больше у врагов работы, а не только мяса
+try:
+    with open("data/squads.json", "r", encoding="utf-8") as f:
+        SQUADS = {k: v for k, v in json.load(f).items() if not k.startswith("_")}
+except FileNotFoundError:
+    SQUADS = {}
+ROLE_SUFFIX = {"medic": "медик", "commander": "главарь", "sniper": "снайпер", "gunner": "пулемётчик",
+               "grenadier": "гренадёр", "shield": "щитоносец", "runner": "гонец"}
+
+
+def apply_role(e, role):
+    """Враг получает роль: поля для поведения и подпись к имени (засада и фланговый — без подписи)."""
+    e.role = role
+    e.hidden = role == "ambush"
+    if role == "medic":
+        e.medkits = max(getattr(e, "medkits", 0), 3)
+    if role == "grenadier":
+        e.grenades = max(e.grenades, 3)
+    if role in ROLE_SUFFIX and ROLE_SUFFIX[role] not in e.name:
+        e.name = f"{e.name}-{ROLE_SUFFIX[role]}"
+
+
+def assign_squad_roles(loc_id, enemies):
+    """data/squads.json: {"локация": [[тип, сколько, роль], …]} — первым врагам этого типа без роли."""
+    for kind, n, role in SQUADS.get(loc_id, []):
+        for e in [e for e in enemies if e.type_id == kind and not getattr(e, "role", None)][:n]:
+            apply_role(e, role)
+
+
 def npc_variant(npc_id):
     """Житель с общим листом (пятнадцать «folk_c» в разных городах) — свой оттенок одежды и волос, всегда один и тот же."""
     import zlib
@@ -208,7 +237,13 @@ class Location:
         entry = d.get("entry")
         self.entry = (entry[0] * S.TILE, entry[1] * S.TILE) if entry else self.level.player_spawn
         iso = getattr(self.level, "iso", False)
-        self.enemies = [make_enemy(pos, t, iso) for pos, t in self.level.enemy_spawns]
+        self.enemies = []
+        for sp in self.level.enemy_spawns:          # (место, тип[, роль в отряде])
+            e = make_enemy(sp[0], sp[1], iso)
+            if len(sp) > 2 and sp[2]:
+                apply_role(e, sp[2])
+            self.enemies.append(e)
+        assign_squad_roles(loc_id, self.enemies)   # роли по data/squads.json
         if not self.is_encounter and not d.get("action"):   # мир растёт вместе с героем (src/balance.py)
             from .balance import act_of, scale_enemy, scale_loot
             act = act_of(loc_id)

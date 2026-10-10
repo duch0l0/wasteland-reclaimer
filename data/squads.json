@@ -1,0 +1,34 @@
+{
+  "_doc": "Роли врагов по локациям (src/ai_roles.py, docs/combat_plan.md): [тип, сколько, роль] — первым врагам этого типа. Акт I — по одной роли на бой (обучение), акт II — отряды из 2–3 ролей, акт III и тайные места — командиры, пулемётчики, щитоносцы. Случайные встречи раздают роли по уровню героя (src/encounters.py).",
+
+  "town": [["raider", 1, "cover"]],
+  "drain": [["ratman", 1, "ambush"]],
+  "barstow": [["ghoul_runner", 2, "flanker"]],
+  "barstow_base": [["ghoul_runner", 2, "flanker"]],
+  "barstow_center": [["ghoul_runner", 3, "flanker"]],
+  "barstow_depot": [["ghoul_runner", 2, "flanker"]],
+  "baker_mission": [["cultist", 1, "medic"]],
+  "baker_crypt": [["cultist", 1, "runner"]],
+
+  "needles_bridge": [["raider_elite", 1, "commander"], ["sniper", 1, "sniper"], ["raider", 1, "grenadier"], ["raider", 1, "cover"]],
+  "hub_old": [["gang", 1, "cover"], ["raider", 1, "runner"]],
+  "hub_tunnels": [["ratman", 2, "ambush"]],
+  "junktown_dump": [["raider_elite", 1, "commander"], ["raider", 1, "grenadier"], ["raider", 1, "cover"]],
+  "necropolis_under": [["feral", 1, "flanker"]],
+  "vault12": [["feral", 1, "flanker"]],
+  "aradesh_canyon": [["radscorpion", 1, "ambush"]],
+  "aradesh_cave": [["radscorpion", 2, "ambush"]],
+  "boneyard_vt": [["feral", 2, "flanker"]],
+  "vault4_lower": [["rad_mutant", 1, "flanker"]],
+
+  "goodsprings_cave": [["river_lizard", 1, "ambush"]],
+  "vegas_tunnels": [["ratman", 2, "ambush"], ["feral", 2, "flanker"]],
+  "vegas_tower": [["feral", 2, "flanker"]],
+  "vault57": [["ghoul_runner", 1, "flanker"]],
+  "repconn": [["ghoul_runner", 1, "flanker"], ["feral", 1, "ambush"]],
+  "poseidon7_hangar": [["enclave_soldier", 1, "commander"], ["enclave_soldier", 1, "gunner"], ["enclave_soldier", 1, "cover"]],
+  "catalina_cove": [["river_lizard", 1, "ambush"]],
+  "mariposa": [["super_mutant", 1, "gunner"], ["super_mutant", 1, "shield"], ["super_mutant", 1, "grenadier"], ["cult_guard", 1, "medic"]],
+  "mariposa_lab": [["super_mutant", 1, "cover"]],
+  "mariposa_vats": [["joined", 1, "commander"], ["super_mutant", 1, "gunner"], ["super_mutant", 1, "shield"], ["super_mutant", 1, "grenadier"]]
+}

@@ -159,12 +159,13 @@ nc.put(BANNERS[0], 35, 19)
 nc.put(BANNERS[1], 43, 19)
 
 # северо-запад: высотки вдоль бульвара, за ними — дом Коббса
-for i, x in enumerate((2, 5, 8, 22, 25)):
-    nc.put(TOWERS[i % len(TOWERS)], x, 24)
-nc.put(SHOP_ROW, 12, 25)
-nc.put(TOWER_BROKEN, 19, 24)
+nc.reserve(9, 19, 12, 26)                             # проход от дома Коббса к бульвару
+for i, x in enumerate((0, 4)):                        # высотки в рост (data/prop_scale.json: пятно 4×4)
+    nc.put(TOWERS[i], x, 23)
+nc.put(SHOP_ROW, 13, 25)                              # ряд лавок: 12 клеток фасада
+nc.put(TOWER_BROKEN, 25, 23)
+nc.put(TOWERS[2], 29, 23)
 nc.building(6, 9, 12, 10, "brick", south=(4,))        # дом капрала Коббса
-nc.reserve(10, 19, 11, 22)
 nc.put(CAR_PILE, 20, 12)
 nc.put(BILLBOARDS[0], 21, 17)
 nc.put(TREES[0], 3, 6)
@@ -187,7 +188,7 @@ nc.enemies += [["feral", 59, 11], ["feral", 66, 13], ["feral", 74, 18], ["ghoul_
 for i, (x, y) in enumerate(((4, 33), (14, 26), (27, 33), (48, 26), (53, 33), (64, 33), (72, 26))):
     nc.put((CARS + WRECKS)[i % 14], x, y)
 for x in (10, 30, 50, 70):
-    nc.put(LAMPS[(x // 10) % 2], x, 26)
+    nc.maybe(LAMPS[(x // 10) % 2], x, 26)          # у прохода к Коббсу — пропустить
     nc.put(LAMPS[(x // 10 + 1) % 2], x + 2, 33)
 nc.put(SIGNS[0], 35, 26)
 nc.put(SIGNS[1], 44, 33)

@@ -205,6 +205,9 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             self.update_world_map(dt_ms)
             return
 
+        if self.combat.hitstop_ms > 0:   # стоп-кадр после крита/убийства: мир на миг замер
+            self.combat.hitstop_ms -= dt_ms
+            return
         Minimap.reveal(self)  # туман войны: открыть клетки вокруг героя
         self.refresh_hero_look()
         self.player.update(dt_ms)

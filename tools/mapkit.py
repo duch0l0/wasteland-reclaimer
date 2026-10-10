@@ -400,7 +400,18 @@ class MapKit:
     def check(self, npc_enemy_gap=6, gap_exempt=(), passable=()):
         """passable — клетки, которые откроются по ходу игры (гермодвери)."""
         reach = self.reachable(passable=passable)
-        for kind, x, y in self.enemies + [[n, x, y] for n, x, y in self.npcs]:
+        for lst in (self.enemies, self.npcs):      # житель/враг оказался под выросшей декорацией — на соседнюю клетку
+            for e in lst:
+                x, y = e[1], e[2]
+                if (x, y) in reach and (x, y) not in self.blocked:
+                    continue
+                near = sorted((t for t in reach if t not in self.blocked and abs(t[0] - x) <= 4 and abs(t[1] - y) <= 4
+                               and not any(o is not e and (o[1], o[2]) == t for o in self.enemies + self.npcs)),
+                              key=lambda t: abs(t[0] - x) + abs(t[1] - y))
+                if near:
+                    print(f"   {e[0]}: ({x}, {y}) занято — встаёт в {near[0]}")
+                    e[1], e[2] = near[0]
+        for kind, x, y, *_ in self.enemies + [[n, x, y] for n, x, y in self.npcs]:
             assert (x, y) in reach and (x, y) not in self.blocked, f"{kind} в недоступной клетке {x, y}"
         for item, _, x, y in self.pickups:
             assert (x, y) in reach, f"{item} недоступен {x, y}"

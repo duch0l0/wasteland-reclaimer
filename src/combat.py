@@ -19,6 +19,7 @@ import pygame
 
 from . import settings as S
 from .weapons import WEAPONS, RANGE_PENALTY_PER_TILE, shortfall, skill_of
+from . import ai_roles as ROLES
 
 T = S.TILE
 
@@ -120,6 +121,9 @@ def chebyshev(a, b):
 class Combat:
     def __init__(self, game):
         self.game = game
+        self.shake_ms, self.shake_amp = 0, 0    # тряска экрана: крит, взрыв (S.SCREEN_SHAKE)
+        self.hitstop_ms = 0                    # стоп-кадр: на крите и убийстве мир замирает на миг
+        self.sparks = []                       # искры: пуля по броне и по роботу
         self.active = False
         self.order = []
         self.turn_idx = 0
@@ -172,6 +176,8 @@ class Combat:
 
     def enemy_notices_player(self, enemy):
         p = self.game.player
+        if getattr(enemy, "hidden", False):
+            return ROLES.ambush_check(self, enemy)
         return enemy.hostile and self._dist(enemy, p) <= enemy.aggro and self.los(enemy, p)
 
     # ------------------------------------------------------ начало и конец
@@ -198,10 +204,16 @@ class Combat:
         self.aim_menu = False
         g.craft_open = False
         allies = self._party_here()
+        enemies = [e for e in enemies if not getattr(e, "hidden", False)]   # затаившиеся не выдают себя
+        self.squad_size, self.half_lost, self.focus = len(enemies), False, None
         if player_first:  # напал сам — ходишь первым, спутник сразу за тобой
             self.order = [p] + allies + enemies
         else:             # заметили тебя — очередь по Реакции
             self.order = sorted([p] + allies + enemies, key=lambda f: -f.sequence)
+        for e in [e for e in enemies if getattr(e, "ambusher", False)]:   # засада бьёт первой
+            e.ambusher = False
+            self.order.remove(e)
+            self.order.insert(0, e)
         for f in self.order:
             self._snap_to_grid(f)
             if f is not p:
@@ -251,6 +263,9 @@ class Combat:
     def _begin_turn(self):
         ent = self.current
         ent.ap = ent.max_ap
+        if not ent is self.game.player and not self.is_ally(ent):
+            ent.fired = False
+        ROLES.begin_turn(self, ent)
         if self._tick_dots(ent):   # яд или огонь добили — ход следующему
             self.busy_ms = S.COMBAT_ATTACK_MS
             if self.active and self.game.player.alive:
@@ -362,16 +377,21 @@ class Combat:
         self.tweens.append({"ent": ent, "from": pygame.Vector2(ent.rect.topleft),
                             "to": pygame.Vector2(rect_pos_for_tile(ent, nxt)), "t": 0})
         ent.anim.set_action("walk")
+        if ent is self.game.player or self.is_ally(ent):
+            ROLES.overwatch_react(self, ent, nxt)          # шагнул в сектор пулемётчика
         return True
 
-    def find_path(self, ent, done):
+    def find_path(self, ent, done, max_len=None):
         """BFS по свободным клеткам до первой, где done(tile) истинно.
-        Список клеток пути без стартовой ([] — уже на месте, None — не дойти)."""
+        Список клеток пути без стартовой ([] — уже на месте, None — не дойти). max_len — не дальше стольких шагов."""
         start = tile_of(ent)
         blocked = self._occupied(except_ent=ent)
         q, prev = deque([start]), {start: None}
+        depth = {start: 0}
         while q:
             c = q.popleft()
+            if max_len is not None and depth[c] > max_len:
+                continue
             if done(c):
                 path = []
                 while c != start:
@@ -382,6 +402,7 @@ class Combat:
                 n = (c[0] + d[0], c[1] + d[1])
                 if n not in prev and self._walkable(n) and n not in blocked:
                     prev[n] = c
+                    depth[n] = depth[c] + 1
                     q.append(n)
         return None
 
@@ -445,6 +466,9 @@ class Combat:
         if aim < 0 and attacker is self.game.player and attacker.perk_rank("sniper"):
             aim //= 2   # перк «Снайпер»
         chance = prof["skill"] - self.defense(defender) + aim - (25 if attacker.blinded else 0)
+        chance += ROLES.hit_bonus(self, attacker, defender)
+        if getattr(attacker, "aimed_shot", False):
+            chance += 30                                  # снайпер целился целый ход
         if prof["ranged"]:
             dist = chebyshev(tile_of(attacker), tile_of(defender))
             chance -= RANGE_PENALTY_PER_TILE * max(0, dist - 1)
@@ -457,9 +481,18 @@ class Combat:
     COVER_PENALTY = 25
 
     def in_cover(self, attacker, defender):
-        """Цель за низким укрытием (мешки, ящики, бочки) со стороны стрелка: клетка рядом
-        с целью в сторону стрелка непроходима, но обзор не закрывает."""
-        (ax, ay), (dx, dy) = tile_of(attacker), tile_of(defender)
+        """Цель за низким укрытием (мешки, ящики, бочки) или за щитоносцем со стороны стрелка."""
+        if self.cover_between(tile_of(attacker), tile_of(defender)):
+            return True
+        return chebyshev(tile_of(attacker), tile_of(defender)) > 1 and ROLES.shields_cover(self, tile_of(attacker), defender)
+
+    def cover_between_ents(self, attacker, defender):
+        return self.in_cover(attacker, defender)
+
+    def cover_between(self, att_tile, def_tile):
+        """Клетка def_tile прикрыта от стрелка в att_tile: соседняя клетка в его сторону непроходима,
+        но обзор не закрывает (мешки, ящики, бочки, машины)."""
+        (ax, ay), (dx, dy) = att_tile, def_tile
         if chebyshev((ax, ay), (dx, dy)) <= 1:
             return False
         sx = (ax > dx) - (ax < dx)
@@ -491,6 +524,7 @@ class Combat:
         if attacker.ap < cost or not ok:
             return False
         attacker.ap -= cost
+        attacker.fired = True
         attacker.facing_left = defender.rect.centerx < attacker.rect.centerx
         attacker.anim.face(defender.rect.centerx - attacker.rect.centerx,
                            defender.rect.centery - attacker.rect.centery)
@@ -578,6 +612,8 @@ class Combat:
                 dmg = round(dmg * 1.3)
         if attacker.crippled_arms:
             dmg = max(1, dmg // 2)
+        if getattr(attacker, "aimed_shot", False):
+            dmg = round(dmg * 1.5)                            # выцеленный выстрел снайпера
         crit = random.randint(1, 100) <= self.crit_chance(attacker, part_idx)
         if crit:
             dmg = int(dmg * part["mult"])
@@ -588,7 +624,20 @@ class Combat:
             armor = max(0, armor - 3 * attacker.perk_rank("armor_piercer"))
         absorbed = min(dmg, armor)
         dmg -= absorbed
+        if absorbed and (getattr(defender, "robot", False) or absorbed >= dmg):
+            self.spark(defender, attacker, 10 if absorbed >= dmg else 6)   # звяк: броня приняла удар
+            if dmg <= 0:
+                self._float(defender, "звяк", (200, 210, 225))
         defender.apply_damage(dmg)
+        if crit and dmg > 0:                                   # крит чувствуется: экран вздрагивает, мир на миг замирает
+            self.shake(140, 3)
+            self.hitstop(70)
+            heavy = (not prof["ranged"] and prof["damage"] >= 12) or (prof.get("close_bonus")
+                                                                      and chebyshev(tile_of(attacker), tile_of(defender)) <= 1)
+            if heavy and defender.alive:
+                self.knockback(defender, tile_of(attacker))
+        elif not defender.alive and is_player:
+            self.hitstop(50)
         if not defender.alive and getattr(self.game, "ring", None) and self.game.ring_ko(defender):
             self._float(defender, "НОКАУТ!", (255, 220, 90))
             return
@@ -741,6 +790,13 @@ class Combat:
 
     # -------------------------------------------------------------- кадр
     def update(self, dt_ms):
+        if self.shake_ms > 0:
+            self.shake_ms -= dt_ms
+        for sp in self.sparks:
+            sp["t"] += dt_ms
+            sp["pos"] += sp["vel"] * dt_ms
+            sp["vel"].y += 0.0009 * dt_ms
+        self.sparks = [sp for sp in self.sparks if sp["t"] < sp["life"]]
         for b in self.blasts:
             b["t"] += dt_ms
         self.blasts = [b for b in self.blasts if b["t"] < 700]
@@ -790,6 +846,8 @@ class Combat:
             self._ally_turn(ent)
         elif self._enemy_special(ent):
             return
+        elif ROLES.act(self, ent):
+            return
         elif ent.ai == "turret":
             self._enemy_turret(ent)
         elif ent.ai == "ranged":
@@ -798,7 +856,10 @@ class Combat:
             self._enemy_melee(ent)
 
     def _enemy_target(self, enemy):
-        """Кого бить: ближайшего из героя и спутника (при равенстве — героя)."""
+        """Кого бить: по приказу командира, иначе ближайшего из героя и спутника (при равенстве — героя)."""
+        f = ROLES.focus_target(self, enemy)
+        if f is not None:
+            return f
         here = tile_of(enemy)
         cands = [self.game.player] + self.allies_in_combat()
         return min(cands, key=lambda c: (chebyshev(here, tile_of(c)), c is not self.game.player))
@@ -986,11 +1047,15 @@ class Combat:
                              "plasma": "Плазменная граната вспыхивает зелёным!",
                              "holy": "...три! Аллилуйя! Святая ручная граната обращает врагов в щебень!"}.get(kind, "Граната рвётся!"))
             lo, hi = {"barrel": (12, 18), "rocket": (18, 28), "plasma": (16, 24), "holy": (45, 60)}.get(kind, (7, 12))
+            self.shake(320, 7)
+            self.hitstop(60)
             for e in hit:
                 dmg = random.randint(lo, hi) if tile_of(e) == tile else random.randint(lo // 2, hi // 2)
                 if e is not g.player and e.alive:
                     g.gore.hit(g.level, e.rect, (cx, cy), "ranged", crit=True, kill=dmg >= e.hp, delay_ms=0)
                 self.hurt(e, dmg, (255, 200, 80))
+                if e.alive and tile_of(e) != tile and self.active:
+                    self.knockback(e, tile)                    # взрывной волной отбрасывает
         # рядом с бочкой — цепная реакция
         for b in self.barrels_near(tile, 1):
             self.blow_barrel(b)
@@ -1096,7 +1161,7 @@ class Combat:
             g.log(f"{_cap(enemy.name)} всаживает себе стимулятор в бедро. +{heal} HP.")
             self.busy_ms = S.COMBAT_ATTACK_MS
             return True
-        if enemy.coward and low:
+        if (enemy.coward and low) or getattr(enemy, "broken", False):
             p = self._enemy_target(enemy)
             if chebyshev(tile_of(enemy), tile_of(p)) >= 7 and not self.los(enemy, p):
                 g.log(f"{_cap(enemy.name)} удирает, поджав хвост.")
@@ -1121,6 +1186,81 @@ class Combat:
                 self.throw(enemy, tile_of(p), "grenade")
                 return True
         return False
+
+    def spark(self, ent, src, n=8):
+        """Сноп искр от брони/металла — от стрелка через цель."""
+        cx, cy = ent.rect.centerx, ent.rect.centery - 8
+        away = pygame.Vector2(cx - src.rect.centerx, cy - src.rect.centery)
+        away = away.normalize() if away.length() else pygame.Vector2(1, 0)
+        for _ in range(n):
+            v = away.rotate(random.uniform(-70, 70)) * random.uniform(0.15, 0.4)
+            self.sparks.append({"pos": pygame.Vector2(cx, cy), "vel": v, "t": 0, "life": random.randint(180, 340)})
+
+    def shake(self, ms, amp):
+        if getattr(S, "SCREEN_SHAKE", True):
+            self.shake_ms, self.shake_amp = max(self.shake_ms, ms), max(self.shake_amp if self.shake_ms > 0 else 0, amp)
+
+    def hitstop(self, ms):
+        self.hitstop_ms = max(self.hitstop_ms, ms)
+
+    def knockback(self, ent, from_xy, tiles=1):
+        """Отлёт от сильного удара: на клетку от удара; в стену — лишний урон; в другого — оба ушиблены."""
+        if not ent.alive or getattr(ent, "robot", False) and ent.max_hp >= 100:
+            return
+        ex, ey = tile_of(ent)
+        fx, fy = from_xy
+        dx, dy = (ex > fx) - (ex < fx), (ey > fy) - (ey < fy)
+        if not dx and not dy:
+            return
+        g = self.game
+        for _ in range(tiles):
+            nxt = (ex + dx, ey + dy)
+            others = [o for o in self._obstacles() if o is not ent and tile_of(o) == nxt and o.alive]
+            if not self._walkable(nxt):
+                self.hurt(ent, 3, (230, 160, 90))
+                if ent.alive:
+                    g.log(f"{_cap(ent.name) if ent is not g.player else 'Вас'} впечатывает в стену!")
+                return
+            if others:
+                self.hurt(ent, 2, (230, 160, 90))
+                self.hurt(others[0], 2, (230, 160, 90))
+                return
+            self.tweens.append({"ent": ent, "from": pygame.Vector2(ent.rect.topleft),
+                                "to": pygame.Vector2(rect_pos_for_tile(ent, nxt)), "t": 0})
+            ex, ey = nxt
+
+    def shout(self, ent, text):
+        """Крик бойца — облачко над головой (роли узнаются на слух)."""
+        self.game.speech = {"ent": ent, "text": text, "t": 1600}
+
+    def call_reinforcements(self, runner):
+        """Гонец добежал: с края карты приходят двое из его отряда."""
+        from .location import make_enemy
+        g = self.game
+        kinds = [e.type_id for e in self.order if e is not g.player and not self.is_ally(e)
+                 and getattr(e, "role", None) != "runner"] or [runner.type_id]
+        here = tile_of(runner)
+        me = tile_of(g.player)
+        spots = sorted(((x, y) for y in range(g.level.height) for x in range(g.level.width)
+                        if self._walkable((x, y)) and (x, y) not in self._occupied()
+                        and chebyshev((x, y), me) >= 7 and chebyshev((x, y), here) <= 8),
+                       key=lambda t: (self.los_tile(g.player, t), chebyshev(t, here)))   # лучше — из-за угла
+        come = []
+        for t in spots[:2]:
+            e = make_enemy((t[0] * T, t[1] * T), random.choice(kinds), getattr(g.level, "iso", False))
+            e.hostile = True
+            g.loc.enemies.append(e)
+            self.order.append(e)
+            self._snap_to_grid(e)
+            come.append(e)
+        if come:
+            g.log(f"{_cap(runner.name)} привёл подмогу: ещё {len(come)}!")
+            self.shout(runner, "Сюда, все сюда!")
+            self.squad_size += len(come)
+        return come
+
+    def los_tile(self, ent, tile):
+        return has_los(self.game.level, ent.rect.center, tile_center(tile))
 
     def _flee_step(self, enemy, p):
         here, goal = tile_of(enemy), tile_of(p)

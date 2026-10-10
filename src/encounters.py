@@ -113,9 +113,10 @@ class Scene:
         self.taken.add(c)
         return c
 
-    def enemy(self, kind, x0=20, y0=3, x1=W - 6, y1=H - 4):
+    def enemy(self, kind, x0=20, y0=3, x1=W - 6, y1=H - 4, role=None):
+        """Враг; role — роль в отряде (src/ai_roles.py)."""
         x, y = self.spot(x0, y0, x1, y1)
-        self.enemies.append([kind, x, y])
+        self.enemies.append([kind, x, y] + ([role] if role else []))
 
     def npc(self, nid, x0=18, y0=MID - 4, x1=26, y1=MID + 4):
         x, y = self.spot(x0, y0, x1, y1)
@@ -156,10 +157,13 @@ def _raiders(s, lvl):
         s.put(s.rnd.choice(WRECKS), x, y)
     s.put("r_sandbag_row", 25, MID - 1)
     s.box("r_barrels", 30, MID, "заначка рейдеров", {"патроны": s.rnd.randint(4, 10), "крышки": s.rnd.randint(10, 30)})
-    for _ in range(2 + (lvl >= 3)):
-        s.enemy("raider", 22, 3, W - 6, H - 4)
+    roles = [r for need, r in ((5, "cover"), (7, "grenadier"), (12, "flanker")) if lvl >= need]   # чем дальше, тем умнее
+    for i in range(2 + (lvl >= 3)):
+        s.enemy("raider", 22, 3, W - 6, H - 4, role=roles[i] if i < len(roles) else None)
     if lvl >= 4:
-        s.enemy("raider_elite", 28, 3, W - 6, H - 4)
+        s.enemy("raider_elite", 28, 3, W - 6, H - 4, role="commander" if lvl >= 9 else None)
+    if lvl >= 9:
+        s.enemy("raider", 30, 3, W - 4, H - 4, role="medic")
 
 
 def _beetles(s, lvl):
@@ -173,8 +177,8 @@ def _ferals(s, lvl):
     s.dress(trees=3)
     s.put(s.rnd.choice(["r_van", "r_tanker", "r_rv_b"]), 20, MID - 5)
     s.box("r_dumpster", 26, MID + 3, "мусорный бак", {"ткань": 1, "химикаты": 1, "крышки": 6})
-    for _ in range(3 + (lvl >= 6)):
-        s.enemy("feral")
+    for i in range(3 + (lvl >= 6)):
+        s.enemy("feral", role="flanker" if (i == 0 and lvl >= 5) else "ambush" if (i == 1 and lvl >= 8) else None)
 
 
 def _roaches(s, lvl):
@@ -189,8 +193,11 @@ def _cult(s, lvl, hostile):
     s.dress(trees=4)
     s.put("r_tent_beige", 24, MID - 4)
     s.put("firewood", 27, MID)
+    roles = {"cultist": "medic"} if lvl >= 6 else {}
+    if lvl >= 9:
+        roles["cult_guard"] = "cover"
     for kind in ("cult_guard", "cult_guard", "cultist"):
-        s.enemy(kind, 20, MID - 5, 32, MID + 5)
+        s.enemy(kind, 20, MID - 5, 32, MID + 5, role=roles.pop(kind, None))
 
 
 def _robots(s, lvl):
@@ -205,9 +212,9 @@ def _snipers(s, lvl):
     s.dress(trees=3)
     s.put("r_derrick", 30, MID - 6)
     s.put("r_sandbag_row", 27, MID + 1)
-    s.enemy("sniper", 30, 3, W - 4, MID - 3)
-    s.enemy("sniper", 30, MID + 3, W - 4, H - 3)
-    s.enemy("raider_elite", 26, MID - 2, 32, MID + 2)
+    s.enemy("sniper", 30, 3, W - 4, MID - 3, role="sniper")
+    s.enemy("sniper", 30, MID + 3, W - 4, H - 3, role="sniper" if lvl >= 8 else None)
+    s.enemy("raider_elite", 26, MID - 2, 32, MID + 2, role="commander" if lvl >= 10 else "cover")
 
 
 def _golem(s, lvl):
@@ -527,8 +534,8 @@ def _spot_toll(s, lvl):
     s.put("x_fire_barrel", 22, MID - 3)
     s.box("r_barrels", 30, MID, "касса рейдеров", {"крышки": 60, "патроны": 10, "сигареты": 2})
     s.box("r_car_wreck", 14, MID + 4, "сожжённый фургон каравана", {"стрела Ханов": 1, "обрывок накладной": 1})
-    for kind in ("raider", "raider", "raider_elite", "raider"):
-        s.enemy(kind, 20, 3, W - 6, H - 4)
+    for kind, role in (("raider", "cover"), ("raider", "runner"), ("raider_elite", "commander"), ("raider", "grenadier")):
+        s.enemy(kind, 20, 3, W - 6, H - 4, role=role)   # застава рейдеров — отряд с ролями
 
 
 SPOTS = {"convoy": (_spot_convoy, True), "caravan_camp": (_spot_caravan, True), "farm": (_spot_farm, False),

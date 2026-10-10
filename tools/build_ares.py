@@ -159,7 +159,7 @@ for x in range(4, 16, 2):
 mr.box(CRATES[0], 40, 32, "контейнер снабжения 2077", {"консервы": 3, "стимулятор": 2})
 # кратеры, камни
 for i, (x, y) in enumerate(((4, 38), (54, 40), (60, 22), (2, 12), (22, 42))):
-    mr.stamp(f"ar2_crater{i}", CRATER if i % 2 else CRATER_BIG, x, y, water=False)
+    mr.stamp(f"ar2_crater{i}", CRATER if i % 2 else CRATER_BIG, x, y, water=False, soft=True)
 mr.npcs += [["rover_bot", 24, 30]]
 mr.scatter(ROCKS, 1, 1, W - 2, H - 2, 40)
 for x, y in ((24, 20), (40, 20), (12, 36), (50, 12), (60, 30), (6, 26)):   # ещё купола и модули — станция большая

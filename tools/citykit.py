@@ -31,6 +31,7 @@ import json
 import os
 
 from mapkit import MapKit, ROOT
+from src import props as P  # noqa: E402
 
 import pygame
 
@@ -107,9 +108,28 @@ class CityMap(MapKit):
 
     def put(self, name, x, y, check=True, allow_reserved=False, owner=None, force=False):
         ok = super().put(name, x, y, check=check, allow_reserved=allow_reserved, owner=owner, force=force)
+        if not ok and not force and self._near_scaled(x, y):
+            for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1), (-2, 0), (2, 0), (0, -2), (0, 2), (-1, -1), (1, 1), (-1, 1), (1, -1)):
+                if super().put(name, x + dx, y + dy, check=check, allow_reserved=allow_reserved, owner=owner):
+                    print(f"   {self.id}: «{name}» сдвинут на ({dx}, {dy}) — рядом выросла декорация")
+                    return True
+        if not ok and P.world_scale(name) != 1:
+            # декорация выросла под рост героя (data/prop_scale.json) — сдвинуть рядом, где влезет
+            fw, fh = P.info(name)["foot"]
+            for dx, dy in [(-i, 0) for i in range(1, fw + 1)] + [(0, -j) for j in range(1, fh + 2)] + \
+                    [(-i, -j) for i in range(1, fw + 1) for j in range(1, fh + 2)] + [(i, 0) for i in range(1, 4)] + \
+                    [(0, j) for j in range(1, 3)]:
+                if super().put(name, x + dx, y + dy, check=check, allow_reserved=allow_reserved, owner=owner, force=force):
+                    return True
+            print(f"   {self.id}: «{name}» после увеличения не влезает у ({x}, {y}) — пропущен")
+            return True
         if not ok and not self._loose:
             raise AssertionError(f"{self.id}: «{name}» не встаёт в ({x}, {y}) — занято, проход или перекрыл бы путь")
         return ok
+
+    def _near_scaled(self, x, y, r=6):
+        """Рядом стоит декорация, увеличенная под рост героя (data/prop_scale.json)."""
+        return any(P.world_scale(p[0]) != 1 and abs(p[1] - x) <= r and abs(p[2] - y) <= r for p in self.props)
 
     def _loosely(self, fn, *a, **kw):
         self._loose += 1
@@ -146,15 +166,23 @@ class CityMap(MapKit):
         self.city.prop(name, img, foot=foot, block=block, sight=sight, layer=layer, **extra)
         return self.put(name, x, y, check=check)
 
-    def stamp(self, name, img, x, y, water=True):
+    def stamp(self, name, img, x, y, water=True, soft=None):
         """Кусок страницы набора как плоская земля (рисуется под всем). Клетки, где больше половины —
-        вода (голубое), непроходимы и закрывают проход, но не обзор."""
-        self.city.prop(name, img, block=False, layer="floor", foot=_cells(img))
+        вода (голубое), непроходимы и закрывают проход, но не обзор. soft — края тают в землю (по умолчанию —
+        у воды на улице: оазис и озеро не обрываются прямоугольником)."""
+        pond = soft is None and water and not self.interior
+        extra = {"soft": "pond"} if pond else {"soft": True} if soft else {}
+        self.city.prop(name, img, block=False, layer="floor", foot=_cells(img), **extra)
         self.props.append([name, x, y])
         if water:
             if not hasattr(self, "_water"):
                 self._water = set()
-            for cx, cy in self.city.water_cells(img):
+            cells = self.city.water_cells(img)
+            if pond:                       # вода — только внутри пятна пруда (берег проходим)
+                w, h = P.pack_image(img).get_size()
+                dist = P.pond_mask(w, h, seed=w * 7 + h)
+                cells = [(cx, cy) for cx, cy in cells if dist(cx * T + T / 2, cy * T + T / 2) > 9]
+            for cx, cy in cells:
                 self.blocked.add((x + cx, y + cy))
                 self._water.add((x + cx, y + cy))
             self._reach = None

@@ -244,6 +244,8 @@ class InteractionMixin:
 
     def on_enemy_killed(self, enemy):
         """Вызывается боевым модулем: добыча, опыт, перки, флаги квестов."""
+        from .. import ai_roles
+        ai_roles.on_death(self.combat, enemy)        # мораль отряда: без командира или после больших потерь — бегут
         if not self.action.active:   # в экшене счёт убитых — на экране, лог не засоряем
             self.log(f"{enemy.name[:1].upper() + enemy.name[1:]} повержен.")
         if getattr(enemy, "npc_id", None):   # убитый житель не воскреснет при следующем приходе

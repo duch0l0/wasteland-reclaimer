@@ -270,7 +270,7 @@ class TownMap(MapBase):
         self.doors = []
         self.pickups = []
         self.player_spawn = (d["player"][0] * T, d["player"][1] * T)
-        self.enemy_spawns = [((x * T, y * T), kind) for kind, x, y in d.get("enemies", [])]
+        self.enemy_spawns = [((e[1] * T, e[2] * T), e[0], e[3] if len(e) > 3 else None) for e in d.get("enemies", [])]
         self.npc_spawns = [((x * T, y * T), nid) for nid, x, y in d.get("npcs", [])]
         for item, count, x, y in d.get("pickups", []):
             self.add_pickup((x * T, y * T), item, count)

@@ -149,7 +149,7 @@ for enc in encounters.ENCOUNTERS:
         s = encounters.Scene(random.Random(seed), road=enc[1] in encounters.ROADS)
         enc[4](s, 5, False) if enc[1] == "cult" else enc[4](s, 5)
         reach = s._reach()
-        assert all((x, y) in reach for _, x, y in s.enemies + s.npcs), enc[1]
+        assert all((e[1], e[2]) in reach for e in s.enemies + s.npcs), enc[1]
 ok(True, f"все {len(encounters.ENCOUNTERS)} сцен встреч собираются, все до кого-то можно дойти")
 hits = sum(1 for i in range(200) if encounters.make_encounter({}, 1, 150, rnd=random.Random(i))[0] is None)
 ok(hits > 0, f"следопыт обходит опасные встречи ({hits} из 200)")

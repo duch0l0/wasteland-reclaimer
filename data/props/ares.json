@@ -799,7 +799,8 @@
 2,
 2
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": true
 },
 "ar2_crater1": {
 "img": "pk:pmars/p1/4,2,2,2",
@@ -809,7 +810,8 @@
 2,
 2
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": true
 },
 "ar2_crater2": {
 "img": "pk:pmars/p1/2,4,2,2",
@@ -819,7 +821,8 @@
 2,
 2
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": true
 },
 "ar2_crater3": {
 "img": "pk:pmars/p1/4,2,2,2",
@@ -829,7 +832,8 @@
 2,
 2
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": true
 },
 "ar2_crater4": {
 "img": "pk:pmars/p1/2,4,2,2",
@@ -839,7 +843,8 @@
 2,
 2
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": true
 },
 "ar5_tech_2_073": {
 "img": "pk:npower/npower_2_073",

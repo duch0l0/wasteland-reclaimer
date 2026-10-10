@@ -73,3 +73,5 @@ HIT_CHANCE_MIN, HIT_CHANCE_MAX = 5, 95
 
 COMBAT_STEP_MS = 160    # анимация шага по клетке
 COMBAT_ATTACK_MS = 380  # пауза после удара, чтобы было видно, что произошло
+
+SCREEN_SHAKE = True   # тряска экрана на крите и взрыве (src/combat.py shake)

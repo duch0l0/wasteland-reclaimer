@@ -151,7 +151,7 @@ pm.put(LAMPS[1], 57, 33)
 # переулок за казино — чёрный ход офиса шерифа (запертая дверь, следы)
 pm.props.append(["x_puddle", 59, 44])
 # запад: парковка караванов — грузовики, повозки, бочки с водой
-pm.stamp("pr_park_patch", PARK_PATCH, 8, 8, water=False)
+pm.stamp("pr_park_patch", PARK_PATCH, 8, 8, water=False, soft=True)
 pm.put(TRUCK, 4, 6)
 pm.put(BRAHMIN_CART, 12, 6)
 pm.put(BRAHMIN_CART, 16, 12)

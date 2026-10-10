@@ -807,7 +807,9 @@ class Bot:
                 if not c.can_attack(p, left[0])[0] and c.can_attack(p, left[0])[1] == "нет патронов":
                     self.best_weapon()            # кончились патроны — за лом
                 here = tile_of(p)
-                t = min(left, key=lambda e: (not c.can_attack(p, e)[0], chebyshev(here, tile_of(e)), e.hp))
+                first = {"medic": 0, "sniper": 1, "commander": 2, "gunner": 3, "grenadier": 4}   # как игрок: сначала «мозги» отряда
+                t = min(left, key=lambda e: (not c.can_attack(p, e)[0], first.get(getattr(e, "role", None), 9),
+                                             chebyshev(here, tile_of(e)), e.hp))
                 c.target = t
                 if (getattr(t, "robot", False) and g.inventory.has("импульсная граната") and p.ap >= c.THROW_AP
                         and 2 <= chebyshev(here, tile_of(t)) <= c.THROW_RANGE and c.los(p, t)):
@@ -830,7 +832,8 @@ class Bot:
                             continue
                 if c.can_attack(p, t)[0] and p.ap >= c.attack_cost(p):
                     part = 0                      # в оптику — если броня и шанс приличный
-                    if "eyes" in t.weak_parts and t.armor and c.hit_chance(p, t, 2) >= 30:
+                    if ("eyes" in t.weak_parts and t.armor and c.hit_chance(p, t, 2) >= 30
+                            and p.ap >= c.attack_cost(p, 2)):        # прицельный дороже — хватит ли ОД
                         part = 2
                     c.player_attack(part)
                 elif p.ap >= 1 and not c.can_attack(p, t)[0]:
@@ -1683,8 +1686,6 @@ def act3(b):
         city("vegas_strip")
         b.pursue("judge_sol", "know_crowns", required=False)
         if b.sides:
-            SQ.vegas(b)
-        if b.sides:
             b.pursue("boots_rider", "bike_job", required=False)
             b.pursue("snake_trader", "bike_done", required=False)
         b.terminal("agatha_salon", "[Зашифрованное]")      # тайна Ладоней: Агата — из Ордена
@@ -1707,6 +1708,11 @@ def act3(b):
         b.pursue("cooper_zero", "zero_fate", required=False)
         b.terminal("zero_vault", "[Уничтожить — стерилизация]", "[Опечатать для Братства Стали]", "[Передать Анклаву]")
     b.step("Вегас: «Ноль»", vegas)
+
+    def vegas_sides():                 # побочки Вегаса — после «Ноля»: разговоры с Матерью-Змеёй не мешают пропуску в ходы
+        if b.sides:
+            SQ.vegas(b)
+    b.step("Вегас: побочки", vegas_sides)
 
 
 
@@ -1802,7 +1808,12 @@ def final(b):
                    "[«Пепел»", "[«Сталь»", "[«Чужие руки»")
         b.fr(5)
         if not g.flags.get("game_ending"):
-            raise Stuck("концовка не наступила")
+            need = ("mariposa_unlocked", "mariposa_code", "order_contact", "zero_fate_destroy", "v4_vre_destroyed",
+                    "ending_ash_way")
+            alive = [f"{e.type_id}/{getattr(e, 'role', None)}" for e in g.enemies if e.alive]
+            raise Stuck("концовка не наступила: " + ", ".join(f"{k}={bool(g.flags.get(k))}" for k in need)
+                        + f"; бой {g.combat.active}; живы {alive}; терминал {bool(g.term)}; "
+                        + f"лог: {g.log_lines[-4:]}")
     b.step("Марипоза: финал", mariposa)
 
 

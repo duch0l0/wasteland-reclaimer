@@ -18,6 +18,13 @@ from .mouse import threat_name
 
 
 class CtxMenuMixin:
+    @staticmethod
+    def _role_note(enemy):
+        """Роль врага в отряде и как на неё ответить (src/ai_roles.py)."""
+        from ..ai_roles import ROLE_NAMES, ROLE_HINTS
+        role = getattr(enemy, "role", None)
+        return f" Роль: {ROLE_NAMES[role]}. {ROLE_HINTS[role]}" if role in ROLE_NAMES else ""
+
     def open_ctx_menu(self, pos):
         """ПКМ вне боя: собрать действия для того, что под курсором. False — там ничего нет."""
         target = self.entity_at_screen(pos)
@@ -39,7 +46,8 @@ class CtxMenuMixin:
             acts += [("Напасть", lambda: self._attack_from_explore(enemy)),
                      ("Осмотреть", lambda: self.log(f"{title}. HP {enemy.hp}/{enemy.max_hp}"
                                                      + (f", панцирь гасит {enemy.armor} урона" if enemy.armor else "")
-                                                     + ("." if enemy.hostile else ". Пока не нападает.")))]
+                                                     + ("." if enemy.hostile else ". Пока не нападает.")
+                                                     + self._role_note(enemy)))]
         else:
             obj = self.object_at_screen(pos)
             if not obj:

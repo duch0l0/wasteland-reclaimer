@@ -459,7 +459,8 @@
 8,
 11
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": "pond"
 },
 "zz_pool_a": {
 "img": "pk:pool/p1/4,4,4,2",

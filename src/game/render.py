@@ -52,11 +52,14 @@ class RenderMixin:
     def _draw_local(self):
         screen, cam, combat, z = self.screen, self.cam, self.combat, self.zoom
         shake = (0, 0)
+        import random as _r
         if self.action.active and self.action.shake_ms > 0:   # толпа вывалилась — экран дрогнул
-            import random as _r
             shake = (_r.randint(-6, 6), _r.randint(-4, 4))
-            cam.x += shake[0]
-            cam.y += shake[1]
+        elif combat.shake_ms > 0:                              # крит или взрыв в пошаговом бою
+            a = combat.shake_amp
+            shake = (_r.randint(-a, a), _r.randint(-a, a))
+        cam.x += shake[0]
+        cam.y += shake[1]
         try:
             self._draw_local_inner(screen, cam, combat, z)
         finally:
@@ -79,7 +82,7 @@ class RenderMixin:
         from ..companion import party
         pals = [c for c in party(self) if not c.down]
         hero = [self.player] if self.player.alive else []      # погибший герой лежит, как убитые враги
-        entities = hero + [e for e in self.enemies if e.alive] + self.npcs + pals
+        entities = hero + [e for e in self.enemies if e.alive and not getattr(e, "hidden", False)] + self.npcs + pals
         for c in party(self) + ([] if hero else [self.player]):
             if c is self.player or c.down:  # выбитый из боя спутник (и погибший герой) лежит
                 from ..corpse import corpse_image
@@ -125,6 +128,8 @@ class RenderMixin:
         combat_ui.draw_tracers(surf, combat.tracers, cam)
         combat_ui.draw_throws(surf, combat, cam)
         combat_ui.draw_blasts(surf, combat, cam)
+        combat_ui.draw_role_warnings(surf, combat, cam)
+        combat_ui.draw_sparks(surf, combat, cam)
         if getattr(self.level, "dark", False):
             me = self.player.rect
             fx, fy = cam.foot(self.player)
@@ -137,10 +142,12 @@ class RenderMixin:
         surf = screen
 
         if self.speech and (self.speech["ent"] in self.npcs or self.speech["ent"] is self.player
-                            or self.speech["ent"] in party(self)) \
+                            or self.speech["ent"] in party(self)
+                            or (self.speech["ent"] in self.enemies and self.speech["ent"].alive)) \
                 and not self.hidden_by_roof(self.speech["ent"]):
             combat_ui.draw_speech(surf, self.speech, cam, z)
         combat_ui.draw_health_bars(surf, self, cam, z)
+        combat_ui.draw_role_badges(surf, self, cam, z)
         if combat.active:
             combat_ui.draw_combat_markers(surf, combat, cam, z)
         combat_ui.draw_floaters(surf, combat.floaters, cam, z)

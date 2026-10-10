@@ -446,7 +446,8 @@
 8,
 11
 ],
-"layer": "floor"
+"layer": "floor",
+"soft": "pond"
 }
 }
 }
