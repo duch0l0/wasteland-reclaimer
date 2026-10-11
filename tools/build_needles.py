@@ -310,7 +310,8 @@ b = CityMap(city, "needles_bridge", "Мост через Колорадо", W, H
 b.floor_code("s", *SAND)
 b.floor_code("~", *WATER)
 b.floor_code("≈", *DEEP)
-b.floor_code("k", *STONE)
+b.floor_code("k", "pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1")   # дощатые мостки через пролом
+b.piers = ("a", "h", "k")                                  # полотно моста и мостки — над водой, без берега
 b.paint("s", 0, 0, W - 1, H - 1)
 river(b, 14, 0, 51, H - 1)
 b.paint("a", 0, 13, W - 1, 17)                           # полотно моста
@@ -326,6 +327,20 @@ for x in (32, 33, 34, 35):                               # мостки Речн
     b.blocked.discard((x, 15))
 for x in range(0, W, 4):
     b.ground[15][x] = b.ground[15][x + 1] = "h" if b.ground[15][x] == "a" else b.ground[15][x]
+RAIL = [P("nd_rail", "pk:wrail/p2/12,6,2,1", foot=[2, 1], keybg=True), P("nd_rail_b", "pk:wrail/p2/14,6,2,1", foot=[2, 1], keybg=True),
+        P("nd_rail_broken", "pk:wrail/p2/10,7,2,1", foot=[2, 1], keybg=True)]
+for x in range(14, 52):                                    # обочины моста — бетонный бортик под ограждением
+    for y in (12, 18):
+        if not 32 <= x <= 35:
+            b.ground[y][x] = "a"
+for x in range(14, 51, 2):                                 # ограждение моста: целое, местами сорвано; у пролома — нет
+    if 32 <= x <= 35:
+        continue
+    for y in (12, 18):
+        k = 2 if (x * 7 + y) % 9 == 0 else (x // 2) % 2
+        b.put(RAIL[k], x, y, force=True)
+for x in (31, 36):                                         # торчащая арматура у краёв пролома
+    b.maybe("rebar_bits", x, 14, allow_reserved=True)
 b.portal([(0, y) for y in range(13, 18)], "needles", (45, 2), "Нидлс")
 b.exits = [(W - 1, y) for y in range(13, 18)]
 b.reserve(0, 12, W - 1, 18)

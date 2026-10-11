@@ -558,6 +558,36 @@
 ],
 "scale": 1.6,
 "keybg": true
+},
+"nd_rail": {
+"img": "pk:wrail/p2/12,6,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"nd_rail_b": {
+"img": "pk:wrail/p2/14,6,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"nd_rail_broken": {
+"img": "pk:wrail/p2/10,7,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
 }
 }
 }

@@ -290,8 +290,7 @@ for x0, y0 in ((3, 25), (18, 25), (38, 25), (50, 25)):
     od.maybe("pile_cloth", x0 + 7, y0 + 2)
     od.maybe("r_barrels", x0 + 1, y0 + 4)
     od.maybe("firewood", x0 + 5, y0 + 4)
-od.scatter(["r_trash", "r_bones", "pile_cans", "pile_bottles", "pile_scrap", "r_planks"], 1, 1, W - 2, H - 2, 26)
-od.scatter(["r_dry_bush", "r_rocks"], 1, 1, W - 2, H - 2, 10)
+od.scatter(["r_trash", "pile_cans", "pile_bottles", "pile_scrap", "r_planks"], 1, 1, W - 2, H - 2, 18)
 od.npcs += [["slum_mother", 9, 22], ["slum_old", 42, 24], ["slum_boy", 25, 18]]
 od.npcs += [["harold", 36, 30]]          # Гарольд (Fallout 1–3): вернулся из Марипозы в 2102-м — и остался
 # свалка на юго-востоке
@@ -299,8 +298,32 @@ od.put(JUNK, 46, 34)
 od.put(JUNK, 52, 36)
 od.put(TIRES, 57, 34)
 od.box("r_dumpster", 44, 38, "мусорный бак", {"пружина": 1, "изолента": 1, "батарейки": 1})
+# плотная застройка трущоб: лачуги рядами вдоль обеих улиц, в каждом проулке — навес, верёвка с тряпьём, хлам
+SHACKS = ["r_shack", "r_shack_tin", "r_cabin", "r_shed_tin", "r_hut", "r_shanty", "r_cabin_b", "r_shack_e",
+          "r_cabin_d", "r_shack_f", "r_shack_blue", "r_shack_g", "r_shed_tin_b"]
+_i = 0
+for y in (2, 9, 26, 33):                                      # ряды домов вдоль поперечной улицы и за ними
+    for x in range(1, W - 4, 5):
+        if 28 <= x <= 36 or (y >= 26 and x <= 16) or (y == 33 and 24 <= x <= 33):
+            continue
+        if od.maybe(SHACKS[_i % len(SHACKS)], x, y):
+            _i += 1
+od.reserve(26, 31, 34, H - 1)                                 # подход к люку акведука и водокачке
+for y in (29, 37, 40):                                        # южные кварталы — плотнее, вразбежку
+    for x in range(18 + (y % 3) * 2, W - 4, 5):
+        if od.maybe(SHACKS[_i % len(SHACKS)], x, y):
+            _i += 1
+od.floor_code("g2", "pk:destown/p2/4,0,1,1") if False else None
+for x0, y0, x1, y1 in ((2, 6, 26, 8), (38, 6, 60, 8), (18, 34, 60, 36)):    # тропинки между лачугами
+    od.paint_ragged("g", x0, y0, x1, y1, depth=1)
+LINE = ["clothes_55", "clothes_72", "clothes_74", "clothes_76", "pants", "rag"]
+for x, y in ((6, 17), (21, 17), (41, 17), (55, 17), (22, 30), (45, 30)):    # бельё на верёвках во дворах
+    for k in range(3):
+        od.maybe(LINE[(x + k) % len(LINE)], x + k, y)
+for x, y in ((12, 18), (46, 18), (40, 31), (58, 31)):                      # костры в бочках у проулков
+    od.maybe("x_fire_barrel", x, y)
 # вход в старый акведук — люк у фонтана
-od.put("r_water_tower_b", 26, 36)
+od.put("r_water_tower_b", 26, 36, allow_reserved=True)
 od.props.append(["x_manhole", 30, 38])
 od.portal([(30, 38)], "hub_tunnels", (4, 5), "Старый акведук")
 
