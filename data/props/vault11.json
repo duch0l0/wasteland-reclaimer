@@ -236,7 +236,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "v11_tech_2_026": {
 "img": "pk:npower/npower_2_026",
@@ -348,7 +349,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "vault11_f_tech_2_026": {
 "img": "pk:npower/npower_2_026",

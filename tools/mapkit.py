@@ -145,7 +145,9 @@ class MapKit:
                 self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
 
         # куски обрыва в наборе: левый край, середина, правый край — ряд собирается без щелей
-        plat = {(tx, ty) for cx, cy in cells for tx in (cx, cx + 1) for ty in (cy, cy + 1)}
+        plat = {(tx, ty) for cy in range(0, self.H, 2) for cx in range(0, self.W, 2)   # и пропущенные (дверь в скале)
+                if not {(cx, cy), (cx + 1, cy), (cx, cy + 1), (cx + 1, cy + 1)} & floor
+                for tx in (cx, cx + 1) for ty in (cy, cy + 1)}
         for x, y in sorted(south_cells):
             # куски набора: [0] — правый торец (обрыв уходит вправо-вниз), [1] — середина, [2] — левый торец
             open_w = (x - 1, y) not in plat and (x - 1, y + 1) not in plat

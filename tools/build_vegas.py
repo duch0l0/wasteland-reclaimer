@@ -38,8 +38,8 @@ def cells(page, pts):
 
 NEON = lambda c: {"r": 120, "color": c, "at": [0.5, 0.5], "flicker": 0.15}
 # ------------------------------------------------------------ руины Стрипа
-TOWERS = [P(f"vg_tower{i}", f"pk:zcity/zcity_5_{n:03d}", scale=1.6, foot=[3, 2], sight=True) for i, n in enumerate((0, 1, 2, 3, 5))]
-TOWER_BROKEN = P("vg_tower_broken", "pk:zcity/zcity_5_004", scale=1.6, foot=[3, 2], sight=True)
+TOWERS = [P(f"vg_tower{i}", f"pk:zcity/zcity_5_{n:03d}", scale=2.4, foot=[4, 2], sight=True) for i, n in enumerate((0, 1, 2, 3, 5))]
+TOWER_BROKEN = P("vg_tower_broken", "pk:zcity/zcity_5_004", scale=2.4, foot=[4, 2], sight=True)
 LUCKY38 = P("vg_lucky38", "pk:zcity/zcity_5_000", scale=2.4, foot=[4, 2], sight=True,
             light={"r": 90, "color": [255, 230, 150], "at": [0.5, 0.1], "flicker": 0.5})
 VT_TOWER = P("vg_vt_tower", "pk:zcity/zcity_5_004", scale=2.4, foot=[4, 2], sight=True)
@@ -171,11 +171,21 @@ st.terminal(51, 12, "vt_tower_door")
 st.portal([(54, 11), (55, 11)], "vegas_tower", (18, 26), "Башня Vault-Tec",
           requires={"flag": "tower_front_open", "msg": "Вход в башню завален бетоном. Нужен динамит — или другой путь, снизу."})
 st.reserve(53, 11, 56, 13)
-# казино вдоль улиц: фасады с неоном, вывески
-for x, y in ((4, 20), (12, 20), (60, 20), (68, 20)):
-    st.put(CASINO_FRONT, x, y)
-st.put(CASINO_SIGN, 5, 18)
-st.put(CASINO_SIGN, 69, 18)
+# казино — целые здания: бетонные стены и крыша, на южном фасаде — неоновый вход и вывеска над ним
+def casino(x0, y1, w=10, h=7):
+    """Закрытое казино: x0 — левый край, y1 — строка южной стены (фасад смотрит на улицу)."""
+    y0 = y1 - h + 1
+    area = [(x, y) for x in range(x0 - 1, x0 + w + 1) for y in range(y0 - 1, y1 + 2)]
+    if any(t in st.reserved or st.solid(*t) or not (0 < t[0] < st.W - 1 and 0 < t[1] < st.H - 1) for t in area):
+        return False
+    st.building(x0, y0, w, h, "concrete", worn=False)
+    fx = x0 + (w - 8) // 2
+    st.put(CASINO_FRONT, fx, y1, force=True, allow_reserved=True)                 # вход поверх южной стены
+    return True
+
+
+for x0, y1 in ((2, 22), (14, 22), (58, 22), (68, 22)):
+    casino(x0, y1)
 st.put(JACKPOT, 4, 34)
 st.put(NEON_CASH, 14, 33)
 st.put(NEON_JP, 62, 33)
@@ -183,8 +193,8 @@ st.put(SHOP_ROW, 60, 34)
 for i, (x, y) in enumerate(((8, 6), (14, 6), (62, 4), (70, 6), (4, 42), (12, 46), (60, 44), (70, 46))):
     st.put((TOWERS + [TOWER_BROKEN])[i % 6], x, y)
 # вдоль самого Стрипа — фасады казино с неоном: здесь ещё помнят, каким был город
-for x, y in ((29, 4), (46, 4), (29, 40), (46, 40), (29, 48), (46, 48)):
-    st.maybe(CASINO_FRONT, x, y)
+for x0, y1 in ((22, 30), (46, 30), (22, 50), (46, 50)):   # казино вдоль самого Стрипа — фасадом на дорогу
+    casino(x0, y1)
 for x, y in ((30, 16), (47, 16), (30, 44), (47, 44)):
     st.maybe([NEON_CASH, NEON_JP, CASINO_SIGN][(x + y) % 3], x, y)
 # ничья земля у перекрёстка: рынок, бочки с огнём, судья Стрипа

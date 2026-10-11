@@ -133,6 +133,18 @@ class CityMap(MapKit):
             raise AssertionError(f"{self.id}: «{name}» не встаёт в ({x}, {y}) — занято, проход или перекрыл бы путь")
         return ok
 
+    def fix_ladders(self):
+        """Лестница стоит только у стены (по ней лезут наверх/вниз вдоль стены). Посреди пола — это люк
+        с лестницей вниз, а на улице — крышка колодца/шахты: x_ladder заменяется на x_manhole."""
+        for e in self.props:
+            if e[0] != "x_ladder":
+                continue
+            x, y = e[1], e[2]
+            above = self.ground[y - 1][x] if y > 0 else "_"
+            wall = above == "_" or above in self.walls or above == "x" or (x, y - 1) in self.blocked
+            if not wall:
+                e[0] = "x_manhole"
+
     def _near_scaled(self, x, y, r=6):
         """Рядом стоит декорация, увеличенная под рост героя (data/prop_scale.json)."""
         return any(P.world_scale(p[0]) != 1 and abs(p[1] - x) <= r and abs(p[2] - y) <= r for p in self.props)
@@ -179,6 +191,30 @@ class CityMap(MapKit):
         pond = soft is None and water and not self.interior
         extra = {"soft": "pond"} if pond else {"soft": True} if soft else {}
         self.city.prop(name, img, block=False, layer="floor", foot=_cells(img), **extra)
+        if soft and not water:                       # воронка/пятно — не под домом, ракетой, ящиком
+            fw, fh = P.info(name)["size"][0] // T, P.info(name)["size"][1] // T
+            busy = set(self.blocked) | set(self.reserved)
+            for e in self.props:
+                if P.CATALOG.get(e[0], {}).get("layer") != "floor":
+                    busy.update(self.footprint(e[0], e[1], e[2]))
+            ok = None
+            for r in range(0, 7):
+                for dx in range(-r, r + 1):
+                    for dy in range(-r, r + 1):
+                        if max(abs(dx), abs(dy)) != r:
+                            continue
+                        area = {(x + dx + i, y + dy + j) for i in range(-1, fw + 1) for j in range(-1, fh + 1)}
+                        if not area & busy and 0 <= x + dx and x + dx + fw < self.W and 0 <= y + dy and y + dy + fh < self.H:
+                            ok = (x + dx, y + dy)
+                            break
+                    if ok:
+                        break
+                if ok:
+                    break
+            if not ok:
+                return
+            x, y = ok
+            self.reserve(x, y, x + fw - 1, y + fh - 1)   # потом сюда не встанет ни дом, ни камень
         self.props.append([name, x, y])
         if water:
             if not hasattr(self, "_water"):
@@ -212,6 +248,8 @@ class CityMap(MapKit):
             out["night"] = self.night
         if self.tint:
             out["tint"] = self.tint
+        if getattr(self, "crisp", False):
+            out["crisp"] = True
         if getattr(self, "piers", None):
             out["piers"] = list(self.piers)
         if self.blocked_extra():
@@ -222,7 +260,7 @@ class CityMap(MapKit):
 
     def blocked_extra(self):
         """Непроходимые клетки, которых не видно по объектам: вода в штампах и клетки с кодом воды."""
-        cells = set(getattr(self, "_water", set()))
+        cells = set(getattr(self, "_water", set())) | set(getattr(self, "solid_cells", set()))
         for y, row in enumerate(self.ground):
             for x, code in enumerate(row):
                 if code in self.water_codes:
@@ -297,6 +335,11 @@ class City:
 
     # -------------------------------------------------------- запись
     def furnish_sparse(self):
+        for m in self.maps:
+            pass
+        return self._furnish_sparse()
+
+    def _furnish_sparse(self):
         """Голые интерьеры (меньше 4 объектов на 100 клеток пола) получают обстановку по стилю места:
         техзал (убежища, бункеры, лаборатории), жильё (салуны, ратуши, конторы), подземелье (стоки, туннели)."""
         TECH = ("vault", "fort_bunker", "ares", "nova_core", "poseidon7", "mariposa_lab", "vegas_tower", "vegas_vault",
@@ -352,6 +395,7 @@ class City:
         with open(loc_path, "r", encoding="utf-8") as f:
             locs = json.load(f)
         for m in self.maps:
+            m.fix_ladders()
             reach = m.check(gap_exempt=gap_exempt, npc_enemy_gap=0 if m.interior else 6, passable=m.gate_tiles())
             m.save(os.path.join("data", "maps", f"{m.id}.json"), **m.extra())
             entry = {"name": m.name, "map": f"data/maps/{m.id}.json", "known": m.known, "music": m.music}
@@ -378,7 +422,7 @@ def tech_scenes(city, pre):
     tall = P("2_042", foot=(1, 1))
     desk, desk2, desk3 = P("2_036"), P("2_047"), P("2_060")
     work, work2 = P("2_066"), P("2_074")
-    fire = P("2_057", foot=(1, 1))
+    fire = P("2_057", foot=(1, 1), scale=0.55)          # огнетушитель — по колено, не в рост
     glow = {"r": 70, "color": [120, 220, 160], "at": [0.5, 0.3], "flicker": 0.08}
     console = P("2_026", light=glow)
     return [

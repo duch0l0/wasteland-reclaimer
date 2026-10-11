@@ -93,12 +93,12 @@ for x0, y0, x1, y1 in ((0, 23, 24, 29), (10, 8, 38, 30)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
 sf.paint("g", 10, 8, 38, 30)
 sf.paint("o", 0, 25, 24, 27)
-sf.paint("o", 21, 12, 24, 27)
+sf.paint("o", 22, 8, 25, 27)                           # тропа — до самой двери
 sf.exits = [(0, y) for y in range(24, 29)]
 sf.reserve(0, 24, 6, 28)
-sf.put("x_vault_door22", 21, 7, check=False, allow_reserved=True)
+sf.put("x_vault_door22", 22, 6, check=False, allow_reserved=True)
 sf.put("x_vault_sign22", 26, 9)
-sf.portal([(22, 9), (23, 9)], "vault22_living", (20, 6), "Убежище 22")
+sf.portal([(23, 8), (24, 8)], "vault22_living", (20, 6), "Убежище 22")
 sf.reserve(21, 9, 24, 13)
 # огороды снаружи: грядки и плодовые кусты — жители выходят работать днём
 for i, (x, y) in enumerate(((12, 14), (12, 18), (28, 14), (28, 18))):
@@ -106,7 +106,7 @@ for i, (x, y) in enumerate(((12, 14), (12, 18), (28, 14), (28, 18))):
 sf.put(TOMATO[0], 32, 22)
 sf.put(CUCUMBER[0], 13, 22)
 sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
-sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 21 <= x <= 24 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
+sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 22 <= x <= 25 and 6 <= y <= 7, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 sf.npcs += [["v22_gardener_out", 17, 16]]
 sf.grow(10, 8, 38, 30, 6, names=TREES)
 sf.scatter(GRASS, 10, 8, 38, 30, 24)

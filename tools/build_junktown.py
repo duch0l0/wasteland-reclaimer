@@ -165,6 +165,8 @@ def junk_wall(m, x0, y0, x1, y1, gate_w=(), gate_e=()):
         for y in range(y0 + 1, y1):
             if y not in gates:
                 m.maybe(m.rnd.choice(WALL_V), x, y, check=False, allow_reserved=False)
+                m.blocked.update({(x, y), (x + 1, y)})          # стена сплошная, даже если кусок хлама узкий
+                m.solid_cells = getattr(m, "solid_cells", set()) | {(x, y), (x + 1, y)}
 
 
 # ================================================================ город

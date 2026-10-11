@@ -138,6 +138,25 @@ def vault_door(label="57"):
     return s
 
 
+def vault_door_cliff(label="11"):
+    """Дверь убежища, врезанная в обрыв плато из набора desert-natural: сверху песок плато, ниже — каменный
+    фасад обрыва (те же куски, что у скал вокруг), в фасаде — тёмный проём, жёлто-чёрная рама и шестерня."""
+    from src import props as PP
+    face = PP.pack_image("pk:desnat/p1/10,14,2,2")              # 96×96: верх — песок, низ — камень
+    s = pygame.Surface((192, 144), pygame.SRCALPHA)
+    s.blit(face, (0, 48))
+    s.blit(face, (96, 48))
+    cx, cy, r = 96, 100, 30
+    pygame.draw.rect(s, (34, 30, 28), (cx - r - 8, cy - r - 4, 2 * r + 16, r + 40))       # проём в скале
+    pygame.draw.circle(s, (34, 30, 28), (cx, cy), r + 8)
+    for k in range(-r - 8, r + 9, 6):                                                      # жёлто-чёрная рама
+        col = (220, 180, 40) if (k // 6) % 2 == 0 else (30, 28, 26)
+        pygame.draw.rect(s, col, (cx + k, cy - r - 10, 6, 4))
+    gear(s, cx, cy, r, label)
+    pygame.draw.rect(s, (70, 64, 58), (cx - r - 14, 139, 2 * r + 28, 5))                  # порог
+    return s
+
+
 def gear(s, cx, cy, r, label="57"):
     teeth = 10
     for i in range(teeth):
@@ -469,7 +488,8 @@ PROPS = {
     # новые — только в конец: рисунки берут случайность из общего генератора, порядок не менять
     "x_rocket": (rocket, {"foot": [2, 1], "sight": True}),
     # Убежища 15 и 4: дверь снаружи (в скале), шестерня изнутри, табличка
-    **{f"x_vault_door{n}": (lambda n=n: vault_door(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4", "22", "0")},
+    **{f"x_vault_door{n}": (lambda n=n: vault_door_cliff(n), {"foot": [4, 2], "sight": True}) for n in ("15", "4", "22")},
+    "x_vault_door0": (lambda: vault_door("0"), {"foot": [4, 2], "sight": True}),
     **{f"x_vault_gear{n}": (lambda n=n: vault_gear(n), {"foot": [2, 1], "sight": True}) for n in ("15", "4", "22", "0")},
     **{f"x_vault_sign{n}": (lambda n=n: vault_sign(n), {"foot": [1, 1]}) for n in ("15", "4", "22", "0")},
     # особые встречи в пустоши (src/encounters.py)
@@ -479,7 +499,7 @@ PROPS = {
     "x_petunia": (petunia, {"foot": [1, 1], "search": "junk", "title": "горшок с петунией"}),
     "x_planks": (planks, {"block": False, "layer": "floor"}),
     # Убежище 11 (жребий): дверь в скале, шестерня изнутри, табличка
-    "x_vault_door11": (lambda: vault_door("11"), {"foot": [4, 2], "sight": True}),
+    "x_vault_door11": (lambda: vault_door_cliff("11"), {"foot": [4, 2], "sight": True}),
     "x_vault_gear11": (lambda: vault_gear("11"), {"foot": [2, 1], "sight": True}),
     "x_vault_sign11": (lambda: vault_sign("11"), {"foot": [1, 1]}),
 }
@@ -577,7 +597,8 @@ def main():
         catalog = json.load(f)
     for name, (draw, desc) in PROPS.items():
         img = draw()
-        img = pygame.transform.scale(img, (img.get_width() * 2, img.get_height() * 2))
+        if not getattr(draw, "full_size", False) and "vault_door_cliff" not in getattr(draw, "__code__", draw.__call__).co_names:
+            img = pygame.transform.scale(img, (img.get_width() * 2, img.get_height() * 2))
         pygame.image.save(img, os.path.join(OUT, name + ".png"))
         index[name] = {"page": None, "rect": None, "size": list(img.get_size()), "made_by": "tools/make_props.py"}
         entry = catalog["props"].setdefault(name, {})

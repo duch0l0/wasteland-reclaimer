@@ -1028,7 +1028,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "nova_f_tech_2_026": {
 "img": "pk:npower/npower_2_026",

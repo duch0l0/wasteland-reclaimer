@@ -57,15 +57,15 @@ for x0, y0, x1, y1 in ((0, 19, 22, 25), (14, 8, 30, 25)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
 sf.exits = [(0, y) for y in range(20, 25)]
 sf.reserve(0, 20, 6, 24)
-sf.put("x_vault_door11", 19, 7, check=False, allow_reserved=True)
+sf.put("x_vault_door11", 20, 6, check=False, allow_reserved=True)   # дверь врезана в фасад обрыва
 sf.put("x_vault_sign11", 24, 10)
-sf.portal([(20, 9), (21, 9)], "vault11_hall", (20, 6), "Убежище 11")
+sf.portal([(21, 8), (22, 8)], "vault11_hall", (20, 6), "Убежище 11")
 sf.reserve(19, 9, 22, 13)
 for x, y in ((16, 18), (27, 14), (25, 22)):
     sf.maybe("r_rocks", x, y)
 sf.maybe(BONES[0], 18, 15)
 sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
-sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 19 <= x <= 22 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
+sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 20 <= x <= 23 and 6 <= y <= 7, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 sf.enemies += [["radroach", 24, 18], ["radroach", 17, 22]]
 
 

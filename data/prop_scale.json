@@ -278,6 +278,10 @@
     "scale": 1.5,
     "names": [
       "ar2_rover",
+      "jt_car0",
+      "jt_car1",
+      "jt_car2",
+      "jt_car3",
       "jt_trailer",
       "jt_truck0",
       "jt_truck1",
@@ -290,8 +294,12 @@
       "nv_6_001",
       "nv_6_008",
       "pr_truck",
+      "sl_firetruck",
+      "sl_firetruck_b",
       "sl_humvee_b",
+      "sl_loco",
       "sl_tank",
+      "sl_tanker",
       "vg_wagon",
       "ws_bus"
     ]
@@ -363,7 +371,7 @@
     "keep_foot": true
   },
   "mars": {
-    "scale": 2.5,
+    "scale": 2,
     "names": [
       "ar2_rock",
       "ar2_rock_b",

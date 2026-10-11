@@ -37,7 +37,10 @@ BARRACKS = P("mp_barracks", "pk:mbase/mbase_2_006", foot=[2, 2], sight=True)
 BUNKER = P("mp_bunker", "pk:mbase/mbase_2_004", foot=[4, 3], sight=True)
 HANGAR = P("mp_hangar", "pk:mbase/mbase_2_015", foot=[6, 3], sight=True)
 TANK = P("mp_tank", "pk:mbase/mbase_2_002", foot=[4, 1], sight=True)
-BARBED = P("mp_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1])
+BARBED = P("mp_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1], keybg=True)            # проволока без песчаной подложки
+BARBED_B = P("mp_barbed_b", "pk:mbase/p1/10,2,2,2", foot=[2, 1], keybg=True)
+SANDBAG_WALL = P("mp_sandbag_wall", "pk:mbase/p1/10,0,2,1", foot=[2, 1], keybg=True)
+FENCE_MIX = [BARBED, BARBED_B, BARBED, SANDBAG_WALL, BARBED_B]                           # секции разные, не один кадр
 AMMO = P("mp_ammo", "pk:mbase/mbase_2_001", foot=[2, 1], search="military", title="армейский ящик")
 DEBRIS = [P("mp_helmet", "pk:mbase/p1/6,8,1,1", block=False), P("mp_gasmask", "pk:mbase/p1/7,9,1,1", block=False)]
 TENT_WHITE = P("mp_tent_white", "pk:bazaar/bazaar_1_004", foot=[2, 2], sight=True)
@@ -88,8 +91,8 @@ for x0, y0, x1, y1 in ((0, 21, 14, 27), (10, 4, 62, 44)):
 mp.paint("g", 12, 6, 60, 42)
 mp.exits = [(0, y) for y in range(22, 27)]
 mp.reserve(0, 22, 16, 26)
-mp.hwall([BARBED], 12, 60, 5)
-mp.hwall([BARBED], 12, 60, 43)
+mp.hwall(FENCE_MIX, 12, 60, 5)
+mp.hwall(FENCE_MIX, 12, 60, 43)
 for y in range(6, 43):
     if y not in range(21, 28):
         mp.maybe(BARBED, 12, y, check=False)
@@ -124,11 +127,8 @@ mp.portal([(30, 41)], "mariposa_vats", (30, 31), "Грузовой въезд (�
                     "msg": "Ржавая решётка в земле, рядом — остов крана. Заперта изнутри. Кто-то знал, как её открыть."})
 mp.npcs += [["cult_herald", 28, 27], ["mp_acolyte", 24, 24], ["mp_acolyte_b", 33, 23]]
 mp.enemies += [["super_mutant", 48, 28], ["super_mutant", 55, 24], ["super_mutant", 46, 16], ["cult_guard", 40, 32]]
-for y in range(0, H, 2):
-    for x in range(0, W, 2):
-        if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & FLOOR:
-            mp.props.append([CLIFFS[(x * 7 + y * 3) % 3], x, y])
-            mp.blocked.update({(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)})
+mp.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
+mp.cliff_walls(CLIFFS, FLOOR, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 
 
 # ================================================================ лаборатория

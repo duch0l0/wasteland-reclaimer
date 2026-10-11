@@ -84,13 +84,13 @@ for x0, y0, x1, y1 in ((0, 27, 30, 33),                # тропа с запа�
                        (28, 26, 54, 38)):              # лощина Шакалов
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
 sf.paint("g", 0, 29, 26, 31)
-sf.paint("g", 24, 12, 27, 31)
+sf.paint("g", 24, 8, 27, 31)                           # тропа — до самой двери
 sf.exits = [(0, y) for y in range(28, 33)]
 sf.reserve(0, 28, 6, 32)
 # дверь Убежища в северном склоне: скала с шестернёй, табличка
-sf.put("x_vault_door15", 24, 7, check=False, allow_reserved=True)
+sf.put("x_vault_door15", 24, 6, check=False, allow_reserved=True)
 sf.put("x_vault_sign15", 29, 9)
-sf.portal([(25, 9), (26, 9)], "vault15_atrium", (20, 6), "Убежище 15")
+sf.portal([(25, 8), (26, 8)], "vault15_atrium", (20, 6), "Убежище 15")
 sf.reserve(24, 9, 27, 13)
 # лагерь Шакалов: палатки по кругу у костра, клетки с пленниками, частокол из шипов
 sf.put(TENTS[0], 34, 28)
@@ -111,7 +111,7 @@ sf.npcs += [["jackal_boss", 43, 30], ["captive_mira", 33, 34], ["jackal_a", 37, 
             ["jackal_c", 51, 31]]                       # Шакалы торгуют, пока им выгодно; драка — по слову вожака
 # скалы вокруг долины
 sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
-sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 24 <= x <= 27 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
+sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 24 <= x <= 27 and 6 <= y <= 7, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((16, 10), (40, 12), (18, 24)):
     sf.maybe(OUTCROP, x, y)
 sf.scatter(["r_dry_bush", "r_rocks", "r_bones"], 14, 8, 44, 26, 12)

@@ -4673,7 +4673,7 @@
    192,
    144
   ],
-  "made_by": "tools/make_props.py"
+  "made_by": "tools/make_props.py vault_door_cliff"
  },
  "x_vault_door4": {
   "page": null,
@@ -4682,7 +4682,7 @@
    192,
    144
   ],
-  "made_by": "tools/make_props.py"
+  "made_by": "tools/make_props.py vault_door_cliff"
  },
  "x_vault_gear15": {
   "page": null,
@@ -4727,7 +4727,7 @@
    192,
    144
   ],
-  "made_by": "tools/make_props.py"
+  "made_by": "tools/make_props.py vault_door_cliff"
  },
  "x_vault_gear22": {
   "page": null,
@@ -4835,7 +4835,7 @@
    192,
    144
   ],
-  "made_by": "tools/make_props.py"
+  "made_by": "tools/make_props.py vault_door_cliff"
  },
  "x_vault_gear11": {
   "page": null,

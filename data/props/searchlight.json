@@ -565,7 +565,28 @@
 "foot": [
 2,
 1
-]
+],
+"keybg": true
+},
+"sl_barbed_b": {
+"img": "pk:mbase/p1/10,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"sl_sandbag_wall": {
+"img": "pk:mbase/p1/10,0,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
 },
 "sl_cannon": {
 "img": "pk:mbase/mbase_3_041",
@@ -790,7 +811,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "searchlight_f_tech_2_026": {
 "img": "pk:npower/npower_2_026",

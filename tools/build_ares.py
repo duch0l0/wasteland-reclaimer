@@ -158,12 +158,30 @@ for x in range(4, 16, 2):
     mr.put(SOLAR, x, 30)
 mr.box(CRATES[0], 40, 32, "контейнер снабжения 2077", {"консервы": 3, "стимулятор": 2})
 # кратеры, камни
-for i, (x, y) in enumerate(((4, 38), (54, 40), (60, 22), (2, 12), (22, 42))):
-    mr.stamp(f"ar2_crater{i}", CRATER if i % 2 else CRATER_BIG, x, y, water=False, soft=True)
 mr.npcs += [["rover_bot", 24, 30]]
-mr.scatter(ROCKS, 1, 1, W - 2, H - 2, 40)
 for x, y in ((24, 20), (40, 20), (12, 36), (50, 12), (60, 30), (6, 26)):   # ещё купола и модули — станция большая
     mr.maybe([DOMES[0], MODULES[3], MODULES[4], GREENHOUSES[1], MODULES[5], MODULES[6]][(x + y) % 6], x, y)
+for i, (x, y) in enumerate(((4, 38), (54, 40), (60, 22), (2, 12), (22, 42))):
+    mr.stamp(f"ar2_crater{i}", CRATER if i % 2 else CRATER_BIG, x, y, water=False, soft=True)
+# камни и воронки — на открытом грунте, не ближе 3 клеток к постройкам (а не «дом на кратере»)
+from src import props as P_  # noqa: E402
+_busy = set(mr.reserved)
+for _e in mr.props:
+    if P_.CATALOG.get(_e[0], {}).get("layer") != "floor":
+        for _t in mr.footprint(_e[0], _e[1], _e[2]):
+            _busy.update((_t[0] + dx, _t[1] + dy) for dx in range(-3, 4) for dy in range(-3, 4))
+_rnd = __import__("random").Random(272)
+_n = 0
+for _ in range(600):
+    if _n >= 22:
+        break
+    _x, _y = _rnd.randint(2, W - 4), _rnd.randint(2, H - 4)
+    if any((_x + i, _y + j) in _busy for i in range(-1, 3) for j in range(-1, 3)):
+        continue
+    if mr.maybe(_rnd.choice(ROCKS), _x, _y):
+        _busy.update((_x + i, _y + j) for i in range(-2, 4) for j in range(-2, 4))
+        _n += 1
+
 
 
 # ================================================================ жилой модуль

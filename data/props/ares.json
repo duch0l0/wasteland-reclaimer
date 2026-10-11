@@ -937,7 +937,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "ar5_tech_2_026": {
 "img": "pk:npower/npower_2_026",
@@ -1049,7 +1050,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "ares_f_tech_2_026": {
 "img": "pk:npower/npower_2_026",

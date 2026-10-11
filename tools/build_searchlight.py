@@ -86,7 +86,10 @@ TANK = P("sl_tank", "pk:mbase/mbase_2_002", foot=[4, 1], sight=True)
 HUMVEE = [P("sl_humvee", "pk:mbase/mbase_2_003", foot=[2, 1], sight=True), P("sl_humvee_b", "pk:mbase/mbase_2_007", foot=[3, 1], sight=True)]
 AMMO = [P("sl_ammo", "pk:mbase/mbase_2_001", foot=[2, 1], search="military", title="армейский ящик"),
         P("sl_ammo_b", "pk:mbase/mbase_2_009", foot=[2, 1], search="military", title="ящик с патронами")]
-BARBED = P("sl_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1])
+BARBED = P("sl_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1], keybg=True)            # проволока без песчаной подложки
+BARBED_B = P("sl_barbed_b", "pk:mbase/p1/10,2,2,2", foot=[2, 1], keybg=True)
+SANDBAG_WALL = P("sl_sandbag_wall", "pk:mbase/p1/10,0,2,1", foot=[2, 1], keybg=True)
+FENCE_MIX = [BARBED, BARBED_B, BARBED, SANDBAG_WALL, BARBED_B]                           # секции разные, не один кадр
 CANNON = P("sl_cannon", "pk:mbase/mbase_3_041", foot=[4, 1], sight=True)
 RADAR = P("sl_radar", "pk:mbase/mbase_3_008")
 SANDBAGS = "x_sandbags"
@@ -254,8 +257,8 @@ city.road(sl, [(63, y) for y in range(21, 25)], ft, [(0, y) for y in range(21, 2
           step=(1, 0))
 ft.reserve(0, 20, 13, 25)
 # периметр: колючая проволока с воротами на запад, вышки по углам
-ft.hwall([BARBED], 10, 66, 4)
-ft.hwall([BARBED], 10, 66, 46)
+ft.hwall(FENCE_MIX, 10, 66, 4)
+ft.hwall(FENCE_MIX, 10, 66, 46)
 for y in range(5, 46, 2):
     if y not in (21, 23):
         ft.maybe(BARBED, 10, y, check=False)

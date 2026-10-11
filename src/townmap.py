@@ -411,7 +411,7 @@ class TownMap(MapBase):
         self._feather = {}
         self._piers = set(d.get("piers", []))      # доски причала: лежат поверх воды, берег у них не рисуется
         self._water = set()                       # коды воды на улице: берег рисуется слоями (мелководье, пена, мокрый песок)
-        if not any("_" in row for row in self.ground):
+        if not any("_" in row for row in self.ground) and not d.get("crisp"):   # crisp — мощёный город: стыки ровные
             from collections import Counter
             counts = Counter(c for row in self.ground for c in row)
             for code, n in counts.items():

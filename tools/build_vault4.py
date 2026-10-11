@@ -84,20 +84,20 @@ FLOOR = set()
 for x0, y0, x1, y1 in ((0, 23, 26, 29), (14, 8, 40, 30)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
 sf.paint("g", 0, 25, 22, 27)
-sf.paint("g", 21, 12, 24, 27)
+sf.paint("g", 22, 8, 25, 27)                           # тропа — до самой двери
 sf.exits = [(0, y) for y in range(24, 29)]
 sf.reserve(0, 24, 6, 28)
-sf.put("x_vault_door4", 21, 7, check=False, allow_reserved=True)
+sf.put("x_vault_door4", 22, 6, check=False, allow_reserved=True)
 sf.put("x_vault_sign4", 26, 9)
 sf.terminal(18, 10, "v4_intercom")                       # интерком у двери: «Всё хорошо. Как погода?»
-sf.portal([(22, 9), (23, 9)], "vault4_upper", (20, 6), "Убежище 4",
+sf.portal([(23, 8), (24, 8)], "vault4_upper", (20, 6), "Убежище 4",
           requires={"flag": "v4_open", "msg": "Дверь-шестерня закрыта. На интеркоме мигает зелёная лампочка: внутри кто-то слушает."})
 sf.reserve(21, 9, 24, 13)
 # пустой фургон культа у подножия: культ уже стучался в эту дверь
 sf.put(VAN, 30, 18)
 sf.box("hb_crate", 33, 19, "ящик с печатью круга", {"письмо смотрительнице": 1})
 sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
-sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 21 <= x <= 24 and 6 <= y <= 9, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
+sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 22 <= x <= 25 and 6 <= y <= 7, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 for x, y in ((15, 12), (36, 10), (34, 26)):
     sf.maybe(OUTCROP, x, y)
 sf.enemies += [["radscorpion", 36, 14]]

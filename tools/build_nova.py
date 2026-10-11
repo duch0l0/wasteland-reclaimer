@@ -82,7 +82,7 @@ TANKS = [P("nv_tank", "pk:fmbase/fmbase_1_004", sight=True, light=NEON([120, 200
          P("nv_tank_b", "pk:fmbase/fmbase_1_010", sight=True, light=NEON([140, 255, 160]))]
 
 WHITE = ["pk:bcyber/p2/0,0,1,1"]
-WHITE_ROAD = ["pk:bcyber/p1/9,9,1,1"]
+WHITE_ROAD = ["pk:bcyber/p2/1,1,1,1", "pk:bcyber/p2/2,1,1,1", "pk:bcyber/p2/1,2,1,1"]   # проезжая часть: белая с тонкими линиями, как в наборе
 CIRCUIT = ["pk:bcyber/p2/4,0,1,1"]
 DARK = ["pk:cyber/p1/0,4,1,1"]
 DARK_B = ["pk:cyber/p2/0,4,1,1"]
@@ -96,9 +96,9 @@ up.floor_code("w", *WHITE)
 up.floor_code("r", *WHITE_ROAD)
 up.floor_code("c", *CIRCUIT)
 up.paint("w", 0, 0, W - 1, H - 1)
-up.paint("r", 30, 0, 37, H - 1)                        # проспект с севера на юг
-up.paint("r", 0, 20, W - 1, 25)                        # поперечный проспект
-up.paint("c", 26, 34, 41, 42)                          # «Хаб чистоты» у шлюза
+up.paint("r", 31, 0, 36, H - 1)                        # проспект с севера на юг
+up.paint("r", 0, 21, W - 1, 24)                        # поперечный проспект
+up.crisp = True                                        # город из плитки: стыки ровные, как уложено
 up.exits = [(x, H - 1) for x in range(31, 37)]
 up.reserve(31, 0, 36, H - 1)
 up.reserve(0, 20, W - 1, 25)
@@ -144,6 +144,7 @@ up.scatter([TREE_SMALL], 1, 1, W - 2, H - 2, 10)
 W, H = 68, 46
 dn = CityMap(city, "nova_under", "«Нова»: Нижний ярус", W, H, start=(6, 6), seed=262, music="reno",
              night=[60, 52, 90])
+dn.crisp = True
 dn.floor_code("d", *DARK)
 dn.floor_code("e", *DARK_B)
 dn.floor_code("g", *GRATE)

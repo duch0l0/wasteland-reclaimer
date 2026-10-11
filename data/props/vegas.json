@@ -5,60 +5,60 @@
 "block": true,
 "sight": true,
 "foot": [
-3,
+4,
 2
 ],
-"scale": 1.6
+"scale": 2.4
 },
 "vg_tower1": {
 "img": "pk:zcity/zcity_5_001",
 "block": true,
 "sight": true,
 "foot": [
-3,
+4,
 2
 ],
-"scale": 1.6
+"scale": 2.4
 },
 "vg_tower2": {
 "img": "pk:zcity/zcity_5_002",
 "block": true,
 "sight": true,
 "foot": [
-3,
+4,
 2
 ],
-"scale": 1.6
+"scale": 2.4
 },
 "vg_tower3": {
 "img": "pk:zcity/zcity_5_003",
 "block": true,
 "sight": true,
 "foot": [
-3,
+4,
 2
 ],
-"scale": 1.6
+"scale": 2.4
 },
 "vg_tower4": {
 "img": "pk:zcity/zcity_5_005",
 "block": true,
 "sight": true,
 "foot": [
-3,
+4,
 2
 ],
-"scale": 1.6
+"scale": 2.4
 },
 "vg_tower_broken": {
 "img": "pk:zcity/zcity_5_004",
 "block": true,
 "sight": true,
 "foot": [
-3,
+4,
 2
 ],
-"scale": 1.6
+"scale": 2.4
 },
 "vg_lucky38": {
 "img": "pk:zcity/zcity_5_000",
@@ -1249,7 +1249,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "vg_tech_2_026": {
 "img": "pk:npower/npower_2_026",
@@ -1361,7 +1362,8 @@
 "foot": [
 1,
 1
-]
+],
+"scale": 0.55
 },
 "vegas_f_tech_2_026": {
 "img": "pk:npower/npower_2_026",
