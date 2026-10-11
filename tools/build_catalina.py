@@ -50,7 +50,7 @@ FENCE = P("ct_fence", "pk:iresort/iresort_4_049", foot=[2, 1])
 HAMMOCK = P("ct_hammock", "pk:iresort/iresort_4_000", foot=[2, 1])
 HOUSES = [P(f"ct_house{i}", f"pk:town50/town50_3_{n:03d}", scale=1.7, foot=[3, 2], sight=True) for i, n in enumerate((0, 1, 7, 8))]
 HOUSE_BLUE = P("ct_house_blue", "pk:town50/p3/10,2,2,2", scale=1.7, foot=[3, 2], sight=True)
-BOATS = [P("ct_boat", "pk:fishv/fishv_2_083", foot=[1, 2], sight=True), P("ct_boat_b", "pk:fishv/p2/12,12,4,2", foot=[4, 1], sight=True)]
+BOATS = [P("ct_boat", "pk:fishv/fishv_2_083", foot=[1, 2], sight=True), P("ct_boat_b", "pk:fishv/p2/12,12,4,2", foot=[4, 1], sight=True, keybg=True)]
 WRECK = [P("ct_wreck", "pk:fishv/fishv_1_000", foot=[2, 1], sight=True), P("ct_wreck_b", "pk:fishv/fishv_1_001", foot=[2, 1], sight=True)]
 SHIPWRECK = P("ct_shipwreck", "pk:sisland/p1/14,8,2,2", foot=[2, 2], sight=True)
 NETS = [P("ct_nets", "pk:fishv/fishv_1_012", foot=[2, 1]), P("ct_nets_b", "pk:fishv/fishv_1_013", foot=[2, 1])]
@@ -109,18 +109,20 @@ av.paint("w", 0, 47, W - 1, H - 1)
 av.paint("p", 4, 26, 66, 28)                             # набережная
 av.paint("p", 34, 8, 37, 26)                             # аллея к Казино
 # причал в бухту — сюда пристаёт лодка героя
-av.paint("s", 34, 43, 37, 46)
-av.stamp("ct_pier", PIER, 34, 43, water=False)
-av.stamp("ct_pier2", PIER, 34, 45, water=False)
+av.floor_code("d", "pk:seaport/seaport_f1_21")        # доски причала — над водой, без берега
+av.piers = ("d",)
+av.paint("d", 35, 41, 36, 46)                            # мостки от пляжа в бухту
 
 av.exits = [(35, 46), (36, 46)]
 av.reserve(33, 40, 38, 46)
 av.reserve(4, 26, 66, 28)
 av.reserve(34, 8, 37, 25)
-for x in (28, 31, 40, 44):
-    av.put(BOATS[0], x, 44)
-av.put(BOATS[1], 22, 46)
-av.put(ANCHOR, 30, 41)
+for x, y in ((33, 44), (38, 45)):                        # лодки у мостков, на воде
+    av.put(BOATS[0], x, y, force=True)
+av.put(BOATS[1], 22, 47, force=True)
+for x in (26, 30, 42, 46):                                # рыбацкие лодки вытащены на песок у кромки
+    av.maybe(BOATS[0], x, 40)
+av.maybe(ANCHOR, 31, 38)
 # карантинный барак у причала — сюда ведут всех «с Большой земли»
 av.building(42, 32, 10, 8, "planks", north=(4,), worn=False)
 av.reserve(46, 29, 47, 32)

@@ -437,17 +437,6 @@
 "img": "pk:nbunk/nbunk_2_028",
 "block": true,
 "sight": false
-},
-"hb_oasis": {
-"img": "pk:destown/p5/8,5,8,11",
-"block": false,
-"sight": false,
-"foot": [
-8,
-11
-],
-"layer": "floor",
-"soft": "pond"
 }
 }
 }

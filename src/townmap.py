@@ -409,14 +409,19 @@ class TownMap(MapBase):
             self._tiles[code] = _even_tone([pygame.transform.scale(r, (T, T)).convert() for r in raw])
         # улица (без пустоты «_», как у интерьеров): края участков земли размываются в соседнюю землю
         self._feather = {}
+        self._piers = set(d.get("piers", []))      # доски причала: лежат поверх воды, берег у них не рисуется
+        self._water = set()                       # коды воды на улице: берег рисуется слоями (мелководье, пена, мокрый песок)
         if not any("_" in row for row in self.ground):
             from collections import Counter
             counts = Counter(c for row in self.ground for c in row)
             for code, n in counts.items():
-                if code in self.wallsets or code in "x_~" or not self._tiles.get(code):
+                if code in self.wallsets or code in "x_" or not self._tiles.get(code):
                     continue
                 avg = pygame.transform.average_color(self._tiles[code][0])
-                if avg[2] > avg[0] + 25:          # вода — со своими берегами, не размывать
+                if avg[2] > avg[0] + 25:          # вода — свой берег (_shore), не размывать
+                    self._water.add(code)
+                    continue
+                if code in self._piers:           # причал стоит над водой — без берега и размытия
                     continue
                 self._feather[code] = n
         global _VOID
@@ -548,9 +553,92 @@ class TownMap(MapBase):
                 if tile is None:
                     tile = self._edge_cache[key] = self._blend_edge(x, y, self._raw_tile(x, y), mask)
                 return tile
+        if self._water and self._near_shore(x, y, code):
+            return self._shore(x, y, code)
+        if code in self._water:                    # мелководье и глубина сходятся плавно
+            near = {self.ground[ny][nx] for ny in range(max(0, y - 2), min(self.height, y + 3))
+                    for nx in range(max(0, x - 2), min(self.width, x + 3))} & self._water
+            if len(near) > 1:
+                key = ("ww", x, y)
+                if key not in self._edge_cache:
+                    self._edge_cache[key] = self._blend_codes(x, y, sorted(near), (x * 73856093) ^ (y * 19349663), soft=True)
+                return self._edge_cache[key]
         if code in self._feather:
             return self._feathered(x, y, code)
         return self._raw_tile(x, y)
+
+    # ------------------------------------------------------------ берег
+    def _near_shore(self, x, y, code):
+        """Клетка у кромки воды: вода рядом с сушей или суша рядом с водой (окно 3×3)."""
+        wet = code in self._water
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.width and 0 <= ny < self.height:
+                    c = self.ground[ny][nx]
+                    if (c in self._water) != wet and (c in self._feather or c in self._water) \
+                            and c not in self._piers and code not in self._piers:
+                        return True
+        return False
+
+    def _water_field(self, x, y):
+        """Доля воды вокруг (окно 5×5 с весами) — шире окно, плавнее и круглее берег. Причал считается водой."""
+        n = tot = 0
+        for dy in range(-2, 3):
+            for dx in range(-2, 3):
+                nx, ny = min(self.width - 1, max(0, x + dx)), min(self.height - 1, max(0, y + dy))
+                w = (3 - abs(dx)) * (3 - abs(dy))
+                tot += w
+                c = self.ground[ny][nx]
+                n += w * (c in self._water or c in self._piers)
+        return n / tot
+
+    def _shore(self, x, y, code):
+        """Берег как в наборе seaside: кромка идёт по сглаженному полю воды с волной вдоль берега
+        (непрерывной через клетки), у кромки — светлое мелководье, линия пены и полоса мокрого песка."""
+        import math
+        key = ("w", x, y)
+        tile = self._edge_cache.get(key)
+        if tile is not None:
+            return tile
+        h = (x * 73856093) ^ (y * 19349663)
+        # вода и суша этой клетки: ближайшие коды в окне 3×3
+        wc = code if code in self._water else next(
+            (self.ground[y + dy][x + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+             if 0 <= x + dx < self.width and 0 <= y + dy < self.height and self.ground[y + dy][x + dx] in self._water), code)
+        lc = code if code not in self._water else next(
+            (self.ground[y + dy][x + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+             if 0 <= x + dx < self.width and 0 <= y + dy < self.height and self.ground[y + dy][x + dx] in self._feather), code)
+        water = self._tiles[wc][h % len(self._tiles[wc])]
+        land = self._feathered(x, y, lc) if code not in self._water and lc in self._feather else \
+            self._tiles[lc][h % len(self._tiles[lc])] if self._tiles.get(lc) else self._raw_tile(x, y)
+        f = {(i, j): self._water_field(x + i, y + j) for i in (-1, 0, 1) for j in (-1, 0, 1)}
+        out = land.copy()
+        B = 2
+        for py in range(0, T, B):
+            for px in range(0, T, B):
+                u, v = (px + 1) / T - 0.5, (py + 1) / T - 0.5
+                i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
+                fu, fv = u - i0, v - j0
+                val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
+                       + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
+                wx, wy = x * T + px, y * T + py
+                val += 0.05 * math.sin(wx * 0.11 + wy * 0.05) + 0.035 * math.sin(wx * 0.043 - wy * 0.13) \
+                    + 0.02 * math.sin((wx + 2 * wy) * 0.29)
+                if val >= 0.5:                                  # вода
+                    c = water.get_at((px, py))
+                    if val < 0.58:                              # мелководье — светлее, бирюзовее
+                        k = (0.58 - val) / 0.08
+                        c = (min(255, int(c[0] + 50 * k)), min(255, int(c[1] + 60 * k)), min(255, int(c[2] + 40 * k)))
+                    out.fill(c, (px, py, B, B))
+                    if val < 0.525:                             # пена у кромки
+                        out.fill((232, 240, 236), (px, py, B, B))
+                elif val > 0.42:                                # мокрый песок
+                    c = land.get_at((px, py))
+                    k = 0.78 + 0.22 * (0.5 - val) / 0.08
+                    out.fill((min(255, int(c[0] * k)), min(255, int(c[1] * k)), min(255, int(c[2] * k * 1.03))), (px, py, B, B))
+        self._edge_cache[key] = out
+        return out
 
     def _patch_field(self, x, y, p):
         """Доля клеток «пятна» p в окрестности 3×3 клетки (x, y): 1 — глубоко внутри, 0 — снаружи."""
@@ -563,7 +651,7 @@ class TownMap(MapBase):
                 n += w * (self.ground[ny][nx] == p)
         return n / tot
 
-    def _blend_codes(self, x, y, codes, h):
+    def _blend_codes(self, x, y, codes, h, soft=False):
         """Смесь земель: вес каждой — по сглаженному полю (непрерывно через границы клеток), веса нормируются,
         текстуры складываются. Соседние клетки сходятся без шва, сколько бы земель ни встречалось."""
         N = 12
@@ -581,7 +669,8 @@ class TownMap(MapBase):
                     f = fields[c]
                     val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
                            + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
-                    ws[c] = max(0.0, min(1.0, (val + jit - 0.3) / 0.4)) ** 2
+                    ws[c] = (max(0.0, min(1.0, (val + jit - 0.3) / 0.4)) ** 2 if not soft
+                             else max(0.0, min(1.0, val)) ** 1.5)                # вода — широкий мягкий переход
                 tot = sum(ws.values()) or 1.0
                 for c in codes:
                     grid[c][py][px] = ws[c] / tot

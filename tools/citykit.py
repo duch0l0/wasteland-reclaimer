@@ -121,6 +121,12 @@ class CityMap(MapKit):
                     [(0, j) for j in range(1, 3)]:
                 if super().put(name, x + dx, y + dy, check=check, allow_reserved=allow_reserved, owner=owner, force=force):
                     return True
+            for r in range(2, 6):                       # дальше по кольцу — ближайшее свободное место
+                for dx in range(-r, r + 1):
+                    for dy in range(-r, r + 1):
+                        if max(abs(dx), abs(dy)) == r and super().put(name, x + dx, y + dy, check=check,
+                                                                       allow_reserved=False, owner=owner):
+                            return True
             print(f"   {self.id}: «{name}» после увеличения не влезает у ({x}, {y}) — пропущен")
             return True
         if not ok and not self._loose:
@@ -206,6 +212,8 @@ class CityMap(MapKit):
             out["night"] = self.night
         if self.tint:
             out["tint"] = self.tint
+        if getattr(self, "piers", None):
+            out["piers"] = list(self.piers)
         if self.blocked_extra():
             out["blocked"] = self.blocked_extra()
         return out
@@ -324,6 +332,12 @@ class City:
                       "home": lambda: home}[style]()
             fl = "".join(m.floors) or m.ground[m.H // 2][m.W // 2]
             n = m.dress_empty(scenes, ground=fl, block=6, margin=1, chance=0.75, max_uses=3)
+            if style in ("home", "tech") and 100 * len(m.props) / walk < 5:   # вдоль стен — как в настоящей комнате
+                along = {"home": (["shelf_wood", "wardrobe", "cabinet_small", "shelf_stuff_1", "glass_cabinet", "filecab_1"],
+                                  ["barrel_wood", "crate", "sack", "crate_b"]),
+                         "tech": (["locker_1", "locker_2", "locker_double", "metal_shelf", "filecab_2", "shelf_metal_tall"],
+                                  ["crate", "barrel_wood", "toolbox_red", "canister"])}[style]
+                n += m._loosely(m.furnish_walls, along[0], along[1], fl)
             if 100 * (len(m.props)) / walk < 4:             # тесные комнаты — участки поменьше
                 small = [sc[:2] for sc in scenes]
                 n += m.dress_empty(small, ground=fl, block=4, margin=0, chance=0.6, max_uses=3)

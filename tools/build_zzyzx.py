@@ -112,7 +112,25 @@ for _, x, y in z.npcs:
     z.reserve(x, y, x, y)
 
 # озеро Туэнде — восточнее конца бульвара, вода непроходима
-z.stamp("zz_lake", LAKE, 61, 21, water=True)
+z._palm = "zz_palm0"
+# водоём — обычная вода карты: берег, мелководье и пена рисуются сами (src/townmap.py _shore)
+z.floor_code("~", *["pk:mport/p1/8,4,1,1", "pk:mport/p1/9,4,1,1", "pk:mport/p1/10,4,1,1", "pk:mport/p1/11,4,1,1"])
+z.water_codes = tuple(set(getattr(z, "water_codes", ())) | {"~"})
+import math as _m, random as _r
+_rr = _r.Random(11)
+_k = [_rr.uniform(0, 6.3) for _ in range(3)]
+for _y in range(26 - 5 - 2, 26 + 5 + 3):
+    for _x in range(64 - 4 - 2, 64 + 4 + 3):
+        _a = _m.atan2((_y - 26) / 5, (_x - 64) / 4)
+        _wob = 1 + 0.12 * _m.sin(2 * _a + _k[0]) + 0.08 * _m.sin(3 * _a + _k[1]) + 0.05 * _m.sin(5 * _a + _k[2])
+        if ((_x - 64) / 4) ** 2 + ((_y - 26) / 5) ** 2 <= _wob ** 2:
+            z.ground[_y][_x] = "~"
+            z.blocked.add((_x, _y))
+for _px, _py in [(58, 21), (69, 22), (58, 31), (69, 30)]:                                  # пальмы по берегу
+    z.maybe(z._palm, _px, _py)
+for _px, _py in [(59, 24), (68, 27)]:                                  # камыш у воды
+    z.maybe("grass_big", _px, _py)
+
 # пальмы вдоль бульвара — через одну клетку, с обеих сторон
 for i, x in enumerate(range(13, 52, 4)):      # через каждые 4 клетки, кроме мест, где отходят дорожки
     if not 19 <= x <= 23 and not 56 <= x <= 60:

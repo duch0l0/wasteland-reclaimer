@@ -8,7 +8,8 @@
 2,
 1
 ],
-"layer": "floor"
+"layer": "floor",
+"keybg": true
 },
 "nd_boat_b": {
 "img": "pk:fishv/p3/0,11,2,1",
@@ -18,7 +19,8 @@
 2,
 1
 ],
-"layer": "floor"
+"layer": "floor",
+"keybg": true
 },
 "nd_sailboat": {
 "img": "pk:fishv/p3/4,10,4,2",
@@ -28,7 +30,8 @@
 4,
 2
 ],
-"layer": "floor"
+"layer": "floor",
+"keybg": true
 },
 "nd_fish_stall": {
 "img": "pk:fishv/p3/8,8,2,2",
@@ -424,7 +427,8 @@
 "img": "pk:west/west_2_060",
 "block": false,
 "sight": false,
-"layer": "floor"
+"layer": "floor",
+"keybg": true
 },
 "nd_safe": {
 "img": "pk:west/west_2_105",

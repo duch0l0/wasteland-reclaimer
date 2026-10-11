@@ -33,9 +33,9 @@ def cells(page, pts):
 
 
 # ------------------------------------------------------------ объекты
-BOAT = P("nd_boat", "pk:fishv/p3/0,10,2,1", foot=[2, 1], block=False, layer="floor")
-BOAT_B = P("nd_boat_b", "pk:fishv/p3/0,11,2,1", foot=[2, 1], block=False, layer="floor")
-SAILBOAT = P("nd_sailboat", "pk:fishv/p3/4,10,4,2", foot=[4, 2], block=False, layer="floor")
+BOAT = P("nd_boat", "pk:fishv/p3/0,10,2,1", foot=[2, 1], block=False, layer="floor", keybg=True)
+BOAT_B = P("nd_boat_b", "pk:fishv/p3/0,11,2,1", foot=[2, 1], block=False, layer="floor", keybg=True)
+SAILBOAT = P("nd_sailboat", "pk:fishv/p3/4,10,4,2", foot=[4, 2], block=False, layer="floor", keybg=True)
 FISH_STALL = P("nd_fish_stall", "pk:fishv/p3/8,8,2,2", foot=[2, 1], sight=True)
 FISH_STALL_B = P("nd_fish_stall_b", "pk:fishv/p3/10,8,2,2", foot=[2, 1], sight=True)
 MEAT_STALL = P("nd_meat_stall", "pk:fishv/p3/10,10,2,2", foot=[2, 1], sight=True)
@@ -82,7 +82,7 @@ CHAIR = P("nd_chair", "pk:west/west_2_001")
 STOVE = P("nd_stove", "pk:west/west_2_018")
 CLOCK = P("nd_clock", "pk:west/west_2_019", sight=True)
 BED = P("nd_bed", "pk:west/west_2_005", foot=[2, 2])
-RUG = P("nd_rug", "pk:west/west_2_060", block=False, layer="floor")
+RUG = P("nd_rug", "pk:west/west_2_060", block=False, layer="floor", keybg=True)
 SAFE = P("nd_safe", "pk:west/west_2_105", search="military", title="сейф")
 SUITCASES = P("nd_suitcases", "pk:wrail/wrail_1_014", search="bag", title="чемоданы")
 
@@ -125,6 +125,7 @@ n = CityMap(city, "needles", "Нидлс: Пристань", W, H, start=(2, 24)
 n.floor_code("s", *SAND)
 n.floor_code("t", *DIRT)
 n.floor_code("w", *PLANK)
+n.piers = ("w",)                                         # доски причала — над водой
 n.floor_code("~", *WATER)
 n.floor_code("≈", *DEEP)
 n.paint("s", 0, 0, W - 1, H - 1)
@@ -197,7 +198,13 @@ n.put(BOAT_B, 57, 36, force=True)
 # паром Мамаши Кейт у главного причала, лодки у мостков
 n.put(SAILBOAT, 64, 22, force=True)
 n.put(BOAT, 58, 27, force=True)
-n.put(LIGHTHOUSE, 57, 15)            # маяк на мостках к северу от причала
+n.floor_code("r", "pk:desnat/p1/0,0,1,1")          # каменистый мысок под маяком (не вода)
+for x in range(55, 60):
+    for y in range(14, 18):
+        if (x - 57) ** 2 + (y - 15.5) ** 2 <= 5:
+            n.ground[y][x] = "s"
+            n.blocked.discard((x, y))
+n.put(LIGHTHOUSE, 57, 15, force=True)  # маяк на мысу к северу от причала
 # склад речников между вокзалом и дорогой к мосту: два контейнера в ряд, бочки и хлам перед ними
 n.put(CONT_R, 34, 10)
 n.put(CONT_B, 38, 10)

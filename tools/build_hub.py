@@ -120,7 +120,25 @@ for _, x, y in hb.npcs:
     hb.reserve(x, y, x, y)
 
 # оазис в центре площади: пальмы по кругу, колодец у края
-hb.stamp("hb_oasis", OASIS, 35, 14, water=True)
+hb._palm = "hb_palm0"
+# водоём — обычная вода карты: берег, мелководье и пена рисуются сами (src/townmap.py _shore)
+hb.floor_code("~", *["pk:mport/p1/8,4,1,1", "pk:mport/p1/9,4,1,1", "pk:mport/p1/10,4,1,1", "pk:mport/p1/11,4,1,1"])
+hb.water_codes = tuple(set(getattr(hb, "water_codes", ())) | {"~"})
+import math as _m, random as _r
+_rr = _r.Random(7)
+_k = [_rr.uniform(0, 6.3) for _ in range(3)]
+for _y in range(19 - 5 - 2, 19 + 5 + 3):
+    for _x in range(39 - 4 - 2, 39 + 4 + 3):
+        _a = _m.atan2((_y - 19) / 5, (_x - 39) / 4)
+        _wob = 1 + 0.12 * _m.sin(2 * _a + _k[0]) + 0.08 * _m.sin(3 * _a + _k[1]) + 0.05 * _m.sin(5 * _a + _k[2])
+        if ((_x - 39) / 4) ** 2 + ((_y - 19) / 5) ** 2 <= _wob ** 2:
+            hb.ground[_y][_x] = "~"
+            hb.blocked.add((_x, _y))
+for _px, _py in [(33, 15), (45, 16), (34, 24), (44, 23)]:                                  # пальмы по берегу
+    hb.maybe(hb._palm, _px, _py)
+for _px, _py in [(35, 17), (43, 21), (36, 23)]:                                  # камыш у воды
+    hb.maybe("grass_big", _px, _py)
+
 for x, y in ((33, 15), (33, 21), (44, 15), (44, 22), (36, 25)):
     hb.put(PALMS[(x + y) % 4], x, y)
 hb.put(WELL, 30, 19)

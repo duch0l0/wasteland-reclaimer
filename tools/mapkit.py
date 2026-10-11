@@ -145,13 +145,22 @@ class MapKit:
                 self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
 
         # куски обрыва в наборе: левый край, середина, правый край — ряд собирается без щелей
+        plat = {(tx, ty) for cx, cy in cells for tx in (cx, cx + 1) for ty in (cy, cy + 1)}
         for x, y in sorted(south_cells):
-            self.props.append([cliffs[1 if len(cliffs) > 1 else 0], x, y])   # цельный кусок — без щелей торцов
-            for tx, ty in ((x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)):   # на углу боковая стенка — до низа обрыва
-                if (tx + 1, ty) in floor:
-                    self.props.append([f"x_cliff_side_e{rnd.randrange(6)}", tx, ty, 16, 0])
-                elif (tx - 1, ty) in floor:
-                    self.props.append([f"x_cliff_side_w{rnd.randrange(6)}", tx, ty, -16, 0])
+            # куски набора: [0] — правый торец (обрыв уходит вправо-вниз), [1] — середина, [2] — левый торец
+            open_w = (x - 1, y) not in plat and (x - 1, y + 1) not in plat
+            open_e = (x + 2, y) not in plat and (x + 2, y + 1) not in plat
+            mids = [cliffs[1]] + list(cliffs[3:]) if len(cliffs) > 1 else [cliffs[0]]
+            piece = cliffs[2] if open_w and len(cliffs) > 2 else cliffs[0] if open_e else rnd.choice(mids)
+            self.props.append([piece, x, y])
+            out = (x - 1, y) if piece is cliffs[2] and open_w else (x + 2, y) if open_e else None
+            if out and 0 <= out[0] < self.W and out not in plat:   # под прозрачным торцом — земля дна, не верх плато
+                fc = self.ground[out[1]][out[0]]
+                edge_x = x if piece is cliffs[2] else x + 1
+                for ty in (y, y + 1):
+                    if 0 <= ty < self.H:
+                        self.ground[ty][edge_x] = fc
+
 
     def reserve(self, x0, y0, x1, y1):
         for y in range(y0, y1 + 1):
@@ -224,6 +233,48 @@ class MapKit:
             self.containers.append({"prop": len(self.props) - 1, "name": inf.get("title", "ящик"),
                                     "loot": self.roll_loot(inf["search"]), "owner": owner})
         return True
+
+    def furnish_walls(self, wall_items, corner_items, floor_codes, spacing=3, chance=0.8):
+        """Мебель по логике комнаты: шкафы и полки — вдоль северной стены (лицом к камере), ящики и бочки — в углах.
+        Не у дверей и проходов (резерв, порталы ±2), путь не перекрывается (put проверяет)."""
+        busy = set(self.reserved)
+        for p in self.portals:
+            for (tx, ty) in p["tiles"]:
+                busy.update((tx + dx, ty + dy) for dx in range(-2, 3) for dy in range(-2, 3))
+        for n in self.npcs + self.enemies:
+            busy.update((n[1] + dx, n[2] + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1))
+        occupied = set(self.blocked)
+        for e in self.props:
+            occupied.update(self.footprint(e[0], e[1], e[2]))
+        floor = lambda x, y: 0 <= x < self.W and 0 <= y < self.H and self.ground[y][x] in floor_codes
+        wall = lambda x, y: not floor(x, y)
+        placed, last = 0, {}
+        for y in range(1, self.H - 1):
+            for x in range(1, self.W - 1):
+                if not floor(x, y) or not wall(x, y - 1) or (x, y) in busy or (x, y) in occupied:
+                    continue
+                corner = wall(x - 1, y) or wall(x + 1, y)
+                if corner:
+                    items = corner_items
+                elif x - last.get(y, -99) < spacing or self.rnd.random() > chance:
+                    continue
+                else:
+                    items = wall_items
+                name = self.rnd.choice(items)
+                fp = self.footprint(name, x, y)
+                if any(t in busy or t in occupied or not floor(*t) for t in fp):
+                    continue
+                front = {(t[0], max(q[1] for q in fp) + 1) for t in fp}      # клетки перед мебелью — свободны
+                if any(t in occupied or not floor(*t) for t in front):
+                    continue
+                if P.info(name).get("search") and not (front & self.reachable()):
+                    continue                                                 # к шкафу с добычей нужно подойти
+                if self.put(name, x, y):
+                    occupied.update(fp)
+                    busy.update(front)                                       # перед мебелью — проход
+                    last[y] = x + len({t[0] for t in fp}) - 1
+                    placed += 1
+        return placed
 
     def dress_empty(self, scenes, ground=None, block=8, margin=2, chance=0.85, max_uses=2):
         """Обжить пустыри (docs/city_plan.md, экскурсия по городам): участок block×block, где нет ни объекта, ни

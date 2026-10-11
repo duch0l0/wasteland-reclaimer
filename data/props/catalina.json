@@ -367,7 +367,8 @@
 "foot": [
 4,
 1
-]
+],
+"keybg": true
 },
 "ct_wreck": {
 "img": "pk:fishv/fishv_1_000",
@@ -702,26 +703,6 @@
 "img": "pk:west/west_2_001",
 "block": true,
 "sight": false
-},
-"ct_pier": {
-"img": "pk:iresort/p1/0,12,4,2",
-"block": false,
-"sight": false,
-"foot": [
-4,
-2
-],
-"layer": "floor"
-},
-"ct_pier2": {
-"img": "pk:iresort/p1/0,12,4,2",
-"block": false,
-"sight": false,
-"foot": [
-4,
-2
-],
-"layer": "floor"
 },
 "ct_dance_floor": {
 "img": "pk:casino/p1/8,13,2,2",

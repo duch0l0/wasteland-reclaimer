@@ -451,17 +451,6 @@
 "block": true,
 "sight": true
 },
-"zz_lake": {
-"img": "pk:destown/p5/8,5,8,11",
-"block": false,
-"sight": false,
-"foot": [
-8,
-11
-],
-"layer": "floor",
-"soft": "pond"
-},
 "zz_pool_a": {
 "img": "pk:pool/p1/4,4,4,2",
 "block": false,
