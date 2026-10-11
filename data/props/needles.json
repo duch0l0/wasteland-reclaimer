@@ -588,6 +588,163 @@
 1
 ],
 "keybg": true
+},
+"nd_card_table": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_card_table_b": {
+"img": "pk:west/west_2_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_chair_l": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"nd_chair_r": {
+"img": "pk:west/west_2_002",
+"block": true,
+"sight": false
+},
+"nd_rug_red": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor",
+"scale": 1.5
+},
+"nd_rug_quilt": {
+"img": "pk:west/west_2_062",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor",
+"scale": 1.5
+},
+"nd_painting": {
+"img": "pk:west/west_2_030",
+"block": false,
+"sight": false
+},
+"nd_mona": {
+"img": "pk:west/west_2_029",
+"block": false,
+"sight": false
+},
+"nd_window": {
+"img": "pk:west/west_2_027",
+"block": false,
+"sight": false
+},
+"nd_wall_clock": {
+"img": "pk:west/west_2_011",
+"block": false,
+"sight": false
+},
+"nd_plant": {
+"img": "pk:west/west_2_031",
+"block": true,
+"sight": false
+},
+"nd_plant_b": {
+"img": "pk:west/west_2_042",
+"block": true,
+"sight": false
+},
+"nd_plant_c": {
+"img": "pk:west/west_2_033",
+"block": true,
+"sight": false
+},
+"nd_fireplace": {
+"img": "pk:west/west_2_010",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 130,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.7
+],
+"flicker": 0.4
+}
+},
+"needles_f_home_rug": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"needles_f_home_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"needles_f_home_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"needles_f_home_poker": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"needles_f_home_shelf": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true
+},
+"needles_f_home_books": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true
+},
+"needles_f_home_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"needles_f_home_plant": {
+"img": "pk:bazaar/bazaar_3_206",
+"block": true,
+"sight": false
 }
 }
 }

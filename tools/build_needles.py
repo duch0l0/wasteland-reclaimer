@@ -375,11 +375,30 @@ sl.put(CABINET, 8, 4)
 sl.put(CLOCK, 12, 4)
 sl.npcs += [["barkeep_ned", 6, 5]]
 # пианино в углу, столы для покера и обычные — рядами, стулья у столов
-sl.put(PIANO, 22, 4)
-for x, y in ((4, 11), (10, 11), (17, 11), (4, 16), (17, 16)):
-    sl.put(POKER if (x + y) % 3 == 0 else TABLE, x, y)
-    sl.put(CHAIR, x + 2, y)
-sl.put(RUG, 11, 16)
+# зал салуна (набор wild-west): круглые игорные столы, стулья по обе стороны, ковры, картины и окна на стенах
+CARD = [P("nd_card_table", "pk:west/west_2_020", foot=[2, 1]), P("nd_card_table_b", "pk:west/west_2_021", foot=[2, 1])]
+CH_L, CH_R = P("nd_chair_l", "pk:west/west_2_001"), P("nd_chair_r", "pk:west/west_2_002")
+RUGS = [P("nd_rug_red", "pk:west/west_2_060", block=False, layer="floor", foot=[2, 2], scale=1.5),
+        P("nd_rug_quilt", "pk:west/west_2_062", block=False, layer="floor", foot=[2, 2], scale=1.5)]
+WALL_ART = [P("nd_painting", "pk:west/west_2_030", block=False), P("nd_mona", "pk:west/west_2_029", block=False),
+            P("nd_window", "pk:west/west_2_027", block=False), P("nd_wall_clock", "pk:west/west_2_011", block=False)]
+PLANTS = [P("nd_plant", "pk:west/west_2_031"), P("nd_plant_b", "pk:west/west_2_042"), P("nd_plant_c", "pk:west/west_2_033")]
+STOVE_W = P("nd_fireplace", "pk:west/west_2_010", foot=[2, 1], light={"r": 130, "color": [255, 150, 70], "at": [0.5, 0.7], "flicker": 0.4})
+for i, x in enumerate((15, 18, 21, 24)):                     # на северной стене — картины, окно, часы
+    sl.props.append([WALL_ART[i % 4], x, 3, 0, -14])
+sl.put(PIANO, 20, 4)
+sl.maybe(STOVE_W, 15, 4)
+for i, (x, y) in enumerate(((3, 10), (9, 10), (16, 10), (21, 10), (3, 15), (9, 16), (16, 15), (21, 16))):
+    sl.props.append([RUGS[0], x, y, 0, -12])               # ковёр — под столом, по центру группы
+    sl.maybe(CARD[i % 2], x, y)
+    sl.maybe(CH_L, x - 1, y)
+    sl.maybe(CH_R, x + 2, y)
+for i, (x, y) in enumerate(((2, 6), (25, 6), (2, 19), (25, 19))):      # кадки в углах
+    sl.maybe(PLANTS[i % 3], x, y)
+for x, y in ((2, 21), (3, 21)):
+    sl.maybe("barrel_wood", x, y)
+for x, y in ((24, 21), (25, 21)):
+    sl.maybe("crate", x, y)
 sl.npcs += [["gambler_lou", 6, 12], ["river_guard_off", 18, 17]]
 sl.box(SAFE, 24, 4, "сейф салуна", {"крышки": 140, "сигареты": 3},
        requires={"items_any": ["отмычка", "ключ от сейфа салуна"], "msg": "Старый банковский сейф. Без отмычки — никак."})

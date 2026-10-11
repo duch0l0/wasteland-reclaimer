@@ -607,6 +607,106 @@
 ],
 "flicker": 0.35
 }
+},
+"hb_round_table": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_chair_l": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"hb_chair_r": {
+"img": "pk:west/west_2_002",
+"block": true,
+"sight": false
+},
+"hb_rug_round": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor",
+"scale": 1.5
+},
+"hb_plant": {
+"img": "pk:west/west_2_031",
+"block": true,
+"sight": false
+},
+"hb_plant_b": {
+"img": "pk:west/west_2_042",
+"block": true,
+"sight": false
+},
+"hb_painting": {
+"img": "pk:west/west_2_030",
+"block": false,
+"sight": false
+},
+"hb_window": {
+"img": "pk:west/west_2_027",
+"block": false,
+"sight": false
+},
+"hub_f_home_rug": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"hub_f_home_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hub_f_home_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"hub_f_home_poker": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hub_f_home_shelf": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true
+},
+"hub_f_home_books": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true
+},
+"hub_f_home_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"hub_f_home_plant": {
+"img": "pk:bazaar/bazaar_3_206",
+"block": true,
+"sight": false
 }
 }
 }

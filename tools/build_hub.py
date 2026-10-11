@@ -349,9 +349,21 @@ fc.put(PIANO, 14, 9)
 fc.put(RUG, 14, 11)
 fc.npcs += [["falcon_singer", 15, 12]]
 # зал: столы со стульями рядами, проход от двери к стойке свободен
-for x, y in ((3, 14), (8, 14), (3, 17), (8, 17), (14, 15), (14, 18)):
-    fc.put(TABLE, x, y)
-    fc.put(CHAIR, x + 2, y)
+# зал: круглые столы с парой стульев на ковриках, кадки в углах, картины на стене (набор wild-west)
+F_TABLE = P("hb_round_table", "pk:west/west_2_020", foot=[2, 1])
+F_CH_L, F_CH_R = P("hb_chair_l", "pk:west/west_2_001"), P("hb_chair_r", "pk:west/west_2_002")
+F_RUG = P("hb_rug_round", "pk:west/west_2_060", block=False, layer="floor", foot=[2, 2], scale=1.5)
+F_PLANT = [P("hb_plant", "pk:west/west_2_031"), P("hb_plant_b", "pk:west/west_2_042")]
+F_ART = [P("hb_painting", "pk:west/west_2_030", block=False), P("hb_window", "pk:west/west_2_027", block=False)]
+for x, y in ((3, 14), (9, 14), (3, 18), (9, 18), (14, 16)):
+    fc.props.append([F_RUG, x, y, 0, -12])
+    fc.maybe(F_TABLE, x, y)
+    fc.maybe(F_CH_L, x - 1, y)
+    fc.maybe(F_CH_R, x + 2, y)
+for i, (x, y) in enumerate(((2, 20), (17, 20), (17, 13))):
+    fc.maybe(F_PLANT[i % 2], x, y)
+for i, x in enumerate((2, 16, 20, 24)):
+    fc.props.append([F_ART[i % 2], x, 8, 0, -14])          # на лицевой стороне стены
 fc.npcs += [["falcon_drunk", 7, 15]]
 # задняя комната: стол для покера, сейф
 fc.put(POKER, 21, 11)

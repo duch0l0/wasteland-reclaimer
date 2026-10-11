@@ -411,19 +411,23 @@ class TownMap(MapBase):
         self._feather = {}
         self._piers = set(d.get("piers", []))      # доски причала: лежат поверх воды, берег у них не рисуется
         self._water = set()                       # коды воды на улице: берег рисуется слоями (мелководье, пена, мокрый песок)
-        if not any("_" in row for row in self.ground) and not d.get("crisp"):   # crisp — мощёный город: стыки ровные
-            from collections import Counter
-            counts = Counter(c for row in self.ground for c in row)
-            for code, n in counts.items():
-                if code in self.wallsets or code in "x_" or not self._tiles.get(code):
-                    continue
-                avg = pygame.transform.average_color(self._tiles[code][0])
-                if avg[2] > avg[0] + 25:          # вода — свой берег (_shore), не размывать
-                    self._water.add(code)
-                    continue
-                if code in self._piers:           # причал стоит над водой — без берега и размытия
-                    continue
+        from collections import Counter
+        counts = Counter(c for row in self.ground for c in row)
+        outdoor = not any("_" in row for row in self.ground) and not d.get("crisp")   # crisp — мощёный город
+        for code, n in counts.items():
+            if code in self.wallsets or code in "x_" or not self._tiles.get(code):
+                continue
+            avg = pygame.transform.average_color(self._tiles[code][0])
+            if avg[2] > avg[0] + 25:              # вода — свой берег (_shore), и в подземелье тоже (канал, сток)
+                self._water.add(code)
+                continue
+            if code in self._piers:               # причал стоит над водой — без берега и размытия
+                continue
+            if outdoor:
                 self._feather[code] = n
+        self._indoor_water = not outdoor and any("_" in row for row in self.ground)   # канал в подземелье — ровная кладка
+        self._water_land = {c for c in counts if c not in self._water and c not in self.wallsets
+                            and c not in "x_" and self._tiles.get(c)}
         global _VOID
         if _VOID is None:
             _VOID = pygame.Surface((T, T))
@@ -576,7 +580,7 @@ class TownMap(MapBase):
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < self.width and 0 <= ny < self.height:
                     c = self.ground[ny][nx]
-                    if (c in self._water) != wet and (c in self._feather or c in self._water) \
+                    if (c in self._water) != wet and (c in self._water_land or c in self._water) \
                             and c not in self._piers and code not in self._piers:
                         return True
         return False
@@ -608,7 +612,7 @@ class TownMap(MapBase):
              if 0 <= x + dx < self.width and 0 <= y + dy < self.height and self.ground[y + dy][x + dx] in self._water), code)
         lc = code if code not in self._water else next(
             (self.ground[y + dy][x + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1)
-             if 0 <= x + dx < self.width and 0 <= y + dy < self.height and self.ground[y + dy][x + dx] in self._feather), code)
+             if 0 <= x + dx < self.width and 0 <= y + dy < self.height and self.ground[y + dy][x + dx] in self._water_land), code)
         water = self._tiles[wc][h % len(self._tiles[wc])]
         land = self._feathered(x, y, lc) if code not in self._water and lc in self._feather else \
             self._tiles[lc][h % len(self._tiles[lc])] if self._tiles.get(lc) else self._raw_tile(x, y)
@@ -623,6 +627,25 @@ class TownMap(MapBase):
                 val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
                        + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
                 wx, wy = x * T + px, y * T + py
+                if self._indoor_water:                          # канал: прямая каменная кромка, без пены и песка
+                    cell = self.ground[min(self.height - 1, max(0, (wy) // T))][min(self.width - 1, max(0, wx // T))]
+                    if cell in self._water:
+                        edge = min(abs(((wx // T) - x) * T + px - (0 if (x - 1, y) else 0)), 99)
+                        c = water.get_at((px, py))
+                        near_land = any(self.ground[ny][nx] not in self._water
+                                        for nx, ny in ((wx // T + dx, wy // T + dy) for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)))
+                                        if 0 <= nx < self.width and 0 <= ny < self.height)
+                        out.fill(c, (px, py, B, B))
+                        lx, ly = px, py
+                        dl = min([lx if (x - 1 >= 0 and self.ground[y][x - 1] not in self._water) else 99,
+                                  T - 1 - lx if (x + 1 < self.width and self.ground[y][x + 1] not in self._water) else 99,
+                                  ly if (y - 1 >= 0 and self.ground[y - 1][x] not in self._water) else 99,
+                                  T - 1 - ly if (y + 1 < self.height and self.ground[y + 1][x] not in self._water) else 99])
+                        if dl < 4:
+                            out.fill((52, 50, 48), (px, py, B, B))           # кромка кладки
+                        elif dl < 10:
+                            out.fill((int(c[0] * 0.7), int(c[1] * 0.75), int(c[2] * 0.85)), (px, py, B, B))   # тень у стенки
+                    continue
                 val += 0.05 * math.sin(wx * 0.11 + wy * 0.05) + 0.035 * math.sin(wx * 0.043 - wy * 0.13) \
                     + 0.02 * math.sin((wx + 2 * wy) * 0.29)
                 if val >= 0.5:                                  # вода

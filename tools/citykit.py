@@ -365,17 +365,17 @@ class City:
                 continue
             walk = sum(1 for y in range(m.H) for x in range(m.W)
                        if m.ground[y][x] in m.floors and (x, y) not in m.blocked)
-            if not walk or 100 * len(m.props) / walk >= 4:
+            if not walk or 100 * len(m.props) / walk >= 7:
                 continue
             style = ("tech" if m.id.startswith(TECH) else "sewer" if m.id.startswith(SEWER)
                      else "cave" if m.id.startswith(CAVE) else "home")
             cave = [[("rock", 0, 0), ("stones_12", 2, 1)], [("bones_a" if "bones_a" in P.CATALOG else "r_bones", 0, 0), ("rock", 2, 0)],
                     [("stones_19", 0, 0), ("x_puddle", 1, 1)], [("crate_b", 0, 0), ("pickaxe", 1, 0), ("sack", 0, 1)]]
             scenes = {"tech": lambda: tech_scenes(self, f"{self.id}_f"), "sewer": lambda: sewer, "cave": lambda: cave,
-                      "home": lambda: home}[style]()
+                      "home": lambda: home_scenes(self, f"{self.id}_f") + home}[style]()
             fl = "".join(m.floors) or m.ground[m.H // 2][m.W // 2]
             n = m.dress_empty(scenes, ground=fl, block=6, margin=1, chance=0.75, max_uses=3)
-            if style in ("home", "tech") and 100 * len(m.props) / walk < 5:   # вдоль стен — как в настоящей комнате
+            if style in ("home", "tech") and 100 * len(m.props) / walk < 8:   # вдоль стен — как в настоящей комнате
                 along = {"home": (["shelf_wood", "wardrobe", "cabinet_small", "shelf_stuff_1", "glass_cabinet", "filecab_1"],
                                   ["barrel_wood", "crate", "sack", "crate_b"]),
                          "tech": (["locker_1", "locker_2", "locker_double", "metal_shelf", "filecab_2", "shelf_metal_tall"],
@@ -409,6 +409,31 @@ class City:
                   f"доступно клеток {len(reach)}")
         with open(loc_path, "w", encoding="utf-8") as f:
             json.dump(locs, f, ensure_ascii=False, indent=2)
+
+
+def home_scenes(city, pre):
+    """Жилая комната / салун / контора: стол со стульями на коврике, шкаф и часы у стены, растение в углу,
+    бочки и ящики группой у входа в подсобку. Объекты — из набора wild-west (дерево) и базара (кадки)."""
+    def P(n, img, **kw):
+        name = f"{pre}_home_{n}"
+        city.prop(name, img, **kw)
+        return name
+    rug = P("rug", "pk:west/west_2_060", block=False, layer="floor", keybg=True)
+    table = P("table", "pk:west/west_2_000", foot=[2, 1])
+    chair = P("chair", "pk:west/west_2_001")
+    poker = P("poker", "pk:west/west_2_020", foot=[2, 1])
+    shelf = P("shelf", "pk:west/west_2_110", sight=True)
+    books = P("books", "pk:west/west_2_116", sight=True)
+    clock = P("clock", "pk:west/west_2_019", sight=True)
+    plant = P("plant", "pk:bazaar/bazaar_3_206")
+    lamp = "lantern_lit"
+    return [
+        [(rug, 0, 1), (table, 0, 1), (chair, 2, 1), (chair, 0, 2)],
+        [(rug, 1, 0), (poker, 1, 0), (chair, 0, 0), (chair, 3, 0)],
+        [(shelf, 0, 0), (clock, 2, 0), (plant, 3, 0)],
+        [(books, 0, 0), (lamp, 2, 0), (plant, 0, 2)],
+        [("barrel_wood", 0, 0), ("crate", 1, 0), ("crate_b", 0, 1), ("sack", 2, 1)],
+    ]
 
 
 def tech_scenes(city, pre):
