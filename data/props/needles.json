@@ -696,55 +696,96 @@
 "flicker": 0.4
 }
 },
-"needles_f_home_rug": {
-"img": "pk:west/west_2_060",
+"nd_station_sign": {
+"img": "pk:wrail/p2/0,8,4,2",
+"block": false,
+"sight": false
+},
+"nd_delayed": {
+"img": "pk:wrail/p2/10,0,2,1",
+"block": false,
+"sight": false
+},
+"nd_win_broken": {
+"img": "pk:wrail/p2/6,0,2,2",
+"block": false,
+"sight": false
+},
+"nd_win_broken_b": {
+"img": "pk:wrail/p2/8,2,2,2",
+"block": false,
+"sight": false
+},
+"nd_seats": {
+"img": "pk:wrail/p2/4,0,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_seat_fallen": {
+"img": "pk:wrail/p2/2,4,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_luggage": {
+"img": "pk:wrail/p2/0,12,1,1",
+"block": true,
+"sight": false
+},
+"nd_luggage_b": {
+"img": "pk:wrail/p2/2,12,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_luggage_c": {
+"img": "pk:wrail/p2/2,13,1,1",
+"block": true,
+"sight": false
+},
+"nd_oars": {
+"img": "pk:fishv/p1/2,6,2,2",
+"block": false,
+"sight": false
+},
+"nd_basket": {
+"img": "pk:fishv/p1/12,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_crate_fish": {
+"img": "pk:fishv/p2/4,0,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_runner": {
+"img": "pk:west/west_2_061",
 "block": false,
 "sight": false,
+"foot": [
+2,
+2
+],
 "layer": "floor",
-"keybg": true
-},
-"needles_f_home_table": {
-"img": "pk:west/west_2_000",
-"block": true,
-"sight": false,
-"foot": [
-2,
-1
-]
-},
-"needles_f_home_chair": {
-"img": "pk:west/west_2_001",
-"block": true,
-"sight": false
-},
-"needles_f_home_poker": {
-"img": "pk:west/west_2_020",
-"block": true,
-"sight": false,
-"foot": [
-2,
-1
-]
-},
-"needles_f_home_shelf": {
-"img": "pk:west/west_2_110",
-"block": true,
-"sight": true
-},
-"needles_f_home_books": {
-"img": "pk:west/west_2_116",
-"block": true,
-"sight": true
-},
-"needles_f_home_clock": {
-"img": "pk:west/west_2_019",
-"block": true,
-"sight": true
-},
-"needles_f_home_plant": {
-"img": "pk:bazaar/bazaar_3_206",
-"block": true,
-"sight": false
+"scale": 1.15
 }
 }
 }

@@ -429,6 +429,23 @@ dp.box(CRATE, 22, 16, "почтовый мешок 2077 года", {"письм�
                                                     "кинолента «Пески Мохаве»": 1})
 dp.put(BARRELS, 26, 16)
 dp.enemies += [["river_lizard", 24, 10], ["river_lizard", 27, 12], ["radroach", 23, 14]]
+# вокзал (набор railway-station): табло и окна на стене, мусор, перевёрнутые стулья, чемоданы
+STATION_SIGN = P("nd_station_sign", "pk:wrail/p2/0,8,4,2", block=False)
+DELAYED = P("nd_delayed", "pk:wrail/p2/10,0,2,1", block=False)
+WIN_BROKEN = [P("nd_win_broken", "pk:wrail/p2/6,0,2,2", block=False), P("nd_win_broken_b", "pk:wrail/p2/8,2,2,2", block=False)]
+SEATS = [P("nd_seats", "pk:wrail/p2/4,0,2,1", foot=[2, 1]), P("nd_seat_fallen", "pk:wrail/p2/2,4,2,1", foot=[2, 1])]
+LUGGAGE = [P("nd_luggage", "pk:wrail/p2/0,12,1,1"), P("nd_luggage_b", "pk:wrail/p2/2,12,2,1", foot=[2, 1]),
+           P("nd_luggage_c", "pk:wrail/p2/2,13,1,1")]
+dp.props.append([STATION_SIGN, 8, 3, 0, -6])
+dp.props.append([DELAYED, 15, 3, 0, -20])
+for i, x in enumerate((3, 17, 23, 26)):
+    dp.props.append([WIN_BROKEN[i % 2], x, 3, 0, -6])
+for x, y in ((4, 15), (16, 15), (10, 16)):
+    dp.maybe(SEATS[(x + y) % 2], x, y)
+for i, (x, y) in enumerate(((21, 7), (28, 8), (23, 18), (28, 15), (6, 17))):
+    dp.maybe(LUGGAGE[i % 3], x, y)
+for x, y in ((12, 14), (18, 6), (2, 10)):
+    dp.maybe("pile_bottles" if x % 2 else "r_trash", x, y)
 
 # ================================================================ лавка
 sh = CityMap(city, "needles_shop", "Лавка «Всё для реки»", 16, 16, start=(7, 13), seed=95, interior=True, music="hub")
@@ -447,6 +464,17 @@ sh.put(NET, 12, 6)
 sh.put(BARREL, 2, 12)
 sh.put(CRATE, 13, 12)
 sh.npcs += [["shopkeeper_rosa", 7, 6]]
+# лавка речника: вёсла и сети на стене, бочки и корзины у прилавка, кадка у двери
+OARS = P("nd_oars", "pk:fishv/p1/2,6,2,2", block=False)
+BASKET = P("nd_basket", "pk:fishv/p1/12,2,2,2", foot=[2, 1])
+CRATE_FISH = P("nd_crate_fish", "pk:fishv/p2/4,0,2,1", foot=[2, 1])
+sh.props.append([OARS, 12, 3, 0, -10])
+sh.props.append(["nd_window", 8, 3, 0, -14])
+sh.maybe(BASKET, 2, 9)
+sh.maybe(CRATE_FISH, 11, 10)
+sh.maybe("nd_plant", 13, 14)
+sh.maybe("nd_plant_b", 2, 14)
+sh.props.append(["nd_rug_red", 7, 11, 0, 0])
 
 # ================================================================ церковь
 ch = CityMap(city, "needles_church", "Церковь проповедника Эли", 16, 16, start=(8, 13), seed=96, interior=True,
@@ -464,7 +492,18 @@ for y in (7, 9, 11):
     ch.put("bench_7", 3, y)
     ch.put("bench_7", 10, y)
 ch.box("cabinet_small", 13, 4, "ящик для пожертвований", {"крышки": 35, "бинт": 1})
-ch.npcs += [["noa_runaway", 2, 5]]         # беглянка из конвоя культа прячется за кафедрой
+ch.npcs += [["noa_runaway", 2, 5]]
+# церковь: дорожка-ковёр от двери к кафедре, окна с занавесями, распятие и свечи, кадки
+RUNNER = P("nd_runner", "pk:west/west_2_061", block=False, layer="floor", foot=[2, 2], scale=1.15)
+for y in (6, 8, 10, 12):
+    ch.props.append([RUNNER, 7, y])
+for x in (3, 12):
+    ch.props.append(["nd_window", x, 3, 0, -14])
+ch.props.append(["x_cross", 7, 3, 24, -20])
+for x, y in ((2, 13), (13, 13)):
+    ch.maybe("nd_plant_c", x, y)
+for x, y in ((4, 4), (11, 4)):
+    ch.maybe("lantern_lit", x, y)         # беглянка из конвоя культа прячется за кафедрой
 
 city.save(gap_exempt=("captain_morrow", "river_guard", "barkeep_ned", "gambler_lou", "river_guard_off",
                       "kate", "fisher_joe", "fishmonger", "shopkeeper_rosa"))

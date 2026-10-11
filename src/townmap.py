@@ -213,6 +213,29 @@ def _even_tone(tiles):
 WALL_LIFT = T   # стены высотой в две клетки: верх стены на клетку выше её основания
 
 
+_ROOF_TEX = {}
+ROOF_TEXTURES = {"planks": ["pk:fishv/p3/9,0,1,1"],
+                 "concrete": ["pk:mbase/p1/0,0,1,1", "pk:mbase/p1/1,0,1,1"],
+                 "metal": ["pk:mbase/p1/4,0,1,1", "pk:mbase/p1/5,0,1,1"],
+                 "brick": ["pk:wrail/p1/2,3,1,1", "pk:wrail/p1/3,3,1,1"]}
+ROOF_TINT = {"brick": (200, 175, 150), "concrete": (225, 222, 215), "metal": (235, 225, 215), "planks": (230, 220, 210)}
+
+
+def _roof_texture(style):
+    """Плитки крыши из наборов (src/townmap.py ROOF_TEXTURES); None — нет набора, рисуется шумом."""
+    if style not in _ROOF_TEX:
+        try:
+            out = []
+            for ref in ROOF_TEXTURES.get(style, []):
+                t = pygame.transform.scale(P.pack_image(ref), (T, T)).convert()
+                t.fill(ROOF_TINT.get(style, (255, 255, 255)), special_flags=pygame.BLEND_RGB_MULT)
+                out.append(t)
+            _ROOF_TEX[style] = out or None
+        except Exception:      # набора нет в сборке — шум, как раньше
+            _ROOF_TEX[style] = None
+    return _ROOF_TEX[style]
+
+
 def _roof_image(r):
     """Крыша по стилю здания, в пиксель-арте 2×2: рубероид с гравием и вентиляцией (кирпич),
     ржавый профнастил (металл), доски (дерево), бетонная плита (бетон). С парапетом."""
@@ -224,7 +247,13 @@ def _roof_image(r):
            "metal": [(116, 70, 48), (128, 80, 54), (104, 62, 44), (138, 90, 60)],
            "planks": [(104, 78, 54), (112, 84, 58), (96, 72, 50), (120, 90, 62)]}[style]
     img = pygame.Surface((w, h), pygame.SRCALPHA)
-    for y in range(0, h, 2):
+    tex = _roof_texture(style)
+    if tex is not None:          # крыша из настоящей текстуры набора (доски, бетонные плиты, ржавый лист, гудрон)
+        for y in range(0, h, T):
+            for x in range(0, w, T):
+                img.blit(tex[((x // T) * 7 + (y // T) * 3 + r["seed"]) % len(tex)], (x, y))
+        pal = [tuple(pygame.transform.average_color(tex[0])[:3])] * 4
+    for y in range(0, h, 2) if tex is None else ():
         for x in range(0, w, 2):
             c = rnd.choice(pal)
             if style == "metal":                      # профнастил: продольные волны
@@ -237,11 +266,11 @@ def _roof_image(r):
                 elif (x + (y // 16) * 37) % 96 < 2:
                     c = (70, 52, 36)
             img.fill(c, (x, y, 2, 2))
-    if style in ("brick", "concrete"):                # гравий и пятна
+    if style in ("brick", "concrete") and tex is None:   # гравий и пятна
         for _ in range(w * h // 900):
             x, y = rnd.randrange(0, w - 6, 2), rnd.randrange(0, h - 6, 2)
             img.fill(tuple(max(0, v - 18) for v in pal[0]), (x, y, rnd.choice((4, 6, 8)), rnd.choice((2, 4))))
-    if style == "metal":                              # ржавые потёки
+    if style == "metal" and tex is None:              # ржавые потёки
         for _ in range(w // 40):
             x = rnd.randrange(0, w, 2)
             img.fill((90, 48, 32), (x, rnd.randrange(0, h // 2), 2, rnd.randrange(h // 4, h // 2)))
