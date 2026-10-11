@@ -165,28 +165,6 @@
 "search": "crate",
 "title": "ящик"
 },
-"nd_lantern_post": {
-"img": "pk:fishv/p4/14,8,1,2",
-"block": true,
-"sight": false,
-"foot": [
-1,
-1
-],
-"light": {
-"r": 160,
-"color": [
-255,
-170,
-90
-],
-"at": [
-0.6,
-0.15
-],
-"flicker": 0.3
-}
-},
 "nd_wreck": {
 "img": "pk:fishv/fishv_1_000",
 "block": true,
@@ -443,6 +421,143 @@
 "sight": false,
 "search": "bag",
 "title": "чемоданы"
+},
+"nd_pile": {
+"img": "pk:fishv/p1/9,15,1,1",
+"block": false,
+"sight": false
+},
+"nd_track": {
+"img": "pk:wrail/p1/4,4,4,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"nd_freight": {
+"img": "pk:wrail/p1/10,12,2,1",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"scale": 1.5
+},
+"nd_fence": {
+"img": "pk:fishv/p4/12,0,4,1",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+],
+"keybg": true
+},
+"nd_rack_fish": {
+"img": "pk:fishv/p1/6,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_rack_fish_b": {
+"img": "pk:fishv/p1/8,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_net_rack": {
+"img": "pk:fishv/p2/12,4,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"nd_gull": {
+"img": "pk:fishv/p4/14,1,1,1",
+"block": false,
+"sight": false
+},
+"nd_gull_b": {
+"img": "pk:fishv/p4/12,2,1,1",
+"block": false,
+"sight": false
+},
+"nd_rowboat": {
+"img": "pk:fishv/p2/6,12,2,4",
+"block": false,
+"sight": false,
+"foot": [
+2,
+3
+],
+"layer": "floor"
+},
+"nd_ferry": {
+"img": "pk:fishv/p4/12,4,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor",
+"keybg": true
+},
+"nd_skiff": {
+"img": "pk:fishv/p4/12,6,4,2",
+"block": false,
+"sight": false,
+"foot": [
+4,
+2
+],
+"layer": "floor",
+"keybg": true
+},
+"nd_rock": {
+"img": "pk:fishv/p3/9,6,1,1",
+"block": true,
+"sight": false
+},
+"nd_rock_b": {
+"img": "pk:fishv/p3/13,3,1,1",
+"block": true,
+"sight": false
+},
+"nd_rock_c": {
+"img": "pk:fishv/p3/11,13,1,2",
+"block": true,
+"sight": false
+},
+"nd_boathouse_big": {
+"img": "pk:fishv/p4/12,12,4,4",
+"block": true,
+"sight": true,
+"foot": [
+6,
+3
+],
+"scale": 1.6,
+"keybg": true
+},
+"nd_fisher_hut": {
+"img": "pk:fishv/p4/12,8,2,3",
+"block": true,
+"sight": true,
+"foot": [
+3,
+2
+],
+"scale": 1.6,
+"keybg": true
 }
 }
 }

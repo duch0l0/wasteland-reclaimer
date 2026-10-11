@@ -52,8 +52,7 @@ FISH_RACK_B = P("nd_fish_rack_b", "pk:fishv/fishv_1_108", foot=[2, 1])
 ANCHOR = P("nd_anchor", "pk:fishv/fishv_1_027")
 BARREL = P("nd_barrel", "pk:fishv/fishv_1_057", search="junk", title="бочка")
 CRATE = P("nd_crate", "pk:fishv/fishv_1_059", search="crate", title="ящик")
-LANTERN_POST = P("nd_lantern_post", "pk:fishv/p4/14,8,1,2", foot=[1, 1],
-                 light={"r": 160, "color": [255, 170, 90], "at": [0.6, 0.15], "flicker": 0.3})
+LANTERN_POST = "lamp_post"                                  # высокий уличный фонарь (свет описан в каталоге)
 WRECK = P("nd_wreck", "pk:fishv/fishv_1_000", foot=[2, 1])
 CONT_R = P("nd_container_r", "pk:wport/wport_2_007", foot=[3, 2], sight=True)
 CONT_B = P("nd_container_b", "pk:wport/wport_2_010", foot=[3, 2], sight=True)
@@ -119,31 +118,68 @@ def pier(m, x0, y0, x1, y1):
 
 
 # ================================================================ Пристань
+# Собрано по превью набора «рыбацкая деревня»: изогнутый берег, дощатая набережная у воды, причалы с лодками,
+# рыбный рынок у причала, лодочный сарай и хижины на берегу (не в воде!), рельсы у вокзала.
+import math as _m
+
 W, H = 72, 50
 n = CityMap(city, "needles", "Нидлс: Пристань", W, H, start=(2, 24), seed=91, music="hub",
             world_pos=(2470, 1470))
 n.floor_code("s", *SAND)
 n.floor_code("t", *DIRT)
-n.floor_code("w", *PLANK)
-n.piers = ("w",)                                         # доски причала — над водой
+n.floor_code("w", "pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1")   # доски набережной
+n.piers = ("w",)
 n.floor_code("~", *WATER)
 n.floor_code("≈", *DEEP)
+n.water_codes = ("~", "≈")
 n.paint("s", 0, 0, W - 1, H - 1)
+
+
+def bank(y):
+    """Первая клетка воды в строке y: берег Колорадо гуляет плавно."""
+    return int(round(56 + 1.8 * _m.sin(y / 5.0) + 1.0 * _m.sin(y / 2.3 + 2)))
+
+
+for y in range(H):
+    for x in range(bank(y), W):
+        n.ground[y][x] = "≈" if x >= bank(y) + 4 else "~"
+        n.blocked.add((x, y))
+# мыс с маяком на севере — суша выдаётся в реку
+for y in range(7, 14):
+    for x in range(bank(y), bank(y) + 5 - abs(y - 10)):
+        n.ground[y][x] = "s"
+        n.blocked.discard((x, y))
+# набережная: дощатый настил вдоль воды напротив города
+for y in range(18, 38):
+    for x in range(bank(y) - 3, bank(y)):
+        n.ground[y][x] = "w"
+
+
+def pier(y0, y1, x1):
+    for y in range(y0, y1 + 1):
+        for x in range(bank(y) - 1, x1 + 1):
+            n.ground[y][x] = "w"
+            n.blocked.discard((x, y))
+    for y in (y0 - 1, y1 + 1):                    # сваи вдоль причала
+        for x in range(bank(y) + 1, x1 + 1, 3):
+            n.props.append(["nd_pile", x, y])
+
+
+P("nd_pile", "pk:fishv/p1/9,15,1,1", block=False)
+pier(23, 25, 63)                                   # главный причал — паром Кейт
+pier(33, 34, 60)                                   # рыбацкие мостки
+n._reach = None
+
 n.exits = [(0, y) for y in range(23, 27)]
-n.paint("a", 0, 23, 12, 26)                             # I-40 с запада
+n.paint("a", 0, 23, 12, 26)                        # I-40 с запада
 for x in range(0, 12, 4):
     n.ground[24][x] = n.ground[24][x + 1] = "h"
-n.paint("t", 13, 22, 52, 27)                            # Главная улица — укатанная земля
-n.paint("t", 30, 8, 31, 21)                             # дорога к станции
-n.paint("t", 44, 4, 46, 21)                             # дорога вдоль реки к мосту
-river(n, 56, 0, W - 1, H - 1)                           # Колорадо
-n.paint("w", 53, 22, 55, 27)                            # набережная
-pier(n, 56, 23, 63, 25)                                 # главный причал
-pier(n, 56, 33, 60, 34)                                 # рыбацкие мостки
-pier(n, 56, 14, 58, 16)
-n.reserve(0, 22, 55, 27)          # сама улица; дома стоят вдоль неё
+n.paint("t", 13, 22, bank(24) - 4, 27)             # Главная улица — до набережной
+n.paint("t", 30, 8, 31, 21)                        # к вокзалу
+n.paint("t", 44, 0, 46, 21)                        # вдоль реки к мосту
+n.reserve(0, 22, 55, 27)
 n.reserve(29, 8, 32, 21)
-n.reserve(43, 3, 47, 21)
+n.reserve(43, 0, 47, 21)
 n.portal([(x, 0) for x in (44, 45, 46)], "needles_bridge", (6, 15), "Мост через Колорадо")
 
 n.npcs += [["kate", 62, 24], ["fisher_joe", 59, 33], ["morrow_scout", 45, 6], ["preacher_eli", 17, 32],
@@ -151,73 +187,121 @@ n.npcs += [["kate", 62, 24], ["fisher_joe", 59, 33], ["morrow_scout", 45, 6], ["
 for _, x, y in n.npcs:
     n.reserve(x, y, x, y)
 
-# станция Санта-Фе (север): кирпичный вокзал, вход посередине южной стены; пути и вагоны западнее
+# ---- вокзал Санта-Фе и пути: рельсы упираются в перрон у западной стены вокзала
 n.building(24, 1, 16, 7, "brick", south=(6,))
 n.portal([(30, 7), (31, 7)], "needles_depot", (14, 17), "Вокзал Санта-Фе")
+TRACK = P("nd_track", "pk:wrail/p1/4,4,4,2", block=False, layer="floor")
+for x in range(0, 24, 4):
+    n.props.append([TRACK, x, 3])
+WAGON = P("nd_freight", "pk:wrail/p1/10,12,2,1", foot=[2, 1], sight=True, scale=1.5)
+n.put(WAGON, 4, 3, check=False)
+n.put(WAGON, 8, 3, check=False)
 n.put(BENCH, 26, 9)
 n.put(BENCH, 36, 9)
-n.put(RAIL_WAGON, 14, 3)
-n.put(RAIL_WAGON, 17, 3)
+n.maybe(LANTERN_POST, 28, 9)
+n.maybe(LANTERN_POST, 34, 9)
 n.put(STAGECOACH, 18, 8)
+n.put(TROUGH, 15, 9)
+# склад речников у дороги к мосту
+n.put(CONT_R, 35, 11)
+n.put(CONT_B, 38, 11)
+n.put(BARRELS, 35, 14, allow_reserved=False) if False else None
+n.box(JUNK, 41, 13, "куча хлама у склада", {"гаечный ключ": 1, "изолента": 1, "моторное масло": 1})
+n.put(TRUCK, 48, 7)
+n.put(CRANE, 49, 13)
+n.put(TIRES, 48, 18)
 
-# Главная улица, северная сторона: салун, лавка, контора Речной стражи — двери на улицу
-n.building(13, 13, 10, 9, "planks", south=(4,))           # салун «Последний паром»
+# ---- Главная улица: северная сторона — салун, лавка, контора стражи
+n.building(13, 13, 10, 9, "planks", south=(4,))
 n.portal([(17, 21), (18, 21)], "needles_saloon", (13, 21), "Салун «Последний паром»")
-n.building(25, 14, 8, 8, "planks", south=(2,))            # лавка
+n.building(25, 14, 8, 8, "planks", south=(2,))
 n.portal([(27, 21), (28, 21)], "needles_shop", (7, 13), "Лавка «Всё для реки»")
-n.building(35, 15, 8, 7, "brick", south=(2,))             # контора Речной стражи (заперта)
-n.put(TROUGH, 11, 20)                                     # поилка у салуна
+n.building(35, 15, 8, 7, "brick", south=(2,))
+n.put(TROUGH, 11, 20)
 n.put(WEST_SIGN, 23, 20)
 n.box(CRATE, 33, 20, "ящик у лавки", {"консервы": 2, "верёвка": 1, "крышки": 10})
-# южная сторона: церковь Эли и дома, двери на улицу (в северной стене)
-n.building(14, 29, 8, 8, "planks", north=(2,))            # церковь
-n.put("x_cross", 15, 38)
+for x in (12, 24, 33, 43):                         # фонари по обеим сторонам улицы
+    n.maybe(LANTERN_POST, x, 22, allow_reserved=True)
+for x in (12, 23, 33, 46):
+    n.maybe(LANTERN_POST, x, 27, allow_reserved=True)
+# ---- южная сторона: церковь, дома; за ними — дворы с заборами и кладбище
+n.building(14, 29, 8, 8, "planks", north=(2,))
 n.portal([(16, 29), (17, 29)], "needles_church", (8, 13), "Церковь")
 n.building(24, 29, 8, 7, "planks", north=(2,))
 n.building(34, 30, 8, 7, "brick", north=(2,))
 n.box("wardrobe", 26, 33, "шкаф в доме рыбака", {"ткань": 2, "крышки": 8})
-# набережная и рынок: прилавки рядом, бочки и сети у воды
-n.put(FISH_STALL, 47, 28)
-n.put(FISH_STALL_B, 50, 28)
-n.put(MEAT_STALL, 47, 32)
-n.put(FISH_RACK, 51, 34)
-n.put(FISH_RACK_B, 48, 35)
+FENCE_W = P("nd_fence", "pk:fishv/p4/12,0,4,1", foot=[4, 1], keybg=True)
+n.hwall([FENCE_W], 12, 42, 39, gaps=(23, 33))      # дворы за домами
+for i, (x, y) in enumerate(((14, 41), (16, 41), (18, 41), (14, 43), (16, 43), (18, 43))):
+    n.put("x_cross" if i % 2 else "x_grave", x, y)   # кладбище за церковью
+n.put("x_cross", 15, 38)
+for x, y in ((26, 41), (36, 41)):                  # огороды и бочки во дворах
+    n.put(BARREL, x, y) if False else n.maybe("barrel_wood", x, y)
+n.maybe(FISH_RACK, 28, 41)
+n.maybe(FISH_RACK_B, 38, 41)
+
+# ---- набережная и рыбный рынок: прилавки рядами вдоль прохода к причалу
+for name, x, y in ((FISH_STALL, 44, 29), (FISH_STALL_B, 47, 29), (MEAT_STALL, 44, 32), (FISH_STALL, 47, 32)):
+    n.put(name, x, y)
+RACKS = [P("nd_rack_fish", "pk:fishv/p1/6,10,2,2", foot=[2, 1]), P("nd_rack_fish_b", "pk:fishv/p1/8,10,2,2", foot=[2, 1])]
+for i, x in enumerate((44, 47)):
+    n.put(RACKS[i], x, 35)
 n.box(BARREL, 53, 29, "бочка с рыбой", {"вяленое мясо": 2})
-n.put(NET, 54, 31)
-n.put(ANCHOR, 54, 21)
-n.put(LANTERN_POST, 53, 21)
-n.put(LANTERN_POST, 53, 28)
-# лодочные сараи и рыбацкие мостки — южнее
-n.put(HOUSE_W, 44, 37)                                     # рыбацкие хижины у воды
-n.put(HOUSE_T2, 44, 41)
-n.put(SHED, 50, 38)
-n.put(SHED_B, 53, 41)
-n.put(WRECK, 47, 44)
-n.put(BOAT, 61, 33, force=True)
-n.put(BOAT_B, 57, 36, force=True)
-# паром Мамаши Кейт у главного причала, лодки у мостков
-n.put(SAILBOAT, 64, 22, force=True)
-n.put(BOAT, 58, 27, force=True)
-n.floor_code("r", "pk:desnat/p1/0,0,1,1")          # каменистый мысок под маяком (не вода)
-for x in range(55, 60):
-    for y in range(14, 18):
-        if (x - 57) ** 2 + (y - 15.5) ** 2 <= 5:
-            n.ground[y][x] = "s"
-            n.blocked.discard((x, y))
-n.put(LIGHTHOUSE, 57, 15, force=True)  # маяк на мысу к северу от причала
-# склад речников между вокзалом и дорогой к мосту: два контейнера в ряд, бочки и хлам перед ними
-n.put(CONT_R, 34, 10)
-n.put(CONT_B, 38, 10)
-n.put(BARRELS, 35, 13)
-n.box(JUNK, 39, 13, "куча хлама у склада", {"гаечный ключ": 1, "изолента": 1, "моторное масло": 1})
-# у реки, за дорогой к мосту: грузовик и портовый кран
-n.put(TRUCK, 48, 8)
-n.put(CRANE, 50, 12)
-n.put(TIRES, 49, 17)
-# пустыня на западе
-n.scatter([CACTUS, CACTUS_B, TUMBLE], 1, 1, 22, 20, 10)
-n.scatter([CACTUS, CACTUS_B, TUMBLE, "r_rocks"], 1, 30, 45, H - 2, 12)
+for x, y in ((52, 31), (53, 36), (52, 19)):
+    n.maybe("nd_barrel_plain", x, y) if False else n.maybe(CRATE, x, y)
+NETS = P("nd_net_rack", "pk:fishv/p2/12,4,2,2", foot=[2, 1])
+n.maybe(NETS, 50, 35)
+n.put(ANCHOR, 50, 20)
+for y in (21, 28):
+    n.maybe(LANTERN_POST, bank(y) - 3, y, allow_reserved=True)
+GULL = P("nd_gull", "pk:fishv/p4/14,1,1,1", block=False)
+GULL_B = P("nd_gull_b", "pk:fishv/p4/12,2,1,1", block=False)
+for x, y in ((55, 26), (52, 33), (58, 12)):
+    n.maybe(GULL if x % 2 else GULL_B, x, y)
+
+# ---- лодки: у причалов на воде; паром Кейт — у главного причала
+ROWBOAT = P("nd_rowboat", "pk:fishv/p2/6,12,2,4", foot=[2, 3], block=False, layer="floor")
+FERRY = P("nd_ferry", "pk:fishv/p4/12,4,4,2", foot=[4, 2], block=False, layer="floor", keybg=True)
+SKIFF = P("nd_skiff", "pk:fishv/p4/12,6,4,2", foot=[4, 2], block=False, layer="floor", keybg=True)
+n.put(FERRY, 59, 20, force=True)
+n.put(ROWBOAT, 60, 26, force=True)
+n.put(SKIFF, 56, 35, force=True)
+n.put(ROWBOAT, 62, 30, force=True)
+
+# ---- маяк на мысу, камни у воды
+n.put(LIGHTHOUSE, bank(10) + 1, 9, force=True)
+ROCKS_W = [P("nd_rock", "pk:fishv/p3/9,6,1,1"), P("nd_rock_b", "pk:fishv/p3/13,3,1,1"), P("nd_rock_c", "pk:fishv/p3/11,13,1,2")]
+for i, (x, y) in enumerate(((bank(8), 8), (bank(12) + 1, 12), (bank(11) + 2, 11))):
+    n.maybe(ROCKS_W[i], x, y)
+
+# ---- южный берег: лодочный сарай и хижины на песке, лодки вытащены на берег
+BOATHOUSE = P("nd_boathouse_big", "pk:fishv/p4/12,12,4,4", foot=[6, 3], sight=True, scale=1.6, keybg=True)
+HUT = P("nd_fisher_hut", "pk:fishv/p4/12,8,2,3", foot=[3, 2], sight=True, scale=1.6, keybg=True)
+n.put(BOATHOUSE, bank(42) - 8, 40)
+n.put(HUT, 44, 41)
+n.put(HUT, 41, 44)
+n.put(ROWBOAT, bank(45) - 3, 44)                     # вытащена на песок
+n.put(WRECK, 47, 46)
+n.maybe(NETS, 46, 44)
+n.maybe(BARREL, 43, 46) if False else n.maybe("barrel_wood", 43, 46)
+
+# ---- пустыня на западе: кустами и камнями группами, у трассы — щит и брошенная машина
+n.put("r_billboard", 6, 20)
+n.put("r_car_wreck", 3, 28)
+for cx, cy in ((4, 10), (8, 36), (3, 44), (20, 46), (32, 45)):
+    for dx, dy, nm in ((0, 0, CACTUS), (2, 1, "r_rocks"), (1, 2, CACTUS_B), (3, -1, TUMBLE)):
+        n.maybe(nm, cx + dx, cy + dy)
 n.enemies += [["river_lizard", 52, 47], ["rat", 8, 44], ["rat", 11, 46]]
+
+# ничего, кроме лодок, свай и чаек, не стоит в воде
+from src import props as _P  # noqa: E402
+for e in n.props:
+    if e[0] in (ROWBOAT, FERRY, SKIFF, "nd_pile", GULL, GULL_B, LIGHTHOUSE):
+        continue
+    if _P.CATALOG.get(e[0], {}).get("layer") == "floor":
+        continue
+    for t in n.footprint(e[0], e[1], e[2]):
+        assert n.ground[t[1]][t[0]] not in "~≈", f"needles: «{e[0]}» стоит в воде у {t}"
 
 
 # ================================================================ мост
