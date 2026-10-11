@@ -437,6 +437,176 @@
 "img": "pk:nbunk/nbunk_2_028",
 "block": true,
 "sight": false
+},
+"hb_adobe_red": {
+"img": "pk:destown/p3/0,0,3,3",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"scale": 1.25
+},
+"hb_adobe_red_b": {
+"img": "pk:destown/p3/4,0,3,3",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"scale": 1.25
+},
+"hb_adobe_red_c": {
+"img": "pk:destown/p3/0,4,3,3",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+],
+"scale": 1.25
+},
+"hb_adobe_sand": {
+"img": "pk:destown/p3/8,0,4,3",
+"block": true,
+"sight": true,
+"foot": [
+5,
+2
+],
+"scale": 1.25
+},
+"hb_adobe_sand_b": {
+"img": "pk:destown/p3/4,3,4,4",
+"block": true,
+"sight": true,
+"foot": [
+5,
+3
+],
+"scale": 1.25
+},
+"hb_big_tent": {
+"img": "pk:destown/p3/12,0,4,3",
+"block": true,
+"sight": true,
+"foot": [
+4,
+2
+]
+},
+"hb_awning": {
+"img": "pk:destown/p3/8,4,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"hb_yard_wall0": {
+"img": "pk:destown/p3/6,8,1,1",
+"block": true,
+"sight": false
+},
+"hb_yard_wall1": {
+"img": "pk:destown/p3/7,8,1,1",
+"block": true,
+"sight": false
+},
+"hb_yard_wall2": {
+"img": "pk:destown/p3/9,8,1,1",
+"block": true,
+"sight": false
+},
+"hb_yard_wall3": {
+"img": "pk:destown/p3/10,8,1,1",
+"block": true,
+"sight": false
+},
+"hb_jug0": {
+"img": "pk:destown/p3/3,5,1,1",
+"block": true,
+"sight": false
+},
+"hb_jug1": {
+"img": "pk:destown/p3/3,6,1,1",
+"block": true,
+"sight": false
+},
+"hb_jug2": {
+"img": "pk:destown/p3/7,6,1,1",
+"block": true,
+"sight": false
+},
+"hb_jug3": {
+"img": "pk:destown/p3/4,7,1,1",
+"block": true,
+"sight": false
+},
+"hb_jug4": {
+"img": "pk:destown/p3/2,10,1,1",
+"block": true,
+"sight": false
+},
+"hb_jug5": {
+"img": "pk:destown/p3/3,12,1,1",
+"block": true,
+"sight": false
+},
+"hb_pot_cactus": {
+"img": "pk:destown/p3/3,0,1,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"hb_pot_cactus_b": {
+"img": "pk:destown/p3/0,7,1,1",
+"block": true,
+"sight": false
+},
+"hb_pot_cactus_c": {
+"img": "pk:destown/p3/2,7,1,1",
+"block": true,
+"sight": false
+},
+"hb_hide": {
+"img": "pk:destown/p3/10,6,1,1",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"hb_small_well": {
+"img": "pk:destown/p3/8,9,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_firepit": {
+"img": "pk:destown/p3/11,12,1,1",
+"block": true,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
 }
 }
 }

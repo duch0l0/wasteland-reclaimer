@@ -194,6 +194,59 @@ hb.put(TIRES, 72, 22)
 hb.building(18, 44, 10, 8, "planks", north=(4,))
 hb.building(44, 44, 10, 8, "brick", north=(4,))
 hb.box("wardrobe", 46, 47, "шкаф горожанина", {"ткань": 2, "крышки": 15})
+# ---- глинобитные кварталы (набор desert-town): дома в рост героя, дворики со стенками, кувшины, навесы
+ADOBE = [P("hb_adobe_red", "pk:destown/p3/0,0,3,3", foot=[4, 2], sight=True, scale=1.25),
+         P("hb_adobe_red_b", "pk:destown/p3/4,0,3,3", foot=[4, 2], sight=True, scale=1.25),
+         P("hb_adobe_red_c", "pk:destown/p3/0,4,3,3", foot=[4, 2], sight=True, scale=1.25),
+         P("hb_adobe_sand", "pk:destown/p3/8,0,4,3", foot=[5, 2], sight=True, scale=1.25),
+         P("hb_adobe_sand_b", "pk:destown/p3/4,3,4,4", foot=[5, 3], sight=True, scale=1.25)]
+BIG_TENT = P("hb_big_tent", "pk:destown/p3/12,0,4,3", foot=[4, 2], sight=True)
+AWNING = P("hb_awning", "pk:destown/p3/8,4,4,2", foot=[4, 1], sight=True)
+YARD_WALL = [P(f"hb_yard_wall{i}", f"pk:destown/p3/{x},8,1,1") for i, x in enumerate((6, 7, 9, 10))]
+JUGS = [P(f"hb_jug{i}", f"pk:destown/p3/{x},{y},1,1", block=True) for i, (x, y) in
+        enumerate(((3, 5), (3, 6), (7, 6), (4, 7), (2, 10), (3, 12)))]
+POT_CACTUS = [P("hb_pot_cactus", "pk:destown/p3/3,0,1,2", foot=[1, 1]), P("hb_pot_cactus_b", "pk:destown/p3/0,7,1,1"),
+              P("hb_pot_cactus_c", "pk:destown/p3/2,7,1,1")]
+HIDE = P("hb_hide", "pk:destown/p3/10,6,1,1", block=False, layer="floor")
+SMALL_WELL = P("hb_small_well", "pk:destown/p3/8,9,2,1", foot=[2, 1])
+FIREPIT = P("hb_firepit", "pk:destown/p3/11,12,1,1", light={"r": 120, "color": [255, 150, 70], "at": [0.5, 0.5],
+                                                          "flicker": 0.35})
+
+
+def adobe_house(x, y, kind, wall=False, door_dx=1):
+    """Дом из самана: перед ним дворик (стенка из самана с проходом у двери), кувшины и кактус в горшке."""
+    if not hb.maybe(kind, x, y):
+        return False
+    fw, fh = P_.info(kind)["foot"]
+    yy = y + fh + 1
+    if wall:
+        for xx in range(x - 1, x + fw + 1):
+            if xx in (x + door_dx, x + door_dx + 1):
+                continue
+            hb.maybe(YARD_WALL[(xx + yy) % 4], xx, yy)
+    hb.maybe(JUGS[(x + y) % 6], x - 1, y + fh)
+    hb.maybe(POT_CACTUS[(x * 3 + y) % 3], x + fw, y + fh)
+    return True
+
+
+from src import props as P_  # noqa: E402
+# северо-запад: улочка у поста стражи
+for i, (x, y) in enumerate(((19, 4), (2, 17), (7, 18), (12, 17), (19, 17))):
+    adobe_house(x, y, ADOBE[i % 5])
+# северо-восток: квартал за «Соколом», большой шатёр торговцев, кострище
+for i, (x, y) in enumerate(((64, 2), (69, 2), (73, 6), (64, 8))):
+    adobe_house(x, y, ADOBE[(i + 2) % 5])
+hb.maybe(BIG_TENT, 64, 13)
+hb.maybe(FIREPIT, 69, 14)
+for x, y in ((67, 15), (71, 15)):
+    hb.maybe(JUGS[x % 6], x, y)
+# юг и юго-восток: дома вдоль дорожки к Старому городу, у караванного двора — навес с товаром
+for i, (x, y) in enumerate(((29, 44), (31, 50), (56, 49), (61, 50), (66, 50), (71, 49), (2, 49), (7, 51))):
+    adobe_house(x, y, ADOBE[(i + 1) % 5])
+hb.maybe(AWNING, 58, 45)
+hb.maybe(SMALL_WELL, 26, 38)
+for x, y in ((20, 38), (24, 40), (30, 37)):
+    hb.maybe(HIDE, x, y)
 hb.scatter(PALMS + ["r_dry_bush", "r_rocks"], 1, 1, W - 2, 5, 10)
 hb.scatter(["r_dry_bush", "r_rocks", "r_bones"], 1, 33, 34, H - 2, 10)
 
