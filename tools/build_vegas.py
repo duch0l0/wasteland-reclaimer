@@ -129,8 +129,8 @@ BIOHAZ = P("vg_biohazard", "pk:hosp/hosp_1_012")
 
 ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
-RUBBLE_FL = ["pk:zcity/zcity_f2_26"]
-DIRT = ["pk:zcity/zcity_f2_00"]
+RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
+DIRT = ["noise:pk:zcity/zcity_f2_22"]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет пустыни вокруг
 GRAVEL = ["noise:pk:mbase/p1/9,9,1,1"]
 PLATES = ["pk:fstation/fstation_f2_09"]
@@ -285,7 +285,7 @@ sn.floor_code("a", *ROAD)
 sn.floor_code("d", *DIRT)
 sn.paint("r", 0, 0, W - 1, H - 1)
 sn.paint("a", 36, 0, 43, 20)
-sn.paint("d", 8, 14, 58, 38)                           # рынок
+sn.paint_ragged("d", 6, 12, 60, 40, depth=3)                           # рынок
 city.road(st, [(x, 55) for x in range(36, 44)], sn,
           [(x, 0) for x in range(36, 44)], "Змеиная родня", "Стрип", step=(0, 1))
 sn.reserve(35, 0, 44, 12)
@@ -345,7 +345,7 @@ pl.floor_code("s", *STONE)
 pl.floor_code("d", *DIRT)
 pl.paint("r", 0, 0, W - 1, H - 1)
 pl.paint("s", 0, 19, 40, 23)                           # чистая мощёная дорожка — Ладони метут её каждое утро
-pl.paint("d", 44, 26, 58, 40)                          # сад
+pl.paint_ragged("d", 42, 24, 60, 42, depth=3)                          # сад
 city.road(st, [(79, y) for y in range(26, 30)], pl, [(0, y) for y in range(19, 23)], "Белые Ладони", "Стрип", step=(1, 0))
 pl.reserve(0, 18, 6, 24)
 pl.building(14, 4, 20, 14, "brick", south=(8,))      # библиотека

@@ -122,7 +122,7 @@ CRATE = P("by_crate", "pk:ucamp/ucamp_2_087", search="crate", title="ящик")
 
 ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
-RUBBLE_FL = ["pk:zcity/zcity_f2_26"]
+RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
 DIRT = ["noise:pk:zcity/zcity_f2_22"]
 SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
 TILES = ["pk:zcity/zcity_f3_00"]

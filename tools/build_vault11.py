@@ -95,6 +95,13 @@ for row in (21, 24):
     for x in (6, 10, 16, 20):
         hl.put(CHAIR, x, row)
 hl.terminal(9, 16, "v11_election")
+# входной зал: приёмная — ряды шкафов у стен, стол дежурного, ящики, брошенные вещи
+hl.put(TABLE, 10, 8)
+hl.put(CHAIR, 10, 9)
+hl.put(TABLE, 30, 8)
+for x, y in ((5, 9), (14, 9), (26, 5), (34, 10), (41, 9), (3, 6)):
+    hl.maybe(LOCKER, x, y)
+hl.scatter(["crate", "crate_broken", "barrel_wood", "r_trash"], 2, 5, 42, 11, 8)
 for x, y in ((4, 18), (24, 20), (9, 29), (19, 30), (25, 15)):
     hl.put(BONES[(x + y) % 2], x, y)
 # жилой блок: койки, шкафчики
