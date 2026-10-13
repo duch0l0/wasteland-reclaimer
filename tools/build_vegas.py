@@ -131,8 +131,8 @@ ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
 RUBBLE_FL = ["pk:zcity/zcity_f2_26"]
 DIRT = ["pk:zcity/zcity_f2_00"]
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
-GRAVEL = cells("mbase/p1", [(8, 8), (9, 9), (10, 10), (9, 8), (8, 10), (10, 9)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет пустыни вокруг
+GRAVEL = ["noise:pk:mbase/p1/9,9,1,1"]
 PLATES = ["pk:fstation/fstation_f2_09"]
 CASINO_FL = ["pk:store/p1/2,8,1,1"]
 WOOD = ["pk:fstation/fstation_f2_22"]
@@ -254,6 +254,9 @@ bt.box(SAFE, 52, 6, "сейф электростанции", {"чертёж эл
        requires={"item": "отмычка", "msg": "Сейф инженеров. Без отмычки не открыть."}, owner="boots_engineer")
 for x in (6, 22, 50):
     bt.put(WARN, x, 15)
+bt.hwall([CHAIN], 4, 60, 19, gaps=(36, 37, 38, 39, 40, 41, 42, 43))     # сетка вокруг станции, ворота к дороге
+for x, y in ((8, 9), (14, 12), (22, 14), (33, 13), (38, 10), (48, 12), (57, 10), (58, 15)):
+    bt.maybe(["pile_junk", "barrel_wood", "pile_cans", "r_trash"][x % 4], x, y)
 # гараж и стойла: мотоциклы рядом, повозки, поилки, сено
 for i, x in enumerate((5, 8, 11)):
     bt.put(BIKES[i], x, 23)
