@@ -438,6 +438,7 @@ class TownMap(MapBase):
             self._tiles[code] = _even_tone([pygame.transform.scale(r, (T, T)).convert() for r in raw])
         # улица (без пустоты «_», как у интерьеров): края участков земли размываются в соседнюю землю
         self._feather = {}
+        self.ring_spot = tuple(d["ring_spot"]) if d.get("ring_spot") else None   # центр ринга (src/game/ring.py)
         self._piers = set(d.get("piers", []))      # доски причала: лежат поверх воды, берег у них не рисуется
         self._water = set()                       # коды воды на улице: берег рисуется слоями (мелководье, пена, мокрый песок)
         from collections import Counter

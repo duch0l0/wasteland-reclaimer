@@ -4938,5 +4938,12 @@
    80,
    48
   ]
+ },
+ "x_boxing_ring": {
+  "size": [
+   288,
+   240
+  ],
+  "made_by": "ring script"
  }
 }

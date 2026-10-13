@@ -232,6 +232,49 @@ jt.maybe(SACKS, 53, 37)
 jt.maybe(TIRE_STACK, 60, 37)
 jt.box(FRIDGE_OLD, 47, 36, "холодильник без двери", {"консервы": 1, "чистая вода": 1})
 
+# ---- обжить город (по превью набора junk-town): лачуги из профнастила, вывески на столбах, кучи хлама,
+# бочки с топливом, солнечные панели, мотоциклы — плотными островками, проходы остаются
+JSHACK = [P(f"jt_mshack{i}", f"pk:jtown/p1/{x},{y},2,2", foot=[2, 1], sight=True, scale=1.5)
+          for i, (x, y) in enumerate(((0, 0), (2, 0), (8, 0), (0, 2), (8, 2), (14, 2), (0, 4), (2, 4), (4, 4),
+                                      (0, 6), (2, 6), (4, 6), (6, 6), (8, 6), (10, 6), (0, 8), (8, 8), (2, 10),
+                                      (4, 10), (6, 10)))]
+JSHOP = P("jt_mshop", "pk:jtown/p1/4,0,4,2", foot=[4, 1], sight=True, scale=1.5)
+SIGNPOST = [P(f"jt_signpost{i}", f"pk:jtown/p2/{x},12,1,2", foot=[1, 1]) for i, x in enumerate((0, 3, 4, 5, 6, 7))]
+JUNKPILE = [P(f"jt_jpile{i}", f"pk:jtown/p2/{x},{y},2,2", foot=[2, 1]) for i, (x, y) in
+            enumerate(((0, 4), (2, 4), (0, 6), (2, 6), (4, 10), (6, 10), (0, 14), (2, 14), (10, 14), (12, 14)))]
+FUEL = [P("jt_fuel", "pk:jtown/p2/2,10,2,2", foot=[2, 1]), P("jt_fuel_b", "pk:jtown/p2/12,12,2,2", foot=[2, 1])]
+PANELS = P("jt_panels_big", "pk:jtown/p1/8,12,2,2", foot=[2, 1])
+MOTO = [P("jt_moto", "pk:jtown/p2/8,10,2,1", foot=[2, 1]), P("jt_moto_b", "pk:jtown/p2/10,10,2,1", foot=[2, 1])]
+CRATE_PILE = P("jt_crate_pile", "pk:jtown/p1/10,12,2,2", foot=[2, 1])
+_k = 0
+
+
+def cluster(x, y, items):
+    for name, dx, dy in items:
+        jt.maybe(name, x + dx, y + dy)
+
+
+# в проходах между домами севера — лачуги-мастерские и хлам
+for x, y in ((22, 9), (23, 14), (46, 9), (47, 14)):
+    jt.maybe(JSHACK[_k % len(JSHACK)], x, y)
+    _k += 1
+# вдоль улицы — вывески на столбах, бочки с топливом, мотоциклы у дверей
+for i, (x, y) in enumerate(((11, 21), (20, 21), (48, 21), (65, 21), (11, 30), (24, 30), (46, 30), (65, 30))):
+    jt.maybe(SIGNPOST[i % len(SIGNPOST)], x, y)
+cluster(26, 21, [(FUEL[0], 0, 0), (MOTO[0], 2, 0)])
+cluster(52, 21, [(MOTO[1], 0, 0), (CRATE_PILE, 3, 0)])
+# юго-запад и юг за клиникой и баром — ещё квартал лачуг с двориками
+for i, (x, y) in enumerate(((8, 43), (12, 43), (16, 43), (20, 43), (44, 41), (44, 37), (24, 32))):
+    jt.maybe(JSHACK[(i + 5) % len(JSHACK)], x, y)
+cluster(22, 39, [(JUNKPILE[0], 0, 0), (FUEL[1], 0, 2)])
+cluster(10, 45, [(JUNKPILE[4], 0, 0), (JUNKPILE[5], 4, 0), (JUNKPILE[6], 8, 0)])
+# северная полоса у стены — огороды из хлама: солнечные панели, кучи, ящики
+for x in range(8, 64, 7):
+    if 26 <= x <= 45:
+        continue
+    jt.maybe([PANELS, JUNKPILE[1], CRATE_PILE, JUNKPILE[2]][x % 4], x, 5)
+jt.maybe(JSHOP, 30, 5)
+jt.maybe(JSHOP, 38, 5)
 # северо-запад и северо-восток за домами — огороды из хлама и хлам
 jt.scatter(JUNK + ["r_trash", "pile_scrap"], 5, 5, 66, 7, 8)
 jt.scatter(["r_trash", "pile_cans", "pile_bottles", "r_planks"], 5, 30, 66, 46, 14)
@@ -471,13 +514,17 @@ sk.put(BAR_COUNTER, 3, 7)
 sk.put(BAR_COUNTER, 7, 7)
 sk.npcs += [["neal", 6, 5]]
 # зал: столы со стульями, дальний стол у восточной стены — там сидит Рурк
-for x, y in ((3, 11), (9, 11), (3, 15), (14, 15)):
-    sk.put(TABLE, x, y)
-    sk.put(CHAIR, x + 2, y)
-sk.put(TABLE, 16, 9)
-sk.put(CHAIR, 18, 9)
+# ринг посреди зала: настил, канаты по краям с проходом, табуреты болельщиков; столы — по углам
+sk.props.append(["x_boxing_ring", 9, 11])                 # помост с канатами (tools: x_boxing_ring)
+sk.ring_spot = (12, 13)
+for x, y in ((7, 12), (16, 13), (10, 17), (14, 17)):        # табуреты болельщиков
+    sk.maybe("stool_1", x, y)
+for x, y in ((3, 11), (3, 15), (17, 9), (17, 16)):
+    sk.maybe(TABLE, x, y)
+    sk.maybe(CHAIR, x + 2, y)
 sk.put(RADIO, 15, 4)
-sk.npcs += [["hunter_rourke", 17, 10], ["skum_drunk", 7, 12], ["skum_girl", 13, 13]]
+sk.maybe("lantern_lit", 12, 9)
+sk.npcs += [["hunter_rourke", 18, 10], ["skum_drunk", 6, 13], ["skum_girl", 16, 15]]
 # ночлежка: койки вдоль стен, сундук постояльца
 for x, y in ((22, 4), (26, 4), (22, 16), (26, 16)):
     sk.put(BED, x, y)

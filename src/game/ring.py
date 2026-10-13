@@ -43,6 +43,9 @@ class RingMixin:
         p = self.player
         d = {"name": f["name"], "hp": f["hp"], "damage": f["damage"], "skill": f["skill"], "ac": f["ac"], "ap": f["ap"],
              "sequence": 6, "ai": "melee", "range": 1, "hit_verb": f["hit_verb"], "level": 2 + n, "xp": 0, "hitbox": [28, 32]}
+        spot = (getattr(self.level, "ring_spot", None) or None)
+        if spot:                                       # в баре есть ринг — бойцы выходят за канаты
+            p.rect.topleft = rect_pos_for_tile(p, (spot[0] - 1, spot[1]))
         t = tile_of(p)
         opp = Enemy(rect_pos_for_tile(p, (t[0] + 2, t[1])), npc_animations(f["sprite"]), "ring_fighter", d)
         opp.hostile, opp.faction, opp.ring = True, "ring", True

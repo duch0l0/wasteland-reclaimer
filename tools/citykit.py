@@ -248,6 +248,8 @@ class CityMap(MapKit):
             out["night"] = self.night
         if self.tint:
             out["tint"] = self.tint
+        if getattr(self, "ring_spot", None):
+            out["ring_spot"] = list(self.ring_spot)
         if getattr(self, "crisp", False):
             out["crisp"] = True
         if getattr(self, "piers", None):
