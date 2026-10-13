@@ -40,7 +40,7 @@ SERVERS = [P("v11_server", "pk:npower/npower_2_042"), P("v11_server_b", "pk:npow
 SAFE = P("v11_safe", "pk:west/west_2_105", search="military", title="сейф смотрителя")
 BONES = [P("v11_bones", "pk:grave/grave_2_022", block=False), P("v11_bones_b", "pk:grave/grave_2_027", block=False)]
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
 PLATES = cells("nbunk/p2", [(4, 8), (5, 9), (6, 10), (4, 10)])
 GRATE = cells("nbunk/p2", [(0, 12), (1, 13), (2, 14), (3, 12)])
 CARPET = ["pk:lrest/p1/0,12,1,1"]

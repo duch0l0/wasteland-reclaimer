@@ -71,7 +71,7 @@ BIOHAZ = P("v22_biohazard", "pk:hosp/hosp_1_012")
 BONES = P("v22_bones", "pk:grave/grave_2_022", block=False)
 
 GRASS_FL = ["pk:zcity/zcity_f2_00"]
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
 SOIL = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
 PLATES = cells("nbunk/p2", [(4, 8), (5, 9), (6, 10), (4, 10)])
 TILE_W = ["pk:store/p1/12,0,1,1"]
