@@ -82,7 +82,7 @@ TANKS = [P("nv_tank", "pk:fmbase/fmbase_1_004", sight=True, light=NEON([120, 200
          P("nv_tank_b", "pk:fmbase/fmbase_1_010", sight=True, light=NEON([140, 255, 160]))]
 
 WHITE = ["pk:bcyber/p2/0,0,1,1"]
-WHITE_ROAD = ["noise:pk:bcyber/p2/9,2,1,1"]   # проезжая часть: серо-голубой асфальт будущего, виден на белом
+WHITE_ROAD = ["pk:bcyber/p2/1,1,1,1", "pk:bcyber/p2/2,1,1,1", "pk:bcyber/p2/1,2,1,1"]   # проезжая часть: белая с тонкими линиями, как в наборе
 CIRCUIT = ["pk:bcyber/p2/4,0,1,1"]
 DARK = ["pk:cyber/p1/0,4,1,1"]
 DARK_B = ["pk:cyber/p2/0,4,1,1"]

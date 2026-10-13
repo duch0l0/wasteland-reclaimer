@@ -62,7 +62,7 @@ for x in range(0, W, 4):
     t.ground[27][x] = t.ground[27][x + 1] = "h"
 t.paint("g", 0, 25, W - 1, 25)
 t.paint("g", 0, 30, W - 1, 30)
-t.paint("g", 24, 11, 47, 23)                         # площадь у Термометра
+t.paint_ragged("g", 23, 10, 48, 24, depth=3)                         # площадь у Термометра
 t.paint("a", 34, 0, 37, 24)                          # на север — к миссии
 t.paint("a", 34, 31, 37, H - 1)                      # на юг — на окраину
 for y in list(range(2, 24, 4)) + list(range(33, H - 1, 4)):
