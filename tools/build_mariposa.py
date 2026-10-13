@@ -70,8 +70,8 @@ BIOHAZ = P("mp_biohazard", "pk:hosp/hosp_1_012")
 BONES = [P("mp_bones", "pk:grave/grave_2_022", block=False), P("mp_bones_b", "pk:grave/grave_2_027", block=False)]
 VRE_CRATE = P("mp_vre_crate", "pk:wlab/wlab_2_024", foot=[2, 1], sight=True)
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
-GRAVEL = cells("mbase/p1", [(8, 8), (9, 9), (10, 10), (9, 8), (8, 10), (10, 9)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
+GRAVEL = ["noise:pk:mbase/p1/9,9,1,1"]
 PLATE = ["pk:fstation/fstation_f2_09"]
 TILE = ["pk:store/p1/12,0,1,1"]
 GRATE = cells("nbunk/p2", [(0, 12), (1, 13), (2, 14), (3, 12)])
@@ -119,6 +119,14 @@ mp.portal([(51, 23), (52, 23)], "mariposa_lab", (20, 5), "Спуск в лабо
 mp.reserve(50, 23, 54, 26)
 for i, (x, y) in enumerate(((18, 36), (30, 38), (44, 36), (52, 32))):
     mp.maybe(DEBRIS[i % 2], x, y)
+# двор обжит: ящики культа и армии, кости у алтаря, лужи зелёной слизи, брошенный хлам
+for x, y in ((16, 14), (20, 14), (46, 14), (56, 12), (56, 36), (16, 34), (24, 38), (38, 38), (48, 40)):
+    mp.maybe(VRE_CRATE if (x + y) % 2 else AMMO, x, y)
+for x, y in ((24, 27), (35, 26), (30, 22), (27, 29)):
+    mp.maybe(BONES[(x + y) % 2], x, y)
+for x, y in ((38, 28), (44, 32), (20, 24)):
+    mp.maybe(PUDDLE, x, y)
+mp.scatter(["r_trash", "pile_junk", "r_bones"], 14, 7, 58, 41, 16)
 # юг: грузовой въезд с краном, которым в 2102-м сшибло Гарольда и Грея. Решётка ведёт прямо к чанам —
 # кто знает о ней от Гарольда, обходит двор с супермутантами и лабораторию
 mp.props.append(["x_manhole", 30, 41])
