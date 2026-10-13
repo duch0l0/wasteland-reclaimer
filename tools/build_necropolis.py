@@ -122,9 +122,9 @@ V_GEN = P("nc_v_gen", "pk:nbunk/nbunk_2_028", foot=[2, 2], sight=True)
 CARPET = "pk:casino/p3/0,0,2,2"
 ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
-RUBBLE_FL = ["pk:zcity/zcity_f2_26"]
-DIRT = ["pk:zcity/zcity_f2_00"]
-STONE = ["pk:zcity/zcity_f1_23"]
+RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
+DIRT = ["noise:pk:zcity/zcity_f2_22"]
+STONE = ["pk:zcity/zcity_f1_23", "pk:zcity/zcity_f3_10"]
 WOOD = ["pk:zcity/zcity_f1_00"]
 METAL = ["pk:ucamp/ucamp_f2_00"]
 VAULT_FL = ["pk:nbunk/p2/4,8,1,1"]
@@ -146,6 +146,8 @@ nc.paint("p", 36, 19, 43, 57)                         # тротуары про�
 nc.paint("a", 38, 19, 41, 57)                         # проспект: от Зала Мёртвых к Водоразделу
 nc.paint("d", 3, 37, 32, 56)                          # кладбище
 nc.paint("s", 46, 40, 64, 56)                         # площадь Водораздела
+nc.paint("s", 30, 19, 49, 22)                         # паперть Зала Мёртвых: каменная площадка перед фасадом
+nc.paint("p", 2, 23, 34, 25)                          # тротуар под высотками
 nc.exits = [(0, y) for y in range(28, 32)]
 nc.reserve(0, 27, W - 1, 32)
 nc.reserve(37, 19, 42, 57)
@@ -245,8 +247,12 @@ nc.npcs += [["nc_guard", 37, 22], ["nc_guard_b", 42, 22], ["cult_envoy", 46, 23]
             ["ghoul_vendor", 74, 39], ["nc_ghoul_kid", 73, 49], ["nc_old", 33, 34]]
 for _, x, y in nc.npcs:
     nc.reserve(x, y, x, y)
-nc.scatter(RUBBLE + RUBBLE_S + [TIRES, "r_trash"], 1, 1, 34, 22, 14)
-nc.scatter(RUBBLE + RUBBLE_S + WRECKS, 54, 1, W - 2, 22, 12)
+nc.scatter(RUBBLE + RUBBLE_S + [TIRES, "r_trash"], 1, 1, 34, 22, 26)
+nc.scatter(RUBBLE + RUBBLE_S + WRECKS, 54, 1, W - 2, 22, 22)
+nc.scatter(DEAD_TREES + ["r_trash", "r_bones"], 1, 1, 27, 22, 6)
+nc.scatter(RUBBLE_S + ["r_trash"], 0, 34, 2, 59, 6)
+nc.scatter(RUBBLE + RUBBLE_S + [TIRES], 33, 34, 36, 59, 6)
+nc.scatter(RUBBLE + RUBBLE_S + [TIRES, "r_trash"], 0, 57, W - 2, 59, 10)
 nc.scatter(RUBBLE_S + ["r_trash", "r_bones"], 44, 34, 64, 38, 4)
 nc.scatter(BONES, 4, 40, 31, 55, 6)
 
@@ -353,6 +359,10 @@ un.put(GENERATOR, 33, 12)
 for x in (10, 22, 31):                                   # колонны платформы метро
     un.put(PILLAR, x, 6)
     un.put(PILLAR, x, 21)
+for i, x in enumerate((6, 13, 17, 26)):     # ночной ряд: второй рынок вдоль южной стены платформы
+    un.put(GOODS[i % 3], x, 21 if x not in (10, 22, 31) else 19)
+for x, y in ((3, 8), (36, 15), (38, 20), (6, 12)):
+    un.put(BARREL, x, y)
 un.put(CAMPFIRE, 18, 18)
 un.put(TENTS[1], 4, 18)
 un.put(TENTS[3], 34, 19)
@@ -360,8 +370,12 @@ un.box(MED_CAB, 39, 9, "аптечный шкаф", {"бинт": 2, "антир�
 un.npcs += [["zeke", 21, 11], ["ghoul_healer", 38, 11], ["under_barkeep", 13, 17], ["under_ghoul", 25, 13],
             ["under_ghoul_b", 30, 17]]
 # старый тоннель: койки, бочки, костёр — здесь живут те, кому не хватило места наверху
-for x in (4, 12, 28):
+for x in (4, 12, 28, 34):
     un.put(COT, x, 30)
+    un.put(COT, x, 36)
+for x, y in ((8, 33), (24, 35), (31, 33)):
+    un.put(BARREL, x, y)
+    un.put(TIRE_PILE, x + 2, y + 1)
 un.put(CAMPFIRE, 20, 33)
 un.put(BARREL, 36, 28)
 un.put(TIRE_PILE, 38, 35)
