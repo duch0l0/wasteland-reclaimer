@@ -64,7 +64,7 @@ VRE_CRATE = P("p7_vre_crate", "pk:wlab/wlab_2_024", foot=[2, 1], sight=True)
 AMMO = P("p7_ammo", "pk:mbase/mbase_2_001", foot=[2, 1], search="military", title="ящик Анклава")
 SAFE = P("p7_safe", "pk:west/west_2_105", search="military", title="сейф коменданта")
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
 PLATE = ["pk:fstation/fstation_f2_09"]
 PLATE_B = ["pk:fstation/fstation_f2_04"]
 PLATE_C = ["pk:fstation/fstation_f2_00"]
@@ -83,6 +83,7 @@ for x0, y0, x1, y1 in ((0, 20, 14, 26), (10, 4, 58, 42)):
 pe.paint("m", 14, 6, 56, 40)
 pe.exits = [(0, y) for y in range(21, 26)]
 pe.reserve(0, 21, 16, 25)
+pe.reserve(14, 22, 36, 24)
 # забор с воротами на запад; у ворот — мешки, турели
 pe.hwall([FENCE], 14, 56, 6)
 pe.hwall([FENCE], 14, 56, 40)
@@ -111,6 +112,14 @@ pe.portal([(33, 19), (34, 19)], "poseidon7_base", (20, 28), "Станция",
           requires={"flags_any": ["p7_invited", "p7_disguise", "p7_storm_won"],
                     "msg": "Солдат Анклава: «Гражданским вход воспрещён. Комендант примет вас, если пожелает»."})
 pe.reserve(32, 19, 35, 22)
+# склады и техника по периметру: ящики, генераторы, баки — станция живёт
+pe.put(GENERATOR, 20, 12)
+pe.put(DOME, 22, 15)
+for x, y in ((18, 9), (20, 9), (52, 28), (52, 31), (48, 36), (28, 37), (30, 37), (18, 37), (54, 12)):
+    pe.maybe(VRE_CRATE if (x + y) % 2 else AMMO, x, y)
+for x, y in ((46, 22), (49, 26), (40, 28), (44, 30)):
+    pe.maybe(SERVER if (x + y) % 3 else SUIT_STAND, x, y)
+pe.scatter(["r_trash", "pile_junk", "barrel_wood"], 16, 8, 54, 38, 14)
 pe.npcs += [["enclave_gate", 18, 23], ["enclave_officer", 34, 23]]
 pe.enemies += [["enclave_mech", 27, 27]]               # шагоход у ворот — молчит, пока нет тревоги
 for _, x, y in pe.npcs:
