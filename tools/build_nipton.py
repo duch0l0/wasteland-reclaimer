@@ -83,7 +83,7 @@ ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
+CAVE = ["noise:pk:gcave/p1/1,4,1,1"]
 
 
 # ================================================================ город
@@ -264,6 +264,8 @@ print("обжито:", np_.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+mn.erode_cave(keep=[(3, 21, 12, 29)])
+mn.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 46, 30, 30)
 city.save(gap_exempt=("groom_cal", "groom_a", "groom_b", "groom_c"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["nipton"].update({"world_name": "Ниптон", "discover": True})

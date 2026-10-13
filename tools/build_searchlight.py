@@ -116,7 +116,7 @@ GROUND = ["noise:pk:mbase/p1/9,9,1,1"]   # гравий базы — бесшо�
 PAVE = ["noise:pk:zcity/zcity_f2_26"]      # асфальт внутренних дорог — темнее гравия, видно, где проезд
 DEBRIS = [P("sl_helmet", "pk:mbase/p1/6,8,1,1", block=False), P("sl_gasmask", "pk:mbase/p1/7,9,1,1", block=False),
           P("sl_shells", "pk:mbase/mbase_3_047", block=False), P("sl_radio", "pk:mbase/p1/13,8,2,1", block=False)]
-CAVE = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
+CAVE = ["noise:pk:gcave/p1/1,4,1,1"]
 
 
 # ================================================================ посёлок
@@ -381,6 +381,8 @@ print("обжито:", sl.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+mn.erode_cave(keep=[(3, 27, 14, 34)], chance=0.3, passes=1)
+mn.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 48, 34, 30)
 city.save(gap_exempt=("robo_sgt", "recruit_danny", "recruit_b", "recruit_c", "recruit_d", "recruit_e", "robo_sentry",
                       "recruit_f"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

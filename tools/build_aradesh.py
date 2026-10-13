@@ -99,7 +99,7 @@ SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"] 
 GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
 CRACK = cells("destown/p2", [(8, 0), (9, 0), (8, 1), (9, 1)])
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE_DIRT = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
+CAVE_DIRT = ["noise:pk:gcave/p1/1,4,1,1"]
 CAVE_STONE = cells("gcave/p1", [(4, 6), (5, 6), (4, 7), (5, 7)])
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
 
@@ -321,6 +321,9 @@ print("обжито по краям:", ar.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], ground="s", block=6, margin=1, chance=1.0))
 
+cv.erode_cave(keep=[(3, 33, 12, 38)])
+cv.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 46, 38, 30)
+cv.scatter(["r_bones", "rock"], 1, 1, 46, 38, 6)
 city.save(gap_exempt=("unity_sister", "settler_kai"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["aradesh"].update({"world_name": "Лагерь Арадеша", "discover": True})

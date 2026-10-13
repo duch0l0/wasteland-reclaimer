@@ -79,7 +79,7 @@ DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
 ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])          # красная укатанная колея
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник площади
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE_DIRT = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
+CAVE_DIRT = ["noise:pk:gcave/p1/1,4,1,1"]
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
 
 
@@ -246,6 +246,9 @@ print("обжито:", gs.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=7, margin=1, chance=1.0))
 
+cv.erode_cave(keep=[(4, 27, 14, 32)])
+cv.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 38, 32, 30)
+cv.scatter(["r_bones", "rock"], 1, 1, 38, 32, 6)
 city.save(gap_exempt=("ezekiel",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["goodsprings"].update({"world_name": "Гудспрингс", "discover": True})

@@ -103,6 +103,49 @@ class MapKit:
                 if j >= top[i] and y1 - y >= bot[i] and i >= left[j] and x1 - x >= right[j]:
                     self.ground[y][x] = code
 
+    def erode_cave(self, wall="x", keep=(), chance=0.45, passes=2):
+        """Края пещеры — не ровные прямоугольники: у стены клетки пола случайно уступают камню (и наоборот), но проход
+        остаётся целым: каждая правка проверяется заливкой от старта. keep — прямоугольники (x0, y0, x1, y1), где край не трогаем."""
+        import random as _r
+        rnd = _r.Random(self.W * 31 + self.H * 17 + 5)
+        g = self.ground
+        protected = set(self.reserved)
+        for x0, y0, x1, y1 in keep:
+            protected |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
+        spots = [(p[1], p[2]) for p in self.props] + [(n[1], n[2]) for n in getattr(self, "npcs", [])] \
+            + [(e[1], e[2]) for e in getattr(self, "enemies", [])] + list(getattr(self, "blocked", ()))
+        for x, y in spots:                                       # вокруг всего, что уже стоит, камень не подступает
+            protected |= {(x + dx, y + dy) for dx in range(-2, 3) for dy in range(-2, 3)}
+
+        def is_wall(x, y):
+            return not (0 <= x < self.W and 0 <= y < self.H) or g[y][x] == wall
+
+        def reach(src):
+            seen, todo = {src}, [src]
+            while todo:
+                x, y = todo.pop()
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    n = (x + dx, y + dy)
+                    if n not in seen and not is_wall(*n):
+                        seen.add(n)
+                        todo.append(n)
+            return seen
+        sx, sy = self.START
+        floor0 = {(x, y) for y in range(self.H) for x in range(self.W) if g[y][x] != wall}
+        for _ in range(passes):
+            edge = [(x, y) for (x, y) in floor0 if (x, y) not in protected
+                    and any(is_wall(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+                    and 1 <= x < self.W - 1 and 1 <= y < self.H - 1]
+            rnd.shuffle(edge)
+            for x, y in edge:
+                if rnd.random() > chance or g[y][x] == wall:
+                    continue
+                keep_code = g[y][x]
+                g[y][x] = wall
+                if len(reach((sx, sy))) < len([1 for yy in range(self.H) for xx in range(self.W) if g[yy][xx] != wall]):
+                    g[y][x] = keep_code                       # отрезало бы часть пещеры — оставляем
+        return self
+
     def cliff_walls(self, cliffs, floor, skip=lambda x, y: False, decor=(), thick=2, decor_chance=0.08, plateau=None):
         """Скалы вокруг дна (каньон, долина у убежища). Глыбы 2×2 стоят только по краю обрыва: внешний ряд —
         сплошь, второй — через раз; дальше — непроходимое плато с редкими камнями и кустами. Рисунок глыбы —
