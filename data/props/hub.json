@@ -658,6 +658,16 @@
 "block": false,
 "sight": false
 },
+"hub_office_rug": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
 "hub_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,

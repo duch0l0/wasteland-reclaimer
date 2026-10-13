@@ -374,22 +374,27 @@ fc.npcs += [["falcon_gambler", 21, 13]]
 
 # ================================================================ водная артель
 wa = CityMap(city, "hub_water", "Водная артель Веги", 32, 24, start=(15, 21), seed=104, interior=True, music="hub")
-wa.floor_code("F", *STONE_IN)
+wa.floor_code("F", *PLANK)
+wa.floor_code("R", "pk:aoffice/p3/3,1,1,1")
 wa.floor_code("M", *METAL)
-wa.wall_code("W", "pk:bazaar/bazaar_w1_22")
+wa.wall_code("W", "pk:bazaar/bazaar_w2_12")
 OFFICE = wa.room(1, 12, 31, 23, "W", "F")          # контора у входа
 HALL = wa.room(1, 1, 20, 12, "W", "M")             # зал с бочками и насосом
-ROOMS = wa.room(20, 1, 31, 12, "W", "F")           # покои Долорес
+ROOMS = wa.room(20, 1, 31, 12, "W", "R")           # покои Долорес
 wa.opening(15, 23, 16, 23, "F")
 wa.portal([(15, 23), (16, 23)], "hub", (34, 12), "На площадь")
 wa.opening(10, 12, 11, 14, "M")
-wa.opening(25, 12, 26, 14, "F")
+wa.opening(25, 12, 26, 14, "R")
 # контора: стойка учёта лицом к двери, шкафы с бумагами вдоль стены, весы
 wa.put("counter", 12, 17)
 wa.put("counter", 17, 17)
 wa.put(BOOKS, 3, 15)
 wa.put(BOOKS, 5, 15)
-wa.put(SCALES, 27, 17)                     # весы для бочек — у восточной стены
+wa.put(SCALES, 27, 17)
+wa.stamp("hub_office_rug", "pk:lhotel/p2/10,12,2,2", 14, 19, water=False)
+wa.put(CRATE, 3, 21)
+wa.put(WATER_BARREL, 29, 21)
+wa.put(WATER_BARREL, 3, 18)                     # весы для бочек — у восточной стены
 wa.terminal(21, 15, "hub_water_ledger")
 # зал: баки и насос у северной стены, бочки рядами
 wa.put(TANKS, 3, 4)
@@ -397,6 +402,10 @@ wa.put(TANKS, 6, 4)
 wa.put(PUMP, 12, 4)
 for x in (3, 6, 9, 12, 15):
     wa.put(WATER_BARREL, x, 9)
+for x, y in ((3, 7), (18, 8), (18, 10), (8, 11), (14, 11)):
+    wa.put(WATER_BARREL, x, y)
+wa.put(PUMP, 9, 4) if False else None
+wa.put(CRATE, 2, 11)
 wa.box(CRATE, 17, 4, "ящик с фильтрами", {"таблетки для очистки воды": 3, "гаечный ключ": 1})
 # покои Долорес: кровать, стол, сейф — жетон Марипозы
 wa.put(BED, 22, 4)
