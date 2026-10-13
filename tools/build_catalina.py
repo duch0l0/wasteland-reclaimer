@@ -61,7 +61,7 @@ BARRELS = [P("ct_barrel", "pk:fishv/fishv_1_057", search="junk", title="бочк
 ANCHOR = P("ct_anchor", "pk:fishv/fishv_1_020", foot=[2, 1])
 LANTERN = P("ct_lantern", "pk:fishv/fishv_1_070", light={"r": 100, "color": [255, 190, 110], "at": [0.5, 0.5], "flicker": 0.3})
 ROCKS = [P("ct_rock", "pk:sisland/p1/4,0,1,1"), P("ct_rock_b", "pk:sisland/p1/4,1,1,1"), P("ct_rock_c", "pk:sisland/p1/5,0,1,1")]
-SEA_ROCK = P("ct_sea_rock", "pk:sisland/p1/4,9,2,2", foot=[2, 2], sight=True)
+SEA_ROCK = P("ct_sea_rock", "pk:sisland/p1/4,9,2,2", foot=[2, 2], sight=True, keybg=True)
 TENT = P("ct_tent", "pk:sisland/p1/10,11,1,1")
 CAMPFIRE = P("ct_campfire", "pk:sisland/p1/8,12,1,1", light={"r": 110, "color": [255, 150, 70], "at": [0.5, 0.5], "flicker": 0.4})
 BONES = P("ct_bones", "pk:sisland/p1/11,12,1,1", block=False)
@@ -168,7 +168,7 @@ av.props.append(["x_puddle", 1, 38])
 av.portal([(0, 36), (0, 37), (0, 38)], "catalina_cove", (34, 18), "Грот")
 av.reserve(0, 35, 3, 39)
 for x, y in ((2, 30), (8, 42), (68, 41), (60, 44), (12, 46)):
-    av.maybe(SEA_ROCK if y > 42 else ROCKS[(x + y) % 3], x, y)
+    av.maybe(ROCKS[(x + y) % 3], x, y)
 av.npcs += [["harbor_master", 37, 39], ["quarantine_nurse", 48, 30], ["fisher_ana", 10, 25], ["tiki_barkeep", 25, 33],
             ["island_kid", 15, 38], ["island_old", 27, 18], ["sailor_finn", 30, 39], ["island_teacher", 20, 26]]
 for _, x, y in av.npcs:
