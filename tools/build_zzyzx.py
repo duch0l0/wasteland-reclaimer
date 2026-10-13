@@ -73,7 +73,7 @@ DESK_LAB = P("zz_desk_lab", "pk:wlab/wlab_1_012")
 GEN = P("zz_generator", "pk:nbunk/nbunk_2_028")
 TANKS_W = P("zz_water_tanks", "pk:nbunk/nbunk_2_021", sight=True)
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 CRACK = cells("destown/p2", [(8, 0), (9, 0), (8, 1), (9, 1)])
 COBBLE = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])   # утоптанный гравий бульвара
 TILE_W = ["pk:hotel/hotel_f1_12", "pk:hotel/hotel_f1_11"]

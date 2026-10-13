@@ -92,7 +92,7 @@ CANDELABRA = P("pr_candelabra", "pk:cult/cult_2_068", block=False,
 CAMPFIRE = P("pr_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1],
              light={"r": 120, "color": [255, 150, 70], "at": [0.5, 0.5], "flicker": 0.35})
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
 WALK = ["pk:zcity/zcity_f1_22"]
 PARK = ["pk:wpark/p1/1,9,1,1"]
@@ -117,6 +117,8 @@ pm.paint("p", 0, 23, W - 1, 32)                        # тротуары вдо
 pm.paint("a", 0, 25, W - 1, 30)                        # I-15
 pm.paint("h", 0, 27, W - 1, 28)
 pm.paint("k", 3, 4, 22, 20)                            # парковка караванов
+pm.paint("g", 50, 3, 77, 17)                           # парк аттракционов под горками — вытоптанная трава
+pm.paint("a", 28, 33, 64, 35)                          # стоянка перед казино
 pm.paint("p", 30, 19, 33, 22)                          # дорожка к отелю
 pm.paint("p", 44, 33, 47, 36)                          # дорожка к казино
 pm.exits = [(0, y) for y in range(25, 31)]
@@ -178,8 +180,9 @@ pm.npcs += [["deputy_baxter", 44, 32], ["pr_deputy", 50, 33], ["pr_undertaker", 
             ["pr_old", 54, 21], ["pr_mechanic", 10, 41]]
 for _, x, y in pm.npcs:
     pm.reserve(x, y, x, y)
-pm.scatter(["r_dry_bush", "r_rocks", "r_trash"], 1, 1, W - 2, 22, 10)
-pm.scatter(["r_dry_bush", "r_rocks", "r_trash"], 1, 33, W - 2, H - 2, 12)
+pm.scatter(["r_dry_bush", "r_rocks", "r_trash"], 1, 1, W - 2, 22, 22)
+pm.scatter(WRECKS + ["r_trash"], 28, 34, 64, 35, 5)
+pm.scatter(["r_dry_bush", "r_rocks", "r_trash"], 1, 33, W - 2, H - 2, 28)
 pm.put("x_grave", 18, 49)
 pm.put("x_cross", 21, 50)
 pm.put("x_cross", 24, 49)

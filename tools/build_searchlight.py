@@ -103,7 +103,7 @@ SERVER = P("sl_server", "pk:mbase/mbase_3_016")
 MACHINE = [P("sl_machine", "pk:mbase/mbase_3_022"), P("sl_machine_b", "pk:mbase/mbase_3_024")]
 GUN_RACK = P("sl_gun_rack", "pk:gcave/p1/14,8,2,2", foot=[2, 1], search="military", title="оружейная стойка")
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
 ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])
 ASPHALT = ["pk:zcity/zcity_f3_09"]

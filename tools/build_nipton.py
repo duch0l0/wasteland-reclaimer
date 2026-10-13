@@ -81,7 +81,7 @@ HAY = P("np_hay", "pk:west/west_1_004", block=False)
 DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
 ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 PLANK = ["pk:bazaar/bazaar_f1_21"]
 CAVE = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
 

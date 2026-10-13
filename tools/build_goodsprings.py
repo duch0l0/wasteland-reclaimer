@@ -74,7 +74,7 @@ MUSH = [P("gs_mush", "pk:gcave/p1/2,4,1,1", light={"r": 60, "color": [140, 255, 
         P("gs_mush_b", "pk:gcave/p1/2,5,1,1", light={"r": 60, "color": [120, 200, 255], "at": [0.5, 0.5]})]
 BOULDERS = [P("gs_boulder", "pk:gcave/p1/4,4,1,1"), P("gs_boulder_b", "pk:gcave/p1/5,4,1,1")]
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
 ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])          # красная укатанная колея
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник площади

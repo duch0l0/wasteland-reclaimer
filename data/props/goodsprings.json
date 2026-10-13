@@ -472,6 +472,56 @@
 "img": "pk:gcave/p1/5,4,1,1",
 "block": true,
 "sight": false
+},
+"goodsprings_f_home_rug": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"goodsprings_f_home_table": {
+"img": "pk:west/west_2_000",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"goodsprings_f_home_chair": {
+"img": "pk:west/west_2_001",
+"block": true,
+"sight": false
+},
+"goodsprings_f_home_poker": {
+"img": "pk:west/west_2_020",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"goodsprings_f_home_shelf": {
+"img": "pk:west/west_2_110",
+"block": true,
+"sight": true
+},
+"goodsprings_f_home_books": {
+"img": "pk:west/west_2_116",
+"block": true,
+"sight": true
+},
+"goodsprings_f_home_clock": {
+"img": "pk:west/west_2_019",
+"block": true,
+"sight": true
+},
+"goodsprings_f_home_plant": {
+"img": "pk:bazaar/bazaar_3_206",
+"block": true,
+"sight": false
 }
 }
 }
