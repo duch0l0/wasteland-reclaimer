@@ -1056,6 +1056,68 @@
 "block": true,
 "sight": true
 },
+"jt_w_window": {
+"img": "pk:west/west_2_027",
+"block": false,
+"sight": false
+},
+"jt_w_painting": {
+"img": "pk:west/west_2_030",
+"block": false,
+"sight": false
+},
+"jt_w_mirror": {
+"img": "pk:west/west_2_028",
+"block": false,
+"sight": false
+},
+"jt_w_clock": {
+"img": "pk:west/west_2_011",
+"block": false,
+"sight": false
+},
+"jt_w_rug": {
+"img": "pk:west/west_2_060",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor",
+"scale": 1.5
+},
+"jt_w_rug_q": {
+"img": "pk:west/west_2_062",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor",
+"scale": 1.5
+},
+"jt_w_plant": {
+"img": "pk:west/west_2_031",
+"block": true,
+"sight": false
+},
+"jt_w_plant_b": {
+"img": "pk:west/west_2_042",
+"block": true,
+"sight": false
+},
+"jt_w_plant_c": {
+"img": "pk:west/west_2_033",
+"block": true,
+"sight": false
+},
+"jt_w_banner": {
+"img": "pk:west/west_2_026",
+"block": false,
+"sight": false
+},
 "jt_casino_slab": {
 "img": "pk:jtown/p3/4,6,4,4",
 "block": false,

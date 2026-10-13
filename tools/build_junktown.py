@@ -169,6 +169,21 @@ def junk_wall(m, x0, y0, x1, y1, gate_w=(), gate_e=()):
                 m.solid_cells = getattr(m, "solid_cells", set()) | {(x, y), (x + 1, y)}
 
 
+# ---- обстановка залов: окна, ковры, кадки, вывески (набор wild-west и junk-town)
+W_ART = [P("jt_w_window", "pk:west/west_2_027", block=False), P("jt_w_painting", "pk:west/west_2_030", block=False),
+         P("jt_w_mirror", "pk:west/west_2_028", block=False), P("jt_w_clock", "pk:west/west_2_011", block=False)]
+W_RUG = P("jt_w_rug", "pk:west/west_2_060", block=False, layer="floor", foot=[2, 2], scale=1.5)
+W_RUG_Q = P("jt_w_rug_q", "pk:west/west_2_062", block=False, layer="floor", foot=[2, 2], scale=1.5)
+W_PLANT = [P("jt_w_plant", "pk:west/west_2_031"), P("jt_w_plant_b", "pk:west/west_2_042"), P("jt_w_plant_c", "pk:west/west_2_033")]
+W_FLAG = P("jt_w_banner", "pk:west/west_2_026", block=False)
+
+
+def wall_art(m, xs, y=3):
+    """Картины, окна, зеркала по северной стене: на лицевой стороне (смещение вверх — как у вывесок)."""
+    for i, x in enumerate(xs):
+        m.props.append([W_ART[i % len(W_ART)], x, y, 0, -14])
+
+
 # ================================================================ город
 W, H = 72, 52
 jt = CityMap(city, "junktown", "Джанктаун", W, H, start=(1, 26), seed=111, music="junktown", world_pos=(880, 1080))
@@ -368,6 +383,14 @@ hl.put(TABLE, 3, 12)                                     # стол для со�
 hl.put(CHAIR, 5, 12)
 hl.put(TANKS, 20, 12)                                    # запас воды ратуши
 hl.npcs += [["mayor_darkwater", 12, 7], ["hall_guard", 16, 13]]
+wall_art(hl, (7, 9, 14, 17, 20), 3)
+hl.props.append([W_RUG, 11, 10, 0, 0])                                 # ковёр перед столом мэра
+for x, y in ((2, 6), (22, 6), (2, 15), (22, 15)):
+    hl.maybe(W_PLANT[(x + y) % 3], x, y)
+for x, y in ((6, 11), (8, 14)):
+    hl.maybe(CHAIR, x, y)
+hl.maybe("candles", 3, 9)
+hl.maybe("lantern_lit", 19, 9)
 
 
 # ================================================================ казино «Гизмо»
@@ -406,6 +429,16 @@ cs.put(BOOKS, 26, 9)
 cs.box(SAFE, 31, 9, "сейф Гизмо", {"долговая книга Гизмо": 1, "крышки": 220},
        requires={"item": "отмычка", "msg": "Сейф Гизмо. Нужна отмычка — и чтобы громила отвернулся."}, owner="gizmo")
 cs.put(CHIPS, 27, 14)
+wall_art(cs, (15, 17, 20), 7)                                          # над кассой — вывески и зеркало
+for x, y in ((2, 7), (22, 7)):
+    cs.maybe(W_PLANT[x % 3], x, y)
+for i, (x, y) in enumerate(((3, 12), (8, 12), (16, 17), (21, 17))):
+    cs.maybe(W_PLANT[i % 3], x, y)
+cs.props.append([W_RUG, 5, 13, 0, 0])                                  # ковёр у блэкджека
+for x, y in ((9, 17), (14, 20), (20, 19)):
+    cs.maybe(STOOL, x, y)
+wall_art(cs, (26, 29), 7)                                              # в кабинете Гизмо
+cs.props.append([W_RUG_Q, 27, 11, 0, 0])
 cs.npcs += [["gizmo", 29, 12], ["gizmo_thug", 21, 14], ["croupier", 13, 13], ["cashier_jt", 19, 9],
             ["gambler_jt", 7, 16], ["gambler_jt_b", 10, 20]]
 
@@ -413,7 +446,7 @@ cs.npcs += [["gizmo", 29, 12], ["gizmo_thug", 21, 14], ["croupier", 13, 13], ["c
 # ================================================================ лавка Дарквотеров
 st = CityMap(city, "junktown_store", "Лавка Дарквотеров", 26, 18, start=(12, 16), seed=115, interior=True,
              music="junktown")
-st.floor_code("F", *STONE_IN)
+st.floor_code("F", *PLANK)
 st.wall_code("W", "pk:jtown/jtown_w1_14")
 st.room(1, 1, 25, 17, "W", "F")
 st.opening(12, 17, 13, 17, "F")
@@ -431,6 +464,12 @@ for i, x in enumerate((3, 5, 7, 9)):                     # два ряда ст�
 st.put(SACKS, 22, 15)
 st.put(CHECKOUT, 15, 12)
 st.npcs += [["marsha", 17, 11]]
+wall_art(st, (10, 12, 20), 3)
+for x, y in ((2, 6), (24, 14)):
+    st.maybe(W_PLANT[x % 3], x, y)
+st.props.append([W_RUG, 12, 14, 0, 0])
+for x, y in ((19, 14), (20, 15), (2, 16)):
+    st.maybe("crate" if x % 2 else "barrel_wood", x, y)
 st.box(CRATE, 3, 15, "ящик с товаром", {"консервы": 2, "энергетический батончик": 2})
 
 
@@ -494,6 +533,13 @@ cr.box(FRIDGE, 22, 4, "холодильный шкаф", {"образец ВРЭ
 cr.put(MED_SHELF, 9, 14)
 cr.put(BIOHAZ, 23, 14)
 cr.put(OXYGEN, 16, 15)
+for x, y in ((8, 8), (10, 8), (12, 8), (15, 8)):                      # стеллажи с образцами в центре
+    cr.maybe(MED_SHELF if x % 4 else BOOKS, x, y)
+for x, y in ((22, 10), (23, 12), (20, 15)):
+    cr.maybe("barrel_wood" if x % 2 else "crate_b", x, y)
+cr.props.append([W_RUG_Q, 17, 9, 0, 0])
+for x in (5, 9, 13, 17):
+    cr.maybe("lantern_lit", x, 3)
 
 
 # ================================================================ бар «Скам-Питт» и ночлежка
