@@ -37,7 +37,7 @@ WATCHTOWER = P("ar2_watchtower", "pk:mbase/mbase_2_005", foot=[2, 1], sight=True
 FUEL = [P("ar2_fuel", "pk:pmars/pmars_1_019", foot=[4, 1], sight=True), P("ar2_fuel_b", "pk:pmars/pmars_1_013", foot=[2, 1], sight=True)]
 RADAR = P("ar2_radar", "pk:pmars/pmars_1_002", foot=[2, 1], sight=True,
           light={"r": 80, "color": [255, 90, 80], "at": [0.5, 0.05], "flicker": 0.5})
-BARBED = P("ar2_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1])
+BARBED = P("ar2_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1], keybg=True)
 CONTROL = P("ar2_control", "pk:mars/mars_2_020", foot=[2, 1], sight=True)
 # ------------------------------------------------------------ Марс
 DOMES = [P("ar2_dome_lab", "pk:mars/mars_1_000", foot=[4, 2], sight=True, light=GLOW([170, 230, 255])),
@@ -81,8 +81,9 @@ VAT = P("ar2_vat", "pk:wlab/wlab_1_002", foot=[2, 1], sight=True, light=GLOW([14
 REACTOR = P("ar2_reactor", "pk:fmbase/fmbase_1_003", foot=[2, 1], sight=True, light=GLOW([110, 200, 255]))
 MED_BED = P("ar2_med_bed", "pk:hosp/hosp_1_007", foot=[3, 1])
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
-CONCRETE = cells("mbase/p1", [(8, 8), (9, 9), (10, 10), (9, 8)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
+CONCRETE = ["noise:pk:mbase/p1/9,9,1,1"]            # гравий полигона — бесшовный шум, без сетки выбоин
+PAVE = ["noise:pk:zcity/zcity_f2_26"]             # асфальт дорог полигона
 MARS = cells("pmars/p1", [(0, 0), (0, 1), (1, 0)])        # гладкий грунт; дюны (0–1, 4–5) — цельный кусок 2×2, по клетке шьются швами
 MARS_PAD = ["pk:fstation/fstation_f2_09"]
 FLOOR = ["pk:fstation/fstation_f2_04"]
@@ -96,16 +97,21 @@ rp = CityMap(city, "repconn", "Полигон REPCONN", W, H, start=(1, 20), see
 rp.floor_code("s", *SAND)
 rp.floor_code("c", *CONCRETE)
 rp.paint("s", 0, 0, W - 1, H - 1)
-rp.paint("c", 10, 4, 52, 36)
+rp.floor_code("r", *PAVE)
+rp.paint_ragged("c", 7, 1, 55, 38, depth=3)          # площадка с рваным краем, как вытоптанная земля
+rp.paint("r", 10, 19, 31, 21)                         # дорога от ворот к стартовому столу
+rp.paint("r", 20, 6, 22, 36)                          # магистраль вдоль ангаров и бункера
 rp.exits = [(0, y) for y in range(18, 23)]
 rp.reserve(0, 18, 12, 22)
-rp.hwall([BARBED], 10, 52, 3)
-rp.hwall([BARBED], 10, 52, 37)
+rp.reserve(10, 19, 31, 21)
+rp.reserve(20, 6, 22, 36)
+rp.hwall([BARBED], 10, 52, 4)
+rp.hwall([BARBED], 10, 52, 36)
 for x, y in ((11, 5), (50, 5), (11, 34), (50, 34)):
     rp.put(WATCHTOWER, x, y)
 rp.put(HANGAR, 14, 6)
 rp.put(HANGAR, 14, 26)
-rp.put(BUNKER, 24, 16)
+rp.put(BUNKER, 25, 14)
 rp.put(FUEL[0], 34, 30)
 rp.put(FUEL[1], 40, 30)
 rp.put(RADAR, 44, 8)
@@ -116,6 +122,10 @@ rp.terminal(34, 20, "repconn_launch")
 rp.portal([(40, 17), (41, 17)], "ares", (32, 40), "Борт «Гелиоса» — на Марс",
           requires={"flag": "rocket_ready", "msg": "Люк «Гелиоса» задраен. Пульт запуска: «Топливо — 0 %. Навигация — не задана»."})
 rp.reserve(39, 17, 42, 19)
+rp.put(FUEL[1], 46, 30)
+for x, y in ((30, 7), (36, 9), (46, 14), (48, 20), (30, 26), (36, 30), (18, 14), (18, 22), (48, 34), (14, 33)):
+    rp.maybe(CRATES[(x + y) % 2], x, y)
+rp.scatter(["r_trash", "pile_junk", "barrel_wood", "r_rocks"], 12, 6, 50, 34, 14)
 rp.enemies += [["feral", 20, 30], ["ghoul_runner", 28, 10], ["feral", 46, 24]]
 rp.npcs += [["repconn_ghoul", 30, 22]]
 

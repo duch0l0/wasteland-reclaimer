@@ -74,7 +74,8 @@
 "foot": [
 2,
 1
-]
+],
+"keybg": true
 },
 "ar2_control": {
 "img": "pk:mars/mars_2_020",

@@ -88,9 +88,14 @@ mp.paint("s", 0, 0, W - 1, H - 1)
 FLOOR = set()
 for x0, y0, x1, y1 in ((0, 21, 14, 27), (10, 4, 62, 44)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
-mp.paint("g", 12, 6, 60, 42)
+mp.floor_code("r", "noise:pk:zcity/zcity_f2_26")
+mp.paint_ragged("g", 8, 2, 64, 46, depth=3)           # двор с рваным краем, а не ровный прямоугольник
+mp.paint("r", 8, 22, 46, 26)                          # дорога от ворот к бункеру
+mp.paint("r", 36, 7, 38, 41)                          # проезд вдоль двора
 mp.exits = [(0, y) for y in range(22, 27)]
 mp.reserve(0, 22, 16, 26)
+mp.reserve(8, 22, 46, 26)
+mp.reserve(36, 7, 38, 41)
 mp.hwall(FENCE_MIX, 12, 60, 5)
 mp.hwall(FENCE_MIX, 12, 60, 43)
 for y in range(6, 43):

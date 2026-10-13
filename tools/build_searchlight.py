@@ -112,7 +112,8 @@ WOOD = ["pk:fstation/fstation_f2_22"]
 METAL = ["pk:fstation/fstation_f2_09"]
 METAL_B = ["pk:fstation/fstation_f2_04"]
 WALK = ["pk:zcity/zcity_f1_22"]
-GROUND = cells("mbase/p1", [(8, 8), (9, 9), (10, 10), (9, 8), (8, 10), (10, 9)])   # гравий плаца с выбоинами
+GROUND = ["noise:pk:mbase/p1/9,9,1,1"]   # гравий базы — бесшовный шум в цветах тайла, без сетки выбоин
+PAVE = ["noise:pk:zcity/zcity_f2_26"]      # асфальт внутренних дорог — темнее гравия, видно, где проезд
 DEBRIS = [P("sl_helmet", "pk:mbase/p1/6,8,1,1", block=False), P("sl_gasmask", "pk:mbase/p1/7,9,1,1", block=False),
           P("sl_shells", "pk:mbase/mbase_3_047", block=False), P("sl_radio", "pk:mbase/p1/13,8,2,1", block=False)]
 CAVE = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
@@ -251,8 +252,15 @@ ft.floor_code("a", *GROUND)
 ft.floor_code("a", *GROUND)
 ft.floor_code("g", *WALK)
 ft.paint("s", 0, 0, W - 1, H - 1)
-ft.paint("a", 12, 6, 64, 44)                           # территория базы
+ft.floor_code("r", *PAVE)
+ft.paint_ragged("a", 7, 1, 69, 49, depth=3)            # территория базы: край земли рваный, как у настоящей вытоптанной площадки
 ft.paint("g", 30, 16, 50, 32)                          # плац
+ft.paint("r", 10, 21, 29, 24)                          # дорога от ворот к плацу
+ft.paint("r", 27, 12, 29, 44)                          # главная дорога базы: ангар — плац — казармы
+ft.paint("r", 29, 40, 55, 42)                          # к бункеру
+ft.reserve(10, 21, 29, 24)
+ft.reserve(27, 12, 29, 44)
+ft.reserve(29, 40, 55, 42)
 city.road(sl, [(63, y) for y in range(21, 25)], ft, [(0, y) for y in range(21, 25)], "Форт Сёрчлайт", "Сёрчлайт",
           step=(1, 0))
 ft.reserve(0, 20, 13, 25)
@@ -287,6 +295,16 @@ ft.put(MISSILE, 58, 8)
 for x in (16, 22):
     ft.put(BARRACKS, x, 35)
 ft.put(BUNKER, 52, 34)
+# автопарк у южной дороги, склад и нужды базы
+ft.maybe(HUMVEE[0], 33, 36)
+ft.maybe(HUMVEE[1], 38, 36)
+ft.maybe(HUMVEE[0], 43, 36)
+ft.maybe(TANK, 34, 29)
+for x, y in ((14, 11), (18, 14), (46, 12), (52, 12), (58, 14), (60, 22), (60, 28), (20, 31), (24, 32), (14, 41), (58, 40)):
+    ft.maybe(AMMO[(x + y) % 2], x, y)
+for x, y in ((18, 20), (18, 27), (62, 20), (62, 27), (26, 19), (26, 27)):
+    ft.maybe(SANDBAGS, x, y)
+ft.scatter(["r_trash", "pile_junk", "barrel_wood", "x_fire_barrel"], 13, 6, 63, 44, 16)
 ft.portal([(53, 37), (54, 37)], "fort_bunker", (23, 5), "Бункер",
           requires={"flag": "fort_access", "msg": "Робот-часовой: «Вход в бункер — только для личного состава. Предъявите жетон»."})
 ft.reserve(52, 37, 56, 39)
