@@ -95,7 +95,7 @@ CLIFFS = [P(f"ar_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True)
 OUTCROP = P("ar_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keybg=True)
 RUBBLE = [P("ar_burnt", "pk:zcity/zcity_1_122", foot=[2, 1]), P("ar_burnt_b", "pk:zcity/zcity_1_123", foot=[2, 1])]
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # тот же песок, что в каньоне: граница без скачка цвета
 GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
 CRACK = cells("destown/p2", [(8, 0), (9, 0), (8, 1), (9, 1)])
 PLANK = ["pk:bazaar/bazaar_f1_21"]
@@ -113,6 +113,8 @@ ar.floor_code("k", *CRACK)
 ar.paint("s", 0, 0, W - 1, H - 1)
 ar.paint_ragged("k", 5, 3, 65, 47, depth=4)            # утоптанная земля лагеря — край рваный, в песок
 ar.paint("g", 0, 23, W - 1, 26)                        # колея от въезда до каньона
+ar.hwall([FENCE], 5, 65, 2)                            # хлипкий забор лагеря по северной и южной границе
+ar.hwall([FENCE], 5, 65, 47)
 ar.exits = [(0, y) for y in range(23, 27)]
 ar.reserve(0, 22, W - 1, 27)
 
