@@ -241,14 +241,15 @@ bt.npcs += [["bath_pilgrim", 6, 10], ["bath_pilgrim_b", 25, 10], ["nurse_ava", 1
 
 # ================================================================ «Замок» Спрингера
 ht = CityMap(city, "zzyzx_hotel", "«Замок» Спрингера", 44, 26, start=(21, 23), seed=83, interior=True, music="hub")
-ht.floor_code("C", *CARPET)
-ht.floor_code("D", *WOOD)
+ht.floor_code("C", "pk:hotel/hotel_f1_23")           # холл и покои — бежевый мрамор вместо шахматки
+ht.floor_code("D", "pk:zcity/zcity_f1_00")          # столовая и номера — доски
+ht.floor_code("R", "pk:aoffice/p3/3,1,1,1")         # ковровое покрытие номеров
 ht.wall_code("V", "pk:hotel/hotel_w1_23")
 ht.wall_code("Y", "pk:hotel/hotel_w1_15")
 LOBBY = ht.room(12, 13, 31, 25, "V", "C")          # холл
 DINE = ht.room(1, 13, 12, 25, "V", "D")             # столовая
 SUITE = ht.room(31, 13, 43, 25, "V", "C")           # покои Спрингера
-ROOMS = [ht.room(x, 1, x + 8, 13, "Y", "D") for x in (1, 9, 17, 25, 33)]
+ROOMS = [ht.room(x, 1, x + 8, 13, "Y", "R") for x in (1, 9, 17, 25, 33)]
 ht.opening(21, 25, 22, 25, "C")
 ht.portal([(21, 25), (22, 25)], "zzyzx", (57, 19), "На бульвар")
 ht.opening(12, 19, 12, 20, "C")
@@ -274,6 +275,9 @@ for i, x0 in enumerate((1, 9, 17, 25, 33)):
     ht.put(BED if i % 2 == 0 else BED_S, x0 + 2, 4)
     ht.put(NIGHT, x0 + 1, 4)
     ht.put(WARDROBE, x0 + 6, 4)
+    ht.stamp(f"zz_room_rug{i}", "pk:lhotel/p2/10,12,2,2", x0 + 2, 7, water=False)
+    ht.put(ARMCHAIR, x0 + 6, 9)
+    ht.put(LAMP, x0 + 1, 10)
 ht.npcs += [["guest_widow", 22, 8]]
 # покои Спрингера: широкая кровать, письменный стол с терминалом, сейф
 ht.put(BED, 39, 17)
@@ -284,6 +288,10 @@ ht.box("metal_chest", 41, 22, "сейф Спрингера",
        {"крышки": 220, "стимулятор": 2, "ключ от насосной": 1},
        requires={"flag": "springer_safe", "msg": "Сейф с кодом. Код Спрингер держит в голове — или в терминале."})
 ht.put(PLANT, 32, 23)
+ht.stamp("zz_lobby_rug", "pk:lhotel/p2/10,12,2,2", 20, 21, water=False)
+ht.stamp("zz_suite_rug", "pk:lhotel/p2/10,12,2,2", 36, 20, water=False)
+ht.put(ARMCHAIR, 41, 14)
+ht.put(LAMP, 33, 22)
 
 
 # ================================================================ цистерна

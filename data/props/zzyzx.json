@@ -491,6 +491,76 @@
 ],
 "layer": "floor"
 },
+"zz_room_rug0": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"zz_room_rug1": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"zz_room_rug2": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"zz_room_rug3": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"zz_room_rug4": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"zz_lobby_rug": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"zz_suite_rug": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
 "zz_canal_a": {
 "img": "pk:pool/p1/4,8,4,4",
 "block": false,
