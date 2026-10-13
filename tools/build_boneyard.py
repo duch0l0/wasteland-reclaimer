@@ -123,13 +123,14 @@ CRATE = P("by_crate", "pk:ucamp/ucamp_2_087", search="crate", title="ящик")
 ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
 RUBBLE_FL = ["pk:zcity/zcity_f2_26"]
-DIRT = ["pk:zcity/zcity_f2_00"]
+DIRT = ["noise:pk:zcity/zcity_f2_22"]
 SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
 TILES = ["pk:zcity/zcity_f3_00"]
 CARPET = ["pk:aoffice/p3/3,1,1,1"]
 WOOD = ["pk:zcity/zcity_f1_00"]
 STONE = ["pk:zcity/zcity_f1_23"]
 CONCRETE = ["pk:zcity/zcity_f3_08"]
+YARD_FL = ["noise:pk:zcity/zcity_f3_08"]
 MALL_TILE = ["pk:store/p1/12,0,1,1"]
 
 
@@ -140,7 +141,7 @@ by.floor_code("r", *RUBBLE_FL)
 by.floor_code("a", *ROAD)
 by.floor_code("p", *WALK)
 by.floor_code("d", *DIRT)
-by.floor_code("c", *CONCRETE)
+by.floor_code("c", *YARD_FL)
 by.paint("r", 0, 0, W - 1, H - 1)
 by.paint("p", 0, 26, W - 1, 33)                        # шоссе через весь город
 by.paint("a", 0, 27, W - 1, 32)
@@ -249,17 +250,19 @@ by.scatter(TREES, 1, 1, 3, 24, 4)
 ad = CityMap(city, "boneyard_adytum", "Адитум", 40, 28, start=(19, 26), seed=142, interior=True, music="hub")
 ad.floor_code("F", *MALL_TILE)
 ad.floor_code("C", *CONCRETE)
+ad.floor_code("R", *CARPET)
+ad.floor_code("O", *WOOD)
 ad.wall_code("W", "pk:pmall/pmall_w3_17")
 ad.room(1, 1, 14, 14, "W", "C")                       # склад и цистерны
-ad.room(14, 1, 26, 14, "W", "F")                      # лавка
-ad.room(26, 1, 39, 14, "W", "F")                      # зал совета
+ad.room(14, 1, 26, 14, "W", "O")                      # лавка
+ad.room(26, 1, 39, 14, "W", "R")                      # зал совета
 ad.room(1, 14, 39, 27, "W", "F")                      # галерея — здесь живут
 ad.opening(19, 27, 20, 27, "F")
 by.portal([(18, 16), (19, 16)], "boneyard_adytum", (19, 25), "Адитум")
 ad.portal([(19, 27), (20, 27)], "boneyard", (18, 18), "Во двор")
 ad.opening(7, 14, 8, 16, "C")
-ad.opening(19, 14, 20, 16, "F")
-ad.opening(32, 14, 33, 16, "F")
+ad.opening(19, 14, 20, 16, "O")
+ad.opening(32, 14, 33, 16, "R")
 # склад: цистерны с водой из Хаба, верстак, ящик
 ad.put(TANKS, 3, 4)
 ad.put(TANKS, 8, 4)
@@ -291,6 +294,12 @@ ad.put(COT, 3, 24)
 ad.put(COT, 33, 24)
 ad.put(CLOTH_PILE, 9, 24)
 ad.put(CANS, 26, 24)
+ad.put(PLANT, 37, 12)
+ad.put(PLANT_B, 27, 12)
+ad.put(PLANT, 15, 12)
+ad.put(CANS, 20, 22)
+ad.put(CLOTH_PILE, 21, 25)
+ad.put(CAMPFIRE, 18, 22)
 ad.npcs += [["adytum_mom", 29, 22], ["adytum_kid", 14, 23], ["adytum_doc", 6, 22]]
 
 
