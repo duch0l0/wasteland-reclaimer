@@ -242,13 +242,28 @@ def _roof_image(r):
     w, h = (r["x1"] - r["x0"] + 1) * T, (r["y1"] - r["y0"]) * T - WALL_LIFT
     rnd = random.Random(r["seed"])
     style = r["style"]
-    pal = {"brick": [(86, 72, 60), (92, 78, 64), (80, 67, 56), (98, 84, 68)],
+    pal = {"brick": [(118, 94, 78), (124, 100, 82), (112, 89, 74), (130, 106, 88)],
            "concrete": [(118, 116, 110), (124, 122, 116), (110, 108, 104), (130, 127, 120)],
            "metal": [(116, 70, 48), (128, 80, 54), (104, 62, 44), (138, 90, 60)],
            "planks": [(104, 78, 54), (112, 84, 58), (96, 72, 50), (120, 90, 62)]}[style]
     img = pygame.Surface((w, h), pygame.SRCALPHA)
-    tex = _roof_texture(style)
-    if tex is not None:          # крыша из настоящей текстуры набора (доски, бетонные плиты, ржавый лист, гудрон)
+    tex = _roof_texture(style) if style in ("planks", "metal") else None      # плоские крыши — гудрон с гравием, без сетки плиток
+    if tex is not None and style in ("planks", "metal"):
+        # дранка и кровельный лист: ряды со смещёнными стыками и разбросом тона — без сетки плиток набора
+        base = tuple(pygame.transform.average_color(tex[0])[:3])
+        pal = [base] * 4
+        rowh = 14 if style == "planks" else 24
+        sw = 40 if style == "planks" else 22
+        for ry, y in enumerate(range(0, h, rowh)):
+            off = (ry * 17 + r["seed"]) % sw
+            for sx in range(-off, w, sw):
+                k = rnd.uniform(0.86, 1.1)
+                col = tuple(max(0, min(255, int(c * k))) for c in base)
+                img.fill(col, (max(0, sx), y, min(sw, w - max(0, sx)) - (1 if sx >= 0 else 0), rowh - 1))
+                if rnd.random() < 0.1:
+                    img.fill(tuple(int(c * 0.72) for c in base), (max(0, sx) + 3, y + 3, rnd.choice((6, 9)), 3))
+            img.fill(tuple(int(c * 0.62) for c in base), (0, y + rowh - 1, w, 1))
+    elif tex is not None:        # крыша из настоящей текстуры набора (бетонные плиты, гудрон)
         for y in range(0, h, T):
             for x in range(0, w, T):
                 img.blit(tex[((x // T) * 7 + (y // T) * 3 + r["seed"]) % len(tex)], (x, y))
@@ -283,7 +298,7 @@ def _roof_image(r):
         shade.fill((0, 0, 0, 44), (0, mid, w, h - mid))
         shade.fill((20, 14, 10, 150), (0, mid - 2, w, 4))             # конёк
         shade.fill((255, 235, 200, 70), (0, mid - 4, w, 2))
-        for k in range(0, w, T * 2):                                   # стыки листов на скатах
+        for k in range(0, w, T * 2) if style == "metal" else ():         # стыки листов на скатах
             shade.fill((0, 0, 0, 26), (k, 0, 2, h))
     else:
         for _ in range(max(3, w * h // 4000)):
