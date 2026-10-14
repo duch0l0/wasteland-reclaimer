@@ -64,6 +64,13 @@ LOOT = P("np_loot", "pk:gcave/p1/10,10,2,2", search="military", title="добы�
 CLIFFS = [P(f"np_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True) for i, x in enumerate((8, 10, 12))]
 MINE_CART = P("np_mine_cart", "pk:west/p1/13,7,1,1")
 RAILS = P("np_rails", "pk:west/p1/8,8,8,2", block=False, layer="floor")
+SUPPORT_N = [P(f"np_support{i}", f"pk:cmine/cmine_1_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((15, 16, 19))]
+COAL_N = [P("np_coal", "pk:cmine/cmine_1_029", foot=[2, 1]), P("np_coal_b", "pk:cmine/cmine_1_023")]
+CART_N = P("np_cmine_cart", "pk:cmine/cmine_1_001", foot=[2, 1], sight=True)
+RAILS_N = P("np_cmine_rails", "pk:cmine/cmine_1_006", block=False, layer="floor")
+CANDLE_N = P("np_candles_floor", "pk:cult/cult_2_068", block=False,
+             light={"r": 90, "color": [255, 170, 80], "at": [0.5, 0.3], "flicker": 0.5})
+BANNER_N = [P("np_banner_a", "pk:cult/cult_2_141", block=False), P("np_banner_b", "pk:cult/cult_2_142", block=False)]
 BOULDERS = [P("np_boulder", "pk:gcave/p1/4,4,1,1"), P("np_boulder_b", "pk:gcave/p1/5,4,1,1")]
 LANTERN = P("np_lantern", "pk:bazaar/bazaar_2_088", block=False,
             light={"r": 110, "color": [255, 180, 90], "at": [0.5, 0.4], "flicker": 0.3})
@@ -232,22 +239,40 @@ mn.paint("c", 4, 3, 40, 10)                             # главная выр�
 mn.paint("c", 30, 10, 40, 24)                           # дальний зал — «часовня»
 mn.portal([(6, 27), (7, 27)], "nipton_camp", (33, 7), "Наружу")
 mn.reserve(4, 24, 9, 27)
-mn.put(RAILS, 12, 5)
-mn.put(MINE_CART, 14, 4)
-mn.put(MINE_CART, 24, 4)
+# Планировка: вход со двора -> штольня на север с крепью -> главная выработка: рельсы по штреку, вагонетки,
+# ряд клеток с пленниками у южной стены -> дальний зал-«часовня» брата Т.: алтарь, свечи, знамёна, кордон стражи.
+for x in (5, 10, 15, 20, 25, 30, 35):
+    mn.maybe(RAILS_N, x, 5)
+mn.put(CART_N, 14, 3)
+mn.put(CART_N, 24, 3)
+for y in (12, 15, 18):
+    mn.maybe(SUPPORT_N[y % 3], 6, y)
+    mn.maybe(SUPPORT_N[(y + 1) % 3], 9, y)
+for x in (8, 13, 20, 28, 34):
+    mn.maybe(SUPPORT_N[x % 3], x, 9)
 for x in (16, 22, 25):
     mn.put(CAGE, x, 8)
 mn.put(CAGE_HELD, 19, 8)
-mn.put(LANTERN, 7, 9)
+mn.put(LANTERN, 7, 11)
+mn.put(LANTERN, 12, 4)
 mn.put(LANTERN, 28, 4)
 mn.put(LANTERN, 32, 12)
-# «часовня» брата Т.: алтарь, свечи, ящики с новенькими крышками
+mn.put(LANTERN, 36, 22)
+for x, y in ((5, 6), (8, 4), (38, 4), (4, 8)):
+    mn.maybe(COAL_N[(x + y) % 2], x, y)
+# «часовня» брата Т.: алтарь у дальней стены, свечи по сторонам, знамёна, ряд ящиков; к алтарю — дорожка из свечей
 mn.put(ALTAR, 34, 20)
 mn.put("candles", 32, 20)
 mn.put("candles", 37, 20)
+for x, y in ((31, 13), (39, 13), (31, 19), (39, 19)):
+    mn.maybe(CANDLE_N, x, y)
+for x, y in ((33, 11), (37, 11)):
+    mn.maybe(BANNER_N[(x + y) % 2], x, y)
 mn.box(CRATE, 38, 14, "ящик с печатью круга", {"крышки": 200, "приказ о «Ноле»": 1}, owner="brother_t")
-for x, y in ((5, 5), (38, 6), (31, 12)):
-    mn.put(BOULDERS[(x + y) % 2], x, y)
+mn.maybe(CRATE, 31, 22)
+mn.maybe(CRATE, 39, 22)
+for x, y in ((38, 6), (31, 12)):
+    mn.maybe(BOULDERS[(x + y) % 2], x, y)
 mn.npcs += [["brother_t", 35, 17], ["cult_guard_np", 32, 15], ["cult_guard_np_b", 38, 18], ["np_captive", 19, 8]]
 
 
@@ -266,7 +291,7 @@ print("обжито:", np_.dress_empty([
 
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 21, 12, 29)])
-mn.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 46, 30, 30)
+mn.scatter(["rock", "stones_12"], 1, 1, 46, 30, 14)
 city.save(gap_exempt=("groom_cal", "groom_a", "groom_b", "groom_c"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["nipton"].update({"world_name": "Ниптон", "discover": True})

@@ -391,6 +391,90 @@
 "sight": false,
 "layer": "floor"
 },
+"np_support0": {
+"img": "pk:cmine/cmine_1_015",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_support1": {
+"img": "pk:cmine/cmine_1_016",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_support2": {
+"img": "pk:cmine/cmine_1_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_coal": {
+"img": "pk:cmine/cmine_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"np_coal_b": {
+"img": "pk:cmine/cmine_1_023",
+"block": true,
+"sight": false
+},
+"np_cmine_cart": {
+"img": "pk:cmine/cmine_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"np_cmine_rails": {
+"img": "pk:cmine/cmine_1_006",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"np_candles_floor": {
+"img": "pk:cult/cult_2_068",
+"block": false,
+"sight": false,
+"light": {
+"r": 90,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.5
+}
+},
+"np_banner_a": {
+"img": "pk:cult/cult_2_141",
+"block": false,
+"sight": false
+},
+"np_banner_b": {
+"img": "pk:cult/cult_2_142",
+"block": false,
+"sight": false
+},
 "np_boulder": {
 "img": "pk:gcave/p1/4,4,1,1",
 "block": true,
