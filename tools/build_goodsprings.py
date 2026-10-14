@@ -92,14 +92,17 @@ COBBLE_G = cells("dcave/p2", [(4, 1), (5, 1), (4, 2), (5, 2)])
 LANTERN_G = P("gs_cave_lantern", "pk:cmine/cmine_1_032", light={"r": 100, "color": [255, 190, 110], "at": [0.5, 0.5], "flicker": 0.3})
 BOULDERS = [P("gs_boulder", "pk:gcave/p1/4,4,1,1"), P("gs_boulder_b", "pk:gcave/p1/5,4,1,1")]
 
+PIT_G = [P("gs_pit_a", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=True), P("gs_pit_b", "pk:dcave/p1/4,8,2,2", foot=[1, 1], layer="floor", keybg=True)]
+MOSS_G = [P(f"gs_moss{i}", f"pk:dcave/p1/{x},14,2,2", block=False, layer="floor", keybg=True) for i, x in enumerate((6, 8, 10))]
+PEBBLE_G = [P(f"gs_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
 ROAD = ["noise:pk:destown/p2/4,0,1,1"]          # утоптанный гравий улицы — как в Зайзиксе
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник площади
 PLANK = ["pk:bazaar/bazaar_f1_21"]
 BOARDS = ["pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1"]      # светлые доски тротуаров
-CAVE_DIRT = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])      # земля с трещинами — как в превью набора
-CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])               # тёмная сухая глина
+CAVE_DIRT = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
+CAVE_DARK = cells("dcave/p1", [(0, 0), (1, 0), (0, 1), (1, 1), (2, 0), (3, 0)])   # земля с крупными трещинами
 CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
 
@@ -357,6 +360,11 @@ print("обжито:", gs.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=7, margin=1, chance=1.0))
 
+for x, y in ((8, 21), (12, 15), (28, 17)):
+    cv.maybe(PIT_G[(x + y) % 2], x, y)                 # провалы и трещины в полу
+for x, y in ((8, 5), (21, 8), (11, 12), (31, 20)):
+    cv.maybe(MOSS_G[(x + y) % 3], x, y)                # мшистые поляны у воды и в нише
+cv.scatter(PEBBLE_G, 1, 1, 38, 32, 18)
 cv.patchwork("d", ["k", "k", "k"], 14, 2, 4, seed=1)
 cv.cave_style = True
 cv.erode_cave(keep=[(3, 25, 14, 32)], chance=0.25, passes=1)

@@ -770,6 +770,43 @@
 "search": "military",
 "title": "оружейная стойка"
 },
+"sl_pebbles0": {
+"img": "pk:dcave/p1/2,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"sl_pebbles1": {
+"img": "pk:dcave/p1/3,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"sl_pebbles2": {
+"img": "pk:dcave/p1/4,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"sl_pebbles3": {
+"img": "pk:dcave/p1/2,5,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"sl_pebbles4": {
+"img": "pk:dcave/p1/5,5,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"sl_pit": {
+"img": "pk:dcave/p1/2,8,2,2",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
 "sl_helmet": {
 "img": "pk:mbase/p1/6,8,1,1",
 "block": false,

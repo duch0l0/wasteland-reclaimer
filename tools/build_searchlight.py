@@ -109,6 +109,8 @@ SERVER = P("sl_server", "pk:mbase/mbase_3_016")
 MACHINE = [P("sl_machine", "pk:mbase/mbase_3_022"), P("sl_machine_b", "pk:mbase/mbase_3_024")]
 GUN_RACK = P("sl_gun_rack", "pk:gcave/p1/14,8,2,2", foot=[2, 1], search="military", title="оружейная стойка")
 
+PEBBLE_S = [P(f"sl_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
+PIT_S = P("sl_pit", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=True)
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
 ROAD = ["noise:pk:destown/p2/4,0,1,1"]
@@ -122,8 +124,8 @@ GROUND = ["noise:pk:mbase/p1/9,9,1,1"]   # гравий базы — бесшо�
 PAVE = ["noise:pk:zcity/zcity_f2_26"]      # асфальт внутренних дорог — темнее гравия, видно, где проезд
 DEBRIS = [P("sl_helmet", "pk:mbase/p1/6,8,1,1", block=False), P("sl_gasmask", "pk:mbase/p1/7,9,1,1", block=False),
           P("sl_shells", "pk:mbase/mbase_3_047", block=False), P("sl_radio", "pk:mbase/p1/13,8,2,1", block=False)]
-CAVE = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])
-CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])
+CAVE = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
+CAVE_DARK = cells("dcave/p1", [(0, 0), (1, 0), (0, 1), (1, 1), (2, 0), (3, 0)])   # земля с крупными трещинами
 CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 
 
@@ -489,6 +491,9 @@ print("обжито:", sl.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+for x, y in ((18, 20), (25, 6), (10, 20)):
+    mn.maybe(PIT_S, x, y)
+mn.scatter(PEBBLE_S, 1, 1, 48, 34, 16)
 mn.patchwork("c", ["k", "k", "k"], 16, 2, 4, seed=4)
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 27, 14, 34)], chance=0.3, passes=1)

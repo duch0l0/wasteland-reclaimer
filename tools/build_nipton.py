@@ -88,10 +88,12 @@ HAY = P("np_hay", "pk:west/west_1_004", block=False)
 DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
 ROAD = ["noise:pk:west/p1/0,1,1,1"]
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])
+PEBBLE_N = [P(f"np_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
+PIT_N = P("np_pit", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=True)
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])
-CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])
+CAVE = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
+CAVE_DARK = cells("dcave/p1", [(0, 0), (1, 0), (0, 1), (1, 1), (2, 0), (3, 0)])   # земля с крупными трещинами
 CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 
 
@@ -293,6 +295,9 @@ print("обжито:", np_.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+for x, y in ((20, 14), (33, 8), (8, 22)):
+    mn.maybe(PIT_N, x, y)
+mn.scatter(PEBBLE_N, 1, 1, 46, 30, 16)
 mn.patchwork("c", ["k", "k", "k"], 16, 2, 4, seed=3)
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 21, 12, 29)])

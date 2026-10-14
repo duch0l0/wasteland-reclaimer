@@ -827,6 +827,75 @@
 1
 ]
 },
+"ar_pit_a": {
+"img": "pk:dcave/p1/2,8,2,2",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"ar_pit_b": {
+"img": "pk:dcave/p1/4,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"layer": "floor",
+"keybg": true
+},
+"ar_moss0": {
+"img": "pk:dcave/p1/6,14,2,2",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"ar_moss1": {
+"img": "pk:dcave/p1/8,14,2,2",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"ar_moss2": {
+"img": "pk:dcave/p1/10,14,2,2",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"ar_pebbles0": {
+"img": "pk:dcave/p1/2,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ar_pebbles1": {
+"img": "pk:dcave/p1/3,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ar_pebbles2": {
+"img": "pk:dcave/p1/4,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ar_pebbles3": {
+"img": "pk:dcave/p1/2,5,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ar_pebbles4": {
+"img": "pk:dcave/p1/5,5,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
 "block": false,

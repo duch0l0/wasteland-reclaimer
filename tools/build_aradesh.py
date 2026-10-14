@@ -102,12 +102,15 @@ CLIFFS = [P(f"ar_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True)
 OUTCROP = P("ar_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keybg=True)
 RUBBLE = [P("ar_burnt", "pk:zcity/zcity_1_122", foot=[2, 1]), P("ar_burnt_b", "pk:zcity/zcity_1_123", foot=[2, 1])]
 
+PIT_A = [P("ar_pit_a", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=True), P("ar_pit_b", "pk:dcave/p1/4,8,2,2", foot=[1, 1], layer="floor", keybg=True)]
+MOSS_A = [P(f"ar_moss{i}", f"pk:dcave/p1/{x},14,2,2", block=False, layer="floor", keybg=True) for i, x in enumerate((6, 8, 10))]
+PEBBLE_A = [P(f"ar_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # тот же песок, что в каньоне: граница без скачка цвета
 GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
 CRACK = ["noise:pk:destown/p2/8,0,1,1"]
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE_DIRT = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])
-CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])
+CAVE_DIRT = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
+CAVE_DARK = cells("dcave/p1", [(0, 0), (1, 0), (0, 1), (1, 1), (2, 0), (3, 0)])   # земля с крупными трещинами
 CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 CAVE_STONE = cells("gcave/p1", [(4, 6), (5, 6), (4, 7), (5, 7)])
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
@@ -345,6 +348,11 @@ print("обжито по краям:", ar.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], ground="s", block=6, margin=1, chance=1.0))
 
+for x, y in ((9, 22), (16, 14), (33, 20), (30, 30)):
+    cv.maybe(PIT_A[(x + y) % 2], x, y)
+for x, y in ((7, 14), (20, 13), (40, 14), (30, 31)):
+    cv.maybe(MOSS_A[(x + y) % 3], x, y)
+cv.scatter(PEBBLE_A, 1, 1, 46, 38, 20)
 cv.patchwork("d", ["k", "k", "k"], 16, 2, 4, seed=2)
 cv.cave_style = True
 cv.erode_cave(keep=[(3, 33, 12, 38)])

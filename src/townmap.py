@@ -498,8 +498,18 @@ class TownMap(MapBase):
         self._cave_rock = None
         if self.style == "cave":                  # скалы пещеры — фасады из набора gcave (верхняя и нижняя половины стены)
             try:
-                top = [pygame.transform.scale(P.pack_image(f"pk:gcave/p1/{i},0,1,1"), (T, T)).convert() for i in range(1, 8)]
-                face = [pygame.transform.scale(P.pack_image(f"pk:gcave/p1/{i},1,1,1"), (T, T)).convert() for i in range(1, 8)]
+                # скальные фасады Goblin Cave, приглушённые под серо-бурую землю Dragon Cave: высокие валуны, а не тонкий карниз
+                def _mute(i, row):
+                    t = pygame.transform.scale(P.pack_image(f"pk:gcave/p1/{i},{row},1,1"), (T, T)).convert()
+                    g = pygame.transform.grayscale(t)
+                    out = pygame.Surface((T, T))
+                    out.blit(t, (0, 0))
+                    g.set_alpha(150)
+                    out.blit(g, (0, 0))
+                    out.fill((222, 206, 214), special_flags=pygame.BLEND_RGB_MULT)       # лёгкий сиреневый оттенок земли
+                    return out
+                top = [_mute(i, 0) for i in range(1, 8)]
+                face = [_mute(i, 1) for i in range(1, 8)]
                 self._cave_rock = {"top": top, "face": face}
             except Exception:
                 self._cave_rock = None
