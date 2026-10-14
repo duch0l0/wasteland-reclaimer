@@ -1,0 +1,348 @@
+{
+"props": {
+"bk_car0": {
+"img": "pk:town50/town50_1_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_car1": {
+"img": "pk:town50/town50_1_037",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_car2": {
+"img": "pk:town50/town50_1_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_car3": {
+"img": "pk:town50/town50_1_053",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_car4": {
+"img": "pk:town50/town50_1_041",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_car5": {
+"img": "pk:town50/town50_1_040",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_pump_red": {
+"img": "pk:town50/town50_1_102",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_pump_yellow": {
+"img": "pk:town50/town50_1_103",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_sign_diner": {
+"img": "pk:town50/town50_1_116",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 130,
+"color": [
+255,
+90,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.4
+}
+},
+"bk_sign_gas": {
+"img": "pk:town50/town50_1_117",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.3
+}
+},
+"bk_sign_motel_big": {
+"img": "pk:motel/motel_1_057",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 150,
+"color": [
+110,
+200,
+255
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"bk_phone": {
+"img": "pk:town50/town50_1_100",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_hydrant": {
+"img": "pk:town50/town50_1_109",
+"block": false,
+"sight": false
+},
+"bk_lamp": {
+"img": "pk:town50/town50_1_120",
+"block": true,
+"sight": false,
+"light": {
+"r": 150,
+"color": [
+255,
+210,
+140
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"bk_picket": {
+"img": "pk:town50/town50_1_135",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"bk_jukebox": {
+"img": "pk:town50/town50_1_084",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 90,
+"color": [
+255,
+170,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"bk_diner_bar": {
+"img": "pk:town50/town50_1_097",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"bk_bench": {
+"img": "pk:town50/town50_1_130",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"bk_ice": {
+"img": "pk:motel/motel_1_022",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 70,
+"color": [
+150,
+220,
+255
+],
+"at": [
+0.5,
+0.4
+]
+}
+},
+"bk_vending": {
+"img": "pk:motel/motel_1_002",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 80,
+"color": [
+255,
+210,
+120
+],
+"at": [
+0.5,
+0.4
+]
+}
+},
+"bk_pot_a": {
+"img": "pk:town50/town50_1_133",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_pot_b": {
+"img": "pk:town50/town50_1_134",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_trash": {
+"img": "pk:town50/town50_1_131",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"bk_well": {
+"img": "pk:desnat/desnat_3_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_banner_a": {
+"img": "pk:cult/cult_2_141",
+"block": false,
+"sight": false
+},
+"bk_banner_b": {
+"img": "pk:cult/cult_2_142",
+"block": false,
+"sight": false
+},
+"bk_laundry": {
+"img": "pk:wfarm/p3/0,0,4,3",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+],
+"keybg": true
+},
+"bk_bed_a": {
+"img": "pk:wfarm/p1/0,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"bk_bed_b": {
+"img": "pk:wfarm/p1/2,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+}
+}
+}

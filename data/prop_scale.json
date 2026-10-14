@@ -58,7 +58,13 @@
       "pr_t50car2",
       "pr_t50car3",
       "pr_t50car4",
-      "pr_t50car5"
+      "pr_t50car5",
+      "bk_car0",
+      "bk_car1",
+      "bk_car2",
+      "bk_car3",
+      "bk_car4",
+      "bk_car5"
     ]
   },
   "cars_ruins": {
@@ -135,7 +141,10 @@
       "gs_front_store",
       "gs_front_sheriff",
       "pr_sign_diner",
-      "pr_sign_motel"
+      "pr_sign_motel",
+      "bk_sign_diner",
+      "bk_sign_motel_big",
+      "bk_sign_gas"
     ]
   },
   "buildings_half": {
@@ -240,7 +249,8 @@
       "by_lamp_b",
       "nc_lamp",
       "nc_lamp_b",
-      "pr_t50lamp"
+      "pr_t50lamp",
+      "bk_lamp"
     ],
     "keep_foot": true
   },

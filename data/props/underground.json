@@ -1,0 +1,164 @@
+{
+"props": {
+"ug_bunk": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ug_locker_a": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "locker",
+"title": "шкафчик"
+},
+"ug_locker_b": {
+"img": "pk:nbunk/nbunk_2_006",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "locker",
+"title": "шкафчик"
+},
+"ug_gen": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+],
+"light": {
+"r": 100,
+"color": [
+255,
+200,
+120
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.25
+}
+},
+"ug_warn": {
+"img": "pk:npower/npower_1_069",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ug_console_a": {
+"img": "pk:npower/npower_2_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ug_console_b": {
+"img": "pk:npower/npower_2_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ug_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ug_vre": {
+"img": "pk:wlab/wlab_2_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ug_biohaz": {
+"img": "pk:hosp/hosp_1_012",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ug_tube": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 80,
+"color": [
+150,
+255,
+160
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
+"ug_lamp": {
+"img": "pk:cmine/cmine_1_032",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
+"ug_chair": {
+"img": "pk:aoffice/aoffice_1_002",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+}
+}
+}

@@ -20,6 +20,30 @@
 Запуск из папки game_project:  .venv/bin/python tools/build_underground.py
 """
 from mapkit import MapKit, CRATES, BARRELS, LOCKERS, JUNK_PILES, CLOTH_PILES, RUBBLE
+from citykit import City
+
+city = City("underground", "Подземелья")     # реестр объектов из наборов: data/props/underground.json
+
+
+def P(name, img, **kw):
+    city.prop(name, img, **kw)
+    return name
+
+
+STEEL = ["pk:nbunk/p2/4,8,1,1"]
+GRILLE = ["pk:nbunk/p2/0,12,1,1"]
+PLATES_UG = ["pk:fstation/fstation_f2_09"]
+BUNK_U = P("ug_bunk", "pk:nbunk/nbunk_2_000", foot=[2, 1], sight=True)
+LOCKER_U = [P("ug_locker_a", "pk:nbunk/nbunk_2_005", foot=[1, 1], search="locker", title="шкафчик"), P("ug_locker_b", "pk:nbunk/nbunk_2_006", foot=[1, 1], search="locker", title="шкафчик")]
+GEN_U = P("ug_gen", "pk:nbunk/nbunk_2_028", foot=[2, 2], sight=True, light={"r": 100, "color": [255, 200, 120], "at": [0.5, 0.5], "flicker": 0.25})
+WARN_U = P("ug_warn", "pk:npower/npower_1_069", foot=[1, 1])
+CONSOLE_U = [P("ug_console_a", "pk:npower/npower_2_006", foot=[2, 1]), P("ug_console_b", "pk:npower/npower_2_013", foot=[2, 1])]
+SERVER_U = P("ug_server", "pk:npower/npower_2_042", foot=[1, 1])
+VRE_U = P("ug_vre", "pk:wlab/wlab_2_024", foot=[2, 1], sight=True)
+BIOHAZ_U = P("ug_biohaz", "pk:hosp/hosp_1_012", foot=[1, 1])
+TUBE_U = P("ug_tube", "pk:wlab/wlab_3_101", foot=[2, 1], sight=True, light={"r": 80, "color": [150, 255, 160], "at": [0.5, 0.5], "flicker": 0.3})
+LAMP_U = P("ug_lamp", "pk:cmine/cmine_1_032", foot=[1, 1], block=False, light={"r": 120, "color": [255, 190, 110], "at": [0.5, 0.5], "flicker": 0.3})
+CHAIR_U = P("ug_chair", "pk:aoffice/aoffice_1_002", foot=[1, 1])
 
 
 def room(m, code, x0, y0, x1, y1):
@@ -183,6 +207,36 @@ terminal(30, 4, "baker7_log")
 scatter(["ammo_box", "metal_sheets", "toolbox_red"], 18, 13, 33, 16, 3)
 b.enemies += [["robot_guard", 18, 18], ["robot_guard", 32, 14], ["turret", 20, 4]]   # двое и турель: склад берут на 3–4 уровне
 
+# обстановка склада: караулка живёт, коридор не пуст, в хранилище — стеллажи партии 7, кабели и светильники
+for y in (11, 13, 15):
+    b.put(BUNK_U, 9, y)
+b.put(LOCKER_U[0], 13, 10, check=False) if False else None
+for x, y in ((8, 12), (13, 12), (13, 14)):
+    b.put(LOCKER_U[(x + y) % 2], x, y)
+b.put(CONSOLE_U[0], 12, 16)
+b.put(LAMP_U, 11, 14)
+b.put(LAMP_U, 14, 16)
+for x in (10, 13, 16, 19, 22):
+    b.put(LAMP_U, x, 20)
+for x, y in ((9, 21), (16, 17), (24, 17)):
+    b.put(WARN_U, x, y)
+b.put(GEN_U, 5, 18)
+for x in (14, 20):
+    b.put(CRATES_U, x, 20) if False else None
+for x, y in ((19, 8), (22, 8), (25, 8), (28, 8), (31, 8)):
+    b.put(VRE_U, x, y)
+for x, y in ((19, 14), (23, 14), (27, 14), (31, 14)):
+    b.put(BIOHAZ_U, x, y)
+for x, y in ((21, 15), (29, 15)):
+    b.put(TUBE_U, x, y)
+for x, y in ((19, 4), (24, 4), (28, 5), (32, 4)):
+    b.put(SERVER_U, x, y)
+for x, y in ((26, 5), (33, 8)):
+    b.put(LAMP_U, x, y)
+b.paint("G", 19, 12, 32, 12)            # решётчатый настил между рядами контейнеров — кабельный канал
+b.paint("G", 3, 19, 5, 19)
+
 b.check(npc_enemy_gap=0)
-b.save("data/maps/baker7.json", style="vault", dark=170)
+b.save("data/maps/baker7.json", style="vault", dark=170, floors={"m": STEEL, "G": GRILLE})
 print(f"Бейкер-7: объектов {len(b.props)}, врагов {len(b.enemies)}, контейнеров {len(b.containers)}")
+city.save()
