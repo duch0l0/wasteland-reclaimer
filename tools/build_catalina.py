@@ -82,14 +82,14 @@ BED = P("ct_bed", "pk:west/west_2_005", foot=[2, 2])
 TABLE = P("ct_table", "pk:west/west_2_000", foot=[2, 1])
 CHAIR = P("ct_chair", "pk:west/west_2_001")
 
-SAND = cells("sisland/p1", [(0, 0), (1, 0), (0, 1), (1, 1)])
+SAND = ["noise:pk:sisland/p1/0,0,1,1"]      # песок без сетки плиток
 GRASS = cells("sisland/p1", [(8, 0), (9, 0), (8, 1), (9, 2)])
 SEA = cells("mport/p1", [(8, 4), (9, 4), (10, 4), (11, 4)])
 SEA_DEEP = cells("mport/p1", [(8, 4), (9, 4), (10, 4), (11, 4)])
 PATH = ["pk:iresort/iresort_f1_02"]
 WOOD = ["pk:iresort/iresort_f1_23"]
 MARBLE = ["pk:lrest/p1/0,12,1,1"]
-CAVE = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
+CAVE = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
 
 
 # ================================================================ Авалон
@@ -242,9 +242,13 @@ cv.floor_code("s", *SAND)
 cv.floor_code("~", *SEA)
 cv.water_codes = ("~",)
 cv.paint("x", 0, 0, W - 1, H - 1)
-cv.paint("s", 6, 4, 37, 21)
-cv.paint("c", 8, 4, 30, 9)
-cv.paint("~", 2, 12, 16, 23)
+# Грот: вход с востока (тропа к Авалону) -> песчаный пляж под сводом -> каменный карман с лагерем Джуда на севере ->
+# морской залив с юго-запада. Формы — овалы с неровным краем, как у настоящего грота.
+cv.blob("s", 21, 13, 13, 7)                            # пляж
+cv.blob("s", 8, 11, 5, 4)                              # берег в юго-западном углу
+cv.tunnel("s", [(37, 18), (33, 17), (30, 15)], width=3, wobble=0)
+cv.blob("c", 19, 6, 11, 3)                             # каменный карман
+cv.blob("~", 8, 18, 6, 5, wobble=0.2)                  # залив
 cv.portal([(37, 17), (37, 18), (37, 19)], "catalina", (2, 37), "Тропа к Авалону")
 cv.reserve(32, 15, 37, 20)
 cv.put(SHIPWRECK, 6, 10)
@@ -260,6 +264,12 @@ cv.enemies += [["river_lizard", 18, 20], ["river_lizard", 28, 12], ["river_lizar
 NAVY = P("ct_navy_crate", "pk:pmars/pmars_1_035", foot=[2, 1], search="military", title="ящик ВМФ")
 cv.box(NAVY, 12, 7, "затопленный ящик ВМФ", {"супер-кувалда": 1, "граната": 2})
 
+cv.cave_style = True
+PEBBLE_C = [P(f"ct_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
+STALAG_C = [P("ct_stalag_a", "pk:dcave/p1/8,6,2,2", foot=[1, 1], keybg=True), P("ct_stalag_b", "pk:dcave/p1/12,2,2,2", foot=[1, 1], keybg=True)]
+for x, y in ((12, 4), (27, 5), (30, 10), (14, 11)):
+    cv.maybe(STALAG_C[(x + y) % 2], x, y)
+cv.scatter(PEBBLE_C, 1, 1, W - 2, H - 2, 14)
 city.save(gap_exempt=("harbor_master", "sailor_finn"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["catalina"].update({"world_name": "Остров Санта-Каталина"})

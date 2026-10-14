@@ -686,52 +686,49 @@ class TownMap(MapBase):
     def _cave_is_dark(self, x, y):
         if not (0 <= x < self.width and 0 <= y < self.height):
             return True
-        if self.ground[y][x] != "x":
-            return False
-        below = self.ground[y + 1][x] if y + 1 < self.height else "x"
-        below2 = self.ground[y + 2][x] if y + 2 < self.height else "x"
-        return below == "x" and below2 == "x"
+        return self.ground[y][x] == "x"            # вся скала (и южные фасады) идёт через общий сглаженный контур
 
     def _cave_edge(self, x, y):
         """Граница «пол — тёмная скала» рисуется по сглаженному полю (как берег): контур гротов — плавные дуги, а не клетки."""
         c = self.ground[y][x]
         dark = self._cave_is_dark(x, y)
-        floor = c not in "x_" and c not in self.wallsets and c not in self._water
+        floor = c not in "x_" and c not in self.wallsets            # вода у скалы тоже получает контур
         if not (dark or floor):
             return None
         near = False
-        for dy in (-1, 0, 1):
-            for dx in (-1, 0, 1):
+        for dy in (-2, -1, 0, 1, 2):
+            for dx in (-2, -1, 0, 1, 2):
                 nx, ny = x + dx, y + dy
                 if dark and self._cave_class(nx, ny, False):
                     near = True
-                if floor and self._cave_is_dark(nx, ny):
+                if floor and abs(dx) <= 1 and abs(dy) <= 1 and self._cave_is_dark(nx, ny):
                     near = True
         if not near:
             return None
         key = ("ce", x, y)
         if key in self._edge_cache:
             return self._edge_cache[key]
-        wf = floor                                        # у пола стены считаем «полом», у скалы — нет
+        wf = False                                        # стены — скала для всех: фасады и боковые края сходятся одной дугой
         f = {(i, j): self._cave_class(x + i, y + j, wf) for i in (-1, 0, 1) for j in (-1, 0, 1)}
         N = 24
         mask = pygame.Surface((N, N))
+        G = {}
+        for j in (-1, 0, 1, 2):                         # поле «доля пола» в узлах: считаем один раз, не на каждый пиксель
+            for i in (-1, 0, 1, 2):
+                tot = n = 0
+                for ddy in (-1, 0, 1):
+                    for ddx in (-1, 0, 1):
+                        w = 2 if ddx == 0 and ddy == 0 else 1
+                        tot += w
+                        n += w * self._cave_class(x + i + ddx, y + j + ddy, wf)
+                G[(i, j)] = n / tot
         for py in range(N):
             for px in range(N):
                 u, v = (px + 0.5) / N - 0.5, (py + 0.5) / N - 0.5
                 i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
                 fu, fv = u - i0, v - j0
-                # круглая сетка: вес соседа по диагонали и по стороне сглажен 3×3-ядром
-                def g(i, j):
-                    tot = n = 0
-                    for ddy in (-1, 0, 1):
-                        for ddx in (-1, 0, 1):
-                            w = 2 if ddx == 0 and ddy == 0 else 1
-                            tot += w
-                            n += w * self._cave_class(x + i + ddx, y + j + ddy, wf)
-                    return n / tot
-                val = (g(i0, j0) * (1 - fu) * (1 - fv) + g(i0 + 1, j0) * fu * (1 - fv)
-                       + g(i0, j0 + 1) * (1 - fu) * fv + g(i0 + 1, j0 + 1) * fu * fv)
+                val = (G[(i0, j0)] * (1 - fu) * (1 - fv) + G[(i0 + 1, j0)] * fu * (1 - fv)
+                       + G[(i0, j0 + 1)] * (1 - fu) * fv + G[(i0 + 1, j0 + 1)] * fu * fv)
                 m = max(0, min(255, int(255 * val)))
                 mask.set_at((px, py), (m, m, m))
         mask = pygame.transform.smoothscale(mask, (T, T))
@@ -747,7 +744,9 @@ class TownMap(MapBase):
         if fl_tile is None:
             return None
         out = pygame.Surface((T, T))
-        lip, hi = (52, 38, 28), (112, 88, 64)
+        lip, hi = (36, 28, 24), (118, 98, 80)
+        # толщина скалы у края — валуны той же фактуры, что и южные фасады, а не тонкая линия: стена читается по всему контуру
+        boul = self._cave_rock["face"][(h // 7) % len(self._cave_rock["face"])]
         for py in range(T):
             for px in range(T):
                 m = mask.get_at((px, py))[0]
@@ -759,8 +758,14 @@ class TownMap(MapBase):
                     elif m < 214:
                         k = 0.82 + 0.18 * (m - 176) / 38
                         c = (int(c[0] * k), int(c[1] * k), int(c[2] * k))
-                elif m >= 118:                                 # кромка уступа
-                    c = lip if m < 128 else hi
+                elif m >= 124:                                 # светлая верхняя грань скола
+                    c = hi
+                elif m >= 112:                                 # тёмный контур
+                    c = lip
+                elif m >= 14:                                  # тело стены: валуны, к глубине темнее
+                    c = boul.get_at((px, py))[:3]
+                    k = 0.62 + 0.38 * min(1.0, (m - 14) / 70)
+                    c = (int(c[0] * k), int(c[1] * k), int(c[2] * k))
                 else:
                     c = rock_tile.get_at((px, py))[:3]
                 out.set_at((px, py), c)
@@ -1009,6 +1014,7 @@ class TownMap(MapBase):
         if code == "x":
             below = self.ground[y + 1][x] if y + 1 < self.height else "x"
             if self.style == "cave" and self._cave_rock:
+                return self._rock[h % len(self._rock)]          # у пещер вся скала рисуется общим контуром (_cave_edge)
                 if below != "x":
                     return self._cave_rock["face"][h % len(self._cave_rock["face"])]   # скальный фасад над полом
                 below2 = self.ground[y + 2][x] if y + 2 < self.height else "x"

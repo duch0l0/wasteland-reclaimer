@@ -732,6 +732,56 @@
 "search": "military",
 "title": "ящик ВМФ"
 },
+"ct_pebbles0": {
+"img": "pk:dcave/p1/2,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ct_pebbles1": {
+"img": "pk:dcave/p1/3,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ct_pebbles2": {
+"img": "pk:dcave/p1/4,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ct_pebbles3": {
+"img": "pk:dcave/p1/2,5,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ct_pebbles4": {
+"img": "pk:dcave/p1/5,5,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"ct_stalag_a": {
+"img": "pk:dcave/p1/8,6,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"ct_stalag_b": {
+"img": "pk:dcave/p1/12,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
 "catalina_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,
