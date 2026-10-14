@@ -301,18 +301,46 @@ mn.paint("c", 11, 17, 14, 19)                          # просечка к в�
 mn.paint("c", 30, 4, 46, 9)                            # старый вентиляционный штрек — к базе
 mn.portal([(6, 33), (7, 33)], "searchlight", (29, 6), "Наверх")
 mn.reserve(4, 29, 9, 33)
-mn.put(RAILS, 5, 6)
-mn.put(RAILS, 18, 6)
-mn.put(CART[0], 9, 5)
-mn.put(CART[1], 24, 5)
+# Планировка шахты: двор у ствола (подъём, локомотив, склад инструмента), главный штрек на север с крепью по бокам,
+# откаточный штрек с рельсами и вагонетками, выработка с угольным забоем, завал у вентиляционного хода.
+mn.paint("c", 15, 27, 22, 32)                          # инструментальная — рядом со двором
+mn.paint("c", 14, 29, 15, 30)                          # проход из двора в инструментальную
+mn.reserve(4, 29, 9, 33)
 mn.put(LOCO, 4, 28)
-for x, y in ((7, 12), (9, 18), (7, 23), (16, 15), (26, 19)):
-    mn.maybe(SUPPORTS[(x + y) % 3], x, y)                 # крепь — где влезает в штрек
-for x, y in ((12, 8), (28, 8), (20, 20), (12, 31)):
-    mn.put(LANTERNS[(x + y) % 2], x, y)
-mn.put(COAL[0], 22, 16)
-mn.put(COAL[1], 28, 16)
+for x in (5, 10, 15, 20, 25, 30):                      # рельсы откаточного штрека вдоль всего хода
+    mn.maybe(RAILS, x, 8)
+mn.maybe(CART[0], 9, 7)
+mn.maybe(CART[1], 24, 7)
+mn.maybe(CART[0], 29, 7)
+for y in (13, 17, 21, 25):                             # крепь главного штрека — парами по бокам, проход посередине свободен
+    mn.maybe(SUPPORTS[y % 3], 7, y)
+    mn.maybe(SUPPORTS[(y + 1) % 3], 10, y)
+for x in (8, 14, 20, 26, 32):                          # крепь откаточного штрека — по южной стене
+    mn.maybe(SUPPORTS[x % 3], x, 10)
+for x, y in ((12, 5), (22, 5), (31, 5), (8, 12), (11, 24), (12, 30), (18, 28)):
+    mn.maybe(LANTERNS[(x + y) % 2], x, y)
+# забой: уголь вдоль стен, вагонетка с рельсом, бункер
+for x, y in ((15, 15), (18, 15), (27, 15), (29, 18), (15, 21), (24, 21)):
+    mn.maybe(COAL[(x + y) % 2], x, y)
+mn.maybe(RAILS_S, 20, 18)
+mn.maybe(CART[1], 24, 18)
 mn.box(CRATE_B, 27, 21, "ящик с инструментом", {"динамит": 1, "изолента": 1}, owner="foreman_gus")
+# инструментальная: верстак, шкафчики, кирки и лопаты, ящики
+mn.maybe("table_2", 18, 29)
+mn.maybe("chair_0", 18, 31)
+mn.maybe("locker_1", 16, 27)
+mn.maybe("locker_2", 18, 27)
+mn.maybe("locker_double", 20, 27)
+mn.maybe("pickaxe", 21, 30)
+mn.maybe("shovel", 21, 31)
+mn.maybe(CRATE, 16, 31)
+mn.maybe(CRATE_B, 20, 32)
+mn.maybe(BARRELS[0], 22, 28)
+# завал у вентиляционного хода — обвал с краю, проход свободен
+mn.maybe(ROCKS[0], 36, 5)
+mn.maybe(ROCKS[1], 38, 9)
+mn.maybe(ROCKS[0], 31, 9)
+mn.maybe(COAL[0], 42, 6)
 mn.put(FAN, 44, 5)
 mn.put(DANGER, 32, 5)
 mn.portal([(45, 7), (45, 8)], "fort_bunker", (4, 30), "Вентиляционный штрек",
@@ -459,7 +487,7 @@ print("обжито:", sl.dress_empty([
 
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 27, 14, 34)], chance=0.3, passes=1)
-mn.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 48, 34, 30)
+mn.scatter(["rock", "stones_12"], 1, 1, 48, 34, 14)
 city.save(gap_exempt=("robo_sgt", "recruit_danny", "recruit_b", "recruit_c", "recruit_d", "recruit_e", "robo_sentry",
                       "recruit_f"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
