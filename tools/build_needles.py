@@ -198,8 +198,6 @@ n.put(WAGON, 4, 3, check=False)
 n.put(WAGON, 8, 3, check=False)
 n.put(BENCH, 26, 9)
 n.put(BENCH, 36, 9)
-n.maybe(LANTERN_POST, 28, 9)
-n.maybe(LANTERN_POST, 34, 9)
 n.put(STAGECOACH, 18, 8)
 n.put(TROUGH, 15, 9)
 # склад речников у дороги к мосту

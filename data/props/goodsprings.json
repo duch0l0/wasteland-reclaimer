@@ -706,21 +706,7 @@
 "layer": "floor",
 "keybg": true
 },
-"gs_moss0": {
-"img": "pk:dcave/p1/6,14,2,2",
-"block": false,
-"sight": false,
-"layer": "floor",
-"keybg": true
-},
-"gs_moss1": {
-"img": "pk:dcave/p1/8,14,2,2",
-"block": false,
-"sight": false,
-"layer": "floor",
-"keybg": true
-},
-"gs_moss2": {
+"gs_moss": {
 "img": "pk:dcave/p1/10,14,2,2",
 "block": false,
 "sight": false,

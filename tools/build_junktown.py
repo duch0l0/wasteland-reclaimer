@@ -215,6 +215,15 @@ for x0, door in ((8, 14), (26, 34), (50, 56)):
 jt.put(JACKPOT, 30, 19, force=True)                                   # неоновые вывески у входа в казино
 jt.put(NEON_CASH, 37, 19, force=True)
 jt.put(NEON_ARROW, 41, 19, force=True)
+# площадка перед казино: скамьи, кадки, бочки с огнём и мотоциклы байкеров — место, где толкутся, а не пустое поле
+for x, y in ((31, 22), (36, 22), (40, 22)):
+    jt.maybe("bench_7", x, y)
+for x, y in ((29, 21), (42, 21), (34, 24), (38, 24)):
+    jt.maybe(W_PLANT[(x + y) % 3], x, y)
+for x, y in ((28, 23), (43, 23)):
+    jt.maybe("x_fire_barrel", x, y)
+jt.maybe(BIKES[0], 44, 22)
+jt.maybe(BIKES[0], 27, 24)
 jt.put(SOLAR, 22, 12)                                     # солнечные панели ратуши
 jt.put(SOLAR_LOW, 22, 15)
 jt.put(BARRELS, 46, 12)                                   # задний двор казино: бочки, ящики

@@ -93,7 +93,7 @@ LANTERN_G = P("gs_cave_lantern", "pk:cmine/cmine_1_032", light={"r": 100, "color
 BOULDERS = [P("gs_boulder", "pk:gcave/p1/4,4,1,1"), P("gs_boulder_b", "pk:gcave/p1/5,4,1,1")]
 
 PIT_G = [P("gs_pit_a", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=True), P("gs_pit_b", "pk:dcave/p1/4,8,2,2", foot=[1, 1], layer="floor", keybg=True)]
-MOSS_G = [P(f"gs_moss{i}", f"pk:dcave/p1/{x},14,2,2", block=False, layer="floor", keybg=True) for i, x in enumerate((6, 8, 10))]
+MOSS_G = [P("gs_moss", "pk:dcave/p1/10,14,2,2", block=False, layer="floor", keybg=True)]
 PEBBLE_G = [P(f"gs_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
@@ -363,7 +363,7 @@ print("обжито:", gs.dress_empty([
 for x, y in ((8, 21), (12, 15), (28, 17)):
     cv.maybe(PIT_G[(x + y) % 2], x, y)                 # провалы и трещины в полу
 for x, y in ((8, 5), (21, 8), (11, 12), (31, 20)):
-    cv.maybe(MOSS_G[(x + y) % 3], x, y)                # мшистые поляны у воды и в нише
+    cv.maybe(MOSS_G[0], x, y)                # мшистые поляны у воды и в нише
 cv.scatter(PEBBLE_G, 1, 1, 38, 32, 18)
 cv.patchwork("d", ["k", "k", "k"], 14, 2, 4, seed=1)
 cv.cave_style = True
