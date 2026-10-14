@@ -1,5 +1,47 @@
 {
 "props": {
+"bk_counter": {
+"img": "pk:lhotel/lhotel_1_012",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"bk_plant": {
+"img": "pk:aoffice/aoffice_3_025",
+"block": true,
+"sight": false
+},
+"bk_wait_chair": {
+"img": "pk:aoffice/aoffice_1_002",
+"block": true,
+"sight": false
+},
+"bk_safebox": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "депозитная ячейка"
+},
+"bk_safebox_b": {
+"img": "pk:nbunk/nbunk_2_006",
+"block": true,
+"sight": false,
+"search": "locker",
+"title": "депозитная ячейка"
+},
+"bk_vent": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
 "bk_safe": {
 "img": "pk:west/west_2_105",
 "block": true,
@@ -37,6 +79,46 @@
 "img": "pk:grave/grave_2_022",
 "block": false,
 "sight": false
+},
+"bk_rug_a": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_rug_b": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_rug_c": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_rug_d": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
 },
 "vegas_bank_f_tech_2_073": {
 "img": "pk:npower/npower_2_073",

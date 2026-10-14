@@ -1448,6 +1448,85 @@
 "search": "drawer",
 "title": "картотека"
 },
+"vg_locker_a": {
+"img": "pk:nbunk/nbunk_2_005",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "locker",
+"title": "шкафчик"
+},
+"vg_locker_b": {
+"img": "pk:nbunk/nbunk_2_006",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "locker",
+"title": "шкафчик"
+},
+"vg_bunk": {
+"img": "pk:nbunk/nbunk_2_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vg_gen": {
+"img": "pk:nbunk/nbunk_2_028",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"vg_office_chair": {
+"img": "pk:aoffice/aoffice_1_002",
+"block": true,
+"sight": false
+},
+"vg_office_plant_a": {
+"img": "pk:aoffice/aoffice_3_025",
+"block": true,
+"sight": false
+},
+"vg_office_plant_b": {
+"img": "pk:aoffice/aoffice_1_002",
+"block": true,
+"sight": false
+},
+"vg_copier": {
+"img": "pk:aoffice/aoffice_3_021",
+"block": true,
+"sight": false
+},
+"vg_whiteboard": {
+"img": "pk:aoffice/aoffice_2_010",
+"block": false,
+"sight": false
+},
+"vg_chart": {
+"img": "pk:aoffice/aoffice_2_036",
+"block": false,
+"sight": false
+},
+"vg_sofa_wait": {
+"img": "pk:lhotel/lhotel_1_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
 "vg_reception": {
 "img": "pk:lhotel/lhotel_1_012",
 "block": true,
@@ -1534,6 +1613,26 @@
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
 "sight": false,
+"layer": "floor"
+},
+"vg_lobby_rug": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"vg_lobby_rug_b": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
 "layer": "floor"
 },
 "vg_tech_2_073": {

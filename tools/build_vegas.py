@@ -138,6 +138,15 @@ SW_LANTERN = P("vg_sw_lantern", "pk:sewer/sewer_1_010", foot=[1, 1], keybg=True,
 SEWER_RUBBLE = [P("vg_sewer_rubble", "pk:sewer/sewer_1_042", foot=[2, 1]), P("vg_sewer_moss", "pk:sewer/sewer_1_041", foot=[2, 1])]
 DESKS = [P("vg_vt_desk", "pk:aoffice/aoffice_1_000"), P("vg_vt_desk_b", "pk:aoffice/aoffice_1_004")]
 CABINETS = P("vg_cabinets", "pk:aoffice/aoffice_3_013", sight=True, search="drawer", title="картотека")
+LOCKERS_V = [P("vg_locker_a", "pk:nbunk/nbunk_2_005", foot=[1, 1], search="locker", title="шкафчик"), P("vg_locker_b", "pk:nbunk/nbunk_2_006", foot=[1, 1], search="locker", title="шкафчик")]
+BUNK_V = P("vg_bunk", "pk:nbunk/nbunk_2_000", foot=[2, 1], sight=True)
+GEN_V = P("vg_gen", "pk:nbunk/nbunk_2_028", foot=[2, 2], sight=True)
+CHAIR_V = P("vg_office_chair", "pk:aoffice/aoffice_1_002")
+PLANT_V = [P("vg_office_plant_a", "pk:aoffice/aoffice_3_025"), P("vg_office_plant_b", "pk:aoffice/aoffice_1_002")]
+COPIER_V = P("vg_copier", "pk:aoffice/aoffice_3_021")
+WHITEBOARD_V = P("vg_whiteboard", "pk:aoffice/aoffice_2_010", block=False)
+CHART_V = P("vg_chart", "pk:aoffice/aoffice_2_036", block=False)
+SOFA_V = P("vg_sofa_wait", "pk:lhotel/lhotel_1_022", foot=[2, 1])
 RECEPTION = P("vg_reception", "pk:lhotel/lhotel_1_012", foot=[4, 1])
 DEBRIS = P("vg_debris", "pk:pmall/pmall_2_042")
 SERVER = P("vg_server", "pk:npower/npower_2_042")
@@ -153,11 +162,15 @@ WALK = ["pk:zcity/zcity_f1_22"]
 RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
 DIRT = ["noise:pk:zcity/zcity_f2_22"]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет пустыни вокруг
-GRAVEL = ["noise:pk:mbase/p1/9,9,1,1"]
+GRAVEL = ["noise:pk:zcity/zcity_f3_10"]
 PLATES = ["pk:fstation/fstation_f2_09"]
 CASINO_FL = ["pk:store/p1/2,8,1,1"]
 WOOD = ["pk:fstation/fstation_f2_22"]
 CARPET = ["pk:aoffice/p3/3,1,1,1"]
+MARBLE = ["pk:hotel/hotel_f1_23"]
+STEEL = ["pk:nbunk/p2/4,8,1,1"]
+GRILLE = ["pk:nbunk/p2/0,12,1,1"]
+VT_LOGO = "pk:casino/casino_4_049"
 TILE_W = ["pk:store/p1/12,0,1,1"]
 STONE = ["pk:zcity/zcity_f1_23"]
 WATER = cells("sewer/p1", [(10, 1), (11, 1)])
@@ -265,7 +278,7 @@ st.scatter(RUBBLE + ["r_trash", "r_bones"], 46, 33, W - 2, H - 2, 10)
 
 # ================================================================ Сапоги Мохаве
 W, H = 64, 44
-bt = vegas_map("vegas_boots", "Вегас: Сапоги Мохаве", W, H, (39, 42), 222, music="junktown")
+bt = vegas_map("vegas_boots", "Вегас: Сапоги Мохаве", W, H, (39, 42), 222, music="junktown", night=[124, 122, 156])
 bt.floor_code("s", *SAND)
 bt.floor_code("g", *GRAVEL)
 bt.floor_code("a", *ROAD)
@@ -290,8 +303,17 @@ bt.box(SAFE, 52, 6, "сейф электростанции", {"чертёж эл
        requires={"item": "отмычка", "msg": "Сейф инженеров. Без отмычки не открыть."}, owner="boots_engineer")
 for x in (6, 22, 50):
     bt.put(WARN, x, 15)
+bt.floor_code("o", "noise:pk:zcity/zcity_f2_26")
+bt.floor_code("z", "pk:fstation/fstation_f2_09")
+bt.patchwork("g", ["o"], 10, 1, 2, seed=7)            # бетонные плиты и тёмные масляные пятна на площадке станции
 bt.hwall([CHAIN], 4, 60, 19, gaps=(36, 37, 38, 39, 40, 41, 42, 43))     # сетка вокруг станции, ворота к дороге
-for x, y in ((8, 9), (14, 12), (22, 14), (33, 13), (38, 10), (48, 12), (57, 10), (58, 15)):
+for x, y in ((8, 16), (16, 16), (24, 16), (30, 16), (46, 16), (54, 16)):
+    bt.maybe(TANK_RAD[(x // 8) % 2], x, y)
+for x, y in ((8, 14), (28, 14), (44, 14), (56, 14)):
+    bt.maybe(PANEL[(x // 4) % 2], x, y)
+for x in (10, 18, 26, 44, 52):
+    bt.maybe(WARN, x, 7)
+for x, y in ((9, 9), (14, 12), (22, 14), (33, 13), (38, 10), (48, 12), (57, 10), (58, 15)):
     bt.maybe(["pile_junk", "barrel_wood", "pile_cans", "r_trash"][x % 4], x, y)
 # гараж и стойла: мотоциклы рядом, повозки, поилки, сено
 for i, x in enumerate((5, 8, 11)):
@@ -563,28 +585,58 @@ tn.scatter(["r_bones", "pile_cans"], 2, 3, 48, 28, 8)
 # ================================================================ башня Vault-Tec
 W, H = 40, 30
 tw = CityMap(city, "vegas_tower", "Башня Vault-Tec", W, H, start=(18, 26), seed=228, interior=True, music="lab")
-tw.floor_code("T", *TILE_W)
+tw.floor_code("T", *MARBLE)
 tw.floor_code("C", *CARPET)
+tw.floor_code("P", *STEEL)
 tw.wall_code("W", "pk:pmall/pmall_w3_10")
-tw.room(1, 12, 39, 29, "W", "T")                      # холл
-tw.room(1, 1, 22, 12, "W", "C")                       # архив
-tw.room(22, 1, 39, 12, "W", "T")                      # лифтовая шахта
+tw.room(1, 12, 39, 29, "W", "T")                      # холл — бежевый мрамор: так «Волт-Тек» принимал гостей
+tw.room(1, 1, 22, 12, "W", "C")                       # архив — ковёр, стеллажи, рабочие места
+tw.room(22, 1, 39, 12, "W", "P")                      # лифтовая шахта — сталь
 tw.opening(18, 29, 19, 29, "T")
 tw.portal([(18, 29), (19, 29)], "vegas_strip", (54, 13), "На Стрип")
 tw.props.append(["x_ladder", 4, 27])
 tw.portal([(4, 27)], "vegas_tunnels", (45, 26), "Вниз, в змеиные ходы")
 tw.reserve(2, 26, 6, 28)
 tw.opening(10, 12, 11, 14, "C")
-tw.opening(30, 12, 31, 14, "T")
+tw.opening(30, 12, 31, 14, "P")
+# холл: стойка по центру, зона ожидания с диванами и ковром, растения, логотип на стене, колонны из шкафов, обломки по углам
 tw.put(RECEPTION, 16, 18)
+tw.stamp("vg_lobby_rug", "pk:lhotel/p2/10,12,2,2", 15, 22, water=False)
+tw.stamp("vg_lobby_rug_b", "pk:lhotel/p2/10,12,2,2", 27, 18, water=False)
+for x, y in ((4, 17), (8, 17), (31, 17), (35, 17)):
+    tw.maybe(SOFA_V, x, y)
+for x, y in ((3, 14), (37, 14), (12, 27), (26, 27), (3, 22), (36, 24)):
+    tw.maybe(PLANT_V[(x + y) % 2], x, y)
+for x, y in ((14, 14), (20, 14), (26, 14)):
+    tw.maybe(CHART_V, x, y)
 for x, y in ((6, 16), (28, 22), (34, 16), (12, 24)):
     tw.put(DEBRIS, x, y)
+for x in (22, 25, 28):
+    tw.maybe(CHAIR_V, x, 19)
+tw.maybe(COPIER_V, 36, 22)
+tw.maybe(CABINETS, 33, 26)
+tw.maybe(CABINETS, 35, 26)
+# архив: стеллажи двумя рядами, рабочие места с лампами, доска, ксерокс
 for i, x in enumerate((3, 5, 7, 9)):
     tw.put(CABINETS, x, 4)
+for x in (11, 12, 20, 21):
+    tw.maybe(CABINETS, x, 4)
 tw.put(DESKS[0], 14, 6)
+for x, y in ((4, 8), (8, 8), (16, 8), (20, 8)):
+    tw.maybe(DESKS[(x // 4) % 2], x, y)
+    tw.maybe(CHAIR_V, x + 1, y + 1)
+tw.maybe(WHITEBOARD_V, 12, 2)
+tw.maybe(COPIER_V, 3, 10)
+tw.maybe(PLANT_V[0], 21, 10)
 tw.terminal(18, 4, "tower_archive")
+# лифтовая: консоли, генератор, сервер, жёлтые ограждения
 tw.put(CONSOLES[0], 24, 4)
 tw.put(SERVER, 36, 4)
+tw.maybe(CONSOLES[1], 27, 4)
+tw.maybe(SERVER, 34, 4)
+tw.maybe(GEN_V, 35, 9)
+tw.maybe(VRE_CRATE, 24, 10)
+tw.maybe(VRE_CRATE, 36, 11)
 tw.props.append(["x_ladder", 31, 7])
 tw.portal([(31, 7)], "vegas_zero", (19, 26), "Лифтовая шахта — вниз, к «Нолю»",
           requires={"flag": "zero_power", "msg": "Лифт мёртв уже сорок четыре года. Нужно питание: электростанция Сапогов — или кто-то ещё."})
@@ -595,9 +647,16 @@ tw.enemies += [["robot_guard", 30, 20], ["feral", 8, 22], ["feral", 34, 26]]
 # ================================================================ хранилище «Ноль»: шлюз
 W, H = 40, 30
 zr = CityMap(city, "vegas_zero", "Хранилище «Ноль»", W, H, start=(19, 26), seed=229, interior=True, music="vats")
-zr.floor_code("M", *PLATES)
+zr.floor_code("M", *STEEL)
+zr.floor_code("G", *GRILLE)
+zr.floor_code("S", *PLATES)
 zr.wall_code("W", "pk:fstation/fstation_w1_10")
 zr.room(1, 1, 39, 29, "W", "M")
+zr.room(1, 11, 11, 21, "W", "S")                       # караулка у западной стены
+zr.room(29, 11, 39, 21, "W", "S")                      # оружейная у восточной
+zr.opening(11, 14, 11, 17, "S")
+zr.opening(29, 14, 29, 17, "S")
+zr.paint("G", 14, 8, 25, 22)                           # решётчатый настил шлюза — кабельные каналы под ногами
 zr.props.append(["x_ladder", 19, 27])
 zr.portal([(19, 27)], "vegas_tower", (31, 8), "Наверх, в шахту лифта")
 zr.reserve(17, 25, 22, 28)
@@ -608,15 +667,40 @@ zr.reserve(17, 4, 22, 7)
 zr.terminal(13, 6, "zero_door")
 for x in (4, 8, 30, 34):
     zr.put(CONSOLES[x % 2], x, 4)
+# караулка: койки, шкафчики, стол, стойка с картой; оружейная: стеллажи, ящики, стойки
+for y in (13, 16, 19):
+    zr.maybe(BUNK_V, 3, y)
+for y in (14, 18):
+    zr.maybe(LOCKERS_V[y % 2], 9, y)
+zr.maybe("table_2", 6, 17)
+zr.maybe("chair_0", 6, 19)
+for y in (13, 15, 17, 19):
+    zr.maybe(VRE_CRATE, 31, y)
+    zr.maybe(VRE_CRATE, 36, y)
+zr.maybe(GEN_V, 33, 12)
+# шлюз: баррикады из мешков и ящики перед дверью, пульты охраны по бокам, лампы
+for x, y in ((14, 24), (24, 24), (14, 9), (24, 9)):
+    zr.maybe("x_sandbags", x, y)
+for x, y in ((17, 22), (22, 22)):
+    zr.maybe(CONSOLES[x % 2], x, y)
+for x, y in ((13, 6), (26, 6), (13, 26), (26, 26)):
+    zr.maybe(SERVER, x, y)
 zr.enemies += [["turret", 6, 14], ["turret", 33, 14]]
 
 
 # ================================================================ хранилище «Ноль»: внутри
 W, H = 40, 30
 vt = CityMap(city, "vegas_vault", "«Ноль»: хранилище", W, H, start=(19, 26), seed=230, interior=True, music="vats")
-vt.floor_code("M", *PLATES)
+vt.floor_code("M", *STEEL)
+vt.floor_code("G", *GRILLE)
+vt.floor_code("S", *PLATES)
 vt.wall_code("W", "pk:fstation/fstation_w1_08")
 vt.room(1, 1, 39, 29, "W", "M")
+vt.paint("G", 12, 14, 27, 20)                          # решётчатый настил вокруг капсул
+vt.room(1, 22, 10, 29, "W", "S")                       # шкаф-кладовая образцов
+vt.room(30, 22, 39, 29, "W", "S")                      # пост медиков
+vt.opening(10, 24, 10, 27, "S")
+vt.opening(30, 24, 30, 27, "S")
 vt.opening(19, 29, 20, 29, "M")
 vt.portal([(19, 29), (20, 29)], "vegas_zero", (19, 6), "К шлюзу")
 for i, (x, y) in enumerate(((4, 5), (8, 5), (12, 5), (4, 10), (8, 10), (28, 5), (32, 5), (28, 10), (32, 10), (36, 10))):
@@ -628,6 +712,19 @@ vt.put(CRYO, 18, 17)
 vt.put(TUBE_DEAD, 14, 17)
 vt.put(TUBE_DEAD, 24, 17)
 vt.terminal(21, 20, "cryo_capsule")
+for y in (24, 26, 28):
+    vt.maybe(LOCKERS_V[y % 2], 3, y)
+    vt.maybe(LOCKERS_V[(y + 1) % 2], 7, y)
+vt.maybe(BIOHAZ, 5, 23)
+for x, y in ((32, 24), (36, 24), (33, 27), (37, 27)):
+    vt.maybe(CONSOLES[(x + y) % 2], x, y)
+vt.maybe(GEN_V, 35, 22)
+for x, y in ((3, 14), (36, 14), (3, 18), (36, 18)):
+    vt.maybe(VRE_CRATE, x, y)
+for x, y in ((12, 12), (27, 12)):
+    vt.maybe(SERVER, x, y)
+for x, y in ((14, 22), (25, 22)):
+    vt.maybe(TUBE_DEAD, x, y)
 vt.npcs += [["cooper_zero", 26, 22]]
 
 

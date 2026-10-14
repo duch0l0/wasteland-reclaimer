@@ -23,6 +23,14 @@ def cells(page, pts):
     return [f"pk:{page}/{x},{y},1,1" for x, y in pts]
 
 
+GRILLE_B = cells("nbunk/p2", [(0, 12)])
+COUNTER_B = P("bk_counter", "pk:lhotel/lhotel_1_012", foot=[4, 1])
+PLANT_B = P("bk_plant", "pk:aoffice/aoffice_3_025")
+CHAIR_W = P("bk_wait_chair", "pk:aoffice/aoffice_1_002")
+SAFEBOX = P("bk_safebox", "pk:nbunk/nbunk_2_005", search="locker", title="депозитная ячейка")
+SAFEBOX_B = P("bk_safebox_b", "pk:nbunk/nbunk_2_006", search="locker", title="депозитная ячейка")
+CARPET_B = "pk:lhotel/p2/10,12,2,2"
+VENT_B = P("bk_vent", "pk:nbunk/nbunk_2_021", foot=[1, 1], block=False)
 SAFE = P("bk_safe", "pk:west/west_2_105")
 DESK = P("bk_desk", "pk:lrest/lrest_1_061", foot=[2, 1])
 CHAIR = P("bk_chair", "pk:west/west_2_001")
@@ -35,9 +43,10 @@ VWALL = "pk:nbunk/nbunk_w3_17"
 
 W, H = 40, 28
 bk = CityMap(city, "vegas_bank", "Первый банк Мохаве: подвал", W, H, start=(6, 5), seed=231, interior=True, music="vats",
-             night=[60, 60, 80])
+             night=[100, 100, 130])
 bk.floor_code("M", *MARBLE)
 bk.floor_code("F", *PLATES)
+bk.floor_code("G", *GRILLE_B)
 bk.wall_code("W", VWALL)
 bk.room(1, 1, 26, 27, "W", "M")                       # холл: стойки кассиров, пульт охраны
 bk.room(26, 1, 39, 27, "W", "F")                      # хранилище за бронедверью
@@ -48,6 +57,20 @@ for x in (8, 12, 16, 20):
     bk.put(DESK, x, 10)
     bk.put(CHAIR, x, 12)
 bk.terminal(13, 18, "bank_security")
+# операционный зал: красная дорожка от входа к стойкам, стойки кассиров с решётками, зона ожидания, колонны из шкафов
+bk.stamp("bk_rug_a", CARPET_B, 10, 6, water=False)
+bk.stamp("bk_rug_b", CARPET_B, 14, 14, water=False)
+bk.stamp("bk_rug_c", CARPET_B, 6, 22, water=False)
+bk.stamp("bk_rug_d", CARPET_B, 20, 20, water=False)
+for x in (9, 13, 17, 21):
+    bk.maybe(COUNTER_B, x - 2, 8)
+for x, y in ((3, 14), (3, 18), (22, 14), (22, 18), (3, 24), (22, 24), (13, 22), (17, 22)):
+    bk.maybe(CHAIR_W, x, y)
+for x, y in ((3, 8), (24, 8), (3, 26), (24, 26), (12, 3), (18, 3)):
+    bk.maybe(PLANT_B, x, y)
+for x in range(4, 25, 4):
+    bk.maybe(SAFEBOX if (x // 4) % 2 else SAFEBOX_B, x, 3)
+bk.paint("G", 4, 24, 24, 24)                             # решётчатый стык в южной части зала — вентиляция подвала
 for x, y in ((5, 20), (19, 22), (11, 25)):
     bk.put(BONES, x, y)
 # бронедверь: открывается флагом (пульт охраны, команда или динамит)
@@ -57,6 +80,14 @@ bk.reserve(25, 12, 28, 15)
 for x, y in ((31, 4), (35, 4), (31, 22), (35, 22)):
     bk.put(CRATES, x, y)
 bk.terminal(34, 13, "bank_vault")
+# хранилище: ряды депозитных ячеек вдоль стен, стальные ящики, весы слитков, огнетушители
+for y in (3, 6, 9, 17, 20, 23, 26):
+    bk.maybe(SAFEBOX if y % 2 else SAFEBOX_B, 28, y)
+    bk.maybe(SAFEBOX_B if y % 2 else SAFEBOX, 38, y)
+for x, y in ((31, 9), (35, 9), (31, 17), (35, 17)):
+    bk.maybe(CRATES, x, y)
+for x, y in ((31, 26), (35, 26)):
+    bk.maybe(SERVER, x, y)
 bk.enemies += [["turret", 22, 6], ["robot_guard", 18, 16], ["robot_guard", 10, 22]]
 
 city.save()
