@@ -310,15 +310,6 @@
 "block": false,
 "sight": false
 },
-"nd_bench": {
-"img": "pk:wrail/p1/9,2,2,1",
-"block": true,
-"sight": false,
-"foot": [
-2,
-1
-]
-},
 "nd_wagon": {
 "img": "pk:wrail/p1/10,12,2,1",
 "block": true,

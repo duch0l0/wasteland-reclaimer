@@ -69,7 +69,7 @@ WEST_SIGN = P("nd_signboard", "pk:west/p1/12,4,2,2", foot=[2, 1])
 CACTUS = P("nd_cactus", "pk:west/p1/12,0,1,2", foot=[1, 1])
 CACTUS_B = P("nd_cactus_b", "pk:west/p1/15,0,1,2", foot=[1, 1])
 TUMBLE = P("nd_tumbleweed", "pk:west/west_1_004", block=False)
-BENCH = P("nd_bench", "pk:wrail/p1/9,2,2,1", foot=[2, 1])
+BENCH = "bench_7"
 RAIL_WAGON = P("nd_wagon", "pk:wrail/p1/10,12,2,1", foot=[2, 1])
 BAR_STOOLS = P("nd_bar_counter", "pk:west/west_2_108", foot=[4, 1])
 PIANO = P("nd_piano", "pk:west/west_2_012", foot=[2, 1])
@@ -224,6 +224,12 @@ for x in (12, 24, 33, 43):                         # фонари по обеи�
     n.maybe(LANTERN_POST, x, 22, allow_reserved=True)
 for x in (12, 23, 33, 46):
     n.maybe(LANTERN_POST, x, 27, allow_reserved=True)
+# уличная жизнь: у каждой двери — ящики, бочки, скамья; в колеях лужи; повозка у обочины
+for x, y, name in ((14, 22, CRATE), (20, 22, "barrel_wood"), (22, 22, "crate_b"), (30, 22, BENCH), (34, 22, "crate_b"),
+                   (40, 22, "barrel_wood"), (42, 22, CRATE), (15, 27, "barrel_wood"), (21, 27, "crate_b"),
+                   (26, 27, "barrel_wood"), (31, 27, BENCH), (38, 27, CRATE), (41, 27, "barrel_wood"), (13, 27, "crate")):
+    n.maybe(name, x, y, allow_reserved=True)
+n.maybe(STAGECOACH, 46, 28, allow_reserved=True)
 # ---- южная сторона: церковь, дома; за ними — дворы с заборами и кладбище
 n.building(14, 29, 8, 8, "planks", north=(2,))
 n.portal([(16, 29), (17, 29)], "needles_church", (8, 13), "Церковь")
