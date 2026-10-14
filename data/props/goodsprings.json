@@ -312,6 +312,26 @@
 ],
 "keybg": true
 },
+"gs_stall": {
+"img": "pk:destown/p3/4,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"gs_stall_b": {
+"img": "pk:destown/p3/0,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
 "gs_hitch": {
 "img": "pk:west/p1/1,13,3,1",
 "block": true,

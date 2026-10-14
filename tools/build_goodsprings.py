@@ -53,6 +53,8 @@ FRONT_STORE = P("gs_front_store", "pk:west/p1/12,12,2,2", foot=[2, 1], sight=Tru
 FRONT_SHERIFF = P("gs_front_sheriff", "pk:west/p1/14,12,2,2", foot=[2, 1], sight=True)
 WFENCE = P("gs_wfence", "pk:wfarm/p3/0,12,4,1", foot=[4, 1], keybg=True)
 LAUNDRY = P("gs_laundry", "pk:wfarm/p3/0,0,4,3", foot=[4, 1], keybg=True)
+STALL_G = P("gs_stall", "pk:destown/p3/4,8,2,2", foot=[2, 1], keybg=True)
+STALL_G2 = P("gs_stall_b", "pk:destown/p3/0,8,2,2", foot=[2, 1], keybg=True)
 HITCH = P("gs_hitch", "pk:west/p1/1,13,3,1", foot=[3, 1], keybg=True)
 TANK_G = P("gs_tank", "pk:wfarm/p3/12,4,2,3", foot=[2, 1], sight=True, keybg=True)
 BED_G = [P("gs_bed_a", "pk:wfarm/p1/0,8,2,2", foot=[2, 1], keybg=True), P("gs_bed_b", "pk:wfarm/p1/2,8,2,2", foot=[2, 1], keybg=True)]
@@ -105,7 +107,7 @@ gs.paint("s", 0, 0, W - 1, H - 1)
 gs.paint_ragged("d", 4, 12, 64, 44, depth=4)                          # утоптанная земля посёлка
 gs.paint("r", 0, 29, W - 1, 32)                         # улица
 gs.paint("r", 33, 10, 36, 29)                           # проезд к пещере
-gs.paint("t", 28, 22, 41, 28)                           # площадь у колодца
+gs.paint_ragged("t", 26, 20, 43, 28, depth=3)             # площадь у колодца — неровный булыжник, как стёртая мостовая
 gs.exits = [(0, y) for y in range(29, 33)] + [(W - 1, y) for y in range(29, 33)]
 gs.reserve(0, 29, W - 1, 32)
 gs.reserve(33, 10, 36, 28)
@@ -122,6 +124,13 @@ gs.put(BELL, 39, 24)
 gs.put(LAMP, 28, 22)
 gs.put(LAMP, 41, 22)
 gs.put(TROUGH, 31, 27)
+# площадь живёт: скамьи вокруг колодца, прилавок с овощами, ящики, привязь, бельё у колодца
+for x, y in ((29, 26), (38, 26), (29, 23), (40, 27)):
+    gs.maybe("bench_7", x, y)
+gs.maybe(STALL_G, 33, 26)
+gs.maybe(STALL_G2, 36, 24)
+for x, y in ((27, 21), (42, 21), (27, 27), (42, 24)):
+    gs.maybe(CRATE if (x + y) % 2 else BARREL, x, y)
 
 # север улицы: салун «Старатель» (большой, с крышей), лавка, дом старосты
 gs.building(10, 16, 14, 11, "planks", south=(6,))       # салун
@@ -180,6 +189,26 @@ gs.npcs += [["sunny", 26, 30], ["chet", 46, 22], ["mayor_pettit", 54, 22], ["gs_
 gs.box("r_trash_can", 20, 25, "мусорный бак за салуном", {"фартук в крови": 1, "ткань": 1})
 for _, x, y in gs.npcs:
     gs.reserve(x, y, x, y)
+# окраины: поля за посёлком, брошенные фермы, стоянка караванщиков — земля вокруг не пустует
+for i, (x, y) in enumerate(((3, 14), (6, 14), (3, 17), (6, 17), (3, 20), (6, 20), (65, 14), (68, 14), (65, 17), (68, 17), (65, 20), (68, 20))):
+    gs.maybe(BED_G[i % 2], x, y)
+gs.hwall([WFENCE], 2, 9, 13)
+gs.hwall([WFENCE], 2, 9, 23)
+gs.hwall([WFENCE], 64, 69, 13)
+gs.hwall([WFENCE], 64, 69, 23)
+gs.vline([FENCE[1]], 9, 14, 22)
+gs.maybe(RUIN, 66, 8)
+gs.maybe(HOUSES[5], 58, 5)
+gs.maybe(HOUSES[6], 64, 4)
+gs.maybe(LAUNDRY, 60, 9)
+gs.maybe(STAGECOACH, 4, 44)
+gs.maybe(STAGECOACH, 62, 44)
+gs.maybe(CAMPFIRE, 56, 47)                               # стоянка караванщиков у повозки
+for x, y in ((53, 47), (59, 47)):
+    gs.maybe("bench_7", x, y)
+gs.maybe(CAMPFIRE, 8, 47)
+for x, y in ((5, 47), (11, 47)):
+    gs.maybe("bench_7", x, y)
 gs.grow(1, 1, W - 2, 9, 4, names=CACTI + BUSHES + DEAD_TREES)
 gs.grow(1, 46, W - 2, H - 2, 3, names=CACTI + BUSHES)
 gs.scatter(DEAD_TREES, 28, 46, W - 2, H - 2, 3)

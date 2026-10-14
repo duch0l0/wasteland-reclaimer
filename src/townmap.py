@@ -285,6 +285,21 @@ def _roof_image(r):
         for _ in range(w * h // 900):
             x, y = rnd.randrange(0, w - 6, 2), rnd.randrange(0, h - 6, 2)
             img.fill(tuple(max(0, v - 18) for v in pal[0]), (x, y, rnd.choice((4, 6, 8)), rnd.choice((2, 4))))
+    if style in ("brick", "concrete"):                # рубероид: полосы полотен с нахлёстом, заплаты, тёмные подтёки, швы
+        sw = 54
+        for k, sx in enumerate(range(0, w, sw)):
+            tone = rnd.choice((-6, -3, 0, 4))
+            if tone:
+                img.fill(tuple(max(0, min(255, c + tone)) for c in pal[0]) + (255,), (sx, 8, sw - 2, h - 16), special_flags=0)
+            pygame.draw.line(img, tuple(max(0, c - 38) for c in pal[0]), (sx, 8), (sx, h - 8), 2)
+            pygame.draw.line(img, tuple(min(255, c + 22) for c in pal[3]), (sx + 2, 8), (sx + 2, h - 8), 1)
+        for _ in range(max(2, w * h // 12000)):        # заплаты чуть темнее/светлее полотна, с прибитой кромкой
+            bw, bh = rnd.randrange(30, 64, 2), rnd.randrange(24, 44, 2)
+            x, y = rnd.randrange(12, max(13, w - bw - 12), 2), rnd.randrange(12, max(13, h - bh - 12), 2)
+            d = rnd.choice((-12, 10))                       # один сдвиг на все каналы — тон, а не цвет
+            c = tuple(max(0, min(255, v + d)) for v in pal[0])
+            pygame.draw.rect(img, c, (x, y, bw, bh))
+            pygame.draw.rect(img, tuple(max(0, v - 26) for v in c), (x, y, bw, bh), 1)
     if style == "metal" and tex is None:              # ржавые потёки
         for _ in range(w // 40):
             x = rnd.randrange(0, w, 2)
