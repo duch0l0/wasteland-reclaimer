@@ -20,7 +20,7 @@
 Запуск из папки game_project:  .venv/bin/python tools/build_baker.py
 """
 from mapkit import MapKit, WALLS_INTACT, BENCHES, STONES, GRASS, BUSHES
-from citykit import City
+from citykit import City, _cells
 
 city = City("baker", "Бейкер")      # реестр объектов из наборов (town50, motel, apark): data/props/baker.json
 
@@ -28,6 +28,12 @@ city = City("baker", "Бейкер")      # реестр объектов из �
 def P(name, img, **kw):
     city.prop(name, img, **kw)
     return name
+
+
+def stamp(m, name, img, x, y):
+    """Плоский кусок набора на земле (ковёр, плита) — как CityMap.stamp, но для карты на MapKit."""
+    city.prop(name, img, block=False, layer="floor", foot=_cells(img))
+    m.props.append([name, x, y])
 
 
 # ---- 1950-е у шоссе: цветные седаны, неон, колонки, будки — тот же набор, что и в Примме
@@ -46,6 +52,8 @@ BENCH50 = P("bk_bench", "pk:town50/town50_1_130", foot=[1, 1], keybg=True)
 ICE = P("bk_ice", "pk:motel/motel_1_022", foot=[1, 1], sight=True, light={"r": 70, "color": [150, 220, 255], "at": [0.5, 0.4]})
 VEND = P("bk_vending", "pk:motel/motel_1_002", foot=[1, 1], sight=True, light={"r": 80, "color": [255, 210, 120], "at": [0.5, 0.4]})
 PLANT_POT = [P("bk_pot_a", "pk:town50/town50_1_133", foot=[1, 1]), P("bk_pot_b", "pk:town50/town50_1_134", foot=[1, 1])]
+SOFA_B = [P("bk_sofa_a", "pk:lhotel/lhotel_1_022", foot=[2, 1]), P("bk_sofa_b", "pk:lhotel/lhotel_1_024", foot=[2, 1])]
+CLOCK_B = P("bk_clock", "pk:west/west_2_019", block=False)
 TRASH50 = P("bk_trash", "pk:town50/town50_1_131", foot=[1, 1])
 DOOR = P("bk_door", "pk:west/p2/12,6,1,2", block=False, layer="floor")
 STONE_PLAZA = ["pk:apark/p2/8,0,1,1", "pk:apark/p2/9,0,1,1", "pk:apark/p2/8,1,1,1", "pk:apark/p2/9,1,1,1"]
@@ -53,7 +61,10 @@ SIDEWALK = ["pk:zcity/zcity_f1_22"]
 EARTH = ["noise:pk:rvill/p2/0,11,1,1"]                 # тёплая утоптанная глина без сетки
 CONCRETE_N = ["noise:pk:zcity/zcity_f3_10"]
 SAND_B = ["pk:destown/p2/0,0,1,1", "pk:destown/p2/1,0,1,1", "pk:destown/p2/0,1,1,1"]       # тёплый жёлтый песок — Бейкер у Мохаве, а не снежная равнина
-FLOORS_TOWN = {"d": SAND_B, "q": STONE_PLAZA, "u": SIDEWALK, "E": EARTH, "Z": CONCRETE_N}
+DINER_FL = ["pk:zcity/zcity_f3_00"]                  # шахматная плитка закусочной
+MOTEL_FL = ["pk:hotel/hotel_f1_03"]                  # светлый ковёр вестибюля
+WOOD_FL = ["pk:zcity/zcity_f1_00"]                   # доски в доме Роя
+FLOORS_TOWN = {"T": DINER_FL, "R": MOTEL_FL, "W": WOOD_FL, "d": SAND_B, "q": STONE_PLAZA, "u": SIDEWALK, "E": EARTH, "Z": CONCRETE_N}
 WELL = P("bk_well", "pk:desnat/desnat_3_006", foot=[2, 1])
 BANNER = [P("bk_banner_a", "pk:cult/cult_2_141", block=False), P("bk_banner_b", "pk:cult/cult_2_142", block=False)]
 PRAYER_RUG = "pk:lhotel/p2/10,12,2,2"
@@ -106,6 +117,8 @@ t.paint("u", 33, 0, 33, 24)
 t.paint("u", 38, 0, 38, 24)
 t.paint("u", 33, 31, 33, H - 1)
 t.paint("u", 38, 31, 38, H - 1)
+t.paint_ragged("Z", 49, 19, 72, 24, depth=1)               # стоянка у мотеля — бетонная площадка с мягким краем
+t.paint_ragged("Z", 1, 19, 21, 24, depth=1)                # стоянка у закусочной
 t.paint_ragged("q", 23, 10, 48, 24, depth=2)             # площадь у Термометра — каменные плиты
 t.paint("a", 34, 0, 37, 24)                          # на север — к миссии
 t.paint("a", 34, 31, 37, H - 1)                      # на юг — на окраину
@@ -129,7 +142,8 @@ for name, x, y in [("r_car_wreck", 20, 22), ("r_taxi", 44, 33), ("r_van", 62, 21
     put(name, x, y)
 
 # закусочная «Безумный грек»
-t.building(3, 10, 14, 10, "planks", south=(4,), sign="БЕЗУМНЫЙ ГРЕК")
+_ix = t.building(3, 10, 14, 10, "planks", south=(4,), sign="БЕЗУМНЫЙ ГРЕК")
+t.paint("T", _ix[0], _ix[1], _ix[2], _ix[3])        # шахматный пол закусочной
 for x in (4, 8):
     put("counter", x, 13, check=False)
 put("shelf_goods", 4, 11, check=False)
@@ -152,7 +166,8 @@ for x, y in ((25, 18), (40, 19)):
 put("r_billboard", 46, 12)
 
 # мотель «Последняя миля»: стойка, номера с кроватями
-t.building(52, 8, 18, 12, "metal", south=(4, 12), sign="МОТЕЛЬ")
+_im = t.building(52, 8, 18, 12, "brick", south=(4, 12), sign="МОТЕЛЬ")
+t.paint("R", _im[0], _im[1], _im[2], _im[3])        # ковёр в вестибюле
 put("counter", 54, 13, check=False)
 box("filecab_2", 53, 9, "конторка Хэтти", {"крышки": 40, "бинт": 2, "долговая книга": 1}, owner="hattie")
 for x in (59, 63, 67):
@@ -163,7 +178,8 @@ put("table_2", 64, 16, check=False)
 put("chair_wood", 65, 16, check=False)
 
 # юг трассы: дом Роя, гараж, блокпост
-t.building(4, 34, 10, 8, "brick", north=(4,), sign="РОЙ")
+_ir = t.building(4, 34, 10, 8, "brick", north=(4,), sign="РОЙ")
+t.paint("W", _ir[0], _ir[1], _ir[2], _ir[3])
 put("bed_frame", 11, 35, check=False)
 put("table_2", 6, 38, check=False)
 put("chair_wood", 7, 38, check=False)
@@ -192,12 +208,21 @@ for x, y in ((46, 38), (46, 40), (46, 42)):
 for i, (x, y) in enumerate(((44, 33), (66, 34), (70, 38))):
     put(CARS50[(i + 2) % 6], x, y, check=False)
 # автомат и ледогенератор у входа в мотель, скамья, кадки
+put(SOFA_B[0], 54, 16, check=False)
+put(SOFA_B[1], 60, 11, check=False)
+put(PLANT_POT[0], 53, 17, check=False)
+put(PLANT_POT[1], 68, 17, check=False)
+put(PLANT_POT[0], 69, 9, check=False)
+put(CLOCK_B, 57, 9, check=False)
 put(VEND, 58, 17, check=False)
 put(ICE, 62, 17, check=False)
 for x, y in ((55, 21), (63, 21), (59, 21)):
     put(BENCH50 if x == 59 else PLANT_POT[x % 2], x, y, check=False)
 # закусочная: музыкальный автомат, кадки, барная стойка у стены
 put(JUKE, 15, 12, check=False)
+for x in (4, 5, 8, 9):
+    put("stool_round_41", x, 14, check=False)
+put(DINER_BAR, 11, 11, check=False)
 put(PLANT_POT[0], 4, 18, check=False)
 put(PLANT_POT[1], 16, 18, check=False)
 # площадь: скамьи по кругу, кадки, лампы 50-х, урны, живая изгородь из кустов
@@ -313,7 +338,7 @@ put(WELL, 31, 36, check=False)
 for x in (26, 28, 33, 38, 44, 46):
     put(BANNER[x % 2], x, 25, check=False)
 for x, y in ((29, 31), (33, 31), (30, 33)):
-    m.stamp("bk_prayer_rug_%d_%d" % (x, y), PRAYER_RUG, x, y, water=False) if hasattr(m, "stamp") else None
+    stamp(m, "bk_prayer_rug_%d_%d" % (x, y), PRAYER_RUG, x, y)
 for i, (x, y) in enumerate(((14, 37), (17, 37), (20, 37), (14, 13), (17, 13))):
     put(GARDEN_BED[i % 2], x, y, check=False)
 for x, y in ((24, 27), (30, 27), (38, 27), (44, 27)):

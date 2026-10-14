@@ -280,6 +280,29 @@
 1
 ]
 },
+"bk_sofa_a": {
+"img": "pk:lhotel/lhotel_1_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_sofa_b": {
+"img": "pk:lhotel/lhotel_1_024",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_clock": {
+"img": "pk:west/west_2_019",
+"block": false,
+"sight": false
+},
 "bk_trash": {
 "img": "pk:town50/town50_1_131",
 "block": true,
@@ -343,6 +366,36 @@
 1
 ],
 "keybg": true
+},
+"bk_prayer_rug_29_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_33_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_30_33": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
 }
 }
 }
