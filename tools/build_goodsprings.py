@@ -82,6 +82,14 @@ COT = P("gs_cot", "pk:ucamp/ucamp_3_027", foot=[4, 1])
 # пещера
 MUSH = [P("gs_mush", "pk:gcave/p1/2,4,1,1", light={"r": 60, "color": [140, 255, 170], "at": [0.5, 0.5]}),
         P("gs_mush_b", "pk:gcave/p1/2,5,1,1", light={"r": 60, "color": [120, 200, 255], "at": [0.5, 0.5]})]
+STALAG_G = [P("gs_stalag_a", "pk:dcave/p1/8,6,2,2", foot=[1, 1], keybg=True), P("gs_stalag_b", "pk:dcave/p1/12,2,2,2", foot=[1, 1], keybg=True),
+            P("gs_stalag_c", "pk:dcave/p1/0,12,2,2", foot=[1, 1], keybg=True)]
+CRYSTALS_G = [P("gs_crystal_a", "pk:dcave/p1/9,8,1,1", block=False, keybg=True, light={"r": 60, "color": [210, 130, 255], "at": [0.5, 0.5]}),
+              P("gs_crystal_b", "pk:dcave/p1/10,8,1,1", block=False, keybg=True, light={"r": 60, "color": [120, 255, 160], "at": [0.5, 0.5]}),
+              P("gs_crystal_c", "pk:dcave/p1/8,8,1,1", block=False, keybg=True, light={"r": 60, "color": [120, 170, 255], "at": [0.5, 0.5]})]
+BONES_G = P("gs_dragon_bones", "pk:dcave/p1/1,10,3,2", block=False, keybg=True)
+COBBLE_G = cells("dcave/p2", [(4, 1), (5, 1), (4, 2), (5, 2)])
+LANTERN_G = P("gs_cave_lantern", "pk:cmine/cmine_1_032", light={"r": 100, "color": [255, 190, 110], "at": [0.5, 0.5], "flicker": 0.3})
 BOULDERS = [P("gs_boulder", "pk:gcave/p1/4,4,1,1"), P("gs_boulder_b", "pk:gcave/p1/5,4,1,1")]
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
@@ -295,21 +303,40 @@ dc.npcs += [["doc_mitchell", 14, 10]]
 cv = CityMap(city, "goodsprings_cave", "Пещера источника", 40, 34, start=(8, 30), seed=184, interior=True, music="caves")
 cv.floor_code("d", *CAVE_DIRT)
 cv.floor_code("~", *SPRING)
+cv.floor_code("o", *COBBLE_G)
 cv.water_codes = ("~",)
 cv.paint("x", 0, 0, 39, 33)
-cv.paint("d", 4, 26, 14, 31)
-cv.paint("d", 8, 14, 12, 26)
-cv.paint("d", 4, 4, 26, 15)
-cv.paint("d", 24, 8, 36, 20)                           # дальний грот — тайник старателей
-cv.paint("~", 10, 6, 18, 10)                           # родник
+# Планировка: низкий вход -> извилистый ход на север -> большой грот с родником (светящиеся грибы по берегу) ->
+# перешеек на восток -> тайник старателей в боковой нише. Каждый участок — отдельное «место», а не коробка.
+cv.blob("d", 8, 29, 6, 4)                              # вход
+cv.tunnel("d", [(9, 27), (10, 22), (9, 17), (11, 13)], width=3, wobble=1)
+cv.blob("d", 15, 9, 11, 6)                             # грот с родником
+cv.tunnel("d", [(24, 11), (28, 13), (31, 16)], width=3, wobble=1)
+cv.blob("d", 31, 17, 6, 5)                             # ниша старателей
+cv.blob("d", 3, 8, 3, 3)                               # тупиковый карман с костями
+cv.tunnel("d", [(5, 8), (8, 9)], width=2, wobble=0)
+cv.blob("o", 15, 8, 7, 4, wobble=0.25)                 # мшистый булыжник вокруг родника — как в превью набора
+cv.blob("~", 15, 8, 4, 2, wobble=0.25)                 # родник
 cv.portal([(8, 31), (9, 31)], "goodsprings", (34, 5), "Наружу")
 cv.reserve(6, 28, 11, 31)
-for x, y in ((5, 12), (20, 5), (30, 18), (12, 24)):
-    cv.put(MUSH[(x + y) % 2], x, y)
-for x, y in ((6, 6), (22, 13), (34, 10)):
-    cv.put(BOULDERS[(x + y) % 2], x, y)
+for x, y in ((11, 6), (19, 6), (11, 10), (20, 10), (14, 11), (17, 11)):
+    cv.maybe(MUSH[(x + y) % 2], x, y)                  # грибы — у воды, их свет отражается
+for x, y in ((6, 11), (23, 4), (26, 8), (29, 14), (33, 19)):
+    cv.maybe(STALAG_G[(x + y) % 3], x, y)
+for x, y in ((7, 24), (12, 18), (21, 7), (31, 14)):
+    cv.maybe(BOULDERS[(x + y) % 2], x, y)                  # одиночные валуны, не груды
+cv.maybe(BONES_G, 2, 7)
+for x, y in ((12, 5), (18, 5), (20, 11), (13, 11)):
+    cv.maybe(CRYSTALS_G[(x + y) % 3], x, y)
+cv.maybe("pickaxe", 4, 7)
+cv.maybe(LANTERN_G, 9, 25)
+cv.maybe(LANTERN_G, 29, 16)
+cv.maybe(LANTERN_G, 34, 18)
 cv.box(CRATE, 33, 16, "тайник старателей", {"крышки": 40, "динамит": 1})
-cv.put(COT, 26, 10)
+cv.maybe(COT, 29, 19)
+cv.maybe("barrel_wood", 35, 15)
+cv.maybe("crate_b", 34, 20)
+cv.maybe("table_chair", 30, 15)
 cv.enemies += [["river_lizard", 20, 12], ["river_lizard", 30, 14], ["river_lizard", 6, 9]]
 
 
@@ -327,9 +354,8 @@ print("обжито:", gs.dress_empty([
 ], block=7, margin=1, chance=1.0))
 
 cv.cave_style = True
-cv.erode_cave(keep=[(4, 27, 14, 32)])
-cv.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 38, 32, 30)
-cv.scatter(["r_bones", "rock"], 1, 1, 38, 32, 6)
+cv.erode_cave(keep=[(3, 25, 14, 32)], chance=0.25, passes=1)
+cv.scatter(["stones_12", "stones_19"], 1, 1, 38, 32, 12)
 city.save(gap_exempt=("ezekiel",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["goodsprings"].update({"world_name": "Гудспрингс", "discover": True})

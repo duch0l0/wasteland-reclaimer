@@ -691,9 +691,86 @@
 "sight": false
 },
 "ar_stalagmite": {
-"img": "pk:gcave/p1/8,3,1,1",
+"img": "pk:dcave/p1/8,6,2,2",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"ar_stalagmite_b": {
+"img": "pk:dcave/p1/12,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"ar_crystal_a": {
+"img": "pk:dcave/p1/9,8,1,1",
+"block": false,
+"sight": false,
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+210,
+130,
+255
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"ar_crystal_b": {
+"img": "pk:dcave/p1/10,8,1,1",
+"block": false,
+"sight": false,
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+120,
+255,
+160
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"ar_nest": {
+"img": "pk:dcave/p1/6,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"ar_nest_b": {
+"img": "pk:dcave/p1/8,10,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"ar_drag_bones": {
+"img": "pk:dcave/p1/1,10,3,2",
+"block": false,
+"sight": false,
+"keybg": true
 },
 "ar_cliff0": {
 "img": "pk:desnat/p1/8,14,2,2",

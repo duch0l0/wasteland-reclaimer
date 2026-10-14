@@ -570,6 +570,114 @@
 ]
 }
 },
+"gs_stalag_a": {
+"img": "pk:dcave/p1/8,6,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"gs_stalag_b": {
+"img": "pk:dcave/p1/12,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"gs_stalag_c": {
+"img": "pk:dcave/p1/0,12,2,2",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"gs_crystal_a": {
+"img": "pk:dcave/p1/9,8,1,1",
+"block": false,
+"sight": false,
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+210,
+130,
+255
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"gs_crystal_b": {
+"img": "pk:dcave/p1/10,8,1,1",
+"block": false,
+"sight": false,
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+120,
+255,
+160
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"gs_crystal_c": {
+"img": "pk:dcave/p1/8,8,1,1",
+"block": false,
+"sight": false,
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+120,
+170,
+255
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"gs_dragon_bones": {
+"img": "pk:dcave/p1/1,10,3,2",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"gs_cave_lantern": {
+"img": "pk:cmine/cmine_1_032",
+"block": true,
+"sight": false,
+"light": {
+"r": 100,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.3
+}
+},
 "gs_boulder": {
 "img": "pk:gcave/p1/4,4,1,1",
 "block": true,

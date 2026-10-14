@@ -90,7 +90,14 @@ MUSHROOMS = [P("ar_mush", "pk:gcave/p1/2,4,1,1", light={"r": 60, "color": [140, 
              P("ar_mush_c", "pk:gcave/p1/7,4,1,1")]
 BOULDERS = [P("ar_boulder", "pk:gcave/p1/4,4,1,1"), P("ar_boulder_b", "pk:gcave/p1/5,4,1,1"),
             P("ar_boulder_c", "pk:gcave/p1/4,5,1,1")]
-STALAGMITE = P("ar_stalagmite", "pk:gcave/p1/8,3,1,1")
+STALAGMITE = P("ar_stalagmite", "pk:dcave/p1/8,6,2,2", foot=[1, 1], keybg=True)
+STALAG_B = P("ar_stalagmite_b", "pk:dcave/p1/12,2,2,2", foot=[1, 1], keybg=True)
+CRYSTALS_A = [P("ar_crystal_a", "pk:dcave/p1/9,8,1,1", block=False, keybg=True, light={"r": 60, "color": [210, 130, 255], "at": [0.5, 0.5]}),
+              P("ar_crystal_b", "pk:dcave/p1/10,8,1,1", block=False, keybg=True, light={"r": 60, "color": [120, 255, 160], "at": [0.5, 0.5]})]
+NEST_A = P("ar_nest", "pk:dcave/p1/6,10,2,2", foot=[2, 1], keybg=True)               # гнездо скорпионов — из набора
+NEST_B = P("ar_nest_b", "pk:dcave/p1/8,10,2,2", foot=[2, 1], keybg=True)
+BONES_A = P("ar_drag_bones", "pk:dcave/p1/1,10,3,2", block=False, keybg=True)
+COBBLE_A = cells("dcave/p2", [(4, 1), (5, 1), (4, 2), (5, 2)])
 CLIFFS = [P(f"ar_cliff{i}", f"pk:desnat/p1/{x},14,2,2", foot=[2, 2], sight=True) for i, x in enumerate((8, 10, 12))]
 OUTCROP = P("ar_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keybg=True)
 RUBBLE = [P("ar_burnt", "pk:zcity/zcity_1_122", foot=[2, 1]), P("ar_burnt_b", "pk:zcity/zcity_1_123", foot=[2, 1])]
@@ -270,29 +277,42 @@ cv = CityMap(city, "aradesh_cave", "Пещера радскорпионов", W,
 cv.floor_code("d", *CAVE_DIRT)
 cv.floor_code("t", *CAVE_STONE)
 cv.floor_code("~", *SPRING)
+cv.floor_code("o", *COBBLE_A)
 cv.water_codes = ("~",)
 cv.paint("x", 0, 0, W - 1, H - 1)
-cv.paint("d", 3, 30, 12, 37)                           # вход
-cv.paint("d", 7, 20, 11, 30)                           # ход на север
-cv.paint("d", 4, 10, 22, 21)                           # первый грот — гнёзда
-cv.paint("d", 20, 14, 30, 17)                          # перешеек
-cv.paint("t", 28, 6, 44, 24)                           # большой грот — родник
-cv.paint("d", 26, 24, 34, 34)                          # тупик с костями переселенца
-cv.paint("~", 33, 10, 39, 15)                          # подземный родник
+# Планировка: вход -> ход на север -> первый грот (гнёзда скорпионов, кости) -> узкий перешеек -> большой каменный грот
+# с родником и королевой -> тупик с телом переселенца Тома. Формы — гроты и извилистые ходы, а не прямоугольники.
+cv.blob("d", 7, 34, 6, 4)                              # вход
+cv.tunnel("d", [(8, 31), (9, 26), (9, 21)], width=3, wobble=1)
+cv.blob("d", 13, 15, 10, 6)                            # первый грот — гнёзда
+cv.tunnel("d", [(21, 15), (25, 16), (29, 14)], width=3, wobble=1)
+cv.blob("t", 36, 15, 9, 9)                             # большой грот — родник
+cv.tunnel("d", [(33, 23), (31, 27), (30, 31)], width=3, wobble=1)
+cv.blob("d", 30, 31, 5, 4)                             # тупик с костями переселенца
+cv.blob("o", 36, 12, 7, 5, wobble=0.22)                # каменная площадка вокруг родника
+cv.blob("~", 36, 12, 3, 2, wobble=0.25)                # подземный родник
 cv.portal([(6, 37), (7, 37)], "aradesh_canyon", (50, 5), "Наружу, в каньон")
 cv.reserve(4, 33, 10, 37)
-for x, y in ((6, 13), (16, 12), (12, 18), (30, 21), (42, 9), (11, 31)):
-    cv.put(MUSHROOMS[(x + y) % 3], x, y)
-for x, y in ((5, 17), (19, 19), (29, 8), (43, 20), (27, 30)):
-    cv.put(BOULDERS[(x + y) % 3], x, y)
-cv.put(STALAGMITE, 21, 11)
-cv.put(STALAGMITE, 41, 22)
+for x, y in ((9, 12), (17, 12), (12, 19), (34, 20), (40, 9), (7, 33)):
+    cv.maybe(MUSHROOMS[(x + y) % 3], x, y)
+for x, y in ((7, 17), (18, 18), (31, 10), (41, 19), (28, 33)):
+    cv.maybe(BOULDERS[(x + y) % 3], x, y)
+for i, (x, y) in enumerate(((21, 12), (41, 21), (6, 30), (28, 14))):
+    cv.maybe((STALAGMITE, STALAG_B)[i % 2], x, y)
+# гнёзда первого грота: кучки костей и яйца вперемешку, чтобы место читалось как логово
+for i, (x, y) in enumerate(((8, 12), (13, 10), (17, 16), (11, 18))):
+    cv.maybe((NEST_A, NEST_B)[i % 2], x, y)               # гнёзда радскорпионов
+for x, y in ((10, 14), (15, 12)):
+    cv.maybe(BONES_A, x, y)
+for x, y in ((33, 9), (40, 11), (34, 18), (38, 20)):
+    cv.maybe(CRYSTALS_A[(x + y) % 2], x, y)
 # тупик: кости переселенца, который первым нашёл родник; его записка — у тела
-cv.put("r_bones", 30, 31)
+cv.put("r_bones", 29, 31)
 cv.box("ar_tarp", 32, 31, "рюкзак переселенца", {"записка Тома": 1, "лопата": 1})
-cv.enemies += [["radscorpion", 10, 14], ["radscorpion", 9, 24], ["radscorpion", 31, 18],
-               ["radscorpion", 42, 16], ["radscorpion_queen", 36, 8]]
-cv.scatter(["r_bones"], 4, 10, 30, 21, 6)
+cv.maybe("pickaxe", 28, 30)
+cv.maybe("lantern_lit", 31, 29)
+cv.enemies += [["radscorpion", 10, 14], ["radscorpion", 9, 24], ["radscorpion", 31, 25],
+               ["radscorpion", 38, 18], ["radscorpion_queen", 37, 9]]
 
 
 # пустыри обживаются сценками (экскурсия по городам показала голый песок)
@@ -323,8 +343,7 @@ print("обжито по краям:", ar.dress_empty([
 
 cv.cave_style = True
 cv.erode_cave(keep=[(3, 33, 12, 38)])
-cv.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 46, 38, 30)
-cv.scatter(["r_bones", "rock"], 1, 1, 46, 38, 6)
+cv.scatter(["stones_12", "stones_19"], 1, 1, 46, 38, 12)
 city.save(gap_exempt=("unity_sister", "settler_kai"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["aradesh"].update({"world_name": "Лагерь Арадеша", "discover": True})

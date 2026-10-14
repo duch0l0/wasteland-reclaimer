@@ -103,6 +103,36 @@ class MapKit:
                 if j >= top[i] and y1 - y >= bot[i] and i >= left[j] and x1 - x >= right[j]:
                     self.ground[y][x] = code
 
+    def blob(self, code, cx, cy, rx, ry, wobble=0.18):
+        """Неровный овал — грот, лужа, пятно. Край гуляет (три гармоники), а не идёт по эллипсу."""
+        import math as _m, random as _r
+        rnd = _r.Random(int(cx * 131 + cy * 71 + rx * 17 + ry * 5))
+        k = [rnd.uniform(0, 6.3) for _ in range(3)]
+        for y in range(max(0, int(cy - ry * 1.4)), min(self.H, int(cy + ry * 1.4) + 1)):
+            for x in range(max(0, int(cx - rx * 1.4)), min(self.W, int(cx + rx * 1.4) + 1)):
+                a = _m.atan2((y - cy) / ry, (x - cx) / rx)
+                w = 1 + wobble * (0.6 * _m.sin(2 * a + k[0]) + 0.5 * _m.sin(3 * a + k[1]) + 0.35 * _m.sin(5 * a + k[2]))
+                if ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= w * w:
+                    self.ground[y][x] = code
+
+    def tunnel(self, code, pts, width=3, wobble=1):
+        """Извилистый ход по точкам: между опорными точками — ломаная со смещением центра, ширина гуляет на клетку."""
+        import random as _r
+        rnd = _r.Random(sum(x * 7 + y * 13 for x, y in pts))
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+            n = max(abs(x1 - x0), abs(y1 - y0)) or 1
+            off = 0
+            for i in range(n + 1):
+                x = x0 + (x1 - x0) * i / n
+                y = y0 + (y1 - y0) * i / n
+                off = max(-wobble, min(wobble, off + rnd.choice((-1, 0, 0, 1))))
+                w = width + rnd.choice((0, 0, 1))
+                horiz = abs(x1 - x0) >= abs(y1 - y0)
+                for d in range(-(w // 2), w - w // 2):
+                    tx, ty = (int(x), int(y + d + off)) if horiz else (int(x + d + off), int(y))
+                    if 0 <= tx < self.W and 0 <= ty < self.H:
+                        self.ground[ty][tx] = code
+
     def erode_cave(self, wall="x", keep=(), chance=0.45, passes=2):
         """Края пещеры — не ровные прямоугольники: у стены клетки пола случайно уступают камню (и наоборот), но проход
         остаётся целым: каждая правка проверяется заливкой от старта. keep — прямоугольники (x0, y0, x1, y1), где край не трогаем."""

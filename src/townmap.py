@@ -652,6 +652,112 @@ class TownMap(MapBase):
 
     # ------------------------------------------------------------ отрисовка
     def _ground_tile(self, x, y):
+        if self.style == "cave" and self._cave_rock:
+            tile = self._cave_edge(x, y)
+            if tile is not None:
+                return tile
+        return self._ground_tile_base(x, y)
+
+    # ------------------------------------------------------------ округлые края пещер
+    def _cave_class(self, x, y, walls_as_floor):
+        """1 — пол (и фасады стен, когда walls_as_floor), 0 — тёмная скала."""
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            return 0
+        c = self.ground[y][x]
+        if c not in "x_" and c not in self.wallsets:
+            return 1
+        if c == "x" and walls_as_floor:
+            below = self.ground[y + 1][x] if y + 1 < self.height else "x"
+            below2 = self.ground[y + 2][x] if y + 2 < self.height else "x"
+            if below != "x" or below2 != "x":
+                return 1
+        return 0
+
+    def _cave_is_dark(self, x, y):
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            return True
+        if self.ground[y][x] != "x":
+            return False
+        below = self.ground[y + 1][x] if y + 1 < self.height else "x"
+        below2 = self.ground[y + 2][x] if y + 2 < self.height else "x"
+        return below == "x" and below2 == "x"
+
+    def _cave_edge(self, x, y):
+        """Граница «пол — тёмная скала» рисуется по сглаженному полю (как берег): контур гротов — плавные дуги, а не клетки."""
+        c = self.ground[y][x]
+        dark = self._cave_is_dark(x, y)
+        floor = c not in "x_" and c not in self.wallsets and c not in self._water
+        if not (dark or floor):
+            return None
+        near = False
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                nx, ny = x + dx, y + dy
+                if dark and self._cave_class(nx, ny, False):
+                    near = True
+                if floor and self._cave_is_dark(nx, ny):
+                    near = True
+        if not near:
+            return None
+        key = ("ce", x, y)
+        if key in self._edge_cache:
+            return self._edge_cache[key]
+        wf = floor                                        # у пола стены считаем «полом», у скалы — нет
+        f = {(i, j): self._cave_class(x + i, y + j, wf) for i in (-1, 0, 1) for j in (-1, 0, 1)}
+        N = 24
+        mask = pygame.Surface((N, N))
+        for py in range(N):
+            for px in range(N):
+                u, v = (px + 0.5) / N - 0.5, (py + 0.5) / N - 0.5
+                i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
+                fu, fv = u - i0, v - j0
+                # круглая сетка: вес соседа по диагонали и по стороне сглажен 3×3-ядром
+                def g(i, j):
+                    tot = n = 0
+                    for ddy in (-1, 0, 1):
+                        for ddx in (-1, 0, 1):
+                            w = 2 if ddx == 0 and ddy == 0 else 1
+                            tot += w
+                            n += w * self._cave_class(x + i + ddx, y + j + ddy, wf)
+                    return n / tot
+                val = (g(i0, j0) * (1 - fu) * (1 - fv) + g(i0 + 1, j0) * fu * (1 - fv)
+                       + g(i0, j0 + 1) * (1 - fu) * fv + g(i0 + 1, j0 + 1) * fu * fv)
+                m = max(0, min(255, int(255 * val)))
+                mask.set_at((px, py), (m, m, m))
+        mask = pygame.transform.smoothscale(mask, (T, T))
+        h = (x * 73856093) ^ (y * 19349663)
+        if not hasattr(self, "_cave_floor_code"):
+            from collections import Counter
+            cnt = Counter(c for row in self.ground for c in row if c not in "x_" and c not in self.wallsets
+                          and c not in self._water and self._tiles.get(c))
+            self._cave_floor_code = [cnt.most_common(1)[0][0]] if cnt else []
+        fl_codes = self._cave_floor_code
+        fl_tile = self._ground_tile_base(x, y) if floor else (self._tiles[fl_codes[0]][h % len(self._tiles[fl_codes[0]])] if fl_codes else None)
+        rock_tile = self._rock[h % len(self._rock)]
+        if fl_tile is None:
+            return None
+        out = pygame.Surface((T, T))
+        lip, hi = (52, 38, 28), (112, 88, 64)
+        for py in range(T):
+            for px in range(T):
+                m = mask.get_at((px, py))[0]
+                if m >= 136:                                   # пол; у кромки — тень
+                    c = fl_tile.get_at((px, py))[:3]
+                    if m < 176:
+                        k = 0.55 + 0.45 * (m - 136) / 40
+                        c = (int(c[0] * k), int(c[1] * k), int(c[2] * k))
+                    elif m < 214:
+                        k = 0.82 + 0.18 * (m - 176) / 38
+                        c = (int(c[0] * k), int(c[1] * k), int(c[2] * k))
+                elif m >= 118:                                 # кромка уступа
+                    c = lip if m < 128 else hi
+                else:
+                    c = rock_tile.get_at((px, py))[:3]
+                out.set_at((px, py), c)
+        self._edge_cache[key] = out
+        return out
+
+    def _ground_tile_base(self, x, y):
         """Клетка земли; у асфальта и гравия, граничащих с землёй, край размыт рваной кромкой."""
         code = self.ground[y][x]
         if code in "aghv":
