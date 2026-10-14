@@ -367,8 +367,9 @@ class City:
                 continue
             walk = sum(1 for y in range(m.H) for x in range(m.W)
                        if m.ground[y][x] in m.floors and (x, y) not in m.blocked)
-            if not walk or 100 * len(m.props) / walk >= 7:
-                continue
+            if not walk:
+                continue                                   # dress_empty занимает только пустые блоки 6×6 — большие голые залы
+                                                           # получают обстановку и в густо заставленных картах
             style = ("tech" if m.id.startswith(TECH) else "sewer" if m.id.startswith(SEWER)
                      else "cave" if m.id.startswith(CAVE) else "home")
             cave = [[("rock", 0, 0), ("stones_12", 2, 1)], [("bones_a" if "bones_a" in P.CATALOG else "r_bones", 0, 0), ("rock", 2, 0)],
@@ -383,9 +384,9 @@ class City:
                          "tech": (["locker_1", "locker_2", "locker_double", "metal_shelf", "filecab_2", "shelf_metal_tall"],
                                   ["crate", "barrel_wood", "toolbox_red", "canister"])}[style]
                 n += m._loosely(m.furnish_walls, along[0], along[1], fl)
-            if 100 * (len(m.props)) / walk < 4:             # тесные комнаты — участки поменьше
-                small = [sc[:2] for sc in scenes]
-                n += m.dress_empty(small, ground=fl, block=4, margin=0, chance=0.6, max_uses=3)
+            small = [sc[:2] for sc in scenes]                 # участки поменьше — между жителями и у проходов
+            n += m.dress_empty(small, ground=fl, block=4, margin=0, chance=0.6 if 100 * len(m.props) / walk < 4 else 0.35,
+                               max_uses=4)
             print(f"   {m.id}: обставлено ({style}) +{n}")
 
     def save(self, gap_exempt=()):
