@@ -194,7 +194,7 @@ class MapKit:
                     g[y][x] = keep_code                       # отрезало бы часть пещеры — оставляем
         return self
 
-    def cliff_walls(self, cliffs, floor, skip=lambda x, y: False, decor=(), thick=2, decor_chance=0.08, plateau=None):
+    def cliff_walls(self, cliffs, floor, skip=lambda x, y: False, decor=(), thick=2, decor_chance=0.08, plateau=None, rock=False):
         """Скалы вокруг дна (каньон, долина у убежища). Глыбы 2×2 стоят только по краю обрыва: внешний ряд —
         сплошь, второй — через раз; дальше — непроходимое плато с редкими камнями и кустами. Рисунок глыбы —
         случайный, а не по сетке, поэтому стена не похожа на ряды одинаковых кубиков."""
@@ -203,6 +203,16 @@ class MapKit:
         floor = set(floor)
         cells = [(x, y) for y in range(0, self.H, 2) for x in range(0, self.W, 2)
                  if not {(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)} & floor and not skip(x, y)]
+        if rock:                  # скалы общим сглаженным контуром (src/townmap.py, style "cliff"), а не рядом кусков-спрайтов
+            self.cliff_style = True
+            for x, y in cells:
+                for tx, ty in ((x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)):
+                    if tx < self.W and ty < self.H:
+                        self.ground[ty][tx] = "x"
+                        self.blocked.add((tx, ty))
+                if decor and rnd.random() < decor_chance:
+                    self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
+            return
 
         def ring(x, y):          # сколько 2×2-шагов до дна (1 — у самого края)
             for r in range(1, thick + 1):

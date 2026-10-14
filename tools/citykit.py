@@ -262,6 +262,8 @@ class CityMap(MapKit):
             out["piers"] = list(self.piers)
         if getattr(self, "cave_style", False):
             out["style"] = "cave"                  # стены — скальные фасады из набора пещер
+        elif getattr(self, "cliff_style", False):
+            out["style"] = "cliff"                 # каньон: песчаное плато и обрыв из валунов общим контуром
         if self.blocked_extra():
             out["blocked"] = self.blocked_extra()
         return out

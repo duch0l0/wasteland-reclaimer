@@ -513,6 +513,26 @@ class TownMap(MapBase):
                 self._cave_rock = {"top": top, "face": face}
             except Exception:
                 self._cave_rock = None
+        elif self.style == "cliff":               # каньон: валуны песчаника по кромке, внутри — песчаное плато (как верх обрыва в наборе)
+            try:
+                piece = P.pack_image("pk:desnat/p1/10,14,2,2")
+                face_src = piece.subsurface((16, 56, 48, 34)).copy()
+                face = []
+                for k in range(4):
+                    t = pygame.transform.scale(face_src, (T, T)).convert()
+                    if k % 2:
+                        t = pygame.transform.flip(t, True, False)
+                    face.append(t)
+                self._cave_rock = {"face": face, "top": face}
+                sand = _noise_tiles(P.pack_image("pk:desnat/p1/0,0,1,1"))
+                plateau = []
+                for t in sand:
+                    t = t.copy()
+                    t.fill((255, 250, 238), special_flags=pygame.BLEND_RGB_MULT)       # плато — тот же песок, что и дно, чуть суше
+                    plateau.append(t)
+                self._rock = plateau
+            except Exception:
+                self._cave_rock = None
         self._edge_cache = {}
         self._face = _wall_faces(self.style)
         # полы из наборов: {код: ["pk:…", …]} — варианты клетки 48×48 (заливки A2, куски страниц)
@@ -662,7 +682,7 @@ class TownMap(MapBase):
 
     # ------------------------------------------------------------ отрисовка
     def _ground_tile(self, x, y):
-        if self.style == "cave" and self._cave_rock:
+        if self.style in ("cave", "cliff") and self._cave_rock:
             tile = self._cave_edge(x, y)
             if tile is not None:
                 return tile
@@ -739,12 +759,22 @@ class TownMap(MapBase):
                           and c not in self._water and self._tiles.get(c))
             self._cave_floor_code = [cnt.most_common(1)[0][0]] if cnt else []
         fl_codes = self._cave_floor_code
-        fl_tile = self._ground_tile_base(x, y) if floor else (self._tiles[fl_codes[0]][h % len(self._tiles[fl_codes[0]])] if fl_codes else None)
+        if floor:
+            fl_tile = self._ground_tile_base(x, y)
+        else:                                       # у скалы пол «просачивается» из соседней клетки пола — его земля, а не любая
+            fl_tile = None
+            for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.width and 0 <= ny < self.height and self._cave_class(nx, ny, False):
+                    fl_tile = self._ground_tile_base(nx, ny)
+                    break
+            if fl_tile is None and fl_codes:
+                fl_tile = self._tiles[fl_codes[0]][h % len(self._tiles[fl_codes[0]])]
         rock_tile = self._rock[h % len(self._rock)]
         if fl_tile is None:
             return None
         out = pygame.Surface((T, T))
-        lip, hi = (36, 28, 24), (118, 98, 80)
+        lip, hi = ((36, 28, 24), (118, 98, 80)) if self.style == "cave" else ((92, 64, 42), (244, 226, 176))
         # толщина скалы у края — валуны той же фактуры, что и южные фасады, а не тонкая линия: стена читается по всему контуру
         boul = self._cave_rock["face"][(h // 7) % len(self._cave_rock["face"])]
         for py in range(T):
@@ -764,7 +794,7 @@ class TownMap(MapBase):
                     c = lip
                 elif m >= 14:                                  # тело стены: валуны, к глубине темнее
                     c = boul.get_at((px, py))[:3]
-                    k = 0.62 + 0.38 * min(1.0, (m - 14) / 70)
+                    k = (0.62 + 0.38 * min(1.0, (m - 14) / 70)) if self.style == "cave" else (0.82 + 0.18 * min(1.0, (m - 14) / 70))
                     c = (int(c[0] * k), int(c[1] * k), int(c[2] * k))
                 else:
                     c = rock_tile.get_at((px, py))[:3]
@@ -1013,7 +1043,7 @@ class TownMap(MapBase):
             return _VOID
         if code == "x":
             below = self.ground[y + 1][x] if y + 1 < self.height else "x"
-            if self.style == "cave" and self._cave_rock:
+            if self.style in ("cave", "cliff") and self._cave_rock:
                 return self._rock[h % len(self._rock)]          # у пещер вся скала рисуется общим контуром (_cave_edge)
                 if below != "x":
                     return self._cave_rock["face"][h % len(self._cave_rock["face"])]   # скальный фасад над полом
