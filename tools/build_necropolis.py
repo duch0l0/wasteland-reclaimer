@@ -122,7 +122,7 @@ V_GEN = P("nc_v_gen", "pk:nbunk/nbunk_2_028", foot=[2, 2], sight=True)
 CARPET = "pk:casino/p3/0,0,2,2"
 ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
-RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
+RUBBLE_FL = ["noise:pk:zcity/zcity_f3_10"]
 DIRT = ["noise:pk:zcity/zcity_f2_22"]
 STONE = ["pk:zcity/zcity_f1_23", "pk:zcity/zcity_f3_10"]
 WOOD = ["pk:zcity/zcity_f1_00"]
