@@ -325,6 +325,26 @@ def _roof_image(r):
             x = rnd.randrange(8, max(9, w - 8), 2)
             shade.fill((0, 0, 0, 30), (x, 6, 4, rnd.randrange(h // 6, h // 3)))
     img.blit(shade, (0, 0))
+    if style in ("planks", "metal") and w >= 6 * T:      # большая двускатная крыша: слуховые окна, печные трубы, водосток
+        mid = h // 2
+        for k in range(max(2, w // (4 * T))):
+            cx = int((k + 0.5) * w / max(2, w // (4 * T))) + rnd.randrange(-10, 11, 2)
+            ytop = mid + 14 + (rnd.randrange(0, 3) * 2)
+            if k % 2 == 0:                                   # слуховое окно с козырьком
+                pygame.draw.rect(img, (46, 34, 26), (cx - 17, ytop + 3, 34, 30))
+                pygame.draw.rect(img, (92, 70, 52), (cx - 17, ytop, 34, 8))
+                pygame.draw.rect(img, (28, 30, 38), (cx - 11, ytop + 12, 22, 16))
+                img.fill((78, 96, 120), (cx - 9, ytop + 14, 8, 6))
+                img.fill((78, 96, 120), (cx + 1, ytop + 14, 8, 6))
+                img.fill((60, 42, 30), (cx - 1, ytop + 12, 2, 16))
+            else:                                            # кирпичная труба
+                pygame.draw.rect(img, (40, 30, 24), (cx - 11, mid - 40, 24, 34))
+                pygame.draw.rect(img, (128, 78, 62), (cx - 12, mid - 44, 22, 36))
+                for yy in range(mid - 40, mid - 10, 6):
+                    img.fill((96, 58, 46), (cx - 12, yy, 22, 1))
+                pygame.draw.rect(img, (34, 28, 26), (cx - 14, mid - 48, 28, 6))
+        img.fill((34, 26, 20), (6, h - 14, w - 12, 4))        # жёлоб по нижней кромке
+        img.fill((120, 98, 76), (6, h - 18, w - 12, 2))
     # мелочи на крыше: короба вентиляции, люк, хлам
     for _ in range(max(1, (w * h) // (T * T * 14))):
         bw, bh = rnd.choice(((20, 16), (26, 18), (16, 16), (34, 20)))

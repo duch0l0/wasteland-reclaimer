@@ -189,6 +189,18 @@ gs.npcs += [["sunny", 26, 30], ["chet", 46, 22], ["mayor_pettit", 54, 22], ["gs_
 gs.box("r_trash_can", 20, 25, "мусорный бак за салуном", {"фартук в крови": 1, "ткань": 1})
 for _, x, y in gs.npcs:
     gs.reserve(x, y, x, y)
+# север посёлка вдоль дороги к пещере: кузница-навес, загон с повозкой, дровяник — жизнь у самого центра
+gs.maybe(SHED, 42, 13)
+gs.maybe(HITCH, 46, 16, check=False)
+gs.maybe(STAGECOACH, 46, 14)
+gs.hwall([WFENCE], 52, 62, 13)
+gs.vline([FENCE[1]], 62, 14, 17)
+gs.maybe(TROUGH, 56, 15)
+gs.maybe(HOUSES[5], 54, 5)
+for x, y in ((40, 16), (50, 17), (60, 17), (38, 12)):
+    gs.maybe(BARREL if (x + y) % 2 else CRATE, x, y)
+gs.maybe(LAUNDRY, 26, 14)
+gs.maybe(CAMPFIRE, 40, 31) if False else None
 # окраины: поля за посёлком, брошенные фермы, стоянка караванщиков — земля вокруг не пустует
 for i, (x, y) in enumerate(((3, 14), (6, 14), (3, 17), (6, 17), (3, 20), (6, 20), (65, 14), (68, 14), (65, 17), (68, 17), (65, 20), (68, 20))):
     gs.maybe(BED_G[i % 2], x, y)
