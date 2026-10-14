@@ -90,7 +90,9 @@ ROAD = ["noise:pk:west/p1/0,1,1,1"]
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE = ["noise:pk:gcave/p1/1,4,1,1"]
+CAVE = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])
+CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])
+CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 
 
 # ================================================================ город
@@ -232,6 +234,8 @@ cp.scatter(["r_bones", "r_rocks", "r_dry_bush"], 14, 6, 50, 34, 14)
 W, H = 44, 30
 mn = CityMap(city, "nipton_mine", "Старая шахта", W, H, start=(6, 26), seed=205, interior=True, music="vats")
 mn.floor_code("c", *CAVE)
+mn.floor_code("k", *CAVE_DARK)
+mn.floor_code("q", *CAVE_GRAVEL)
 mn.paint("x", 0, 0, W - 1, H - 1)
 mn.paint("c", 3, 20, 12, 28)                            # вход
 mn.paint("c", 6, 8, 10, 20)                             # штольня
@@ -289,6 +293,7 @@ print("обжито:", np_.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+mn.patchwork("c", ["k", "k", "k"], 16, 2, 4, seed=3)
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 21, 12, 29)])
 mn.scatter(["rock", "stones_12"], 1, 1, 46, 30, 14)

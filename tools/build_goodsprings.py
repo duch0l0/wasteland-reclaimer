@@ -98,7 +98,9 @@ ROAD = ["noise:pk:destown/p2/4,0,1,1"]          # утоптанный грав�
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник площади
 PLANK = ["pk:bazaar/bazaar_f1_21"]
 BOARDS = ["pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1"]      # светлые доски тротуаров
-CAVE_DIRT = ["noise:pk:gcave/p1/1,4,1,1"]
+CAVE_DIRT = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])      # земля с трещинами — как в превью набора
+CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])               # тёмная сухая глина
+CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
 
 
@@ -304,6 +306,8 @@ cv = CityMap(city, "goodsprings_cave", "Пещера источника", 40, 34
 cv.floor_code("d", *CAVE_DIRT)
 cv.floor_code("~", *SPRING)
 cv.floor_code("o", *COBBLE_G)
+cv.floor_code("k", *CAVE_DARK)
+cv.floor_code("q", *CAVE_GRAVEL)
 cv.water_codes = ("~",)
 cv.paint("x", 0, 0, 39, 33)
 # Планировка: низкий вход -> извилистый ход на север -> большой грот с родником (светящиеся грибы по берегу) ->
@@ -353,6 +357,7 @@ print("обжито:", gs.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=7, margin=1, chance=1.0))
 
+cv.patchwork("d", ["k", "k", "k"], 14, 2, 4, seed=1)
 cv.cave_style = True
 cv.erode_cave(keep=[(3, 25, 14, 32)], chance=0.25, passes=1)
 cv.scatter(["stones_12", "stones_19"], 1, 1, 38, 32, 12)

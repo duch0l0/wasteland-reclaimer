@@ -103,6 +103,24 @@ class MapKit:
                 if j >= top[i] and y1 - y >= bot[i] and i >= left[j] and x1 - x >= right[j]:
                     self.ground[y][x] = code
 
+    def patchwork(self, base, codes, n, rmin=2, rmax=4, seed=0):
+        """Пол не заливкой, а мозаикой: n пятен других земель (трещины, булыжник, мох) на землю base — как в превью наборов.
+        Пятна ложатся только на клетки base, не на резерв и не на воду; края сглаживает отрисовка."""
+        import random as _r
+        rnd = _r.Random(self.W * 977 + self.H * 31 + seed)
+        spots = [(x, y) for y in range(self.H) for x in range(self.W) if self.ground[y][x] == base and (x, y) not in self.reserved]
+        for _ in range(n):
+            if not spots:
+                break
+            cx, cy = rnd.choice(spots)
+            code = rnd.choice(codes)
+            rx, ry = rnd.randint(rmin, rmax), rnd.randint(rmin, rmax)
+            keep = {(x, y): self.ground[y][x] for y in range(self.H) for x in range(self.W)}
+            self.blob(code, cx, cy, rx, ry, wobble=0.25)
+            for (x, y), c in keep.items():                     # блоб не должен трогать ничего, кроме базовой земли
+                if self.ground[y][x] != c and (c != base or (x, y) in self.reserved):
+                    self.ground[y][x] = c
+
     def blob(self, code, cx, cy, rx, ry, wobble=0.18):
         """Неровный овал — грот, лужа, пятно. Край гуляет (три гармоники), а не идёт по эллипсу."""
         import math as _m, random as _r

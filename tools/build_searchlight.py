@@ -122,7 +122,9 @@ GROUND = ["noise:pk:mbase/p1/9,9,1,1"]   # гравий базы — бесшо�
 PAVE = ["noise:pk:zcity/zcity_f2_26"]      # асфальт внутренних дорог — темнее гравия, видно, где проезд
 DEBRIS = [P("sl_helmet", "pk:mbase/p1/6,8,1,1", block=False), P("sl_gasmask", "pk:mbase/p1/7,9,1,1", block=False),
           P("sl_shells", "pk:mbase/mbase_3_047", block=False), P("sl_radio", "pk:mbase/p1/13,8,2,1", block=False)]
-CAVE = ["noise:pk:gcave/p1/1,4,1,1"]
+CAVE = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])
+CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])
+CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 
 
 # ================================================================ посёлок
@@ -292,6 +294,8 @@ fh.npcs += [["sl_firefighter", 8, 14]]
 W, H = 50, 36
 mn = CityMap(city, "searchlight_mine", "Шахта Сёрчлайта", W, H, start=(6, 30), seed=213, interior=True, music="caves")
 mn.floor_code("c", *CAVE)
+mn.floor_code("k", *CAVE_DARK)
+mn.floor_code("q", *CAVE_GRAVEL)
 mn.paint("x", 0, 0, W - 1, H - 1)
 mn.paint("c", 3, 26, 14, 33)                           # околоствольный двор
 mn.paint("c", 7, 10, 11, 26)                           # главный штрек на север
@@ -485,6 +489,7 @@ print("обжито:", sl.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+mn.patchwork("c", ["k", "k", "k"], 16, 2, 4, seed=4)
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 27, 14, 34)], chance=0.3, passes=1)
 mn.scatter(["rock", "stones_12"], 1, 1, 48, 34, 14)

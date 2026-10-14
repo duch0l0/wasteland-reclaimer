@@ -106,7 +106,9 @@ SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"] 
 GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
 CRACK = ["noise:pk:destown/p2/8,0,1,1"]
 PLANK = ["pk:bazaar/bazaar_f1_21"]
-CAVE_DIRT = ["noise:pk:gcave/p1/1,4,1,1"]
+CAVE_DIRT = cells("dcave/p2", [(0, 1), (1, 1), (2, 1), (0, 2), (1, 2), (2, 2)])
+CAVE_DARK = cells("dcave/p2", [(0, 14), (1, 14), (0, 15), (1, 15)])
+CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 CAVE_STONE = cells("gcave/p1", [(4, 6), (5, 6), (4, 7), (5, 7)])
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
 
@@ -278,6 +280,8 @@ cv.floor_code("d", *CAVE_DIRT)
 cv.floor_code("t", *CAVE_STONE)
 cv.floor_code("~", *SPRING)
 cv.floor_code("o", *COBBLE_A)
+cv.floor_code("k", *CAVE_DARK)
+cv.floor_code("q", *CAVE_GRAVEL)
 cv.water_codes = ("~",)
 cv.paint("x", 0, 0, W - 1, H - 1)
 # Планировка: вход -> ход на север -> первый грот (гнёзда скорпионов, кости) -> узкий перешеек -> большой каменный грот
@@ -341,6 +345,7 @@ print("обжито по краям:", ar.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], ground="s", block=6, margin=1, chance=1.0))
 
+cv.patchwork("d", ["k", "k", "k"], 16, 2, 4, seed=2)
 cv.cave_style = True
 cv.erode_cave(keep=[(3, 33, 12, 38)])
 cv.scatter(["stones_12", "stones_19"], 1, 1, 46, 38, 12)
