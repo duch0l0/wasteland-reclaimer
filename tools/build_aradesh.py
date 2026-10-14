@@ -321,6 +321,7 @@ print("обжито по краям:", ar.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], ground="s", block=6, margin=1, chance=1.0))
 
+cv.cave_style = True
 cv.erode_cave(keep=[(3, 33, 12, 38)])
 cv.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 46, 38, 30)
 cv.scatter(["r_bones", "rock"], 1, 1, 46, 38, 6)

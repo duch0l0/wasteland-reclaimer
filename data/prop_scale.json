@@ -326,7 +326,8 @@
       "p7_control",
       "p7_dome",
       "p7_generator",
-      "p7_relay"
+      "p7_relay",
+      "sl_headframe"
     ]
   },
   "outposts_half": {

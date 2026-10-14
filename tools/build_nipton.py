@@ -264,6 +264,7 @@ print("обжито:", np_.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+mn.cave_style = True
 mn.erode_cave(keep=[(3, 21, 12, 29)])
 mn.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 46, 30, 30)
 city.save(gap_exempt=("groom_cal", "groom_a", "groom_b", "groom_c"))

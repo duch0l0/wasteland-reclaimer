@@ -495,6 +495,14 @@ class TownMap(MapBase):
         self._tiles["m"] = _vault_floor()
         self._tiles["w"] = _drain_floor()
         self._rock = _rock_tiles()
+        self._cave_rock = None
+        if self.style == "cave":                  # скалы пещеры — фасады из набора gcave (верхняя и нижняя половины стены)
+            try:
+                top = [pygame.transform.scale(P.pack_image(f"pk:gcave/p1/{i},0,1,1"), (T, T)).convert() for i in range(1, 8)]
+                face = [pygame.transform.scale(P.pack_image(f"pk:gcave/p1/{i},1,1,1"), (T, T)).convert() for i in range(1, 8)]
+                self._cave_rock = {"top": top, "face": face}
+            except Exception:
+                self._cave_rock = None
         self._edge_cache = {}
         self._face = _wall_faces(self.style)
         # полы из наборов: {код: ["pk:…", …]} — варианты клетки 48×48 (заливки A2, куски страниц)
@@ -884,6 +892,13 @@ class TownMap(MapBase):
             return _VOID
         if code == "x":
             below = self.ground[y + 1][x] if y + 1 < self.height else "x"
+            if self.style == "cave" and self._cave_rock:
+                if below != "x":
+                    return self._cave_rock["face"][h % len(self._cave_rock["face"])]   # скальный фасад над полом
+                below2 = self.ground[y + 2][x] if y + 2 < self.height else "x"
+                if below2 != "x":
+                    return self._cave_rock["top"][h % len(self._cave_rock["top"])]     # верхняя половина двухклеточной стены
+                return self._rock_rim(x, y, h)
             if below != "x":
                 return self._face[h % len(self._face)]   # стена, обращённая к нам
             return self._rock[h % len(self._rock)]
@@ -892,6 +907,32 @@ class TownMap(MapBase):
         else:
             variants = self._dirt_shades[self._shade(x, y)]
         return variants[h % len(variants)]
+
+    def _rock_rim(self, x, y, h):
+        """Толща скалы пещеры с кромкой там, где рядом пол: тёмный уступ и светлый скол — край читается, а не обрывается в чёрное."""
+        sides = []
+        for name, dx, dy in (("n", 0, -1), ("w", -1, 0), ("e", 1, 0)):
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.width and 0 <= ny < self.height and self.ground[ny][nx] not in "x_" \
+                    and self.ground[ny][nx] not in self.wallsets:
+                sides.append(name)
+        base = self._rock[h % len(self._rock)]
+        if not sides:
+            return base
+        key = ("rim", h % len(self._rock), tuple(sides))
+        if key in self._edge_cache:
+            return self._edge_cache[key]
+        t = base.copy()
+        lip, hi = (58, 44, 34), (104, 82, 60)
+        for name in sides:
+            if name == "n":
+                t.fill(lip, (0, 0, T, 10)); t.fill(hi, (0, 0, T, 3))
+            elif name == "w":
+                t.fill(lip, (0, 0, 10, T)); t.fill(hi, (0, 0, 3, T))
+            else:
+                t.fill(lip, (T - 10, 0, 10, T)); t.fill(hi, (T - 3, 0, 3, T))
+        self._edge_cache[key] = t
+        return t
 
     # ------------------------------------------------------------ стены A4 (как в RPG Maker)
     def _is_wall(self, x, y):

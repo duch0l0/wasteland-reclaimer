@@ -260,6 +260,8 @@ class CityMap(MapKit):
             out["crisp"] = True
         if getattr(self, "piers", None):
             out["piers"] = list(self.piers)
+        if getattr(self, "cave_style", False):
+            out["style"] = "cave"                  # стены — скальные фасады из набора пещер
         if self.blocked_extra():
             out["blocked"] = self.blocked_extra()
         return out

@@ -35,12 +35,18 @@ def cells(page, pts):
 
 S = 1.5
 # ------------------------------------------------------------ посёлок
-HOUSES = [P(f"sl_house{i}", f"pk:rvill/rvill_1_{n:03d}", scale=S, foot=[3, 2], sight=True)
+HOUSES = [P(f"sl_house{i}", f"pk:rvill/rvill_1_{n:03d}", scale=2, foot=[2, 1], sight=True)
           for i, n in enumerate((0, 24, 26, 4, 41, 27))]
 CHAPEL = P("sl_chapel", "pk:grave/grave_1_004", scale=1.2, foot=[2, 2], sight=True)
 WELL = P("sl_well", "pk:rvill/rvill_1_060", foot=[2, 1])
 TREES = [P(f"sl_tree{i}", f"pk:rvill/rvill_2_{n:03d}", scale=S, foot=[2, 1]) for i, n in enumerate((10, 11, 12))]
 GRASS = [P(f"sl_grass{i}", f"pk:rvill/rvill_2_{n:03d}", block=False) for i, n in enumerate((14, 15, 16, 17))]
+WFENCE = P("sl_wfence", "pk:wfarm/p3/0,12,4,1", foot=[4, 1], keybg=True)
+LAMPS_SL = P("sl_lamp", "pk:apark/apark_3_070", light={"r": 130, "color": [255, 200, 130], "at": [0.5, 0.1]})
+LAUNDRY = P("sl_laundry", "pk:wfarm/p3/0,0,4,3", foot=[4, 1], keybg=True)
+HITCH = P("sl_hitch", "pk:west/p1/1,13,3,1", foot=[3, 1], keybg=True)
+BED_G = [P("sl_bed_a", "pk:wfarm/p1/0,8,2,2", foot=[2, 1], keybg=True), P("sl_bed_b", "pk:wfarm/p1/2,8,2,2", foot=[2, 1], keybg=True)]
+BOARDS = ["pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1"]
 FENCE = [P("sl_fence", "pk:west/west_1_013", foot=[2, 1]), P("sl_fence_b", "pk:west/west_1_014")]
 CRATE = P("sl_crate", "pk:cmine/cmine_1_048", search="crate", title="ящик")
 CRATE_B = P("sl_crate_b", "pk:cmine/cmine_1_058", search="crate", title="ящик")
@@ -104,8 +110,8 @@ MACHINE = [P("sl_machine", "pk:mbase/mbase_3_022"), P("sl_machine_b", "pk:mbase/
 GUN_RACK = P("sl_gun_rack", "pk:gcave/p1/14,8,2,2", foot=[2, 1], search="military", title="оружейная стойка")
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
-DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
-ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])
+DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
+ROAD = ["noise:pk:destown/p2/4,0,1,1"]
 ASPHALT = ["pk:zcity/zcity_f3_09"]
 GARAGE = ["pk:fstation/fstation_f1_08"]
 WOOD = ["pk:fstation/fstation_f2_22"]
@@ -120,63 +126,133 @@ CAVE = ["noise:pk:gcave/p1/1,4,1,1"]
 
 
 # ================================================================ посёлок
+# Планировка: главная улица с востока на запад; от неё на север — дорога к шахте (огороженный двор копра),
+# на юг — поперечная улица к площади с колодцем. Северо-запад — пожарная часть, северо-восток — церковь с кладбищем,
+# юго-запад — дома шахтёров с огородами, юго-восток — лагерь Братства за мешками с песком.
 W, H = 64, 46
 sl = CityMap(city, "searchlight", "Сёрчлайт", W, H, start=(1, 22), seed=211, music="desert", world_pos=(2430, 870))
+PLAZA_FL = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник
 sl.floor_code("s", *SAND)
 sl.floor_code("d", *DIRT)
 sl.floor_code("r", *ROAD)
+sl.floor_code("w", *BOARDS)
+sl.floor_code("t", *PLAZA_FL)
+sl.piers = ("w",)
 sl.paint("s", 0, 0, W - 1, H - 1)
-sl.paint_ragged("d", 2, 2, 60, 44, depth=4)
-sl.paint("r", 0, 21, W - 1, 24)                         # улица посёлка и дорога на Форт
-sl.paint("r", 28, 6, 31, 21)                            # к копру
+sl.paint_ragged("d", 2, 2, 60, 44, depth=3)
+sl.paint("r", 0, 21, W - 1, 24)                         # главная улица и дорога на Форт
+sl.paint("r", 28, 3, 31, 21)                            # дорога к шахте
+sl.paint("r", 28, 25, 31, 36)                           # поперечная улица на юг
+sl.paint_ragged("t", 23, 34, 36, 43, depth=2)           # площадь с колодцем
+sl.paint("r", 12, 18, 14, 20)                           # дорожка к пожарной части
 sl.exits = [(0, y) for y in range(21, 25)]
 sl.reserve(0, 21, W - 1, 24)
-sl.reserve(28, 6, 31, 20)
+sl.reserve(28, 3, 31, 20)
+sl.reserve(28, 25, 31, 36)
+for _x0, _x1 in ((4, 27), (32, 59)):                     # дощатые тротуары вдоль фасадов
+    sl.paint("w", _x0, 20, _x1, 20)
+    sl.paint("w", _x0, 25, _x1, 25)
+    sl.reserve(_x0, 20, _x1, 20)
+    sl.reserve(_x0, 25, _x1, 25)
 
-# север: копёр над стволом шахты, вагонетки, кучи угля, узкоколейка
-sl.put(HEADFRAME, 29, 3, check=False, allow_reserved=True)
-sl.props.append(["x_puddle", 30, 5])
-sl.portal([(29, 5), (30, 5)], "searchlight_mine", (6, 30), "Шахта")
-sl.put(RAILS, 32, 10)
-sl.put(CART[0], 33, 9)
-sl.put(CART[1], 37, 9)
-sl.put(COAL[0], 22, 8)
-sl.put(COAL[0], 24, 11)
-sl.put(COAL[1], 26, 14)
-sl.put(DANGER, 27, 5)
-sl.put(LANTERNS[0], 27, 7)
-sl.put(LANTERNS[1], 32, 7)
-# северо-запад: пожарная часть — штаб посёлка
+# --- северо-запад: пожарная часть — штаб посёлка; перед ней двор: шланг, огнетушитель, лавка, бочка с водой
 sl.building(6, 7, 14, 11, "brick", south=(6,))
 sl.reserve(12, 18, 13, 20)
-sl.put(HOSE, 6, 19)
-sl.put(EXTING, 19, 19)
-# северо-восток: церковь и кладбище шахтёров
+sl.put(HOSE, 6, 18, allow_reserved=True)
+sl.put(EXTING, 19, 18, allow_reserved=True)
+sl.maybe("bench_7", 8, 19, allow_reserved=True)
+sl.maybe(BARRELS[0], 17, 19, allow_reserved=True)
+sl.maybe(LAMPS_SL, 11, 19, allow_reserved=True)
+sl.maybe(LAMPS_SL, 16, 19, allow_reserved=True)
+
+# --- север: двор копра — огорожен, ворота на дороге. Ствол, вагонетки, узкоколейка, паровозик, уголь, крепь
+sl.hwall([WFENCE], 21, 41, 2, gaps=tuple(range(28, 32)))
+sl.hwall([WFENCE], 21, 41, 17, gaps=tuple(range(28, 32)))
+sl.vline([FENCE[1]], 21, 3, 16)
+sl.vline([FENCE[1]], 41, 3, 16)
+sl.put(HEADFRAME, 29, 3, check=False, allow_reserved=True)
+sl.props.append(["x_puddle", 30, 6])
+sl.portal([(29, 6), (30, 6)], "searchlight_mine", (6, 30), "Шахта")
+sl.put(DANGER, 27, 7, allow_reserved=True)
+for y in (8, 13):
+    for x in (32, 37):
+        sl.maybe(RAILS, x, y)                            # две ветки узкоколейки от ствола на восток: под вагонетками и под паровозом
+sl.maybe(CART[0], 33, 8)
+sl.maybe(CART[1], 38, 8)
+sl.maybe(CART[0], 34, 13)
+sl.maybe(COAL[1], 38, 13)
+sl.maybe(COAL[0], 24, 5)
+sl.maybe(COAL[1], 24, 11)
+sl.maybe(COAL[0], 36, 5)
+sl.maybe(SUPPORTS[0], 23, 14)
+sl.maybe(SUPPORTS[1], 38, 15)
+sl.maybe(CRATE, 25, 15)
+sl.maybe(CRATE_B, 26, 15)
+sl.maybe(BARRELS[1], 39, 5)
+sl.maybe(LANTERNS[0], 27, 5, allow_reserved=True)
+sl.maybe(LANTERNS[1], 32, 5, allow_reserved=True)
+
+# --- северо-восток: церковь за низкой оградой, кладбище шахтёров
 sl.put(CHAPEL, 44, 8)
+sl.hwall(FENCE, 42, 60, 3)
+sl.hwall(FENCE, 42, 60, 18, gaps=(49, 50))
+sl.vline([FENCE[1]], 60, 4, 17)
 for x in range(48, 58, 2):
-    sl.maybe("x_cross", x, 10)
-    sl.maybe("x_grave", x, 13)
-sl.put(TREES[1], 41, 13)
-# юг: дома шахтёров, лавка, колодец
-for i, (x, y) in enumerate(((6, 28), (12, 28), (18, 28), (6, 35), (18, 35), (40, 30))):
+    sl.maybe("x_cross", x, 9)
+    sl.maybe("x_grave", x, 12)
+    sl.maybe("x_cross", x, 15)
+sl.maybe(TREES[1], 59, 6)
+sl.maybe("bench_7", 44, 16)
+sl.maybe(LAMPS_SL, 47, 17)
+
+# --- юг: дома шахтёров вдоль главной улицы, во дворах — штакетник, бельё, огороды
+for i, (x, y) in enumerate(((6, 28), (12, 28), (18, 28), (36, 28), (42, 28))):
     sl.put(HOUSES[i], x, y)
-sl.put(WELL, 26, 30)
+    sl.maybe(HITCH, x, y + 3)
+for x in (4, 10, 16):
+    sl.hwall([WFENCE], x, x + 5, 33, gaps=(x + 2, x + 3))
+sl.maybe(LAUNDRY, 22, 31)
+for i, (x, y) in enumerate(((6, 36), (9, 36), (12, 36), (15, 36), (6, 39), (9, 39), (12, 39), (15, 39))):
+    sl.maybe(BED_G[i % 2], x, y)                          # общий огород шахтёров
+sl.hwall([WFENCE], 4, 18, 42)
+sl.vline([FENCE[1]], 4, 35, 41)
+sl.put(HOUSES[5], 19, 36)
+
+# --- площадь: колодец в центре, лавка Сью, скамьи, фонари, поилка
+sl.put(WELL, 29, 38)
 sl.put(STALL, 32, 27)
 sl.box(CRATE, 35, 27, "ящик лавки", {"консервы": 1}, owner="sl_trader")
-sl.put(BARRELS[0], 24, 37)
-sl.hwall(FENCE, 4, 22, 42)
-# восток: лагерь паладинов Братства — шатёр, костёр, ящики
-sl.put(TENT_BOS, 50, 28)
-sl.put(CAMPFIRE, 50, 33)
-sl.put(AMMO[0], 55, 30)
-sl.put(SANDBAGS, 47, 27)
-sl.put(SANDBAGS, 47, 29)
+for x, y in ((25, 36), (34, 36), (25, 41), (34, 41)):
+    sl.maybe("bench_7", x, y)
+for x, y in ((24, 35), (35, 35), (24, 42), (35, 42)):
+    sl.maybe(LAMPS_SL, x, y)
+sl.maybe(BARRELS[0], 27, 38)
+sl.maybe(BARRELS[1], 32, 38)
+sl.maybe(STALL, 25, 39)
+sl.maybe(CRATE_B, 27, 40)
+
+# --- юго-восток: лагерь Братства Стали — за мешками с песком, ворота с севера; палатки, костёр, ящики, хаммер
+sl.hwall([SANDBAG_WALL], 46, 61, 29, gaps=(52, 53))
+sl.hwall([SANDBAG_WALL], 46, 61, 43)
+sl.vline([BARBED], 46, 30, 42)
+sl.vline([BARBED], 61, 30, 42)
+sl.put(TENT_BOS, 50, 30)
+sl.maybe(TENT_BOS, 56, 30)
+sl.maybe(TENT_BOS, 50, 38)
+sl.put(CAMPFIRE, 54, 34)
+sl.maybe(AMMO[0], 58, 36)
+sl.maybe(AMMO[1], 49, 34)
+sl.maybe(HUMVEE[0], 55, 39)
+for x, y in ((52, 36), (56, 36), (53, 40)):
+    sl.maybe("bench_7", x, y)
+
 sl.npcs += [["fire_chief_hope", 14, 20], ["marta_kane", 22, 32], ["foreman_gus", 34, 13], ["father_clement", 44, 14],
             ["sl_trader", 33, 26], ["sl_kid", 27, 28], ["sl_miner", 25, 9], ["paladin_ross", 52, 32], ["bos_knight", 55, 27]]
 for _, x, y in sl.npcs:
     sl.reserve(x, y, x, y)
-sl.grow(1, 1, W - 2, H - 2, 6, names=TREES)
-sl.scatter(GRASS + ["r_rocks", "r_dry_bush"] + ROCKS, 1, 1, W - 2, H - 2, 26)
+for x, y in ((4, 4), (60, 42), (2, 44), (62, 6)):
+    sl.maybe(TREES[(x + y) % 3], x, y)
+sl.scatter(GRASS + ["r_rocks", "r_dry_bush"] + ROCKS, 1, 1, W - 2, H - 2, 18)
 
 
 # ================================================================ пожарная часть
@@ -381,6 +457,7 @@ print("обжито:", sl.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=6, margin=1, chance=1.0))
 
+mn.cave_style = True
 mn.erode_cave(keep=[(3, 27, 14, 34)], chance=0.3, passes=1)
 mn.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 48, 34, 30)
 city.save(gap_exempt=("robo_sgt", "recruit_danny", "recruit_b", "recruit_c", "recruit_d", "recruit_e", "robo_sentry",

@@ -326,6 +326,7 @@ print("обжито:", gs.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=7, margin=1, chance=1.0))
 
+cv.cave_style = True
 cv.erode_cave(keep=[(4, 27, 14, 32)])
 cv.scatter(["rock", "stones_12", "r_rocks", "r_rocks"], 1, 1, 38, 32, 30)
 cv.scatter(["r_bones", "rock"], 1, 1, 38, 32, 6)
