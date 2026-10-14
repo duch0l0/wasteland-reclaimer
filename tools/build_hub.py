@@ -85,9 +85,9 @@ CLOCK = P("hb_clock", "pk:west/west_2_019", sight=True)
 TANKS = P("hb_tanks", "pk:nbunk/nbunk_2_021", sight=True)
 PUMP = P("hb_pump", "pk:nbunk/nbunk_2_028")
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
-GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
-CRACK = cells("destown/p2", [(8, 0), (9, 0), (8, 1), (9, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет пустыни вокруг
+GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
+CRACK = ["noise:pk:destown/p2/8,0,1,1"]           # утоптанная глина — без сетки трещин
 PLAZA = ["pk:bazaar/bazaar_f1_27"]
 COBBLE = ["pk:bazaar/bazaar_f1_26"]
 PLANK = ["pk:bazaar/bazaar_f1_21"]
