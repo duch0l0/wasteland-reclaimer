@@ -39,7 +39,7 @@ SAILBOAT = P("nd_sailboat", "pk:fishv/p3/4,10,4,2", foot=[4, 2], block=False, la
 FISH_STALL = P("nd_fish_stall", "pk:fishv/p3/8,8,2,2", foot=[2, 1], sight=True)
 FISH_STALL_B = P("nd_fish_stall_b", "pk:fishv/p3/10,8,2,2", foot=[2, 1], sight=True)
 MEAT_STALL = P("nd_meat_stall", "pk:fishv/p3/10,10,2,2", foot=[2, 1], sight=True)
-LIGHTHOUSE = P("nd_lighthouse", "pk:fishv/p3/8,10,1,2", foot=[1, 1], sight=True)
+LIGHTHOUSE = P("nd_lighthouse", "pk:fishv/p3/8,10,1,2", foot=[1, 1], sight=True, keybg=True)
 SHED = P("nd_boatshed", "pk:fishv/p4/12,8,2,3", foot=[2, 2], sight=True)
 SHED_B = P("nd_boatshed_b", "pk:fishv/p4/13,12,2,3", foot=[2, 2], sight=True)
 HOUSE_W = P("nd_house_wood", "pk:fishv/p3/0,0,2,2", foot=[2, 2], sight=True)
@@ -85,12 +85,12 @@ RUG = P("nd_rug", "pk:west/west_2_060", block=False, layer="floor", keybg=True)
 SAFE = P("nd_safe", "pk:west/west_2_105", search="military", title="сейф")
 SUITCASES = P("nd_suitcases", "pk:wrail/wrail_1_014", search="bag", title="чемоданы")
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])      # ровный песок (как в Зайзиксе)
-DIRT = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])      # укатанный гравий улиц
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без узора-повтора
+DIRT = ["noise:pk:destown/p2/4,0,1,1"]      # укатанный гравий улиц — бесшовный
 PLANK = ["pk:seaport/seaport_f1_21"]
 STONE = ["pk:seaport/seaport_f1_26"]
 WATER = cells("mport/p1", [(8, 4), (9, 4), (10, 4), (11, 4), (8, 5), (9, 5), (10, 5), (11, 5)])
-DEEP = cells("mport/p1", [(8, 6), (9, 6), (10, 6), (11, 6)])
+DEEP = WATER
 SALOON_FLOOR = ["pk:seaport/seaport_f1_21"]
 TILE = ["pk:hotel/hotel_f1_11", "pk:hotel/hotel_f1_12"]
 
@@ -270,7 +270,7 @@ n.put(ROWBOAT, 62, 30, force=True)
 
 # ---- маяк на мысу, камни у воды
 n.put(LIGHTHOUSE, bank(10) + 1, 9, force=True)
-ROCKS_W = [P("nd_rock", "pk:fishv/p3/9,6,1,1"), P("nd_rock_b", "pk:fishv/p3/13,3,1,1"), P("nd_rock_c", "pk:fishv/p3/11,13,1,2")]
+ROCKS_W = [P("nd_rock", "pk:fishv/p3/9,6,1,1", keybg=True), P("nd_rock_b", "pk:fishv/p3/13,3,1,1", keybg=True), P("nd_rock_c", "pk:fishv/p3/11,13,1,2", keybg=True)]
 for i, (x, y) in enumerate(((bank(8), 8), (bank(12) + 1, 12), (bank(11) + 2, 11))):
     n.maybe(ROCKS_W[i], x, y)
 

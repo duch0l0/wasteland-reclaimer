@@ -274,6 +274,27 @@ def _roof_image(r):
         for _ in range(w // 40):
             x = rnd.randrange(0, w, 2)
             img.fill((90, 48, 32), (x, rnd.randrange(0, h // 2), 2, rnd.randrange(h // 4, h // 2)))
+    # объём и износ: двускатная крыша (дерево, металл) — светлый скат и тёмный скат со коньком;
+    # плоская (кирпич, бетон) — пятна выцветания и потёки, чтобы плитка не читалась сеткой
+    shade = pygame.Surface((w, h), pygame.SRCALPHA)
+    if style in ("planks", "metal"):
+        mid = h // 2
+        shade.fill((255, 255, 255, 26), (0, 0, w, mid))
+        shade.fill((0, 0, 0, 44), (0, mid, w, h - mid))
+        shade.fill((20, 14, 10, 150), (0, mid - 2, w, 4))             # конёк
+        shade.fill((255, 235, 200, 70), (0, mid - 4, w, 2))
+        for k in range(0, w, T * 2):                                   # стыки листов на скатах
+            shade.fill((0, 0, 0, 26), (k, 0, 2, h))
+    else:
+        for _ in range(max(3, w * h // 4000)):
+            bw, bh = rnd.randrange(24, 90), rnd.randrange(16, 60)
+            x, y = rnd.randrange(0, max(1, w - bw)), rnd.randrange(0, max(1, h - bh))
+            pygame.draw.ellipse(shade, (0, 0, 0, rnd.choice((8, 12, 16))) if rnd.random() < 0.6
+                                else (255, 255, 255, 8), (x, y, bw, bh))
+        for _ in range(max(2, w // 60)):                               # потёки под парапетом
+            x = rnd.randrange(8, max(9, w - 8), 2)
+            shade.fill((0, 0, 0, 30), (x, 6, 4, rnd.randrange(h // 6, h // 3)))
+    img.blit(shade, (0, 0))
     # мелочи на крыше: короба вентиляции, люк, хлам
     for _ in range(max(1, (w * h) // (T * T * 14))):
         bw, bh = rnd.choice(((20, 16), (26, 18), (16, 16), (34, 20)))
@@ -717,13 +738,16 @@ class TownMap(MapBase):
                 i0, j0 = (-1 if u < 0 else 0), (-1 if v < 0 else 0)
                 fu, fv = u - i0, v - j0
                 jit = rnd.uniform(-0.05, 0.05)
-                ws = {}
+                ws, raw = {}, {}
                 for c in codes:
                     f = fields[c]
                     val = (f[(i0, j0)] * (1 - fu) * (1 - fv) + f[(i0 + 1, j0)] * fu * (1 - fv)
                            + f[(i0, j0 + 1)] * (1 - fu) * fv + f[(i0 + 1, j0 + 1)] * fu * fv)
                     ws[c] = (max(0.0, min(1.0, (val + jit - 0.3) / 0.4)) ** 2 if not soft
                              else max(0.0, min(1.0, val)) ** 1.5)                # вода — широкий мягкий переход
+                    raw[c] = val
+                if sum(ws.values()) < 1e-6:                  # ни одна земля не набрала веса (стык трёх) — берём сильнейшую, не чёрный пиксель
+                    ws[max(raw, key=raw.get)] = 1.0
                 tot = sum(ws.values()) or 1.0
                 for c in codes:
                     grid[c][py][px] = ws[c] / tot

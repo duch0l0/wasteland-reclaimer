@@ -67,7 +67,8 @@
 "foot": [
 1,
 1
-]
+],
+"keybg": true
 },
 "nd_boatshed": {
 "img": "pk:fishv/p4/12,8,2,3",
@@ -525,17 +526,20 @@
 "nd_rock": {
 "img": "pk:fishv/p3/9,6,1,1",
 "block": true,
-"sight": false
+"sight": false,
+"keybg": true
 },
 "nd_rock_b": {
 "img": "pk:fishv/p3/13,3,1,1",
 "block": true,
-"sight": false
+"sight": false,
+"keybg": true
 },
 "nd_rock_c": {
 "img": "pk:fishv/p3/11,13,1,2",
 "block": true,
-"sight": false
+"sight": false,
+"keybg": true
 },
 "nd_boathouse_big": {
 "img": "pk:fishv/p4/12,12,4,4",
