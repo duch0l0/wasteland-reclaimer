@@ -45,15 +45,20 @@ LUCKY38 = P("vg_lucky38", "pk:zcity/zcity_5_000", scale=2.4, foot=[4, 2], sight=
 VT_TOWER = P("vg_vt_tower", "pk:zcity/zcity_5_004", scale=2.4, foot=[4, 2], sight=True)
 CASINO_FRONT = P("vg_casino_front", "pk:casino/casino_4_051", foot=[4, 1], sight=True,
                  light=NEON([255, 120, 200]))
-CASINO_SIGN = P("vg_casino_sign", "pk:casino/casino_4_002", block=False, light=NEON([255, 90, 180]))
+CASINO_SIGN = P("vg_casino_sign", "pk:casino/casino_4_002", block=False, light={"r": 130, "color": [255, 90, 180], "at": [0.5, 0.5], "flicker": 0.4})
 PALM_POTS = [P(f"vg_palmpot{i}", f"pk:casino/casino_4_{n:03d}", foot=[1, 1], keybg=True) for i, n in enumerate((13, 14, 15, 16, 17, 19, 34, 35, 36, 37))]
 ROPE = [P("vg_rope_a", "pk:casino/casino_4_045", foot=[1, 1], keybg=True), P("vg_rope_b", "pk:casino/casino_4_050", foot=[1, 1], keybg=True)]
 CARPETS_V = ["pk:casino/casino_4_047", "pk:casino/casino_4_048", "pk:casino/casino_4_049"]
 CAM = P("vg_camera", "pk:casino/casino_4_000", block=False)
 TRASHCAN = [P("vg_trash_a", "pk:casino/casino_4_052", foot=[1, 1], keybg=True), P("vg_trash_b", "pk:casino/casino_4_053", foot=[1, 1], keybg=True)]
+HYDRANT_V = P("vg_hydrant", "pk:town50/town50_1_109", block=False)
+PHONE_V = P("vg_phone", "pk:town50/town50_1_100", foot=[1, 1])
+CHANDELIER = P("vg_chandelier", "pk:casino/casino_4_007", block=False, light={"r": 110, "color": [255, 220, 150], "at": [0.5, 0.5], "flicker": 0.08})
+JUKE_V = P("vg_jukebox", "pk:town50/town50_1_084", foot=[1, 1], sight=True, light={"r": 90, "color": [255, 170, 90], "at": [0.5, 0.4], "flicker": 0.2})
+SPOT_V = P("vg_spotlight", "pk:apark/apark_3_064", light={"r": 190, "color": [210, 230, 255], "at": [0.5, 0.1]})
 JACKPOT = P("vg_jackpot", "pk:casino/casino_1_062", foot=[6, 2], sight=True, light=NEON([255, 210, 90]))
-NEON_CASH = P("vg_neon_cash", "pk:casino/casino_1_052", block=False, light=NEON([120, 255, 140]))
-NEON_JP = P("vg_neon_jp", "pk:casino/casino_1_054", block=False, light=NEON([255, 200, 90]))
+NEON_CASH = P("vg_neon_cash", "pk:casino/casino_1_052", block=False, light={"r": 130, "color": [120, 255, 140], "at": [0.5, 0.5], "flicker": 0.5})
+NEON_JP = P("vg_neon_jp", "pk:casino/casino_1_054", block=False, light={"r": 130, "color": [255, 200, 90], "at": [0.5, 0.5], "flicker": 0.45})
 SHOP_ROW = P("vg_shop_row", "pk:zcity/zcity_5_022", foot=[6, 1], sight=True)
 WRECKS = [P(f"vg_wreck{i}", f"pk:zcity/zcity_2_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((1, 5, 13, 21, 34, 45, 97))]
 RUBBLE = [P(f"vg_rubble{i}", f"pk:zcity/zcity_4_{n:03d}", foot=[2, 1]) for i, n in enumerate((7, 8, 9, 21, 22, 23))]
@@ -193,6 +198,13 @@ st.paint("p", 34, 0, 45, H - 1)                        # Стрип — с юг�
 st.paint("a", 36, 0, 43, H - 1)
 st.paint("p", 0, 24, W - 1, 31)                        # поперечная улица
 st.paint("a", 0, 26, W - 1, 29)
+st.floor_code("h", "pk:zcity/zcity_f3_09")
+for _y in range(2, H - 2, 6):                          # разметка Стрипа: осевая из коротких штрихов
+    st.paint("h", 39, _y, 40, _y + 2)
+for _x in range(2, W - 2, 6):
+    st.paint("h", _x, 27, _x + 2, 28)
+st.floor_code("d", "noise:pk:desnat/p1/0,0,1,1")
+st.floor_code("c", "noise:pk:zcity/zcity_f3_10")
 st.exits = [(0, y) for y in range(26, 30)]
 st.reserve(0, 26, W - 1, 29)
 st.reserve(36, 0, 43, H - 1)
@@ -200,6 +212,17 @@ st.reserve(36, 0, 43, H - 1)
 # северо-запад: «Лаки 38» — запертая башня, в окнах иногда мигает свет
 st.put(LUCKY38, 22, 8)
 st.terminal(27, 12, "lucky38_door")
+# площадь «Лаки 38»: гранитная площадка с круглой клумбой, прожекторы по краям, бархатные канаты, афиши, страж у входа
+st.floor_code("g", "pk:zcity/zcity_f1_23")
+st.paint("g", 16, 13, 34, 21)
+for x in (16, 20, 24, 28, 32, 34):
+    st.maybe(SPOT_V, x, 13, allow_reserved=True)
+for x in (18, 22, 26, 30):
+    st.maybe(ROPE[(x // 4) % 2], x, 20, allow_reserved=True)
+for x, y in ((17, 15), (33, 15), (17, 19), (33, 19)):
+    st.maybe(PALM_POTS[(x + y) % len(PALM_POTS)], x, y, allow_reserved=True)
+for x in (19, 29):
+    st.maybe([NEON_CASH, NEON_JP, CASINO_SIGN][(x // 10) % 3], x, 17, allow_reserved=True)
 # северо-восток: руины башни Vault-Tec — над хранилищем «Ноль»; вход завален
 st.put(VT_TOWER, 52, 8)
 st.terminal(51, 12, "vt_tower_door")
@@ -266,10 +289,28 @@ st.props.append(["x_manhole", 22, 38])
 st.portal([(22, 38)], "vegas_bank", (6, 5), "Люк в подвал банка",
           requires={"flag": "know_bank", "msg": "Тяжёлый люк с гербом банка. Заварен изнутри? Нет — просто никто не знает, что он открывается."})
 st.reserve(21, 37, 23, 39)
-st.npcs += [["judge_sol", 40, 32], ["strip_trader", 28, 36], ["strip_drunk", 50, 36], ["grey_buyer", 32, 30],
+st.npcs += [["strip_busker", 34, 37], ["strip_showgirl", 22, 34], ["strip_scav", 58, 34], ["strip_vendor", 44, 37], ["strip_guard_l38", 27, 14],
+            ["judge_sol", 40, 32], ["strip_trader", 28, 36], ["strip_drunk", 50, 36], ["grey_buyer", 32, 30],
             ["strip_kid", 47, 24]]
 for _, x, y in st.npcs:
     st.reserve(x, y, x, y)
+# земля между кварталами — не сплошная тьма: песчаные намёты и растрескавшийся бетон пятнами, проседания у люков
+st.patchwork("r", ["c", "c", "c", "d"], 40, 1, 3, seed=3)
+# уличная жизнь Стрипа: баррикады Легиона из мешков и бочек, будки, гидранты, лавки, выгоревшие машины, афиши
+for x, y in ((33, 20), (46, 20), (33, 35), (46, 35)):
+    st.maybe("x_sandbags", x, y, allow_reserved=True)
+for x in (13, 24, 54, 66, 74):
+    st.maybe(HYDRANT_V, x, 32, allow_reserved=True)
+for x in (8, 30, 50, 70):
+    st.maybe(PHONE_V, x, 24, allow_reserved=True)
+for x in (10, 20, 52, 62, 72):
+    st.maybe("bench_7", x, 31, allow_reserved=True)
+for x, y in ((31, 8), (48, 8), (31, 46), (48, 46), (31, 38), (48, 18)):
+    st.maybe(PALM_POTS[(x + y) % len(PALM_POTS)], x, y, allow_reserved=True)
+for x, y in ((32, 12), (47, 40), (32, 48), (47, 4)):
+    st.maybe("r_billboard", x, y, allow_reserved=True)
+for x, y in ((40, 6), (41, 14), (39, 22), (40, 34), (41, 42), (39, 50)):
+    st.maybe(WRECKS[(x + y) % len(WRECKS)], x, y, allow_reserved=True)
 st.scatter(RUBBLE + ["r_trash"], 1, 1, 33, 22, 10)
 st.scatter(RUBBLE + ["r_trash"], 46, 1, W - 2, 22, 10)
 st.scatter(RUBBLE + ["r_trash", "r_bones"], 1, 33, 33, H - 2, 10)
@@ -345,7 +386,7 @@ sn.paint("r", 0, 0, W - 1, H - 1)
 sn.paint("a", 36, 0, 43, 20)
 sn.floor_code("q", "noise:pk:zcity/zcity_f1_22")
 sn.paint_ragged("d", 6, 12, 60, 40, depth=3)                           # рынок
-sn.paint_ragged("q", 10, 15, 56, 28, depth=2)                          # торговые ряды — утоптанный светлый настил
+sn.paint_ragged("q", 7, 13, 59, 39, depth=2)                           # весь рынок — утоптанный светлый настил, а не тёмная пыль
 city.road(st, [(x, 55) for x in range(36, 44)], sn,
           [(x, 0) for x in range(36, 44)], "Змеиная родня", "Стрип", step=(0, 1))
 sn.reserve(35, 0, 44, 12)
@@ -373,6 +414,12 @@ for x, y in ((8, 20), (60, 20), (8, 36), (58, 36), (22, 34), (42, 34)):
     sn.maybe(FIRE_BARREL, x, y)
 for x, y in ((10, 16), (34, 16), (40, 16), (46, 36), (52, 30)):
     sn.maybe(LANTERN, x, y)
+for x, y in ((12, 22), (16, 22), (20, 22), (34, 22), (46, 22), (52, 22), (14, 34), (46, 34), (52, 34)):
+    sn.maybe(BAZ_STALLS[(x + y) % 4], x, y)
+sn.maybe(NEON_CASH, 33, 28)
+sn.maybe(NEON_JP, 45, 28)
+for x, y in ((9, 14), (57, 14), (9, 38), (57, 38)):
+    sn.maybe(FIRE_BARREL, x, y)
 sn.scatter(RUBBLE + ["r_trash", "r_bones"], 1, 1, W - 2, 12, 10)
 sn.scatter(["r_trash", "pile_cans"], 8, 14, 58, 38, 10)
 
@@ -400,6 +447,34 @@ dn.put(SOFA, 28, 5)
 dn.terminal(29, 9, "snakes_ledger")
 dn.box(SAFE, 29, 18, "сундук Матери-Змеи", {"чертёж змеиных ходов": 1, "крышки": 150},
        requires={"item": "отмычка", "msg": "Сундук Матери-Змеи. Замок хитрый, как она сама."}, owner="mother_snake")
+# игорный зал: ковры, люстры, бархатные канаты, острова столов, второй ряд автоматов у северной стены, картины и бра
+dn.stamp("vg_den_rug_a", "pk:casino/p3/0,0,2,2", 5, 6, water=False)
+dn.stamp("vg_den_rug_b", "pk:casino/p3/0,0,2,2", 12, 6, water=False)
+dn.stamp("vg_den_rug_c", "pk:casino/p3/0,0,2,2", 6, 14, water=False)
+dn.stamp("vg_den_rug_d", "pk:casino/p3/0,0,2,2", 16, 12, water=False)
+for x, y in ((5, 4), (11, 4), (17, 4)):
+    dn.maybe(CHANDELIER, x, y)
+for x in (4, 9, 14):
+    dn.maybe(SLOTS[x % 8], x, 3)
+for x, y in ((4, 18), (8, 18), (18, 18), (3, 10), (19, 10)):
+    dn.maybe(ROPE[(x + y) % 2], x, y)
+for x, y in ((19, 6), (19, 15), (3, 20), (20, 20)):
+    dn.maybe(PALM_POTS[(x + y) % len(PALM_POTS)], x, y)
+dn.maybe(JUKE_V, 20, 8)
+# покои Матери-Змеи: ковры, широкая кровать за ширмой, шкафы, полки с трофеями, лампы — хозяйка живёт не в подвале, а во дворце
+dn.stamp("vg_den_rug_e", "pk:casino/p3/0,0,2,2", 25, 9, water=False)
+dn.stamp("vg_den_rug_f", "pk:casino/p3/0,0,2,2", 24, 16, water=False)
+dn.maybe("bed", 28, 3)
+dn.maybe("wardrobe", 24, 3)
+dn.maybe("shelf_wood", 30, 3)
+dn.maybe("shelf_stuff_1", 24, 19)
+dn.maybe("armchair", 24, 6)
+dn.maybe("armchair", 29, 14)
+dn.maybe("lantern_lit", 23, 12)
+dn.maybe("lantern_lit", 30, 12)
+dn.maybe("lantern_lit", 29, 20)
+dn.maybe(PALM_POTS[2], 30, 16)
+dn.maybe(PALM_POTS[5], 23, 20)
 dn.npcs += [["mother_snake", 26, 12], ["den_dealer", 9, 11], ["den_barkeep", 15, 18]]
 
 

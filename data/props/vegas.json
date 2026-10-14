@@ -120,7 +120,7 @@
 "block": false,
 "sight": false,
 "light": {
-"r": 120,
+"r": 130,
 "color": [
 255,
 90,
@@ -130,7 +130,7 @@
 0.5,
 0.5
 ],
-"flicker": 0.15
+"flicker": 0.4
 }
 },
 "vg_palmpot0": {
@@ -278,6 +278,77 @@
 ],
 "keybg": true
 },
+"vg_hydrant": {
+"img": "pk:town50/town50_1_109",
+"block": false,
+"sight": false
+},
+"vg_phone": {
+"img": "pk:town50/town50_1_100",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vg_chandelier": {
+"img": "pk:casino/casino_4_007",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+220,
+150
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.08
+}
+},
+"vg_jukebox": {
+"img": "pk:town50/town50_1_084",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 90,
+"color": [
+255,
+170,
+90
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.2
+}
+},
+"vg_spotlight": {
+"img": "pk:apark/apark_3_064",
+"block": true,
+"sight": false,
+"light": {
+"r": 190,
+"color": [
+210,
+230,
+255
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
 "vg_jackpot": {
 "img": "pk:casino/casino_1_062",
 "block": true,
@@ -305,7 +376,7 @@
 "block": false,
 "sight": false,
 "light": {
-"r": 120,
+"r": 130,
 "color": [
 120,
 255,
@@ -315,7 +386,7 @@
 0.5,
 0.5
 ],
-"flicker": 0.15
+"flicker": 0.5
 }
 },
 "vg_neon_jp": {
@@ -323,7 +394,7 @@
 "block": false,
 "sight": false,
 "light": {
-"r": 120,
+"r": 130,
 "color": [
 255,
 200,
@@ -333,7 +404,7 @@
 0.5,
 0.5
 ],
-"flicker": 0.15
+"flicker": 0.45
 }
 },
 "vg_shop_row": {
@@ -1613,6 +1684,66 @@
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
 "sight": false,
+"layer": "floor"
+},
+"vg_den_rug_a": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"vg_den_rug_b": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"vg_den_rug_c": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"vg_den_rug_d": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"vg_den_rug_e": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"vg_den_rug_f": {
+"img": "pk:casino/p3/0,0,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
 "layer": "floor"
 },
 "vg_lobby_rug": {
