@@ -208,7 +208,7 @@ JUGS = [P(f"hb_jug{i}", f"pk:destown/p3/{x},{y},1,1", block=True) for i, (x, y) 
 POT_CACTUS = [P("hb_pot_cactus", "pk:destown/p3/3,0,1,2", foot=[1, 1]), P("hb_pot_cactus_b", "pk:destown/p3/0,7,1,1"),
               P("hb_pot_cactus_c", "pk:destown/p3/2,7,1,1")]
 HIDE = P("hb_hide", "pk:destown/p3/10,6,1,1", block=False, layer="floor")
-SMALL_WELL = P("hb_small_well", "pk:destown/p3/8,9,2,1", foot=[2, 1])
+SMALL_WELL = P("hb_small_well", "pk:destown/p3/8,9,1,1", foot=[1, 1], keybg=True)
 FIREPIT = P("hb_firepit", "pk:destown/p3/11,12,1,1", light={"r": 120, "color": [255, 150, 70], "at": [0.5, 0.5],
                                                           "flicker": 0.35})
 
@@ -244,6 +244,17 @@ for x, y in ((67, 15), (71, 15)):
 for i, (x, y) in enumerate(((29, 44), (31, 50), (56, 49), (61, 50), (66, 50), (71, 49), (2, 49), (7, 51))):
     adobe_house(x, y, ADOBE[(i + 1) % 5])
 hb.maybe(AWNING, 58, 45)
+# квартал беженцев у южной дороги: дома с дворами за саманной стенкой, пальмы вдоль дорожки, лампы у перекрёстка
+for i, (x, y) in enumerate(((5, 35), (11, 36), (17, 34), (22, 36), (46, 37), (52, 35), (47, 43), (72, 36))):
+    adobe_house(x, y, ADOBE[(i + 3) % 5], wall=True, door_dx=1)
+for x, y in ((35, 36), (44, 36), (35, 46), (44, 46), (35, 41), (44, 41)):
+    hb.maybe(PALMS[(x + y) % 4], x, y)
+for x, y in ((35, 34), (44, 34)):
+    hb.maybe(LANTERN, x, y, allow_reserved=True)
+hb.maybe(CART, 14, 42)
+hb.maybe(CART_B, 25, 44)
+hb.maybe(TENT_SHABBY, 8, 44)
+hb.maybe(TENT_LOW, 19, 46)
 hb.maybe(SMALL_WELL, 26, 38)
 for x, y in ((20, 38), (24, 40), (30, 37)):
     hb.maybe(HIDE, x, y)
