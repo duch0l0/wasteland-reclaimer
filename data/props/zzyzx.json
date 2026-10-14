@@ -249,22 +249,24 @@
 ]
 },
 "zz_stall": {
-"img": "pk:destown/destown_3_029",
+"img": "pk:destown/p3/4,8,2,2",
 "block": true,
 "sight": false,
 "foot": [
 2,
 1
-]
+],
+"keybg": true
 },
 "zz_stall_b": {
-"img": "pk:destown/destown_3_032",
+"img": "pk:destown/p3/0,8,2,2",
 "block": true,
 "sight": false,
 "foot": [
 2,
 1
-]
+],
+"keybg": true
 },
 "zz_rug": {
 "img": "pk:destown/destown_3_008",
@@ -337,6 +339,141 @@
 "block": false,
 "sight": false,
 "layer": "floor"
+},
+"zz_wall0": {
+"img": "pk:destown/p3/6,8,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"zz_wall1": {
+"img": "pk:destown/p3/8,8,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"zz_wall2": {
+"img": "pk:destown/p3/10,8,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"zz_wall3": {
+"img": "pk:destown/p3/12,8,2,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"zz_gate_arch": {
+"img": "pk:destown/p3/12,10,4,2",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+],
+"keybg": true
+},
+"zz_rug_red": {
+"img": "pk:destown/p3/2,11,2,1",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"zz_rug_blue": {
+"img": "pk:destown/p3/4,11,2,1",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"zz_sack0": {
+"img": "pk:destown/p3/2,8,1,1",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "мешок"
+},
+"zz_sack1": {
+"img": "pk:destown/p3/3,8,1,1",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "мешок"
+},
+"zz_skin0": {
+"img": "pk:destown/p3/5,11,1,1",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"zz_skin1": {
+"img": "pk:destown/p3/6,11,1,1",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
+"zz_reeds0": {
+"img": "pk:desnat/p4/8,10,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"zz_reeds1": {
+"img": "pk:desnat/p4/9,10,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"zz_reeds2": {
+"img": "pk:desnat/p4/7,12,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"zz_reeds3": {
+"img": "pk:desnat/p4/9,12,1,1",
+"block": false,
+"sight": false,
+"keybg": true
+},
+"zz_lantern": {
+"img": "pk:destown/p4/14,4,1,1",
+"block": false,
+"sight": false,
+"keybg": true,
+"light": {
+"r": 110,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.25
+}
 },
 "ht_bed": {
 "img": "pk:hotel/hotel_1_007",
@@ -451,50 +588,19 @@
 "block": true,
 "sight": true
 },
+"zz_pipes": {
+"img": "pk:sewer/sewer_1_042",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
 "sight": false,
-"layer": "floor"
-},
-"zz_pool_a": {
-"img": "pk:pool/p1/4,4,4,2",
-"block": false,
-"sight": false,
-"foot": [
-4,
-2
-],
-"layer": "floor"
-},
-"zz_pool_b": {
-"img": "pk:pool/p1/4,4,4,2",
-"block": false,
-"sight": false,
-"foot": [
-4,
-2
-],
-"layer": "floor"
-},
-"zz_pool_c": {
-"img": "pk:pool/p1/4,4,4,2",
-"block": false,
-"sight": false,
-"foot": [
-4,
-2
-],
-"layer": "floor"
-},
-"zz_pool_d": {
-"img": "pk:pool/p1/4,4,4,2",
-"block": false,
-"sight": false,
-"foot": [
-4,
-2
-],
 "layer": "floor"
 },
 "zz_room_rug0": {
@@ -564,46 +670,6 @@
 "foot": [
 2,
 2
-],
-"layer": "floor"
-},
-"zz_canal_a": {
-"img": "pk:pool/p1/4,8,4,4",
-"block": false,
-"sight": false,
-"foot": [
-4,
-4
-],
-"layer": "floor"
-},
-"zz_canal_b": {
-"img": "pk:pool/p1/4,8,4,4",
-"block": false,
-"sight": false,
-"foot": [
-4,
-4
-],
-"layer": "floor"
-},
-"zz_canal_c": {
-"img": "pk:pool/p1/4,8,4,4",
-"block": false,
-"sight": false,
-"foot": [
-4,
-4
-],
-"layer": "floor"
-},
-"zz_canal_d": {
-"img": "pk:pool/p1/4,8,4,4",
-"block": false,
-"sight": false,
-"foot": [
-4,
-4
 ],
 "layer": "floor"
 },

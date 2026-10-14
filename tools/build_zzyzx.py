@@ -44,8 +44,8 @@ TENT_BIG = P("zz_tent_big", "pk:destown/destown_3_004", foot=[3, 2], sight=True)
 TENT_AWN = P("zz_tent_awning", "pk:destown/destown_3_011", foot=[4, 2], sight=True)
 TENT = P("zz_tent", "pk:destown/destown_3_015", foot=[2, 2], sight=True)
 TENT_S = P("zz_tent_small", "pk:destown/destown_3_018", foot=[2, 1])
-STALL = P("zz_stall", "pk:destown/destown_3_029", foot=[2, 1])
-STALL_B = P("zz_stall_b", "pk:destown/destown_3_032", foot=[2, 1])
+STALL = P("zz_stall", "pk:destown/p3/4,8,2,2", foot=[2, 1], keybg=True)
+STALL_B = P("zz_stall_b", "pk:destown/p3/0,8,2,2", foot=[2, 1], keybg=True)
 RUG = P("zz_rug", "pk:destown/destown_3_008", block=False, layer="floor")
 WELL = P("zz_well", "pk:desnat/desnat_3_006", foot=[2, 1])
 WELL_B = P("zz_well_b", "pk:desnat/desnat_3_027", foot=[2, 1])
@@ -54,6 +54,14 @@ CRATE = P("zz_crate", "pk:desnat/desnat_3_018", search="crate", title="ящик"
 BARREL = P("zz_barrel", "pk:desnat/desnat_3_014", search="junk", title="бочка")
 FIRE = P("zz_campfire", "pk:destown/destown_3_034", block=False, layer="floor")
 LAKE = "pk:destown/p5/8,5,8,11"
+ADOBE_WALL = [P(f"zz_wall{i}", f"pk:destown/p3/{x},8,2,1", foot=[2, 1], keybg=True) for i, x in enumerate((6, 8, 10, 12))]
+ADOBE_GATE = P("zz_gate_arch", "pk:destown/p3/12,10,4,2", foot=[4, 1], sight=True, keybg=True)     # арка: проход 2 клетки посередине
+RUG_R = P("zz_rug_red", "pk:destown/p3/2,11,2,1", block=False, layer="floor", keybg=True)
+RUG_B = P("zz_rug_blue", "pk:destown/p3/4,11,2,1", block=False, layer="floor", keybg=True)
+SACKS = [P(f"zz_sack{i}", f"pk:destown/p3/{x},8,1,1", search="crate", title="мешок") for i, x in enumerate((2, 3))]
+SKIN = [P(f"zz_skin{i}", f"pk:destown/p3/{x},11,1,1", block=False, layer="floor", keybg=True) for i, x in enumerate((5, 6))]
+REEDS = [P(f"zz_reeds{i}", f"pk:desnat/p4/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((8, 10), (9, 10), (7, 12), (9, 12)))]
+LANTERN_ZZ = P("zz_lantern", "pk:destown/p4/14,4,1,1", block=False, keybg=True, light={"r": 110, "color": [255, 190, 110], "at": [0.5, 0.4], "flicker": 0.25})
 
 BED = P("ht_bed", "pk:hotel/hotel_1_007", foot=[2, 2])
 BED_S = P("ht_bed_single", "pk:hotel/hotel_1_004", foot=[1, 2])
@@ -76,13 +84,14 @@ TANKS_W = P("zz_water_tanks", "pk:nbunk/nbunk_2_021", sight=True)
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 CRACK = ["noise:pk:destown/p2/8,0,1,1"]
 COBBLE = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])   # утоптанный гравий бульвара
-TILE_W = ["pk:hotel/hotel_f1_12", "pk:hotel/hotel_f1_11"]
-TILE_B = ["pk:hotel/hotel_f1_18"]
+TILE_W = ["pk:zcity/zcity_f1_23"]
+TILE_B = ["pk:zcity/zcity_f1_22"]
 WOOD = ["pk:hotel/hotel_f1_02"]
 CARPET = ["pk:hotel/hotel_f1_03"]
 METAL = cells("nbunk/p2", [(4, 8), (5, 9), (6, 10), (4, 10)])
 POOL_WATER = "pk:pool/p1/4,4,4,2"
 DIRTY_WATER = "pk:pool/p1/4,8,4,4"
+SEWER_PIPE_ZZ = P("zz_pipes", "pk:sewer/sewer_1_042", foot=[2, 1])
 
 
 # ================================================================ Бульвар Мечты
@@ -95,16 +104,17 @@ z.floor_code("p", *COBBLE)
 z.paint("s", 0, 0, W - 1, H - 1)
 z.tint = None
 z.exits = [(0, y) for y in range(24, 28)]
-z.paint("a", 0, 24, 10, 27)                          # старая дорога с запада
+z.paint("p", 0, 24, 10, 27)                          # въезд с запада — тот же утоптанный гравий, что и бульвар
 z.paint("p", 11, 24, 60, 27)                         # Бульвар Мечты — к озеру
-z.paint("p", 20, 18, 22, 23)                         # к купальням
-z.paint("p", 57, 19, 59, 23)                         # к «Замку»
-z.paint("p", 30, 28, 32, 31)                         # к лагерю
+z.paint("p", 20, 18, 21, 23)                         # к купальням — проход арки
+z.paint("p", 56, 19, 57, 23)                         # к «Замку» — проход арки
+z.paint("p", 30, 28, 31, 32)                         # к лагерю — проход арки
 z.paint_ragged("k", 5, 31, 37, 47)                        # вытоптанная земля лагеря
 z.reserve(0, 23, 60, 28)
-z.reserve(19, 17, 23, 23)
-z.reserve(56, 18, 60, 23)
-z.reserve(29, 28, 33, 32)
+z.reserve(18, 17, 23, 23)
+z.reserve(55, 18, 59, 23)
+z.reserve(28, 28, 33, 32)
+z.reserve(44, 28, 49, 32)
 
 z.npcs += [["springer", 32, 21], ["gus", 47, 30], ["pilgrim_hank", 15, 36],
            ["pilgrim_maria", 24, 38], ["pilgrim_timmy", 26, 39], ["healer_girl", 50, 37], ["merchant_zz", 13, 31]]
@@ -131,6 +141,14 @@ for _px, _py in [(58, 21), (69, 22), (58, 31), (69, 30)]:                       
 for _px, _py in [(59, 24), (68, 27)]:                                  # камыш у воды
     z.maybe("grass_big", _px, _py)
 
+# стены из самана вдоль бульвара: север — к купальням и «Замку», юг — к лагерю и домам целителей; арки — проходы
+z.paint("p", 45, 28, 46, 32)                         # к домам целителей — проход арки
+for gx, gy in ((19, 20), (55, 20), (29, 30), (45, 30)):
+    z.put(ADOBE_GATE, gx, gy, check=False, allow_reserved=True)
+z.hwall(ADOBE_WALL, 12, 62, 20, gaps=tuple(range(19, 23)) + tuple(range(55, 59)))
+z.hwall(ADOBE_WALL, 21, 62, 30, gaps=tuple(range(29, 33)) + tuple(range(45, 49)))
+for x in (18, 23, 54, 59, 28, 33, 44, 49):           # фонари у арок
+    z.maybe(LANTERN_ZZ, x, 21 if x < 40 and x in (18, 23) or x in (54, 59) else 31, allow_reserved=True)
 # пальмы вдоль бульвара — через одну клетку, с обеих сторон
 for i, x in enumerate(range(13, 52, 4)):      # через каждые 4 клетки, кроме мест, где отходят дорожки
     if not 19 <= x <= 23 and not 56 <= x <= 60:
@@ -149,6 +167,26 @@ z.put(WELL, 30, 19)
 z.put("bench_7", 25, 21)
 z.put("bench_16", 35, 21)
 
+# мощёные дворы перед купальнями и «Замком» — между зданием и стеной
+z.paint("p", 14, 18, 27, 19)
+z.paint("p", 50, 18, 65, 19)
+for x, y in ((15, 19), (26, 19), (51, 19), (64, 19)):
+    z.maybe(PLANT, x, y)
+for x in (17, 24, 52, 62):
+    z.maybe("bench_7", x, 19)
+# родник «Сладкая вода» между купальнями и «Замком»: небольшой пруд в пальмовой роще
+for _y in range(7, 15):
+    for _x in range(34, 44):
+        if ((_x - 39) / 4.3) ** 2 + ((_y - 10.5) / 3.2) ** 2 <= 1:
+            z.ground[_y][_x] = "~"
+            z.blocked.add((_x, _y))
+for _px, _py in ((32, 7), (33, 11), (34, 14), (37, 15), (41, 15), (44, 13), (45, 9), (42, 6), (36, 6), (31, 12)):
+    z.maybe(PALMS[(_px + _py) % 4], _px, _py)
+for _px, _py in ((35, 15), (39, 15), (43, 14), (33, 9), (45, 11), (38, 6), (44, 7)):
+    z.maybe(REEDS[(_px + _py) % 4], _px, _py)
+z.paint("p", 38, 16, 39, 19)                         # тропа от родника к бульвару
+for x, y in ((29, 17), (48, 17)):
+    z.maybe(LANTERN_ZZ, x, y)
 # лагерь паломников (юго-запад): шатры по кругу у кострищ, коврики, кувшины
 for name, x, y in ((TENT_BIG, 8, 33), (TENT_AWN, 14, 33), (TENT, 22, 33), (TENT_S, 9, 40), (TENT, 16, 42),
                    (TENT_BIG, 26, 43), (TENT_S, 33, 40)):
@@ -160,6 +198,19 @@ z.put(RUG, 21, 40)
 for i, (x, y) in enumerate(((7, 37), (31, 34), (11, 45), (35, 44))):
     z.put(POTS[i % 4], x, y)
 
+# лагерь живёт: шатёр-лазарет у входа, ряд ковриков для молитвы, мешки, шкуры, фонари, круг пальм у костра
+for name, x, y in ((TENT_BIG, 6, 44), (TENT, 20, 45), (TENT_S, 28, 40), (TENT_AWN, 31, 44), (TENT_S, 13, 36)):
+    z.maybe(name, x, y)
+for i, (x, y) in enumerate(((17, 36), (21, 36), (25, 35), (13, 41), (19, 42), (24, 41))):
+    z.maybe((RUG_R, RUG_B)[i % 2], x, y)
+for x, y in ((18, 40), (30, 39), (11, 43), (23, 38), (28, 34), (34, 37)):
+    z.maybe(SACKS[(x + y) % 2], x, y)
+    z.maybe(SKIN[(x + y) % 2], x + 1, y + 1)
+for x, y in ((20, 34), (28, 36), (15, 40), (24, 44)):
+    z.maybe(LANTERN_ZZ, x, y)
+for x, y in ((18, 37), (30, 36), (21, 38), (27, 38)):
+    z.maybe(PALMS[(x + y) % 4], x, y)
+z.hwall(ADOBE_WALL, 5, 20, 32)                       # низкая стенка лагеря со стороны бульвара
 # рынок у дороги: прилавки вдоль бульвара
 for name, x in ((STALL, 8), (STALL_B, 12), (STALL, 16)):
     z.put(name, x, 30)
@@ -168,6 +219,15 @@ z.box(CRATE, 6, 30, "ящик торговца", {"чистая вода": 2, "�
 # дома целителей (юго-восток) — глинобитные, в ряд вдоль улочки
 for name, x in ((HOUSE_A, 40), (HOUSE_B, 45), (HOUSE_C, 50), (HOUSE_BIG, 56)):
     z.put(name, x, 33)
+z.paint_ragged("k", 36, 31, 66, 46, depth=3)          # квартал целителей — вытоптанная земля
+for name, x, y in ((STALL, 40, 41), (STALL_B, 52, 41), (TENT_S, 57, 41), (TENT_AWN, 61, 41), (RUG_R, 44, 38),
+                   (RUG_B, 54, 38)):
+    z.maybe(name, x, y)
+for x, y in ((38, 43), (44, 43), (50, 43), (57, 44), (64, 43), (64, 38)):
+    z.maybe(PALMS[(x + y) % 4], x, y)
+for x, y in ((43, 36), (49, 37), (55, 36), (62, 36)):
+    z.maybe(LANTERN_ZZ, x, y)
+z.hwall(ADOBE_WALL, 37, 66, 45)                      # задняя стена квартала
 z.put(WELL_B, 47, 40)
 z.box(BARREL, 43, 41, "бочка с «чудо-водой»", {"вода Зайзикса": 3}, owner="springer")
 z.put(POTS[1], 61, 41)
@@ -184,8 +244,8 @@ z.enemies += [["rat", 66, 46], ["rat", 64, 47], ["radroach", 3, 47]]
 bt = CityMap(city, "zzyzx_bath", "Купальни Зайзикса", 40, 26, start=(19, 23), seed=82, interior=True, music="caves")
 bt.floor_code("T", *TILE_W)
 bt.floor_code("B", *TILE_B)
-bt.wall_code("W", "pk:hotel/hotel_w1_13")
-bt.wall_code("Q", "pk:hotel/hotel_w1_11")
+bt.wall_code("W", "pk:bazaar/bazaar_w2_12")
+bt.wall_code("Q", "pk:bazaar/bazaar_w2_12")
 LOBBY = bt.room(10, 15, 29, 25, "W", "T")          # приёмная у входа
 CHANGE_L = bt.room(1, 15, 10, 25, "W", "T")         # мужская раздевалка
 CHANGE_R = bt.room(29, 15, 38, 25, "W", "T")        # женская раздевалка
@@ -215,10 +275,11 @@ for x in (30, 35):
 bt.put("bench_16", 32, 22)
 bt.box("locker_1", 8, 23, "шкафчик паломника", {"крышки": 12, "бинт": 1})
 # зал: целебный бассейн в центре, по краям — лежаки (скамьи)
-bt.stamp("zz_pool_a", POOL_WATER, 9, 6, water=True)
-bt.stamp("zz_pool_b", POOL_WATER, 13, 6, water=True)
-bt.stamp("zz_pool_c", POOL_WATER, 9, 8, water=True)
-bt.stamp("zz_pool_d", POOL_WATER, 13, 8, water=True)
+bt.floor_code("~", "pk:mport/p1/8,4,1,1", "pk:mport/p1/9,4,1,1")
+bt.water_codes = ("~",)
+bt.paint("~", 8, 5, 21, 10)                           # чаша бассейна — настоящая вода с каменной кромкой
+for x in (6, 12, 17, 24):
+    bt.maybe(PLANT, x, 3)
 bt.put("bench_16", 4, 7)
 bt.put("bench_16", 22, 7)
 bt.put("bench_16", 4, 11)
@@ -304,10 +365,12 @@ cs.props.append(["x_ladder", 4, 4])
 cs.portal([(4, 4)], "zzyzx_bath", (34, 13), "Наверх, в насосную")
 cs.reserve(2, 4, 7, 7)
 # каналы с водой: две полосы воды через зал, между ними — мостки
-cs.stamp("zz_canal_a", DIRTY_WATER, 10, 6, water=True)
-cs.stamp("zz_canal_b", DIRTY_WATER, 14, 6, water=True)
-cs.stamp("zz_canal_c", DIRTY_WATER, 10, 14, water=True)
-cs.stamp("zz_canal_d", DIRTY_WATER, 14, 14, water=True)
+cs.floor_code("~", "pk:mport/p1/8,4,1,1", "pk:mport/p1/9,4,1,1")
+cs.water_codes = ("~",)
+cs.paint("~", 9, 6, 18, 9)                            # отстойники — настоящая вода с каменной кромкой
+cs.paint("~", 9, 14, 18, 17)
+for x, y in ((6, 8), (20, 8), (6, 16), (20, 16), (13, 11), (13, 12), (22, 12), (8, 19)):
+    cs.maybe(SEWER_PIPE_ZZ, x, y)
 # фильтр «Чистый лист»: баки и чаны у восточной стены, терминал управления рядом
 cs.put(TANK, 26, 4)
 cs.put(TANK, 28, 4)
