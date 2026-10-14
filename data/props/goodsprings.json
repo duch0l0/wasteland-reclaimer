@@ -5,70 +5,70 @@
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_house1": {
 "img": "pk:rvill/rvill_1_024",
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_house2": {
 "img": "pk:rvill/rvill_1_025",
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_house3": {
 "img": "pk:rvill/rvill_1_026",
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_house4": {
 "img": "pk:rvill/rvill_1_004",
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_house5": {
 "img": "pk:rvill/rvill_1_041",
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_house6": {
 "img": "pk:rvill/rvill_1_102",
 "block": true,
 "sight": true,
 "foot": [
-3,
-2
+2,
+1
 ],
-"scale": 1.5
+"scale": 2
 },
 "gs_shed": {
 "img": "pk:rvill/rvill_1_036",
@@ -264,6 +264,93 @@
 2,
 1
 ]
+},
+"gs_front_saloon": {
+"img": "pk:west/p1/10,12,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"gs_front_store": {
+"img": "pk:west/p1/12,12,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"gs_front_sheriff": {
+"img": "pk:west/p1/14,12,2,2",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"gs_wfence": {
+"img": "pk:wfarm/p3/0,12,4,1",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+],
+"keybg": true
+},
+"gs_laundry": {
+"img": "pk:wfarm/p3/0,0,4,3",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+],
+"keybg": true
+},
+"gs_hitch": {
+"img": "pk:west/p1/1,13,3,1",
+"block": true,
+"sight": false,
+"foot": [
+3,
+1
+],
+"keybg": true
+},
+"gs_tank": {
+"img": "pk:wfarm/p3/12,4,2,3",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"gs_bed_a": {
+"img": "pk:wfarm/p1/0,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"gs_bed_b": {
+"img": "pk:wfarm/p1/2,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
 },
 "gs_bell": {
 "img": "pk:cult/cult_2_131",

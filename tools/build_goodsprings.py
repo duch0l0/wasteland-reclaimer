@@ -30,7 +30,7 @@ def cells(page, pts):
 
 
 S = 1.5   # дома и деревья деревни — крупнее, под рост героя
-HOUSES = [P(f"gs_house{i}", f"pk:rvill/rvill_1_{n:03d}", scale=S, foot=[3, 2], sight=True)
+HOUSES = [P(f"gs_house{i}", f"pk:rvill/rvill_1_{n:03d}", scale=2, foot=[2, 1], sight=True)
           for i, n in enumerate((0, 24, 25, 26, 4, 41, 102))]
 SHED = P("gs_shed", "pk:rvill/rvill_1_036", scale=S, foot=[3, 2], sight=True)
 BARN = P("gs_barn", "pk:rvill/rvill_1_006", scale=S, foot=[3, 2], sight=True)
@@ -48,6 +48,14 @@ BARREL = P("gs_barrel", "pk:west/west_1_017", search="junk", title="бочка")
 CRATE = P("gs_crate", "pk:west/west_1_018", search="crate", title="ящик")
 STAGECOACH = P("gs_wagon", "pk:west/west_1_011", foot=[2, 1], sight=True)
 SIGN = P("gs_sign", "pk:west/p1/12,4,2,2", foot=[2, 1])
+FRONT_SALOON = P("gs_front_saloon", "pk:west/p1/10,12,2,2", foot=[2, 1], sight=True)
+FRONT_STORE = P("gs_front_store", "pk:west/p1/12,12,2,2", foot=[2, 1], sight=True)
+FRONT_SHERIFF = P("gs_front_sheriff", "pk:west/p1/14,12,2,2", foot=[2, 1], sight=True)
+WFENCE = P("gs_wfence", "pk:wfarm/p3/0,12,4,1", foot=[4, 1], keybg=True)
+LAUNDRY = P("gs_laundry", "pk:wfarm/p3/0,0,4,3", foot=[4, 1], keybg=True)
+HITCH = P("gs_hitch", "pk:west/p1/1,13,3,1", foot=[3, 1], keybg=True)
+TANK_G = P("gs_tank", "pk:wfarm/p3/12,4,2,3", foot=[2, 1], sight=True, keybg=True)
+BED_G = [P("gs_bed_a", "pk:wfarm/p1/0,8,2,2", foot=[2, 1], keybg=True), P("gs_bed_b", "pk:wfarm/p1/2,8,2,2", foot=[2, 1], keybg=True)]
 BELL = P("gs_bell", "pk:cult/cult_2_131", sight=True)                       # колокол на столбе
 GAS_PUMP = P("gs_gas_pump", "pk:zcity/zcity_1_134")
 WRECK = P("gs_wreck", "pk:zcity/zcity_2_034", foot=[2, 1], sight=True)
@@ -75,10 +83,11 @@ MUSH = [P("gs_mush", "pk:gcave/p1/2,4,1,1", light={"r": 60, "color": [140, 255, 
 BOULDERS = [P("gs_boulder", "pk:gcave/p1/4,4,1,1"), P("gs_boulder_b", "pk:gcave/p1/5,4,1,1")]
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
-DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
-ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])          # красная укатанная колея
+DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
+ROAD = ["noise:pk:destown/p2/4,0,1,1"]          # утоптанный гравий улицы — как в Зайзиксе
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник площади
 PLANK = ["pk:bazaar/bazaar_f1_21"]
+BOARDS = ["pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1"]      # светлые доски тротуаров
 CAVE_DIRT = ["noise:pk:gcave/p1/1,4,1,1"]
 SPRING = cells("sewer/p1", [(10, 1), (11, 1)])
 
@@ -90,6 +99,8 @@ gs.floor_code("s", *SAND)
 gs.floor_code("d", *DIRT)
 gs.floor_code("r", *ROAD)
 gs.floor_code("t", *STONE)
+gs.floor_code("w", *BOARDS)
+gs.piers = ("w",)                                       # тротуар — доски с чёткой кромкой, без размытия в землю
 gs.paint("s", 0, 0, W - 1, H - 1)
 gs.paint_ragged("d", 4, 12, 64, 44, depth=4)                          # утоптанная земля посёлка
 gs.paint("r", 0, 29, W - 1, 32)                         # улица
@@ -98,6 +109,12 @@ gs.paint("t", 28, 22, 41, 28)                           # площадь у ко
 gs.exits = [(0, y) for y in range(29, 33)] + [(W - 1, y) for y in range(29, 33)]
 gs.reserve(0, 29, W - 1, 32)
 gs.reserve(33, 10, 36, 28)
+gs.paint("w", 6, 27, 27, 28)                            # дощатые тротуары вдоль фасадов
+gs.paint("w", 42, 27, 64, 28)
+gs.paint("w", 6, 33, 24, 34)
+gs.paint("w", 38, 33, 58, 34)
+for _x0, _y0, _x1, _y1 in ((6, 27, 27, 28), (42, 27, 64, 28), (6, 33, 24, 34), (38, 33, 58, 34)):
+    gs.reserve(_x0, _y0, _x1, _y1)
 
 # площадь: колодец и колокол — бить тревогу, если придёт культ
 gs.put(WELL, 30, 24)
@@ -109,17 +126,23 @@ gs.put(TROUGH, 31, 27)
 # север улицы: салун «Старатель» (большой, с крышей), лавка, дом старосты
 gs.building(10, 16, 14, 11, "planks", south=(6,))       # салун
 gs.reserve(16, 27, 17, 28)
-gs.put(SIGN, 12, 27)
-gs.put(BARREL, 22, 27)
-gs.put(HOUSES[0], 44, 18)                               # лавка Чета
-gs.put(CRATE, 48, 20)
-gs.put(HOUSES[1], 52, 18)                               # дом старосты Петтита
+gs.put(SIGN, 12, 27, allow_reserved=True)
+gs.put(BARREL, 22, 27, allow_reserved=True)
+gs.put(FRONT_STORE, 44, 20)                             # лавка Чета
+gs.put(CRATE, 49, 22)
+gs.put(FRONT_SHERIFF, 52, 20)                           # дом старосты Петтита — он же шериф, пока шерифа нет
+gs.put(HITCH, 44, 25, check=False)
+gs.put(HITCH, 52, 25, check=False)
+gs.put(TROUGH, 49, 26)
 # юг улицы: дом дока Митчелла (с крышей — заходят внутрь), жилые дома, ферма с загоном
 gs.building(26, 34, 10, 8, "planks", north=(4,))       # дом дока
 gs.reserve(30, 32, 31, 34)
-gs.put(HOUSES[2], 8, 35)
-gs.put(HOUSES[3], 14, 35)
-gs.put(HOUSES[4], 42, 35)
+gs.put(HOUSES[2], 8, 38)
+gs.put(HOUSES[3], 15, 38)
+gs.put(HOUSES[4], 42, 38)
+gs.put(HITCH, 8, 36, check=False)
+gs.put(HITCH, 15, 36, check=False)
+gs.put(HITCH, 42, 36, check=False)
 gs.put(BARN, 50, 35)
 gs.hwall(FENCE, 49, 61, 40, gaps=(55, 56))
 gs.vline([FENCE[1]], 61, 34, 39)
@@ -157,7 +180,23 @@ gs.npcs += [["sunny", 26, 30], ["chet", 46, 22], ["mayor_pettit", 54, 22], ["gs_
 gs.box("r_trash_can", 20, 25, "мусорный бак за салуном", {"фартук в крови": 1, "ткань": 1})
 for _, x, y in gs.npcs:
     gs.reserve(x, y, x, y)
-gs.grow(1, 1, W - 2, H - 2, 9, names=CACTI + BUSHES + DEAD_TREES)
+gs.grow(1, 1, W - 2, 9, 4, names=CACTI + BUSHES + DEAD_TREES)
+gs.grow(1, 46, W - 2, H - 2, 3, names=CACTI + BUSHES)
+gs.scatter(DEAD_TREES, 28, 46, W - 2, H - 2, 3)
+gs.grow(1, 10, 3, 43, 2, names=CACTI + BUSHES)
+gs.grow(66, 10, W - 2, 43, 2, names=CACTI + BUSHES)
+# дворы жилых домов: штакетник, бельё на верёвке, повозка у порога
+for x in (6, 14, 40):
+    gs.hwall([WFENCE], x, x + 7, 42, gaps=(x + 3, x + 4))
+gs.maybe(LAUNDRY, 18, 37)
+gs.maybe(LAUNDRY, 46, 38)
+gs.maybe(STAGECOACH, 36, 38)
+for x, y in ((22, 38), (4, 38), (47, 36), (39, 37)):
+    gs.maybe(BARREL, x, y)
+# огороды и водокачка за домами: грядки, бак на ножках, бочки с дождевой водой
+gs.put(TANK_G, 20, 43)
+for i, (x, y) in enumerate(((10, 44), (13, 44), (24, 44), (46, 44), (49, 44))):
+    gs.maybe(BED_G[i % 2], x, y)
 gs.scatter(GRASS + ["r_rocks"], 1, 1, W - 2, H - 2, 30)
 
 

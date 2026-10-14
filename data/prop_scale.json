@@ -124,7 +124,10 @@
       "by_billboard2",
       "nc_billboard0",
       "nc_billboard2",
-      "ct_tiki_shop"
+      "ct_tiki_shop",
+      "gs_front_saloon",
+      "gs_front_store",
+      "gs_front_sheriff"
     ]
   },
   "buildings_half": {
@@ -345,7 +348,8 @@
       "nv_tree_small",
       "sl_watchtower",
       "t50_diner_sign",
-      "zz_water_tanks"
+      "zz_water_tanks",
+      "gs_tank"
     ]
   },
   "landmarks": {
