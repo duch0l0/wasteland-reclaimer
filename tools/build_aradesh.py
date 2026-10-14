@@ -96,8 +96,8 @@ OUTCROP = P("ar_outcrop", "pk:desnat/p1/12,4,3,2", foot=[3, 2], sight=True, keyb
 RUBBLE = [P("ar_burnt", "pk:zcity/zcity_1_122", foot=[2, 1]), P("ar_burnt_b", "pk:zcity/zcity_1_123", foot=[2, 1])]
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # тот же песок, что в каньоне: граница без скачка цвета
-GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
-CRACK = cells("destown/p2", [(8, 0), (9, 0), (8, 1), (9, 1)])
+GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
+CRACK = ["noise:pk:destown/p2/8,0,1,1"]
 PLANK = ["pk:bazaar/bazaar_f1_21"]
 CAVE_DIRT = ["noise:pk:gcave/p1/1,4,1,1"]
 CAVE_STONE = cells("gcave/p1", [(4, 6), (5, 6), (4, 7), (5, 7)])

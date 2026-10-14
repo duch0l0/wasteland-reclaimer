@@ -1118,14 +1118,10 @@
 "block": false,
 "sight": false
 },
-"jt_casino_slab": {
-"img": "pk:jtown/p3/4,6,4,4",
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
 "block": false,
 "sight": false,
-"foot": [
-4,
-4
-],
 "layer": "floor"
 },
 "jt_mshack0": {

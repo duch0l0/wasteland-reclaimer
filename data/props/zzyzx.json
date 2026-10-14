@@ -451,6 +451,12 @@
 "block": true,
 "sight": true
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "zz_pool_a": {
 "img": "pk:pool/p1/4,4,4,2",
 "block": false,

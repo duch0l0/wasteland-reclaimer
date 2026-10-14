@@ -140,9 +140,9 @@ BOOKS = P("jt_bookcase", "pk:west/west_2_116", sight=True, search="shelf", title
 CLOCK = P("jt_clock", "pk:west/west_2_019", sight=True)
 TANKS = P("jt_tanks", "pk:nbunk/nbunk_2_021", sight=True)
 
-SAND = cells("destown/p2", [(0, 0), (1, 0), (0, 1), (1, 1)])
-GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
-CRACK = cells("destown/p2", [(8, 0), (9, 0), (8, 1), (9, 1)])
+SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]
+GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
+CRACK = ["noise:pk:destown/p2/8,0,1,1"]
 PLANK = ["pk:bazaar/bazaar_f1_21"]
 STONE_IN = ["pk:bazaar/bazaar_f1_19"]
 COBBLE = ["pk:bazaar/bazaar_f1_26"]
@@ -212,10 +212,9 @@ jt.building(26, 7, 20, 13, "metal", south=(8,))          # казино «Гиз
 jt.building(50, 9, 14, 11, "brick", south=(6,))          # лавка
 for x0, door in ((8, 14), (26, 34), (50, 56)):
     jt.reserve(door, 20, door + 1, 23)
-jt.stamp("jt_casino_slab", SLAB, 33, 20, water=False)
-jt.put(JACKPOT, 30, 21)                                   # неоновые вывески у входа в казино
-jt.put(NEON_CASH, 38, 21)
-jt.put(NEON_ARROW, 41, 21)
+jt.put(JACKPOT, 30, 19, force=True)                                   # неоновые вывески у входа в казино
+jt.put(NEON_CASH, 37, 19, force=True)
+jt.put(NEON_ARROW, 41, 19, force=True)
 jt.put(SOLAR, 22, 12)                                     # солнечные панели ратуши
 jt.put(SOLAR_LOW, 22, 15)
 jt.put(BARRELS, 46, 12)                                   # задний двор казино: бочки, ящики

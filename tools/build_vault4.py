@@ -65,7 +65,7 @@ BONES = [P("v4_bones", "pk:grave/grave_2_022", block=False), P("v4_bones_b", "pk
 BIOHAZ = P("v4_biohazard", "pk:hosp/hosp_1_012")
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
-GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
+GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
 PLATES = cells("nbunk/p2", [(4, 8), (5, 9), (6, 10), (4, 10)])
 TILE_W = ["pk:store/p1/12,0,1,1"]
 GRATE = cells("nbunk/p2", [(0, 12), (1, 13), (2, 14), (3, 12)])

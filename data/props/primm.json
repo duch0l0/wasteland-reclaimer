@@ -631,6 +631,12 @@
 "flicker": 0.35
 }
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "pr_park_patch": {
 "img": "pk:wpark/p1/4,9,4,3",
 "block": false,

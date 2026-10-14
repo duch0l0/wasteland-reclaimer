@@ -723,6 +723,12 @@
 "block": false,
 "sight": false
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "searchlight_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,

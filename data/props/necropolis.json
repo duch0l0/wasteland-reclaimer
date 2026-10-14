@@ -1044,6 +1044,12 @@
 2
 ]
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "nc_hall_carpet0": {
 "img": "pk:casino/p3/0,0,2,2",
 "block": false,

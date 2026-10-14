@@ -93,7 +93,7 @@ CAMPFIRE = P("pr_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1],
              light={"r": 120, "color": [255, 150, 70], "at": [0.5, 0.5], "flicker": 0.35})
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
-GRAVEL = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
+GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
 WALK = ["pk:zcity/zcity_f1_22"]
 PARK = ["pk:wpark/p1/1,9,1,1"]
 PARK_PATCH = "pk:wpark/p1/4,9,4,3"

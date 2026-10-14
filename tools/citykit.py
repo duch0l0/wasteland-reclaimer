@@ -168,8 +168,14 @@ class CityMap(MapKit):
     def wall_row(self, *a, **kw):
         return self._loosely(super().wall_row, *a, **kw)
 
-    def building(self, *a, **kw):
-        return self._loosely(super().building, *a, **kw)
+    def building(self, x0, y0, w, h, style, south=(), *a, **kw):
+        out = self._loosely(super().building, x0, y0, w, h, style, south, *a, **kw)
+        if south:                                   # в проёме — дверь (створка на каждую клетку), а не дыра в стене
+            self.city.prop("x_door", "pk:west/p2/12,6,1,2", block=False, layer="floor")
+            for off in south:
+                for dx in (0, 1):
+                    self.props.append(["x_door", x0 + off + dx, y0 + h - 1])
+        return out
 
     def dress_empty(self, *a, **kw):
         return self._loosely(super().dress_empty, *a, **kw)

@@ -750,6 +750,12 @@
 1
 ]
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "ar_field": {
 "img": "pk:wfarm/p5/0,2,8,2",
 "block": false,

@@ -705,6 +705,12 @@
 "block": true,
 "sight": false
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "ct_dance_floor": {
 "img": "pk:casino/p1/8,13,2,2",
 "block": false,

@@ -895,6 +895,12 @@
 "search": "crate",
 "title": "ящик"
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "boneyard_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,

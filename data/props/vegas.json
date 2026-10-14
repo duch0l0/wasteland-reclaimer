@@ -1161,6 +1161,12 @@
 "block": true,
 "sight": false
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "vg_tech_2_073": {
 "img": "pk:npower/npower_2_073",
 "block": true,

@@ -419,6 +419,12 @@
 "block": false,
 "sight": false
 },
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "nd_track": {
 "img": "pk:wrail/p1/4,4,4,2",
 "block": false,
