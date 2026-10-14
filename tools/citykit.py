@@ -260,6 +260,8 @@ class CityMap(MapKit):
             out["crisp"] = True
         if getattr(self, "piers", None):
             out["piers"] = list(self.piers)
+        if getattr(self, "not_water", None):
+            out["not_water"] = sorted(self.not_water)       # тёмный синеватый пол — не вода, берег ему не рисуется
         if getattr(self, "cave_style", False):
             out["style"] = "cave"                  # стены — скальные фасады из набора пещер
         elif getattr(self, "cliff_style", False):

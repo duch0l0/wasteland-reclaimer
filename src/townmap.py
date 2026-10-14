@@ -560,7 +560,7 @@ class TownMap(MapBase):
             if code in self.wallsets or code in "x_" or not self._tiles.get(code):
                 continue
             avg = pygame.transform.average_color(self._tiles[code][0])
-            if avg[2] > avg[0] + 25:              # вода — свой берег (_shore), и в подземелье тоже (канал, сток)
+            if avg[2] > avg[0] + 25 and code not in d.get("not_water", ()):              # вода — свой берег (_shore), и в подземелье тоже (канал, сток)
                 self._water.add(code)
                 continue
             if code in self._piers:               # причал стоит над водой — без берега и размытия
