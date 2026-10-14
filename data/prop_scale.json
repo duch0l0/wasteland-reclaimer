@@ -168,7 +168,11 @@
       "pr_dpalm0",
       "pr_dpalm1",
       "pr_dpalm2",
-      "pr_dpalm3"
+      "pr_dpalm3",
+      "vg_palm0",
+      "vg_palm1",
+      "vg_palm2",
+      "vg_palm3"
     ],
     "keep_foot": true
   },

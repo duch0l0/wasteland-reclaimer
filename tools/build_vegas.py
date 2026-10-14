@@ -24,7 +24,7 @@ import json
 from citykit import City, CityMap, tech_scenes
 
 city = City("vegas", "Руины Вегаса")
-NIGHT = [70, 76, 120]
+NIGHT = [92, 98, 140]
 
 
 def P(name, img, **kw):
@@ -46,6 +46,11 @@ VT_TOWER = P("vg_vt_tower", "pk:zcity/zcity_5_004", scale=2.4, foot=[4, 2], sigh
 CASINO_FRONT = P("vg_casino_front", "pk:casino/casino_4_051", foot=[4, 1], sight=True,
                  light=NEON([255, 120, 200]))
 CASINO_SIGN = P("vg_casino_sign", "pk:casino/casino_4_002", block=False, light=NEON([255, 90, 180]))
+PALM_POTS = [P(f"vg_palmpot{i}", f"pk:casino/casino_4_{n:03d}", foot=[1, 1], keybg=True) for i, n in enumerate((13, 14, 15, 16, 17, 19, 34, 35, 36, 37))]
+ROPE = [P("vg_rope_a", "pk:casino/casino_4_045", foot=[1, 1], keybg=True), P("vg_rope_b", "pk:casino/casino_4_050", foot=[1, 1], keybg=True)]
+CARPETS_V = ["pk:casino/casino_4_047", "pk:casino/casino_4_048", "pk:casino/casino_4_049"]
+CAM = P("vg_camera", "pk:casino/casino_4_000", block=False)
+TRASHCAN = [P("vg_trash_a", "pk:casino/casino_4_052", foot=[1, 1], keybg=True), P("vg_trash_b", "pk:casino/casino_4_053", foot=[1, 1], keybg=True)]
 JACKPOT = P("vg_jackpot", "pk:casino/casino_1_062", foot=[6, 2], sight=True, light=NEON([255, 210, 90]))
 NEON_CASH = P("vg_neon_cash", "pk:casino/casino_1_052", block=False, light=NEON([120, 255, 140]))
 NEON_JP = P("vg_neon_jp", "pk:casino/casino_1_054", block=False, light=NEON([255, 200, 90]))
@@ -112,8 +117,24 @@ BONES = [P("vg_bones", "pk:grave/grave_2_022", block=False), P("vg_bones_b", "pk
 HOSP_BED = P("vg_hosp_bed", "pk:hosp/hosp_1_007", foot=[3, 1])
 MED_SHELF = P("vg_med_shelf", "pk:hosp/hosp_1_009", sight=True, search="drawer", title="шкаф с лекарствами")
 TENT_WHITE = P("vg_tent_white", "pk:bazaar/bazaar_1_004", foot=[2, 2], sight=True)
+WELL_V = P("vg_well", "pk:desnat/desnat_3_006", foot=[2, 1])
 GARDEN = [P("vg_garden", "pk:ghouse/ghouse_3_048", foot=[2, 1]), P("vg_garden_b", "pk:ghouse/ghouse_3_024", foot=[2, 1])]
 # туннели, башня, хранилище
+VG_PALMS = [P(f"vg_palm{i}", f"pk:desnat/desnat_4_{n:03d}", foot=[1, 1]) for i, n in enumerate((49, 50, 51, 52))]
+SW_FLOOR = ["noise:pk:sewer/p1/6,0,1,1"]
+SW_MOSS = cells("sewer/p1", [(2, 0), (3, 0), (2, 1), (3, 1)])
+SW_WATER = ["pk:sewer/p1/10,1,1,1", "pk:sewer/p1/11,1,1,1", "pk:sewer/p1/10,2,1,1"]
+SW_PLANK = ["pk:sewer/p1/8,0,1,1", "pk:sewer/p1/9,0,1,1"]
+SW_OUTLET = P("vg_sw_outlet", "pk:sewer/sewer_1_008", foot=[3, 1], sight=True)
+SW_GATE = P("vg_sw_gate", "pk:sewer/sewer_1_007", foot=[3, 1], sight=True)
+SW_BARREL = P("vg_sw_barrel", "pk:sewer/sewer_1_003", foot=[1, 1], search="junk", title="бочка")
+SW_CRATE = P("vg_sw_crate", "pk:sewer/sewer_1_002", foot=[1, 1], search="crate", title="ящик")
+SW_MUSH = [P(f"vg_sw_mush{i}", f"pk:sewer/sewer_1_{n:03d}", foot=[1, 1], keybg=True, light={"r": 60, "color": [150, 255, 170], "at": [0.5, 0.5]}) for i, n in enumerate((24, 25, 46))]
+SW_HEAP = [P("vg_sw_heap_a", "pk:sewer/sewer_1_041", foot=[2, 2], keybg=True), P("vg_sw_heap_b", "pk:sewer/sewer_1_042", foot=[2, 2], keybg=True),
+           P("vg_sw_heap_c", "pk:sewer/sewer_1_074", foot=[2, 2], keybg=True)]
+SW_SKULL = P("vg_sw_skull", "pk:sewer/sewer_1_027", foot=[1, 1], keybg=True)
+SW_PIPE = P("vg_sw_pipe", "pk:sewer/sewer_1_038", foot=[1, 2], keybg=True)
+SW_LANTERN = P("vg_sw_lantern", "pk:sewer/sewer_1_010", foot=[1, 1], keybg=True, light={"r": 110, "color": [255, 170, 80], "at": [0.5, 0.4], "flicker": 0.35})
 SEWER_RUBBLE = [P("vg_sewer_rubble", "pk:sewer/sewer_1_042", foot=[2, 1]), P("vg_sewer_moss", "pk:sewer/sewer_1_041", foot=[2, 1])]
 DESKS = [P("vg_vt_desk", "pk:aoffice/aoffice_1_000"), P("vg_vt_desk_b", "pk:aoffice/aoffice_1_004")]
 CABINETS = P("vg_cabinets", "pk:aoffice/aoffice_3_013", sight=True, search="drawer", title="картотека")
@@ -143,7 +164,8 @@ WATER = cells("sewer/p1", [(10, 1), (11, 1)])
 
 
 def vegas_map(mid, name, w, h, start, seed, **kw):
-    m = CityMap(city, mid, name, w, h, start=start, seed=seed, night=NIGHT, **kw)
+    kw.setdefault("night", NIGHT)
+    m = CityMap(city, mid, name, w, h, start=start, seed=seed, **kw)
     return m
 
 
@@ -172,15 +194,29 @@ st.portal([(54, 11), (55, 11)], "vegas_tower", (18, 26), "Башня Vault-Tec",
           requires={"flag": "tower_front_open", "msg": "Вход в башню завален бетоном. Нужен динамит — или другой путь, снизу."})
 st.reserve(53, 11, 56, 13)
 # казино — целые здания: бетонные стены и крыша, на южном фасаде — неоновый вход и вывеска над ним
+CASINO_DONE = []
+NEON_FLASH = [NEON_CASH, NEON_JP, CASINO_SIGN]
+
+
 def casino(x0, y1, w=10, h=7):
     """Закрытое казино: x0 — левый край, y1 — строка южной стены (фасад смотрит на улицу)."""
     y0 = y1 - h + 1
     area = [(x, y) for x in range(x0 - 1, x0 + w + 1) for y in range(y0 - 1, y1 + 2)]
     if any(t in st.reserved or st.solid(*t) or not (0 < t[0] < st.W - 1 and 0 < t[1] < st.H - 1) for t in area):
         return False
-    st.building(x0, y0, w, h, "concrete", worn=False)
+    k = len(CASINO_DONE)
+    CASINO_DONE.append((x0, y1))
+    st.building(x0, y0, w, h, ("concrete", "brick", "metal", "planks")[k % 4], worn=False)    # крыши разные: казино не клоны
     fx = x0 + (w - 8) // 2
     st.put(CASINO_FRONT, fx, y1, force=True, allow_reserved=True)                 # вход поверх южной стены
+    # у входа: красная дорожка, канаты, кадки с пальмами, урны — у каждого казино по-своему
+    st.maybe(NEON_FLASH[k % 3], fx + 4, y1 + 3, allow_reserved=True)
+    for dx in ((0, 7), (1, 6), (0, 3, 7))[k % 3]:
+        st.maybe(PALM_POTS[(k * 3 + dx) % len(PALM_POTS)], fx + dx, y1 + 2, allow_reserved=True)
+    for dx in (2, 5):
+        st.maybe(ROPE[(k + dx) % 2], fx + dx, y1 + 2, allow_reserved=True)
+    st.maybe(TRASHCAN[k % 2], x0 + w, y1 + 1, allow_reserved=True)
+    st.maybe(CAM, fx + 3, y1 - 1, allow_reserved=True)
     return True
 
 
@@ -279,13 +315,15 @@ bt.scatter(["r_rocks", "r_dry_bush", "r_trash"], 1, 19, W - 2, H - 2, 12)
 
 # ================================================================ Змеиная родня
 W, H = 64, 44
-sn = vegas_map("vegas_snakes", "Вегас: Змеиная родня", W, H, (39, 1), 223, music="raiders")
+sn = vegas_map("vegas_snakes", "Вегас: Змеиная родня", W, H, (39, 1), 223, music="raiders", night=[118, 108, 146])
 sn.floor_code("r", *RUBBLE_FL)
 sn.floor_code("a", *ROAD)
 sn.floor_code("d", *DIRT)
 sn.paint("r", 0, 0, W - 1, H - 1)
 sn.paint("a", 36, 0, 43, 20)
+sn.floor_code("q", "noise:pk:zcity/zcity_f1_22")
 sn.paint_ragged("d", 6, 12, 60, 40, depth=3)                           # рынок
+sn.paint_ragged("q", 10, 15, 56, 28, depth=2)                          # торговые ряды — утоптанный светлый настил
 city.road(st, [(x, 55) for x in range(36, 44)], sn,
           [(x, 0) for x in range(36, 44)], "Змеиная родня", "Стрип", step=(0, 1))
 sn.reserve(35, 0, 44, 12)
@@ -298,7 +336,7 @@ for x, y in ((14, 16), (22, 16), (48, 16), (56, 16), (30, 34)):
     sn.put(LANTERN, x, y)
 sn.box(CRATE, 24, 26, "склад Змей", {"патроны": 20, "самогон": 2}, owner="snake_guard")
 # игорный подвал — дом с неоном; люк в змеиные ходы во дворе
-sn.building(26, 30, 12, 9, "brick", north=(4,))
+sn.building(26, 30, 12, 9, "metal", north=(4,))
 sn.put(NEON_CASH, 27, 29)
 sn.props.append(["x_manhole", 52, 38])
 sn.portal([(52, 38)], "vegas_tunnels", (4, 5), "Змеиный ход",
@@ -307,6 +345,12 @@ sn.reserve(50, 36, 54, 40)
 sn.npcs += [["snake_kid", 18, 26], ["snake_guard", 51, 35], ["snake_trader", 50, 21], ["snake_gambler", 33, 27]]
 for _, x, y in sn.npcs:
     sn.reserve(x, y, x, y)
+for i, (x, y) in enumerate(((24, 20), (28, 20), (32, 20), (14, 28), (50, 24), (56, 24), (44, 28))):
+    sn.maybe(BAZ_STALLS[(i + 2) % 4], x, y)
+for x, y in ((8, 20), (60, 20), (8, 36), (58, 36), (22, 34), (42, 34)):
+    sn.maybe(FIRE_BARREL, x, y)
+for x, y in ((10, 16), (34, 16), (40, 16), (46, 36), (52, 30)):
+    sn.maybe(LANTERN, x, y)
 sn.scatter(RUBBLE + ["r_trash", "r_bones"], 1, 1, W - 2, 12, 10)
 sn.scatter(["r_trash", "pile_cans"], 8, 14, 58, 38, 10)
 
@@ -345,10 +389,11 @@ pl.floor_code("s", *STONE)
 pl.floor_code("d", *DIRT)
 pl.paint("r", 0, 0, W - 1, H - 1)
 pl.paint("s", 0, 19, 40, 23)                           # чистая мощёная дорожка — Ладони метут её каждое утро
-pl.paint_ragged("d", 42, 24, 60, 42, depth=3)                          # сад
+pl.paint_ragged("d", 42, 24, 60, 42, depth=3)
+pl.paint_ragged("s", 6, 28, 34, 40, depth=2)            # южная площадь Ладоней — читальный дворик под открытым небом                          # сад
 city.road(st, [(79, y) for y in range(26, 30)], pl, [(0, y) for y in range(19, 23)], "Белые Ладони", "Стрип", step=(1, 0))
 pl.reserve(0, 18, 6, 24)
-pl.building(14, 4, 20, 14, "brick", south=(8,))      # библиотека
+pl.building(14, 4, 20, 14, "planks", south=(8,))      # библиотека
 pl.reserve(22, 18, 23, 20)
 pl.put(TENT_WHITE, 42, 8)                             # лазарет
 pl.put(HOSP_BED, 46, 12)
@@ -362,7 +407,36 @@ for x, y in ((12, 20), (36, 20), (40, 6), (40, 18)):
 pl.npcs += [["palms_doorman", 24, 21], ["palms_doctor", 49, 12], ["palms_gardener", 50, 31], ["palms_reader", 30, 25]]
 for _, x, y in pl.npcs:
     pl.reserve(x, y, x, y)
-pl.scatter(RUBBLE + ["r_trash"], 1, 25, 40, H - 2, 8)
+# сад и двор Ладоней: пальмы вдоль дорожки и вокруг библиотеки, кадки, скамьи, клумбы, колодец — «белый» оазис среди руин
+for i, x in enumerate(range(4, 40, 5)):
+    pl.maybe(VG_PALMS[i % 4], x, 18)
+    pl.maybe(VG_PALMS[(i + 1) % 4], x + 2, 24)
+for x, y in ((12, 3), (36, 3), (10, 9), (38, 9), (12, 15), (36, 15)):
+    pl.maybe(VG_PALMS[(x + y) % 4], x, y)
+for x, y in ((44, 20), (58, 20), (44, 40), (58, 40), (51, 26), (51, 38)):
+    pl.maybe(VG_PALMS[(x + y) % 4], x, y)
+for x in (8, 18, 28, 34):
+    pl.maybe("bench_7", x, 25)
+for x, y in ((16, 19), (30, 19), (10, 22), (36, 22)):
+    pl.maybe(GARDEN[(x + y) % 2], x, y)
+for x, y in ((48, 36), (52, 36), (56, 36), (47, 38), (55, 38)):
+    pl.maybe(GARDEN[(x + y) % 2], x, y)
+pl.maybe(WELL_V, 52, 31)
+pl.maybe(WELL_V, 20, 33)
+for x, y in ((10, 30), (28, 30), (10, 38), (28, 38), (16, 29), (24, 29)):
+    pl.maybe(VG_PALMS[(x + y) % 4], x, y)
+for x, y in ((14, 34), (18, 36), (22, 36), (26, 34)):
+    pl.maybe("bench_7", x, y)
+for x, y in ((8, 33), (32, 33), (20, 29), (20, 38)):
+    pl.maybe(LAMPS[(x + y) % 2], x, y)
+for x, y in ((12, 32), (30, 36), (24, 32)):
+    pl.maybe(GARDEN[(x + y) % 2], x, y)
+pl.maybe(STALLS[0], 12, 36)
+pl.maybe(STALLS[1], 28, 33)
+pl.maybe(TENT_WHITE, 55, 8)
+pl.maybe(HOSP_BED, 57, 12)
+pl.maybe(HOSP_BED, 57, 15)
+pl.scatter(RUBBLE + ["r_trash"], 1, 28, 40, H - 2, 5)
 
 
 # ================================================================ библиотека Ладоней
@@ -423,24 +497,67 @@ lb.npcs += [["palms_cook", 32, 20]]
 # ================================================================ змеиные ходы
 W, H = 50, 30
 tn = CityMap(city, "vegas_tunnels", "Змеиные ходы", W, H, start=(4, 5), seed=227, interior=True, music="caves")
-tn.floor_code("M", *STONE)
-tn.floor_code("~", *WATER)
+tn.floor_code("M", *SW_FLOOR)
+tn.floor_code("m", *SW_MOSS)
+tn.floor_code("~", *SW_WATER)
+tn.floor_code("k", *SW_PLANK)
+tn.piers = ("k",)
 tn.wall_code("K", "pk:zcity/zcity_w2_03")
 tn.water_codes = ("~",)
-tn.room(1, 1, 49, 29, "K", "M")
-tn.paint("~", 8, 13, 46, 15)
-for x in (14, 15, 30, 31):
-    tn.paint("M", x, 13, x, 15)
+# Планировка: три камеры — западный лагерь у лестницы, центральный зал-коллектор с протокой, восточная камера с лазом в башню.
+# Протока идёт с севера на юг, в ней мостки; из камеры в камеру — арки у мостков.
+tn.room(1, 1, 18, 29, "K", "M")
+tn.room(18, 1, 34, 29, "K", "M")
+tn.room(34, 1, 49, 29, "K", "M")
+tn.opening(18, 6, 18, 11, "M")
+tn.opening(18, 17, 18, 23, "M")
+tn.opening(34, 6, 34, 11, "M")
+tn.opening(34, 17, 34, 23, "M")
+tn.paint("~", 24, 2, 28, 28)                          # проток коллектора
+for y0 in (7, 19):
+    tn.paint("k", 24, y0, 28, y0 + 2)                 # мостки
+tn.blob("m", 8, 22, 5, 3)                             # мох в западной камере
+tn.blob("m", 41, 8, 5, 3)
+tn.blob("m", 21, 14, 2, 3)
+tn.blob("m", 31, 25, 2, 3)
 tn.props.append(["x_ladder", 4, 4])
 tn.portal([(4, 4)], "vegas_snakes", (52, 37), "Наверх, к Змеям")
 tn.reserve(2, 4, 8, 8)
 tn.props.append(["x_ladder", 45, 25])
 tn.portal([(45, 25)], "vegas_tower", (4, 26), "Подвал башни Vault-Tec")
 tn.reserve(42, 23, 47, 27)
-tn.put(SEWER_RUBBLE[0], 20, 6)
-tn.put(SEWER_RUBBLE[1], 36, 22)
-tn.enemies += [["ratman", 22, 8], ["ratman", 34, 20], ["mommy_mutant", 40, 8], ["feral", 26, 24], ["feral", 12, 22]]
-tn.scatter(["r_trash", "r_bones"] + SEWER_RUBBLE, 2, 3, 48, 28, 10)
+# центральный зал: коллектор с выпуском на севере, решётки, трубы, фонари на мостках
+tn.maybe(SW_OUTLET, 25, 2)
+tn.maybe(SW_GATE, 21, 2)
+for y in (5, 11, 16, 24):
+    tn.maybe(SW_LANTERN, 23, y)
+    tn.maybe(SW_LANTERN, 29, y)
+tn.maybe(SW_HEAP[0], 19, 13)
+tn.maybe(SW_HEAP[1], 31, 12)
+tn.maybe(SW_HEAP[2], 20, 23)
+# западная камера: стоянка Змей — койки из бочек, ящики, костёр, мох, грибы
+for x, y in ((4, 10), (6, 10), (10, 12), (12, 25), (15, 6)):
+    tn.maybe(SW_BARREL, x, y)
+for x, y in ((3, 14), (5, 14), (13, 14), (14, 22), (3, 26)):
+    tn.maybe(SW_CRATE, x, y)
+for x, y in ((9, 20), (11, 24), (7, 24), (14, 10)):
+    tn.maybe(SW_MUSH[(x + y) % 3], x, y)
+tn.maybe(SW_LANTERN, 9, 14)
+tn.maybe(SW_LANTERN, 15, 24)
+tn.maybe("campfire", 9, 6)
+for x, y in ((6, 18), (12, 17)):
+    tn.maybe(SW_SKULL, x, y)
+# восточная камера: гнёзда мутантов и выход в башню
+for x, y in ((38, 5), (44, 4), (38, 14), (46, 14), (37, 24), (40, 27)):
+    tn.maybe(SW_HEAP[(x + y) % 3], x, y)
+for x, y in ((41, 10), (43, 12), (36, 18), (45, 22)):
+    tn.maybe(SW_MUSH[(x + y) % 3], x, y)
+for x, y in ((37, 8), (47, 6), (47, 20)):
+    tn.maybe(SW_SKULL, x, y)
+tn.maybe(SW_LANTERN, 40, 22)
+tn.maybe(SW_LANTERN, 38, 3)
+tn.enemies += [["ratman", 21, 8], ["ratman", 31, 20], ["mommy_mutant", 42, 8], ["feral", 21, 24], ["feral", 12, 22]]
+tn.scatter(["r_bones", "pile_cans"], 2, 3, 48, 28, 8)
 
 
 # ================================================================ башня Vault-Tec

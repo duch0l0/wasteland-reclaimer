@@ -133,6 +133,151 @@
 "flicker": 0.15
 }
 },
+"vg_palmpot0": {
+"img": "pk:casino/casino_4_013",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot1": {
+"img": "pk:casino/casino_4_014",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot2": {
+"img": "pk:casino/casino_4_015",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot3": {
+"img": "pk:casino/casino_4_016",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot4": {
+"img": "pk:casino/casino_4_017",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot5": {
+"img": "pk:casino/casino_4_019",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot6": {
+"img": "pk:casino/casino_4_034",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot7": {
+"img": "pk:casino/casino_4_035",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot8": {
+"img": "pk:casino/casino_4_036",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_palmpot9": {
+"img": "pk:casino/casino_4_037",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_rope_a": {
+"img": "pk:casino/casino_4_045",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_rope_b": {
+"img": "pk:casino/casino_4_050",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_camera": {
+"img": "pk:casino/casino_4_000",
+"block": false,
+"sight": false
+},
+"vg_trash_a": {
+"img": "pk:casino/casino_4_052",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_trash_b": {
+"img": "pk:casino/casino_4_053",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
 "vg_jackpot": {
 "img": "pk:casino/casino_1_062",
 "block": true,
@@ -1026,6 +1171,15 @@
 2
 ]
 },
+"vg_well": {
+"img": "pk:desnat/desnat_3_006",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
 "vg_garden": {
 "img": "pk:ghouse/ghouse_3_048",
 "block": true,
@@ -1043,6 +1197,221 @@
 2,
 1
 ]
+},
+"vg_palm0": {
+"img": "pk:desnat/desnat_4_049",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vg_palm1": {
+"img": "pk:desnat/desnat_4_050",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vg_palm2": {
+"img": "pk:desnat/desnat_4_051",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vg_palm3": {
+"img": "pk:desnat/desnat_4_052",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vg_sw_outlet": {
+"img": "pk:sewer/sewer_1_008",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"vg_sw_gate": {
+"img": "pk:sewer/sewer_1_007",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"vg_sw_barrel": {
+"img": "pk:sewer/sewer_1_003",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "junk",
+"title": "бочка"
+},
+"vg_sw_crate": {
+"img": "pk:sewer/sewer_1_002",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"search": "crate",
+"title": "ящик"
+},
+"vg_sw_mush0": {
+"img": "pk:sewer/sewer_1_024",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+150,
+255,
+170
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"vg_sw_mush1": {
+"img": "pk:sewer/sewer_1_025",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+150,
+255,
+170
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"vg_sw_mush2": {
+"img": "pk:sewer/sewer_1_046",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true,
+"light": {
+"r": 60,
+"color": [
+150,
+255,
+170
+],
+"at": [
+0.5,
+0.5
+]
+}
+},
+"vg_sw_heap_a": {
+"img": "pk:sewer/sewer_1_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+],
+"keybg": true
+},
+"vg_sw_heap_b": {
+"img": "pk:sewer/sewer_1_042",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+],
+"keybg": true
+},
+"vg_sw_heap_c": {
+"img": "pk:sewer/sewer_1_074",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+],
+"keybg": true
+},
+"vg_sw_skull": {
+"img": "pk:sewer/sewer_1_027",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"vg_sw_pipe": {
+"img": "pk:sewer/sewer_1_038",
+"block": true,
+"sight": false,
+"foot": [
+1,
+2
+],
+"keybg": true
+},
+"vg_sw_lantern": {
+"img": "pk:sewer/sewer_1_010",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true,
+"light": {
+"r": 110,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.35
+}
 },
 "vg_sewer_rubble": {
 "img": "pk:sewer/sewer_1_042",
