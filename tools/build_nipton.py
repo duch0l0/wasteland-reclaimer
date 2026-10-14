@@ -78,8 +78,8 @@ CLOCK = P("np_clock", "pk:west/west_2_019", sight=True)
 COT = P("np_cot", "pk:ucamp/ucamp_3_027", foot=[4, 1])
 HAY = P("np_hay", "pk:west/west_1_004", block=False)
 
-DIRT = cells("rvill/p2", [(0, 11), (1, 11), (0, 12), (1, 12)])
-ROAD = cells("west/p1", [(0, 1), (1, 1), (0, 2), (1, 2)])
+DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
+ROAD = ["noise:pk:west/p1/0,1,1,1"]
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 PLANK = ["pk:bazaar/bazaar_f1_21"]
