@@ -52,7 +52,13 @@
       "nv_taxi",
       "nv_car",
       "nv_car_b",
-      "by_bus"
+      "by_bus",
+      "pr_t50car0",
+      "pr_t50car1",
+      "pr_t50car2",
+      "pr_t50car3",
+      "pr_t50car4",
+      "pr_t50car5"
     ]
   },
   "cars_ruins": {
@@ -127,7 +133,9 @@
       "ct_tiki_shop",
       "gs_front_saloon",
       "gs_front_store",
-      "gs_front_sheriff"
+      "gs_front_sheriff",
+      "pr_sign_diner",
+      "pr_sign_motel"
     ]
   },
   "buildings_half": {
@@ -156,7 +164,11 @@
       "zz_palm0",
       "zz_palm1",
       "zz_palm2",
-      "zz_palm3"
+      "zz_palm3",
+      "pr_dpalm0",
+      "pr_dpalm1",
+      "pr_dpalm2",
+      "pr_dpalm3"
     ],
     "keep_foot": true
   },
@@ -223,7 +235,8 @@
       "by_lamp",
       "by_lamp_b",
       "nc_lamp",
-      "nc_lamp_b"
+      "nc_lamp_b",
+      "pr_t50lamp"
     ],
     "keep_foot": true
   },
@@ -501,5 +514,39 @@
       "wardrobe_open"
     ],
     "keep_foot": true
+  },
+  "coaster": {
+    "scale": 2,
+    "names": [
+      "pr_coaster",
+      "pr_coaster_long",
+      "pr_coaster_loop",
+      "pr_coaster_ring"
+    ]
+  },
+  "park_small": {
+    "scale": 1.33,
+    "names": [
+      "pr_bumper0",
+      "pr_bumper1",
+      "pr_bumper2",
+      "pr_bumper3",
+      "pr_bumper4",
+      "pr_bumper5",
+      "pr_trash_a",
+      "pr_trash_b"
+    ],
+    "keep_foot": true
+  },
+  "park_stalls": {
+    "scale": 1.5,
+    "names": [
+      "pr_stall_pretzel",
+      "pr_stall_gifts",
+      "pr_stall_drinks",
+      "pr_booth0",
+      "pr_booth1",
+      "pr_booth2"
+    ]
   }
 }

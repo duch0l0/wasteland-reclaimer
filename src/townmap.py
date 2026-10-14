@@ -218,7 +218,7 @@ ROOF_TEXTURES = {"planks": ["pk:fishv/p3/9,0,1,1"],
                  "concrete": ["pk:mbase/p1/0,0,1,1", "pk:mbase/p1/1,0,1,1"],
                  "metal": ["pk:mbase/p1/4,0,1,1", "pk:mbase/p1/5,0,1,1"],
                  "brick": ["pk:wrail/p1/2,3,1,1", "pk:wrail/p1/3,3,1,1"]}
-ROOF_TINT = {"brick": (200, 175, 150), "concrete": (225, 222, 215), "metal": (235, 225, 215), "planks": (230, 220, 210)}
+ROOF_TINT = {"brick": (200, 175, 150), "concrete": (225, 222, 215), "metal": (255, 245, 236), "planks": (230, 220, 210)}
 
 
 def _roof_texture(style):
@@ -244,14 +244,17 @@ def _roof_image(r):
     style = r["style"]
     pal = {"brick": [(118, 94, 78), (124, 100, 82), (112, 89, 74), (130, 106, 88)],
            "concrete": [(118, 116, 110), (124, 122, 116), (110, 108, 104), (130, 127, 120)],
-           "metal": [(116, 70, 48), (128, 80, 54), (104, 62, 44), (138, 90, 60)],
+           "metal": [(132, 96, 74), (142, 104, 80), (122, 88, 68), (152, 112, 86)],
            "planks": [(104, 78, 54), (112, 84, 58), (96, 72, 50), (120, 90, 62)]}[style]
     img = pygame.Surface((w, h), pygame.SRCALPHA)
     tex = _roof_texture(style) if style in ("planks", "metal") else None      # плоские крыши — гудрон с гравием, без сетки плиток
     if tex is not None and style in ("planks", "metal"):
         # дранка и кровельный лист: ряды со смещёнными стыками и разбросом тона — без сетки плиток набора
         base = tuple(pygame.transform.average_color(tex[0])[:3])
+        if style == "metal":                                  # профнастил светлее и теплее: ржавая жесть, а не тёмная плита
+            base = tuple(min(255, int(c * 1.32) + (12 if i == 0 else 4 if i == 1 else 0)) for i, c in enumerate(base))
         pal = [base] * 4
+        img.fill(tuple(int(c * 0.78) for c in base) + (255,))      # подложка: между дранками нет прозрачных щелей
         rowh = 14 if style == "planks" else 24
         sw = 40 if style == "planks" else 22
         for ry, y in enumerate(range(0, h, rowh)):
