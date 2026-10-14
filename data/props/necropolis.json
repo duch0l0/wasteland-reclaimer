@@ -448,13 +448,77 @@
 "title": "автомат с газировкой"
 },
 "nc_subway": {
-"img": "pk:zcity/p3/8,4,2,2",
+"img": "pk:zcity/p3/2,8,2,2",
 "block": true,
 "sight": true,
 "foot": [
 2,
 1
 ]
+},
+"nc_barrier_a": {
+"img": "pk:zcity/zcity_3_007",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"nc_barrier_b": {
+"img": "pk:zcity/zcity_3_008",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"nc_road_sign_a": {
+"img": "pk:zcity/zcity_3_035",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"nc_road_sign_b": {
+"img": "pk:zcity/zcity_3_036",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"nc_chandelier": {
+"img": "pk:casino/casino_4_007",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+210,
+150
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.1
+}
+},
+"nc_rails": {
+"img": "pk:wrail/p1/4,4,4,2",
+"block": false,
+"sight": false,
+"layer": "floor"
 },
 "nc_iron_fence": {
 "img": "pk:grave/grave_2_001",
@@ -1048,6 +1112,166 @@
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
 "sight": false,
+"layer": "floor"
+},
+"nc_slab_0": {
+"img": "pk:zcity/p3/10,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_1": {
+"img": "pk:zcity/p3/14,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_2": {
+"img": "pk:zcity/p3/12,11,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_3": {
+"img": "pk:zcity/p3/10,13,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_4": {
+"img": "pk:zcity/p3/14,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_5": {
+"img": "pk:zcity/p3/10,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_6": {
+"img": "pk:zcity/p3/14,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_7": {
+"img": "pk:zcity/p3/12,11,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_8": {
+"img": "pk:zcity/p3/10,13,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_9": {
+"img": "pk:zcity/p3/14,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_10": {
+"img": "pk:zcity/p3/10,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_11": {
+"img": "pk:zcity/p3/14,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_12": {
+"img": "pk:zcity/p3/12,11,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_13": {
+"img": "pk:zcity/p3/10,13,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_14": {
+"img": "pk:zcity/p3/14,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"nc_slab_15": {
+"img": "pk:zcity/p3/10,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
 "layer": "floor"
 },
 "nc_hall_carpet0": {

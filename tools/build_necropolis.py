@@ -54,7 +54,12 @@ TREES = [P("nc_tree", "pk:zcity/zcity_4_126"), P("nc_tree_b", "pk:zcity/zcity_4_
 PIPES = P("nc_pipes", "pk:zcity/zcity_4_050", foot=[2, 1])
 TIRES = P("nc_tires", "pk:zcity/zcity_2_024")
 VENDING = P("nc_vending", "pk:zcity/zcity_1_135", sight=True, search="junk", title="автомат с газировкой")
-SUBWAY = P("nc_subway", "pk:zcity/p3/8,4,2,2", foot=[2, 1], sight=True)
+SUBWAY = P("nc_subway", "pk:zcity/p3/2,8,2,2", foot=[2, 1], sight=True)     # вход в метро с турникетами — из набора
+BARRIER = [P("nc_barrier_a", "pk:zcity/zcity_3_007", foot=[2, 1], keybg=True), P("nc_barrier_b", "pk:zcity/zcity_3_008", foot=[2, 1], keybg=True)]
+ROAD_SIGNS = [P("nc_road_sign_a", "pk:zcity/zcity_3_035", foot=[1, 1], keybg=True), P("nc_road_sign_b", "pk:zcity/zcity_3_036", foot=[1, 1], keybg=True)]
+SLABS = [f"pk:zcity/p3/{x},{y},2,2" for x, y in ((10, 10), (14, 10), (12, 11), (10, 13), (14, 12))]     # растрескавшиеся плиты тротуара
+CHANDELIER_N = P("nc_chandelier", "pk:casino/casino_4_007", block=False, light={"r": 110, "color": [255, 210, 150], "at": [0.5, 0.5], "flicker": 0.1})
+RAILS_N = P("nc_rails", "pk:wrail/p1/4,4,4,2", block=False, layer="floor")
 WALK_TILES = [f"pk:zcity/p3/{x},{y},2,2" for x, y in ((8, 10), (10, 10), (12, 10), (14, 10), (0, 12), (2, 12),
                                                          (6, 12), (8, 12), (10, 12), (14, 12), (0, 14), (6, 14))]
 
@@ -122,7 +127,7 @@ V_GEN = P("nc_v_gen", "pk:nbunk/nbunk_2_028", foot=[2, 2], sight=True)
 CARPET = "pk:casino/p3/0,0,2,2"
 ROAD = ["pk:zcity/zcity_f3_09"]
 WALK = ["pk:zcity/zcity_f1_22"]
-RUBBLE_FL = ["noise:pk:zcity/zcity_f3_10"]
+RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
 DIRT = ["noise:pk:zcity/zcity_f2_22"]
 STONE = ["pk:zcity/zcity_f1_23", "pk:zcity/zcity_f3_10"]
 WOOD = ["pk:zcity/zcity_f1_00"]
@@ -139,6 +144,8 @@ nc.floor_code("a", *ROAD)
 nc.floor_code("p", *WALK)
 nc.floor_code("d", *DIRT)
 nc.floor_code("s", *STONE)
+nc.floor_code("c", "noise:pk:zcity/zcity_f3_08")                    # светлый бетон
+nc.floor_code("o", "noise:pk:zcity/zcity_f2_22")                    # тёмная земля с мусором
 nc.paint("r", 0, 0, W - 1, H - 1)
 nc.paint("p", 0, 26, W - 1, 33)                       # тротуары бульвара
 nc.paint("a", 0, 28, W - 1, 31)                       # бульвар через весь город
@@ -201,11 +208,16 @@ nc.reserve(16, 34, 17, 39)
 nc.put(CHAPEL, 4, 39)
 nc.put(CRYPT, 26, 39)
 nc.put(CRYPT_B, 29, 39)
-for row, y in enumerate((42, 45, 48, 51, 54)):
-    for x in range(5, 31, 3):
-        if x in (14, 17):
+for row, y in enumerate((41, 43, 45, 47, 49, 51, 53, 55)):
+    for x in range(5, 31, 2):
+        if 13 <= x <= 18:
             continue                                   # центральная аллея
-        nc.maybe(TOMBS[(x + row) % 4] if (x + y) % 5 else "x_cross", x, y)
+        if (x + y) % 3:
+            nc.maybe(TOMBS[(x + row) % 4] if (x + y) % 5 else "x_cross", x, y)
+for x, y in ((12, 42), (19, 42), (12, 52), (19, 52)):
+    nc.maybe(GRAVE_LAMP, x, y)                         # светильники вдоль аллеи
+for x, y in ((9, 40), (22, 40), (6, 54), (27, 54)):
+    nc.maybe(BONES[(x + y) % 2], x, y)
 nc.put(STATUE, 15, 44)
 nc.put(GRAVE_LAMP, 19, 40)
 nc.put(GRAVE_LAMP, 13, 50)
@@ -247,6 +259,28 @@ nc.npcs += [["nc_guard", 37, 22], ["nc_guard_b", 42, 22], ["cult_envoy", 46, 23]
             ["ghoul_vendor", 74, 39], ["nc_ghoul_kid", 73, 49], ["nc_old", 33, 34]]
 for _, x, y in nc.npcs:
     nc.reserve(x, y, x, y)
+# Земля руин — не одна серая заливка: пятна светлого бетона и тёмной земли, растрескавшиеся плиты на тротуарах и площадях
+nc.patchwork("r", ["o"], 18, 1, 3, seed=5)
+for i, (x, y) in enumerate(((2, 26), (8, 33), (16, 26), (24, 33), (32, 26), (46, 33), (52, 26), (60, 33), (68, 26), (74, 33),
+                            (38, 40), (38, 50), (42, 22), (36, 22), (30, 13), (28, 4))):
+    nc.stamp(f"nc_slab_{i}", SLABS[i % len(SLABS)], x, y, water=False)
+# блокпост у въезда: ограждения, знаки, укрытие из машин
+for x in (5, 7, 9):
+    nc.maybe(BARRIER[x % 2], x, 25, allow_reserved=True)
+    nc.maybe(BARRIER[(x + 1) % 2], x, 32, allow_reserved=True)
+nc.maybe(ROAD_SIGNS[0], 3, 24, allow_reserved=True)
+nc.maybe(ROAD_SIGNS[1], 3, 33, allow_reserved=True)
+for x, y in ((14, 33), (22, 25), (58, 25), (66, 33)):
+    nc.maybe(ROAD_SIGNS[(x + y) % 2], x, y, allow_reserved=True)
+for x, y in ((44, 24), (62, 24), (18, 32)):
+    nc.maybe(BARRIER[(x + y) % 2], x, y, allow_reserved=True)
+# паперть Зала Мёртвых: ряд урн-светильников, коленопреклонённые статуи, кованая ограда по краям, знамёна — место для церемоний
+for x in (30, 34, 44, 48):
+    nc.maybe(GRAVE_LAMP, x, 19, allow_reserved=True)
+nc.hwall(FENCE, 29, 33, 22, gaps=(33,))
+# кварталы вдоль бульвара: мёртвые деревья и фонари через равные промежутки, чтобы улица имела ритм
+for x in (6, 18, 54, 66):
+    nc.maybe(DEAD_TREES[(x // 12) % 3], x, 35)
 nc.scatter(RUBBLE + RUBBLE_S + [TIRES, "r_trash"], 1, 1, 34, 22, 26)
 nc.scatter(RUBBLE + RUBBLE_S + WRECKS, 54, 1, W - 2, 22, 22)
 nc.scatter(DEAD_TREES + ["r_trash", "r_bones"], 1, 1, 27, 22, 6)
@@ -259,7 +293,7 @@ nc.scatter(BONES, 4, 40, 31, 55, 6)
 
 # ================================================================ Зал Мёртвых
 hl = CityMap(city, "necropolis_hall", "Зал Мёртвых", 36, 26, start=(17, 24), seed=122, interior=True, music="vats")
-hl.floor_code("F", *STONE)
+hl.floor_code("F", "pk:hotel/hotel_f1_23")                          # мрамор тронного зала
 hl.floor_code("C", *WOOD)
 hl.wall_code("W", "pk:zcity/zcity_w1_15")
 hl.room(1, 1, 26, 25, "W", "F")                      # тронный зал
@@ -285,6 +319,12 @@ hl.put(BANNERS[0], 3, 3)
 hl.put(BANNERS[1], 24, 3)
 hl.put(STATUES[0], 7, 4)
 hl.put(STATUES[1], 19, 4)
+for x, y in ((8, 5), (17, 5), (4, 22), (23, 22), (8, 22), (19, 22)):
+    hl.maybe(CHANDELIER_N, x, y)
+for x, y in ((6, 12), (6, 16), (6, 20), (21, 12), (21, 16), (21, 20)):
+    hl.maybe(CANDELABRA, x, y)
+for x, y in ((3, 6), (24, 6), (3, 20), (24, 20)):
+    hl.maybe(STATUES[(x + y) % 2], x, y)
 for i, y in enumerate((10, 14, 18)):                    # ковры дорожкой от дверей к помосту
     hl.stamp(f"nc_hall_carpet{i}", CARPET, 12, y, water=False)
 hl.npcs += [["set", 13, 7], ["nc_hall_guard", 9, 9], ["nc_hall_guard_b", 17, 9], ["lorraine", 6, 14]]
@@ -327,6 +367,8 @@ cb.npcs += [["cobbs", 15, 8]]
 W, H = 64, 40
 un = CityMap(city, "necropolis_under", "Подземка Некрополя", W, H, start=(4, 5), seed=124, interior=True, music="caves")
 un.floor_code("F", *WALK)
+un.floor_code("T", "pk:zcity/zcity_f1_21")                          # плитка платформы — отличается от рынка
+un.floor_code("Y", "pk:nbunk/p2/4,8,1,1")                           # служебные проходы
 un.floor_code("M", *METAL)
 un.floor_code("S", *STONE)
 un.floor_code("~", *WATER)
@@ -338,6 +380,8 @@ un.room(42, 1, 63, 39, "K", "S")                     # канализация к
 un.room(1, 24, 42, 39, "K", "S")                     # старый тоннель — ночлежка
 un.opening(42, 18, 42, 20, "S")
 un.opening(20, 24, 21, 26, "S")
+un.paint("T", 2, 22, 41, 23)                          # жёлтая кромка платформы — дальше пути
+un.paint("T", 2, 4, 41, 5)
 un.paint("~", 50, 4, 52, 32)                          # сточный канал
 for y in (10, 22):
     un.paint("S", 50, y, 52, y + 1)                   # мостки
@@ -363,6 +407,17 @@ for i, x in enumerate((6, 13, 17, 26)):     # ночной ряд: второй 
     un.put(GOODS[i % 3], x, 21 if x not in (10, 22, 31) else 19)
 for x, y in ((3, 8), (36, 15), (38, 20), (6, 12)):
     un.put(BARREL, x, y)
+# платформа метро: рельсы вдоль южной кромки, брошенный вагон-прилавок, схема линий на стене, лампы-светильники
+for x in range(3, 41, 4):
+    un.maybe(RAILS_N, x, 22)
+for x in (6, 14, 22, 30, 38):
+    un.maybe(CHANDELIER_N, x, 7)
+for x, y in ((8, 11), (16, 11), (26, 11), (34, 11)):
+    un.maybe("bench_7", x, y)
+for x, y in ((12, 21), (28, 21), (24, 8)):
+    un.maybe(BARRIER[(x + y) % 2], x, y)
+un.maybe(ROAD_SIGNS[0], 5, 6)
+un.maybe(ROAD_SIGNS[1], 40, 6)
 un.put(CAMPFIRE, 18, 18)
 un.put(TENTS[1], 4, 18)
 un.put(TENTS[3], 34, 19)
@@ -390,6 +445,10 @@ un.put("x_vault_gear12", 56, 36)
 un.reserve(55, 34, 60, 38)
 un.portal([(58, 36)], "vault12", (20, 5), "Убежище 12",
           requires={"flag": "v12_way", "msg": "Дверь-шестерня Убежища 12 приоткрыта на ладонь. Протиснуться можно — если знать, что внутри и зачем."})
+for x, y in ((46, 6), (60, 6), (46, 20), (60, 20), (46, 34), (60, 30)):
+    un.maybe("barrel_wood", x, y)
+for x, y in ((48, 14), (54, 26), (58, 10)):
+    un.maybe("campfire", x, y) if False else None
 un.scatter(["r_trash", "r_bones"] + SEWER_RUBBLE, 43, 4, 62, 38, 10)
 
 

@@ -144,7 +144,8 @@
       "pr_sign_motel",
       "bk_sign_diner",
       "bk_sign_motel_big",
-      "bk_sign_gas"
+      "bk_sign_gas",
+      "nc_metro"
     ]
   },
   "buildings_half": {
