@@ -155,6 +155,7 @@ nc.paint("d", 3, 37, 32, 56)                          # кладбище
 nc.paint("s", 46, 40, 64, 56)                         # площадь Водораздела
 nc.paint("s", 30, 19, 49, 22)                         # паперть Зала Мёртвых: каменная площадка перед фасадом
 nc.paint("p", 2, 23, 34, 25)                          # тротуар под высотками
+nc.crisp = True                                       # мощёный город: край мостовой чёткий, без «дыма» размытия
 nc.exits = [(0, y) for y in range(28, 32)]
 nc.reserve(0, 27, W - 1, 32)
 nc.reserve(37, 19, 42, 57)
@@ -231,9 +232,7 @@ nc.put(PUMP_BIG, 53, 42)
 nc.put(TANKS, 57, 43)
 nc.put(TANKS, 61, 43)
 nc.put(GENERATOR, 50, 43)
-nc.put(PIPES, 55, 46)
 nc.put(BASIN, 50, 49)                                    # чаша, куда насос качает воду; к ней — очередь
-nc.put(PIPES_B, 58, 48)
 nc.put(BARREL, 54, 53)
 nc.put(BARREL, 55, 53)
 nc.box(CRATES, 63, 47, "ящик с запчастями", {"гаечный ключ": 1, "изолента": 1})
@@ -260,7 +259,6 @@ nc.npcs += [["nc_guard", 37, 22], ["nc_guard_b", 42, 22], ["cult_envoy", 46, 23]
 for _, x, y in nc.npcs:
     nc.reserve(x, y, x, y)
 # Земля руин — не одна серая заливка: пятна светлого бетона и тёмной земли, растрескавшиеся плиты на тротуарах и площадях
-nc.patchwork("r", ["o"], 18, 1, 3, seed=5)
 for i, (x, y) in enumerate(((2, 26), (8, 33), (16, 26), (24, 33), (32, 26), (46, 33), (52, 26), (60, 33), (68, 26), (74, 33),
                             (38, 40), (38, 50), (42, 22), (36, 22), (30, 13), (28, 4))):
     nc.stamp(f"nc_slab_{i}", SLABS[i % len(SLABS)], x, y, water=False)
@@ -383,6 +381,7 @@ un.opening(20, 24, 21, 26, "S")
 un.paint("T", 2, 22, 41, 23)                          # жёлтая кромка платформы — дальше пути
 un.paint("T", 2, 4, 41, 5)
 un.paint("~", 50, 4, 52, 32)                          # сточный канал
+un.reserve(49, 3, 53, 5)
 for y in (10, 22):
     un.paint("S", 50, y, 52, y + 1)                   # мостки
 un.props.append(["x_ladder", 4, 4])
@@ -436,7 +435,7 @@ un.put(BARREL, 36, 28)
 un.put(TIRE_PILE, 38, 35)
 un.npcs += [["under_ghoul_c", 16, 35]]
 # канализация: трубы, решётки, дикие гули у шлюза; в конце — дверь Убежища 12
-un.put(SEWER_OUTLET, 44, 4)
+un.put(SEWER_OUTLET, 50, 3, force=True, check=False)        # выпуск прямо над каналом: вода течёт из трубы в русло
 un.put(SEWER_GATE, 58, 4)
 un.put(SEWER_RUBBLE[0], 45, 28)
 un.put(SEWER_RUBBLE[1], 56, 14)
