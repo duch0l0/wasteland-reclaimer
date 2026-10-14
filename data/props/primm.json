@@ -637,17 +637,6 @@
 "sight": false,
 "layer": "floor"
 },
-"pr_park_patch": {
-"img": "pk:wpark/p1/4,9,4,3",
-"block": false,
-"sight": false,
-"foot": [
-4,
-3
-],
-"layer": "floor",
-"soft": true
-},
 "pr_lobby_rug": {
 "img": "pk:lhotel/p2/10,12,2,2",
 "block": false,

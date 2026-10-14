@@ -95,7 +95,7 @@ CAMPFIRE = P("pr_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1],
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни, без скачка
 GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
 WALK = ["pk:zcity/zcity_f1_22"]
-PARK = ["pk:wpark/p1/1,9,1,1"]
+PARK = ["noise:pk:destown/p2/4,0,1,1"]   # вытоптанная площадка парковки — гравий, а не тёмная плитка
 PARK_PATCH = "pk:wpark/p1/4,9,4,3"
 HOTEL_FL = ["pk:store/p1/12,0,1,1"]
 CARPET = ["pk:aoffice/p3/3,1,1,1"]
@@ -118,7 +118,6 @@ pm.paint("a", 0, 25, W - 1, 30)                        # I-15
 pm.paint("h", 0, 27, W - 1, 28)
 pm.paint("k", 3, 4, 22, 20)                            # парковка караванов
 pm.paint("g", 50, 3, 77, 17)                           # парк аттракционов под горками — вытоптанная трава
-pm.paint("a", 28, 33, 64, 35)                          # стоянка перед казино
 pm.paint("p", 30, 19, 33, 22)                          # дорожка к отелю
 pm.paint("p", 44, 33, 47, 36)                          # дорожка к казино
 pm.exits = [(0, y) for y in range(25, 31)]
@@ -153,7 +152,6 @@ pm.put(LAMPS[1], 57, 33)
 # переулок за казино — чёрный ход офиса шерифа (запертая дверь, следы)
 pm.props.append(["x_puddle", 59, 44])
 # запад: парковка караванов — грузовики, повозки, бочки с водой
-pm.stamp("pr_park_patch", PARK_PATCH, 8, 8, water=False, soft=True)
 pm.put(TRUCK, 4, 6)
 pm.put(BRAHMIN_CART, 12, 6)
 pm.put(BRAHMIN_CART, 16, 12)
