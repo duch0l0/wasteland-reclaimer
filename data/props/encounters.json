@@ -1,0 +1,54 @@
+{
+"props": {
+"enc_dune0": {
+"img": "pk:desnat/p1/4,0,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"enc_dune1": {
+"img": "pk:desnat/p1/6,0,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"enc_dune2": {
+"img": "pk:desnat/p1/8,0,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"enc_dune3": {
+"img": "pk:desnat/p1/4,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"enc_dune4": {
+"img": "pk:desnat/p1/6,2,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+}
+}
+}

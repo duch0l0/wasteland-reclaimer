@@ -29,27 +29,56 @@ WRECKS = ["r_car_wreck", "r_car_a", "r_car_b", "r_car_c", "r_pickup", "r_taxi", 
 JUNK = ["r_trash", "r_bones", "r_planks", "r_barrels", "r_bin", "r_logs"]
 
 
+# земля встреч: песок, сухая глина, щебень (как в городах)
+FLOORS = {"s": ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"],
+          "t": ["pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1"],
+          "q": ["pk:desnat/p1/10,4,1,1"]}
+
+
 class Scene:
     """Маленькая карта встречи в формате data/maps/*.json (её читает src/townmap.TownMap)."""
 
     def __init__(self, rnd, road=False):
         self.rnd = rnd
-        self.ground = [["d"] * W for _ in range(H)]
+        self.ground = [["s"] * W for _ in range(H)]
         self.props, self.containers = [], []
         self.enemies, self.npcs, self.pickups = [], [], []
         self.blocked, self.taken = set(), set()
         self.start = (2, MID)
         self.exits = [(0, y) for y in range(MID - 2, MID + 2)] + [(W - 1, y) for y in range(MID - 2, MID + 2)]
-        if road:   # старая трасса через всю сцену
+        self.decals_floor = []
+        self.road = road
+        self._patches()
+        if road:   # старая трасса через всю сцену, по краям — гравийные обочины
+            for x in range(W):
+                self.ground[MID - 3][x] = self.ground[MID + 2][x] = "g"
             for y in range(MID - 2, MID + 2):
                 for x in range(W):
                     self.ground[y][x] = "a"
             for x in range(0, W, 4):
                 self.ground[MID - 1][x] = self.ground[MID - 1][x + 1] = "h"
+        # время суток: чаще день, но бывают закат и ночь — огонь и фонари тогда светят
+        r = rnd.random()
+        self.night = None if r < 0.55 else [172, 140, 134] if r < 0.8 else [92, 98, 142]
         # вход и выходы — свободны
         for x in list(range(0, 5)) + list(range(W - 4, W)):
             for y in range(MID - 3, MID + 3):
                 self.taken.add((x, y))
+
+    def _patches(self):
+        """Земля пятнами: песок, сухая растрескавшаяся глина, щебень (как в городах)."""
+        import math
+        for code, n, rmin, rmax in (("t", self.rnd.randint(4, 7), 2, 4), ("q", self.rnd.randint(3, 6), 1, 3)):
+            for _ in range(n):
+                cx, cy = self.rnd.randint(0, W - 1), self.rnd.randint(0, H - 1)
+                rx, ry = self.rnd.randint(rmin, rmax), self.rnd.randint(rmin, rmax)
+                ph = self.rnd.uniform(0, 6.3)
+                for y in range(max(0, cy - ry - 1), min(H, cy + ry + 2)):
+                    for x in range(max(0, cx - rx - 1), min(W, cx + rx + 2)):
+                        a = math.atan2((y - cy) / ry, (x - cx) / rx)
+                        w = 1 + 0.25 * math.sin(3 * a + ph)
+                        if ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= w * w:
+                            self.ground[y][x] = code
 
     def _reach(self, extra=()):
         bad = self.blocked | set(extra)
@@ -70,7 +99,7 @@ class Scene:
             return False
         if any(t in self.taken or t in self.blocked for t in foot):
             return False
-        if name in DRY and any(self.ground[fy][fx] != "d" for fx, fy in foot):
+        if name in DRY and any(self.ground[fy][fx] not in "dstq" for fx, fy in foot):
             return False
         if inf["block"] and check:
             before = len(self._reach())
@@ -122,23 +151,72 @@ class Scene:
         x, y = self.spot(x0, y0, x1, y1)
         self.npcs.append([nid, x, y])
 
-    def dress(self, trees=6, dry=20, rocks=10):
-        """Пустыня вокруг: сухие деревья, кусты, камни."""
+    def dress(self, trees=6, dry=20, rocks=10, dunes=None):
+        """Отложенное оформление: пустыня расставляется после главного (камни не займут место костра и палаток)."""
+        self._dress_args = (trees, dry, rocks, dunes)
+
+    def _dress_now(self, trees=6, dry=20, rocks=10, dunes=None):
+        """Пустыня вокруг: дюны, сухие деревья, кусты, гряды камней, кости, колеи и пятна крови."""
         self.scatter(TREES, trees)
         self.scatter(DRY, dry)
         self.scatter(ROCKS, rocks)
+        for _ in range(self.rnd.randint(2, 4) if dunes is None else dunes):
+            self.put(f"enc_dune{self.rnd.randrange(5)}", self.rnd.randint(2, W - 4), self.rnd.randint(1, H - 3))
+        for _ in range(self.rnd.randint(1, 3)):
+            self.outcrop(self.rnd.randint(4, W - 6), self.rnd.randint(2, H - 4))
+        self.scatter(["r_bones"], self.rnd.randint(1, 3))
+        for _ in range(self.rnd.randint(1, 3)):
+            self.floor_decal("x_vd_blood0" if self.rnd.random() < 0.6 else "x_vd_blood1",
+                             self.rnd.randint(6, W - 6), self.rnd.randint(2, H - 3))
+        if self.road:
+            for _ in range(self.rnd.randint(2, 4)):          # колеи, шины, мусор на асфальте
+                self.floor_decal("x_vd_ruts_h", self.rnd.randint(2, W - 3), MID + self.rnd.choice((-2, -1, 0, 1)))
+
+    def floor_decal(self, name, x, y):
+        """Плоский знак на земле (колея, кровь, подтёк): не мешает ходить."""
+        if (x, y) not in self.blocked:
+            self.props.append([name, x, y])
+
+    def outcrop(self, cx, cy):
+        """Гряда камней: несколько валунов кучкой и пучок сухой травы у подножия."""
+        for dx, dy in self.rnd.sample([(0, 0), (1, 0), (2, 1), (0, 1), (-1, 1), (1, -1)], self.rnd.randint(2, 4)):
+            self.put(self.rnd.choice(["r_rocks", "rock_grass", "rock_grass_b"]), cx + dx, cy + dy)
+        self.put("r_dry_bush", cx - 1, cy + 2)
+
+    def camp(self, cx, cy, tents=2, fire="campfire"):
+        """Стоянка: костёр, брёвна вокруг, палатки полукругом, тряпьё и бочка."""
+        self.put(fire, cx, cy, check=False)
+        for dx, dy, n in ((-2, 1, "r_logs"), (2, 1, "r_logs_b"), (0, 2, "pile_rags")):
+            self.put(n, cx + dx, cy + dy)
+        for i, (dx, dy) in enumerate(((-4, -2), (4, -2), (0, -4))[:tents]):
+            self.put(self.rnd.choice(["r_tent_beige", "r_tent_green", "r_tent_orange", "r_tent_yellow", "r_tent_low"]),
+                     cx + dx, cy + dy)
+        self.put("barrel_wood", cx + 3, cy + 2)
+
+    def wreck_field(self, x0, y0, x1, y1, n=3):
+        """Остовы машин, покрышки и хлам россыпью."""
+        for _ in range(n):
+            self.put(self.rnd.choice(WRECKS), self.rnd.randint(x0, x1), self.rnd.randint(y0, y1))
+        self.scatter(["pile_tires", "r_trash", "pile_scrap"], max(1, n // 2), x0, y0, x1, y1)
 
     def to_map(self):
+        if getattr(self, "_dress_args", None):
+            args, self._dress_args = self._dress_args, None
+            self._dress_now(*args)
         return {"w": W, "h": H, "player": list(self.start), "exits": [list(t) for t in self.exits],
                 "ground": ["".join(r) for r in self.ground], "decals": [], "props": self.props,
                 "containers": self.containers, "terminals": [], "portals": [], "roofs": [],
-                "enemies": self.enemies, "npcs": self.npcs, "pickups": self.pickups, "tint": [255, 240, 212]}
+                "enemies": self.enemies, "npcs": self.npcs, "pickups": self.pickups, "tint": [255, 240, 212],
+                "floors": FLOORS, **({"night": self.night} if self.night else {})}
 
 
 # ------------------------------------------------------------ сцены
 def _rats(s, lvl):
     s.dress()
-    s.scatter(JUNK, 4, 18, 4, W - 6, H - 5)
+    s.scatter(JUNK, 5, 18, 4, W - 6, H - 5)
+    s.put("r_junk_mound", 24, MID - 4)
+    s.put("pile_rags", 27, MID + 3)
+    s.floor_decal("x_vd_blood1", 25, MID + 1)
     for _ in range(s.rnd.randint(3, 5)):
         s.enemy("rat")
 
@@ -146,7 +224,11 @@ def _rats(s, lvl):
 def _mutants(s, lvl):
     s.dress()
     s.put(s.rnd.choice(WRECKS), 22, MID + 2)
+    s.put("r_burning_rubble", 28, MID - 5)
+    for x, y in ((24, MID - 1), (26, MID - 4), (21, MID - 3)):
+        s.floor_decal("x_vd_blood0", x, y)
     s.box("r_bones", 24, MID - 3, "тело путника", {"крышки": s.rnd.randint(5, 20), "бинт": 1, "ткань": 1})
+    s.put("backpack", 22, MID - 4)
     for _ in range(2 + (lvl >= 3)):
         s.enemy("mutant")
 
@@ -156,6 +238,14 @@ def _raiders(s, lvl):
     for x, y in ((20, MID - 4), (21, MID + 2)):   # баррикада из машин поперёк дороги
         s.put(s.rnd.choice(WRECKS), x, y)
     s.put("r_sandbag_row", 25, MID - 1)
+    s.put("r_sandbag_row_b", 25, MID + 1)
+    for x, y in ((23, MID - 2), (23, MID + 1), (29, MID - 5)):
+        s.put("x_fire_barrel", x, y, check=False)
+    s.put("ar_spikes", 18, MID - 1)
+    s.put("ar_spikes", 18, MID + 1)
+    s.put("r_tent_orange", 31, MID - 6)
+    s.put("r_tent_low", 33, MID + 4)
+    s.put("pile_bottles", 30, MID + 3)
     s.box("r_barrels", 30, MID, "заначка рейдеров", {"патроны": s.rnd.randint(4, 10), "крышки": s.rnd.randint(10, 30)})
     roles = [r for need, r in ((5, "cover"), (7, "grenadier"), (12, "flanker")) if lvl >= need]   # чем дальше, тем умнее
     for i in range(2 + (lvl >= 3)):
@@ -167,7 +257,10 @@ def _raiders(s, lvl):
 
 
 def _beetles(s, lvl):
-    s.dress(trees=4, rocks=16)
+    s.dress(trees=4, rocks=16, dunes=4)
+    s.outcrop(24, MID - 3)
+    s.put("r_bones", 22, MID + 1)
+    s.put("r_bones", 27, MID - 1)
     s.enemy("beetle")
     for _ in range(s.rnd.randint(1, 2)):
         s.enemy("rat")
@@ -176,7 +269,12 @@ def _beetles(s, lvl):
 def _ferals(s, lvl):
     s.dress(trees=3)
     s.put(s.rnd.choice(["r_van", "r_tanker", "r_rv_b"]), 20, MID - 5)
+    s.wreck_field(14, MID - 6, 34, MID + 6, 3)
+    s.put("r_streetlamp_b", 25, MID - 4)
+    s.put("r_pole_broken", 29, MID + 4)
     s.box("r_dumpster", 26, MID + 3, "мусорный бак", {"ткань": 1, "химикаты": 1, "крышки": 6})
+    for x, y in ((22, MID - 1), (27, MID + 1)):
+        s.floor_decal("x_vd_blood1", x, y)
     for i in range(3 + (lvl >= 6)):
         s.enemy("feral", role="flanker" if (i == 0 and lvl >= 5) else "ambush" if (i == 1 and lvl >= 8) else None)
 
@@ -184,6 +282,7 @@ def _ferals(s, lvl):
 def _roaches(s, lvl):
     s.dress(trees=2, rocks=6)
     s.put("r_junk_mound", 22, MID - 2)
+    s.scatter(["r_trash", "pile_scrap", "pile_cans", "r_planks"], 7, 16, MID - 6, 32, MID + 6)
     s.box("r_dumpster_b", 28, MID + 3, "ржавый бак", {"химикаты": 2, "лом": 2})
     for _ in range(s.rnd.randint(4, 6)):
         s.enemy("radroach")
@@ -191,8 +290,9 @@ def _roaches(s, lvl):
 
 def _cult(s, lvl, hostile):
     s.dress(trees=4)
-    s.put("r_tent_beige", 24, MID - 4)
-    s.put("firewood", 27, MID)
+    s.camp(26, MID, tents=2, fire="campfire")
+    s.put("firewood", 30, MID + 2)
+    s.put("lantern_lit", 23, MID - 2)
     roles = {"cultist": "medic"} if lvl >= 6 else {}
     if lvl >= 9:
         roles["cult_guard"] = "cover"
@@ -203,6 +303,12 @@ def _cult(s, lvl, hostile):
 def _robots(s, lvl):
     s.dress(trees=2, rocks=8)
     s.put("r_bunker_small", 24, MID - 6)
+    s.put("r_sandbag_row", 22, MID - 3)
+    s.put("r_sandbag_row_b", 27, MID - 3)
+    s.put("r_streetlamp", 21, MID + 2)
+    s.put("r_streetlamp", 30, MID + 2)
+    s.put("ar_spikes", 18, MID + 3)
+    s.floor_decal("x_vd_sparks", 25, MID - 1)
     s.box("ammo_box", 22, MID + 3, "армейский ящик", {"патроны": 12, "дробь": 6, "граната": 1})
     for _ in range(2):
         s.enemy("robot_skel")
@@ -212,6 +318,10 @@ def _snipers(s, lvl):
     s.dress(trees=3)
     s.put("r_derrick", 30, MID - 6)
     s.put("r_sandbag_row", 27, MID + 1)
+    s.put("r_sandbag_row_b", 31, MID - 2)
+    s.wreck_field(22, MID - 6, 30, MID + 6, 2)
+    s.put("x_fire_barrel", 33, MID - 3, check=False)
+    s.put("pile_bags", 28, MID - 3)
     s.enemy("sniper", 30, 3, W - 4, MID - 3, role="sniper")
     s.enemy("sniper", 30, MID + 3, W - 4, H - 3, role="sniper" if lvl >= 8 else None)
     s.enemy("raider_elite", 26, MID - 2, 32, MID + 2, role="commander" if lvl >= 10 else "cover")
@@ -240,6 +350,10 @@ def _lizards(s, lvl):
 def _mech(s, lvl):
     s.dress(trees=2)
     s.put("r_army_truck", 22, MID - 6)
+    s.wreck_field(18, MID - 6, 34, MID + 6, 3)
+    s.put("r_burning_rubble", 29, MID - 4)
+    s.floor_decal("x_vd_ruts_h", 20, MID)
+    s.floor_decal("x_vd_ruts_h", 26, MID + 1)
     s.enemy("mech_green", 24, MID - 2, 32, MID + 3)
     s.enemy("robot_skel")
 
@@ -248,6 +362,10 @@ def _caravan(s, lvl):
     s.dress(trees=3)
     s.put("r_camper", 20, MID - 5)
     s.put("r_awning", 24, MID + 2)
+    s.camp(26, MID - 1, tents=1)
+    s.put("crate", 22, MID + 4)
+    s.put("pile_bags", 29, MID + 3)
+    s.put("lantern_lit", 22, MID - 2)
     s.npc("caravan_trader", 22, MID - 2, 26, MID + 1)
     s.npc("caravan_guard", 27, MID - 3, 30, MID + 3)
 
@@ -259,6 +377,11 @@ def _robot_post(s, lvl):
 
 def _cache(s, lvl):
     s.dress()
+    s.put("r_bones", 20, MID - 2)
+    s.put("backpack", 24, MID + 2)
+    s.put("crate_broken", 25, MID - 2)
+    s.put("pile_bags", 19, MID + 2)
+    s.floor_decal("x_vd_ruts_h", 17, MID)
     s.box("r_dumpster", 22, MID, "тележка каравана", {"крышки": s.rnd.randint(15, 35),
                                                      "патроны": s.rnd.randint(3, 8), "химикаты": 2, "бинт": 1})
 
@@ -316,6 +439,11 @@ def _cafe(s, lvl):
     s.put("r_shanty_big", 17, MID - 7)
     s.put("r_billboard", 27, MID - 7)
     s.put("campfire", 21, MID + 1)
+    s.put("round_table_42", 24, MID + 2)
+    s.put("stool_round_41", 23, MID + 3)
+    s.put("stool_round_41", 26, MID + 3)
+    s.put("lantern_lit", 19, MID - 3)
+    s.put("lantern_lit", 28, MID - 3)
     s.npcs.append(["cafe_stranger", 20, MID - 1])
     s.npcs.append(["cafe_dog", 23, MID])
 
@@ -325,6 +453,12 @@ def _gunrunners(s, lvl):
     s.dress(trees=2)
     s.put("r_army_truck", 19, MID - 6)
     s.put("r_sandbag_row", 25, MID + 2)
+    s.put("r_sandbag_row_b", 22, MID + 2)
+    s.put("x_fire_barrel", 29, MID - 4, check=False)
+    s.put("ammo_box", 21, MID - 4)
+    s.put("ammo_box", 23, MID - 4)
+    s.put("crate", 28, MID + 3)
+    s.put("sign_stop", 17, MID + 3)
     s.npcs.append(["gun_runner", 22, MID - 1])
     s.npcs.append(["gun_runner_guard", 26, MID - 3])
 
@@ -333,6 +467,8 @@ def _punishers(s, lvl):
     """Каратели культа: герой слишком часто вставал у Единства на пути. Письмо брата Т. — на старшем."""
     s.dress(trees=3)
     s.put("r_car_wreck", 24, MID - 5)
+    s.put("x_fire_barrel", 29, MID - 4, check=False)
+    s.put("pile_rags", 27, MID + 2)
     for kind in ("cult_guard", "cultist", "cultist", "cult_guard"):
         s.enemy(kind, 22, MID - 5, W - 6, MID + 5)
     s.box("r_bones", 27, MID + 3, "сумка старшего карателя", {"письмо карателям": 1, "святая вода": 2,
@@ -466,6 +602,15 @@ def _spot_convoy(s, lvl):
         s.put(name, x, y)
     for x, y in ((16, MID), (26, MID - 3)):
         s.put("r_sandbag_row", x, y)
+    s.put("r_burning_rubble", 20, MID - 6)
+    s.put("r_burning_rubble", 33, MID + 3)
+    s.wreck_field(10, MID - 7, 34, MID + 7, 2)
+    for x, y in ((17, MID - 2), (24, MID + 1), (29, MID - 1)):
+        s.floor_decal("x_vd_blood0", x, y)
+    s.floor_decal("x_vd_ruts_h", 14, MID)
+    s.floor_decal("x_vd_ruts_h", 27, MID + 1)
+    s.put("crate_broken", 19, MID - 4)
+    s.put("ammo_box", 25, MID + 4)
     s.box("ammo_box", 18, MID - 3, "армейский ящик", {"патроны": 14, "аптечка армейская": 1, "порох": 1})
     s.box("ammo_box", 28, MID + 4, "армейский ящик", {"дробь": 10, "граната": 1, "противогаз": 1})
     s.box("r_bones", 21, MID - 1, "останки солдата", {"жетон солдата": 1, "консервы": 1})
@@ -477,7 +622,11 @@ def _spot_caravan(s, lvl):
     s.dress(trees=4)
     for name, x, y in (("r_camper", 14, MID - 6), ("r_awning", 20, MID + 1), ("r_rv_b", 26, MID + 4)):
         s.put(name, x, y)
-    s.put("campfire", 19, MID - 2)
+    s.camp(19, MID - 2, tents=2)
+    s.put("crate", 23, MID + 3)
+    s.put("pile_bags", 29, MID - 2)
+    s.put("lantern_lit", 16, MID - 2)
+    s.put("lantern_lit", 24, MID - 3)
     s.npc("caravan_trader", 17, MID - 3, 22, MID)
     s.npc("caravan_guard", 23, MID - 4, 28, MID + 1)
     s.box("crate", 25, MID - 4, "ящик каравана", {"чистая вода": 2, "консервы": 2, "сигареты": 1})
@@ -491,6 +640,11 @@ def _spot_farm(s, lvl):
     for x in range(14, 30, 3):           # грядки — ряды сухих кустов за изгородью
         for y in range(MID + 2, MID + 7, 2):
             s.put("r_dry_bush", x, y)
+    for x in range(13, 31, 2):           # изгородь вокруг огорода
+        s.put("fence_picket", x, MID + 1, check=False)
+    s.put("barrel_wood", 11, MID + 1)
+    s.put("pile_bags", 27, MID + 1)
+    s.put("lantern_lit", 21, MID - 3)
     s.box("r_barrels", 25, MID - 1, "бочка с зерном", {"консервы": 1, "вяленое мясо": 2})
     s.npc("farmer_miller", 16, MID - 2, 22, MID)
     for _ in range(4):
@@ -502,6 +656,11 @@ def _spot_radio(s, lvl):
     s.put("r_derrick", 20, MID - 8)
     s.put("r_bunker_small", 24, MID - 4)
     s.put("r_water_tower_tall", 14, MID - 6)
+    s.put("r_pole_wire", 17, MID - 2)
+    s.put("r_pole_wire", 30, MID - 2)
+    s.put("r_sandbag_row", 22, MID - 1)
+    s.put("x_fire_barrel", 27, MID - 1, check=False)
+    s.floor_decal("x_vd_sparks", 25, MID - 3)
     s.box("metal_chest", 22, MID + 1, "ящик радиста", {"рация": 1, "батарейки": 3, "крышки": 30, "таблица Морзе": 1})
     s.npcs.append(["radio_bot", 25, MID - 1])          # «Голос в эфире»: диктор у бункера просит позывной
     s.enemy("sniper", 26, 3, W - 4, MID - 3)
@@ -513,6 +672,12 @@ def _spot_diner(s, lvl):
     s.put("r_shanty_big", 16, MID - 7)
     s.put("r_car_red", 24, MID - 1)
     s.put("r_billboard", 29, MID - 6)
+    s.put("round_table_42", 20, MID + 3)
+    s.put("stool_round_41", 19, MID + 4)
+    s.put("stool_round_41", 22, MID + 4)
+    s.put("lantern_lit", 18, MID - 3)
+    s.put("pile_bottles", 14, MID + 2)
+    s.floor_decal("x_vd_blood1", 17, MID - 1)
     s.box("r_dumpster", 26, MID + 3, "мусорный бак закусочной", {"консервы": 1, "энергетический батончик": 1})
     s.box("cabinet_small", 20, MID - 1, "касса", {"крышки": 45, "сигареты": 2})
     for _ in range(4):
@@ -520,7 +685,9 @@ def _spot_diner(s, lvl):
 
 
 def _spot_saltlake(s, lvl):
-    s.dress(trees=0, dry=6, rocks=26)
+    s.dress(trees=0, dry=6, rocks=26, dunes=4)
+    s.outcrop(18, MID - 4)
+    s.outcrop(30, MID + 3)
     s.enemy("sand_golem", 22, MID - 3, 28, MID + 3)
     s.box("r_bones", 27, MID - 6, "кости старателя", {"крышки": 70, "бинокль": 1, "стимулятор": 1})
     s.box("r_bones", 15, MID + 5, "кости в песке", {"батарейки": 2, "охотничий нож": 1})
@@ -531,7 +698,14 @@ def _spot_toll(s, lvl):
     for x, y in ((18, MID - 4), (18, MID + 2)):
         s.put("r_car_wreck", x, y)
     s.put("r_sandbag_row", 24, MID - 1)
-    s.put("x_fire_barrel", 22, MID - 3)
+    s.put("r_sandbag_row_b", 24, MID + 1)
+    for x, y in ((22, MID - 3), (22, MID + 2), (31, MID - 4)):
+        s.put("x_fire_barrel", x, y, check=False)
+    s.put("ar_spikes", 16, MID - 1)
+    s.put("ar_spikes", 16, MID + 1)
+    s.put("r_tent_orange", 33, MID - 6)
+    s.put("r_tent_low", 33, MID + 4)
+    s.put("sign_stop", 14, MID + 3)
     s.box("r_barrels", 30, MID, "касса рейдеров", {"крышки": 60, "патроны": 10, "сигареты": 2})
     s.box("r_car_wreck", 14, MID + 4, "сожжённый фургон каравана", {"стрела Ханов": 1, "обрывок накладной": 1})
     for kind, role in (("raider", "cover"), ("raider", "runner"), ("raider_elite", "commander"), ("raider", "grenadier")):
