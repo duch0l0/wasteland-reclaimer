@@ -384,6 +384,9 @@ mn.patchwork("c", ["k", "k", "k"], 16, 2, 4, seed=3)
 mn.cave_style = True
 mn.erode_cave(keep=[(3, 21, 12, 29)])
 mn.scatter(["rock", "stones_12"], 1, 1, 46, 30, 14)
+# ратуша: скамьи собраний, стулья, цветы в кадках, фонари; сарай — мешки, вёдра, сено, верёвки
+hl.scatter(["bench_16", "chair_wood", "chair_1", "table_1", "pile_bags", "barrel_wood", "lantern_lit", "crate"], 3, 4, 26, 18, 14)
+sh.scatter(["sack", "bucket", "crate", "barrel_wood", "pile_rags", "pile_bags", "r_logs"], 3, 4, 16, 12, 10)
 city.save(gap_exempt=("groom_cal", "groom_a", "groom_b", "groom_c"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["nipton"].update({"world_name": "Ниптон", "discover": True})

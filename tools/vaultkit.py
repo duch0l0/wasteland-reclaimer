@@ -41,24 +41,39 @@ class Lamps:
 
 
 # освещение интерьеров по умолчанию: цвет темноты и лампы сеткой на свободном полу (по музыке карты — характер места)
+COLORS_RGB = {"warm": (255, 190, 110), "cold": (160, 200, 235), "amber": (255, 160, 60), "red": (255, 60, 50), "green": (130, 235, 160),
+              "violet": (200, 130, 255)}
 AMBIENT = {"hub": ([132, 118, 104], "warm"), "reno": ([126, 108, 120], "amber"), "desert": ([134, 120, 108], "warm"),
            "lab": ([112, 118, 132], "cold"), "vats": ([88, 96, 108], "amber"), "caves": ([84, 84, 98], "amber"),
            "junktown": ([130, 116, 104], "warm")}
 
 
-def auto_ambient(m, step=8):
-    """Интерьеру без своего света: ночной фон и лампы сеткой (только на пустом полу, не в проходах и не у стен)."""
+def auto_ambient(m, step=6):
+    step = 9 if AMBIENT.get(m.music, AMBIENT["hub"])[1] == "cold" else step
+    """Интерьеру без своего света: ночной фон и настенные плафоны вдоль северных стен каждой комнаты
+    (стена с полом под ней), по характеру места (music карты) — цвет света."""
     if not m.interior or m.night:
         return 0
     night, kind = AMBIENT.get(m.music, AMBIENT["hub"])
-    if kind == "cold":
-        step = 11
     m.night = night
     n = 0
-    for y in range(4, m.H - 2, step // 2 + 2 if step > 8 else step // 2 + 1):
-        for x in range(3 + (y // 4) % 2 * (step // 2), m.W - 2, step):
-            if m.ground[y][x] in m.walls or m.ground[y][x] in ("_", "x") or (x, y) in m.blocked or (x, y) in m.reserved:
-                continue
-            if m.maybe(f"x_vd_stand_{kind}", x, y, check=False):
+    last = {}
+    for y in range(1, m.H - 1):
+        for x in range(1, m.W - 1):
+            g = m.ground[y][x]
+            below = m.ground[y + 1][x] if y + 1 < m.H else "_"
+            if g in m.walls and below not in m.walls and below not in ("_", "x") and (x, y + 1) not in m.reserved:
+                if x - last.get(y, -99) >= step:
+                    if m.maybe(f"x_vd_wl_{kind}", x, y, check=False, allow_reserved=True):
+                        last[y] = x
+                        n += 1
+    # потолочные светильники в глубине комнат: круг света без предмета, по сетке на свободном полу вдали от стен
+    col = tuple(int(c * (0.62 if kind == "cold" else 0.8)) for c in COLORS_RGB[kind])
+    gx, gy = (10, 8) if kind == "cold" else (7, 6)
+    for y in range(6, m.H - 3, gy):
+        for x in range(5 + (y // gy) % 2 * (gx // 2), m.W - 4, gx):
+            if all(m.ground[y + dy][x + dx] not in m.walls and m.ground[y + dy][x + dx] not in ("_", "x")
+                   for dx in (-2, 0, 2) for dy in (-2, 0, 2) if 0 <= y + dy < m.H and 0 <= x + dx < m.W):
+                m.ceiling(x, y, 130 if kind == "cold" else 150, col)
                 n += 1
     return n

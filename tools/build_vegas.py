@@ -822,6 +822,8 @@ print("обжито у Сапогов:", bt.dress_empty([
 print("техзал zr:", zr.dress_empty(tech_scenes(city, "vg"), ground="M", block=7, margin=1, chance=1.0))
 print("техзал vt:", vt.dress_empty(tech_scenes(city, "vg"), ground="M", block=7, margin=1, chance=1.0))
 
+# хранилище «Ноль»: ящики, стеллажи, оборудование по периметру
+vt.scatter(["crate", "toolbox_red", "canister", "pile_scrap", "locker_1", "metal_shelf", "crate_b", "ammo_box"], 3, 3, 36, 28, 14)
 city.save(gap_exempt=("cooper_zero",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["vegas_strip"].update({"world_name": "Руины Вегаса", "discover": True})

@@ -524,6 +524,8 @@ print("обжито:", pm.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=7, margin=1, chance=1.0))
 
+# подвал казино: склад выпивки и реквизита, ящики с фишками, бочки, битые бутылки
+cl.scatter(["crate", "crate_b", "barrel_wood", "pile_bottles", "crate_broken", "sack", "pile_cans", "pile_rags"], 3, 3, 28, 18, 18)
 city.save()
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["primm"].update({"world_name": "Примм", "discover": True})

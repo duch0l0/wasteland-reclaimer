@@ -549,6 +549,8 @@ for x, y in ((6, 8), (14, 9), (38, 8), (32, 9)):
 LM.decals(v, "x_vd_hz_v", [(22, 7), (23, 7)])
 
 LM.doors(v)
+# квартира Коббса: хлам старьёвщика — покрышки, радиодетали, ящики, бочки
+cb.scatter(["pile_junk", "crate", "crate_b", "barrel_wood", "pile_tires", "pile_electronics", "pile_scrap", "pile_cans"], 3, 5, 20, 14, 12)
 city.save(gap_exempt=("nc_guard", "nc_guard_b", "cult_envoy", "harry_mech", "water_queue", "water_queue_b"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["necropolis"].update({"world_name": "Некрополь", "discover": True})

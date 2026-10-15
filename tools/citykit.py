@@ -253,6 +253,8 @@ class CityMap(MapKit):
             out["gates"] = self.gates
         if self.night:
             out["night"] = self.night
+        if getattr(self, "lights", None):
+            out["lights"] = self.lights               # потолочные светильники без картинки: [x, y, радиус, [r,g,b], мерцание] в пикселях
         if self.tint:
             out["tint"] = self.tint
         if getattr(self, "ring_spot", None):
@@ -270,6 +272,12 @@ class CityMap(MapKit):
         if self.blocked_extra():
             out["blocked"] = self.blocked_extra()
         return out
+
+    def ceiling(self, x, y, r=170, color=(255, 190, 110), flick=0.04):
+        """Потолочный светильник над клеткой (x, y): круг света без предмета."""
+        if not hasattr(self, "lights"):
+            self.lights = []
+        self.lights.append([x * T + T // 2, y * T + T // 2, r, list(color), flick, "nh"])
 
     water_codes = ()   # коды земли, которые — вода (река, озеро): непроходимы в игре
 
@@ -404,9 +412,9 @@ class City:
 
     def save(self, gap_exempt=()):
         from vaultkit import auto_ambient
-        for _m in self.maps:
-            auto_ambient(_m)                        # интерьеры без своего света получают фон и лампы
         self.furnish_sparse()
+        for _m in self.maps:
+            auto_ambient(_m)                        # интерьеры без своего света получают фон и лампы (после обстановки)
         os.makedirs(os.path.join(ROOT, "data", "props"), exist_ok=True)
         with open(os.path.join(ROOT, "data", "props", f"{self.id}.json"), "w", encoding="utf-8") as f:
             json.dump({"props": self.props}, f, ensure_ascii=False, indent=0)

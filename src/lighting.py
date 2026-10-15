@@ -63,7 +63,7 @@ def light_sources(level):
                     (sx, sy) if spec.get("flame") else None, (sx, sy), None))
     for L in getattr(level, "lights", []):
         x, y, rad, color, flick = L[:5]
-        halo = (L[6], L[7]) if len(L) > 7 else (x, y)
+        halo = (L[6], L[7]) if len(L) > 7 else None if (len(L) > 5 and L[5] == "nh") else (x, y)
         out.append((x, y, rad, color, flick, None, halo, L[5] if len(L) > 5 else None))
     return out
 
@@ -93,7 +93,9 @@ class Lighting:
         for i, (x, y, rad, color, flick, flame, src, tile) in enumerate(self._sources):
             if not view.inflate(rad * 2, rad * 2).collidepoint(x, y):
                 continue
-            if getattr(level, "iso", False):
+            if tile == "nh":
+                roof = None
+            elif getattr(level, "iso", False):
                 roof = level.roof_over(tile) if tile and hasattr(level, "roof_over") else None
             else:
                 roof = level.roof_over((int(x) // S.TILE, int(y) // S.TILE)) if hasattr(level, "roof_over") else None
@@ -117,7 +119,10 @@ class Lighting:
             warm = tuple(int(c * 0.32) for c in color)
             surf.blit(gradient(r, warm), (x - view.x - r, y - view.y - r), special_flags=pygame.BLEND_RGB_ADD)
         # ореолы у самих источников и пламя — поверх, светятся в темноте
-        for x, y, rad, color, flick, flame, (sx, sy), k in visible:
+        for x, y, rad, color, flick, flame, srcpos, k in visible:
+            if srcpos is None:      # потолочный светильник: пятно на полу есть, светящейся точки нет
+                continue
+            sx, sy = srcpos
             halo = max(12, int(rad * 0.22 * k) // 4 * 4)
             dim = tuple(int(c * 0.55) for c in color)
             surf.blit(gradient(halo, dim), (sx - view.x - halo, sy - view.y - halo),

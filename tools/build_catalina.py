@@ -297,6 +297,9 @@ STALAG_C = [P("ct_stalag_a", "pk:dcave/p1/8,6,2,2", foot=[1, 1], keybg=True), P(
 for x, y in ((12, 4), (27, 5), (30, 10), (14, 11)):
     cv.maybe(STALAG_C[(x + y) % 2], x, y)
 cv.scatter(PEBBLE_C, 1, 1, W - 2, H - 2, 14)
+# маяк: смотритель живёт здесь — сети, бочки, верёвки, лодочный хлам, фонари
+lt.scatter(["barrel_wood", "crate", "crate_b", "sack", "pile_rags", "bucket", "r_logs", "pile_bags"], 3, 6, 21, 15, 12)
+lt.scatter(["lantern_lit"], 3, 3, 21, 15, 2)
 city.save(gap_exempt=("harbor_master", "sailor_finn"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["catalina"].update({"world_name": "Остров Санта-Каталина"})
