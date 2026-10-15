@@ -193,8 +193,28 @@ d.enemies += [["ratman", 16, 15], ["ratman", 33, 18], ["ratman", 42, 12], ["ratm
 put("bar_fence_a", 46, 12, check=False)
 d.pickups.append(["лом", 1, 45, 14])
 
+# атмосфера ливнёвки: тусклые янтарные лампы у труб, зелёное свечение тины, сырость, кровь у логова, капли с потолка
+def dl(kind, x, y):
+    d.put(f"x_vd_stand_{kind}", x, y, check=False, allow_reserved=True)
+
+
+for x, y in ((5, 3), (14, 4), (22, 5), (30, 6), (44, 5), (16, 12), (8, 17), (10, 21)):
+    dl("amber", x, y)
+for x, y in ((12, 9), (24, 12), (36, 8), (31, 17)):
+    dl("green", x, y)
+for x, y in ((38, 12), (41, 15)):
+    dl("red", x, y)
+for x, y in ((8, 5), (18, 6), (27, 5), (36, 14), (4, 14), (10, 20), (22, 11)):
+    d.put("x_vd_wet0" if (x + y) % 2 else "x_vd_wet1", x, y, check=False, allow_reserved=True)
+for x, y in ((14, 3), (26, 3), (40, 5)):
+    d.put("x_vd_drip", x, y, check=False, allow_reserved=True)
+for x, y in ((35, 13), (39, 17), (42, 14)):
+    d.put("x_vd_blood0", x, y, check=False, allow_reserved=True)
+for x, y in ((12, 17), (13, 18)):
+    d.put("x_vd_waterline", x, y, check=False, allow_reserved=True)
+
 d.check(npc_enemy_gap=0)
-d.save("data/maps/drain.json", style="drain", dark=195)
+d.save("data/maps/drain.json", style="drain", dark=195, night=[84, 92, 88])
 print(f"Ливнёвка: объектов {len(d.props)}, врагов {len(d.enemies)}, контейнеров {len(d.containers)}")
 
 
@@ -255,7 +275,15 @@ for x, y in ((26, 5), (33, 8)):
 b.paint("G", 19, 12, 32, 12)            # решётчатый настил между рядами контейнеров — кабельный канал
 b.paint("G", 3, 19, 5, 19)
 
+
+# свет склада: холодный аварийный, красные лампы у турели, зелёное свечение чанов
+for x, y in ((6, 17), (12, 18), (20, 18), (4, 20)):
+    b.put("x_vd_stand_cold", x, y, check=False, allow_reserved=True)
+for x, y in ((22, 4), (30, 7), (19, 15), (32, 15)):
+    b.put("x_vd_stand_red", x, y, check=False, allow_reserved=True)
+for x, y in ((24, 12), (28, 12)):
+    b.put("x_vd_stand_green", x, y, check=False, allow_reserved=True)
 b.check(npc_enemy_gap=0)
-b.save("data/maps/baker7.json", style="vault", dark=170, floors={"m": STEEL, "G": GRILLE})
+b.save("data/maps/baker7.json", style="vault", dark=170, night=[76, 84, 96], floors={"m": STEEL, "G": GRILLE})
 print(f"Бейкер-7: объектов {len(b.props)}, врагов {len(b.enemies)}, контейнеров {len(b.containers)}")
 city.save()
