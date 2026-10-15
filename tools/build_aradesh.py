@@ -107,7 +107,8 @@ MOSS_A = [P("ar_moss", "pk:dcave/p1/10,14,2,2", block=False, layer="floor", keyb
 PEBBLE_A = [P(f"ar_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # тот же песок, что в каньоне: граница без скачка цвета
 GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
-CRACK = ["noise:pk:destown/p2/8,0,1,1"]
+CRACK = ["noise:pk:rvill/p2/0,11,1,1"]                # тёплая приглушённая глина лагеря — не оранжевая заливка
+PLAZA_A = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
 PLANK = ["pk:bazaar/bazaar_f1_21"]
 CAVE_DIRT = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
 CAVE_DARK = cells("dcave/p1", [(0, 0), (1, 0), (0, 1), (1, 1), (2, 0), (3, 0)])   # земля с крупными трещинами
@@ -122,11 +123,26 @@ ar = CityMap(city, "aradesh", "Лагерь Арадеша", W, H, start=(1, 24)
 ar.floor_code("s", *SAND)
 ar.floor_code("g", *GRAVEL)
 ar.floor_code("k", *CRACK)
+ar.floor_code("q", "noise:pk:desnat/p1/0,0,1,1")           # светлая утоптанная тропа
+ar.floor_code("w", "pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1")
+ar.piers = ("w",)
 ar.paint("s", 0, 0, W - 1, H - 1)
 ar.paint_ragged("k", 5, 3, 65, 47, depth=4)            # утоптанная земля лагеря — край рваный, в песок
 ar.paint("g", 0, 23, W - 1, 26)                        # колея от въезда до каньона
 ar.hwall([FENCE], 5, 65, 2)                            # хлипкий забор лагеря по северной и южной границе
 ar.hwall([FENCE], 5, 65, 47)
+# Дорожки: от колеи к дому собраний, к палаткам, к полям и к мастерской — лагерь ходит по тропам, а не по целине
+ar.paint("q", 34, 14, 35, 22)                          # к дому собраний
+ar.paint("q", 8, 20, 12, 22)                           # к шатру у въезда
+ar.paint("q", 12, 12, 34, 13)                          # вдоль палаток
+ar.paint("q", 12, 14, 13, 22)
+ar.paint("q", 28, 27, 29, 36)                          # к колодцу и полям
+ar.paint("q", 10, 36, 36, 37)
+ar.paint("q", 44, 27, 45, 36)                          # к мастерской
+ar.paint("q", 40, 36, 60, 37)
+ar.paint("q", 44, 12, 62, 13)                          # к теплице и грядкам
+ar.paint("q", 44, 14, 45, 22)
+ar.paint("w", 30, 18, 39, 21)                          # дощатая площадка вокруг костра собраний
 ar.exits = [(0, y) for y in range(23, 27)]
 ar.reserve(0, 22, W - 1, 27)
 
@@ -173,6 +189,29 @@ for i, x in enumerate((10, 13, 16, 19, 22)):
     ar.put(TRELLIS[i % 4], x, 40)
 ar.put(FERT, 26, 41)
 ar.npcs += [["farmer_ruth", 17, 36]]
+# общая кухня под открытым небом: плиты-костры, столы, лавки, бочки с водой, сушилки — здесь лагерь ест вместе
+for x, y in ((48, 16), (52, 16), (56, 16)):
+    ar.maybe("table_2", x, y)
+for x, y in ((48, 18), (52, 18), (56, 18)):
+    ar.maybe("bench_7", x, y)
+ar.maybe(CAMPFIRE, 50, 14)
+ar.maybe(CAMPFIRE, 56, 14)
+for x, y in ((46, 20), (58, 20), (60, 17)):
+    ar.maybe(WATER_BARREL, x, y)
+# торговый ряд у колеи: столы, палатка скупщика, фонари — первое, что видит входящий
+for x, y in ((14, 28), (18, 28), (22, 28)):
+    ar.maybe(GOODS[(x // 4) % len(GOODS)], x, y)
+ar.maybe(TENT_WHITE, 26, 29)
+# тропы освещены: факелы-фонари через каждые шесть клеток
+for x, y in ((34, 14), (35, 21), (13, 14), (13, 21), (28, 28), (29, 35), (44, 28), (45, 35), (45, 15), (60, 14)):
+    ar.maybe("lantern_lit", x, y, allow_reserved=True)
+# знамёна «Детей Единства» у входа в дом собраний, лавки вокруг костра
+for x in (32, 38):
+    ar.maybe("bench_7", x, 22)
+ar.maybe(TARP[0], 40, 30)
+ar.maybe(TARP[1], 34, 30)
+for x, y in ((36, 28), (38, 31), (32, 32)):
+    ar.maybe(RUST_BARRELS[0], x, y)
 
 # юг: высохший колодец — рядом бадья, копаные ямы, лопаты; отсюда видно, что воды нет
 ar.put(WELL, 34, 36)
