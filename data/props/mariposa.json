@@ -177,6 +177,60 @@
 1
 ]
 },
+"mp_humvee_a": {
+"img": "pk:mbase/mbase_2_003",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"mp_humvee_b": {
+"img": "pk:mbase/mbase_2_007",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"mp_truck_cargo": {
+"img": "pk:jtown/jtown_2_016",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"mp_truck_flat": {
+"img": "pk:jtown/jtown_2_018",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"mp_moto_a": {
+"img": "pk:jtown/jtown_2_010",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mp_moto_b": {
+"img": "pk:jtown/jtown_2_022",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
 "mp_altar": {
 "img": "pk:cult/cult_2_045",
 "block": true,

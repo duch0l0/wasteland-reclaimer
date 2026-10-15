@@ -46,6 +46,10 @@ DEBRIS = [P("mp_helmet", "pk:mbase/p1/6,8,1,1", block=False, keybg=True), P("mp_
 CAMPFIRE_M = P("mp_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1], light={"r": 120, "color": [255, 150, 70], "at": [0.5, 0.5], "flicker": 0.35})
 TENT_WHITE = P("mp_tent_white", "pk:bazaar/bazaar_1_004", foot=[2, 2], sight=True)
 VAN = P("mp_cult_van", "pk:zcity/zcity_2_098", foot=[2, 1], sight=True)
+# автопарк — разная техника, а не ряд клонов: хаммеры, грузовики армии, мотоциклы, один фургон культа
+FLEET = [P("mp_humvee_a", "pk:mbase/mbase_2_003", foot=[3, 1], sight=True), P("mp_humvee_b", "pk:mbase/mbase_2_007", foot=[3, 1], sight=True),
+         P("mp_truck_cargo", "pk:jtown/jtown_2_016", foot=[4, 1], sight=True), P("mp_truck_flat", "pk:jtown/jtown_2_018", foot=[4, 1], sight=True)]
+MOTOS = [P("mp_moto_a", "pk:jtown/jtown_2_010", foot=[2, 1], sight=True), P("mp_moto_b", "pk:jtown/jtown_2_022", foot=[2, 1], sight=True)]
 ALTAR = P("mp_altar", "pk:cult/cult_2_045", foot=[2, 1], sight=True)
 CANDELABRA = P("mp_candelabra", "pk:cult/cult_2_068", block=False,
                light={"r": 90, "color": [255, 170, 80], "at": [0.5, 0.3], "flicker": 0.5})
@@ -120,8 +124,8 @@ for x, y in ((22, 20), (28, 18), (34, 20), (22, 30), (34, 30)):
 mp.put(ALTAR, 28, 25)
 mp.put(CANDELABRA, 26, 25)
 mp.put(CANDELABRA, 31, 25)
-mp.put(VAN, 42, 22)
-mp.put(VAN, 42, 27)
+mp.put(VAN, 42, 22)                                      # фургон с «сосудами» — один, у входа в бункер
+mp.put(FLEET[2], 42, 27)                                 # второй — армейский грузовик с клеткой: возит «материал» на чаны
 # лагерь культа: костры между шатрами, коврики для молитв, знамёна у алтаря; армейский двор: ряд ящиков, бочки, лавки у казарм
 for x, y in ((24, 20), (36, 20), (24, 31)):
     mp.maybe(CAMPFIRE_M, x, y)
@@ -134,8 +138,9 @@ for x, y in ((20, 14), (24, 14), (48, 12), (52, 12), (48, 36), (52, 36)):
 for x, y in ((16, 10), (50, 40), (14, 30)):
     mp.maybe("barrel_wood", x, y)
 # автопарк у восточной стены: ряд фургонов культа и грузовик под навесом, бочки с топливом, ящики стопками — армия, которой нет дела до порядка
-for i, (x, y) in enumerate(((50, 10), (54, 10), (58, 10), (50, 36), (54, 36), (58, 36))):
-    mp.maybe(VAN, x, y)
+for name, x, y in ((FLEET[2], 49, 10), (FLEET[0], 55, 10), (MOTOS[0], 60, 11), (MOTOS[1], 62, 11),
+                   (FLEET[3], 49, 37), (FLEET[1], 56, 37), (MOTOS[1], 61, 37), (MOTOS[0], 62, 39)):
+    mp.maybe(name, x, y)
 for x, y in ((48, 14), (60, 14), (48, 34), (60, 34)):
     mp.maybe("x_fire_barrel", x, y)
 for x, y in ((46, 16), (46, 32), (22, 8), (28, 8), (14, 38), (20, 38), (26, 38)):

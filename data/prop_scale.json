@@ -332,7 +332,11 @@
       "sl_tank",
       "sl_tanker",
       "vg_wagon",
-      "ws_bus"
+      "ws_bus",
+      "mp_humvee_a",
+      "mp_humvee_b",
+      "mp_truck_cargo",
+      "mp_truck_flat"
     ]
   },
   "machines": {
@@ -570,6 +574,13 @@
     "scale": 3,
     "names": [
       "p7_pad"
+    ]
+  },
+  "bikes_mp": {
+    "scale": 1.5,
+    "names": [
+      "mp_moto_a",
+      "mp_moto_b"
     ]
   }
 }
