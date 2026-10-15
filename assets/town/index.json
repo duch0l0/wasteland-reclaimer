@@ -5029,5 +5029,236 @@
    48
   ],
   "made_by": "tools/make_fence_side.py"
+ },
+ "x_vd_tally": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_drawing": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_nine": {
+  "size": [
+   96,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_map": {
+  "size": [
+   96,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_sheet": {
+  "size": [
+   96,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_num15": {
+  "size": [
+   96,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_exit": {
+  "size": [
+   72,
+   28
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_plaque": {
+  "size": [
+   64,
+   26
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_waterline": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_cab_h": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_cab_v": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_cab_es": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_cab_ws": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_cab_en": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_cab_wn": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wet0": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wet1": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_rust0": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_rust1": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_oil0": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_oil1": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_blood0": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_blood1": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_dragh": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_dragv": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_ruts_h": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_ruts_v": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_steps": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_caps": {
+  "size": [
+   32,
+   24
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_drip": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_sparks": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_hz_h": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_hz_v": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
  }
 }

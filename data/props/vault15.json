@@ -363,6 +363,60 @@
 "block": true,
 "sight": false
 },
+"v15_lamp": {
+"img": "p2_088",
+"block": false,
+"sight": false,
+"light": {
+"r": 150,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.08
+}
+},
+"v15_lamp_cold": {
+"img": "p2_088",
+"block": false,
+"sight": false,
+"light": {
+"r": 130,
+"color": [
+150,
+190,
+230
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.05
+}
+},
+"v15_lamp_red": {
+"img": "p2_088",
+"block": false,
+"sight": false,
+"light": {
+"r": 150,
+"color": [
+255,
+50,
+40
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.25
+}
+},
 "vault15_f_tech_2_073": {
 "img": "pk:npower/npower_2_073",
 "block": true,
