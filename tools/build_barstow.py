@@ -435,7 +435,7 @@ def build_base():
     # ангары (восток): первый — разграблен, во втором — гнездо
     k.building(36, 6, 44, 15, "B", floor="Ground E1_N", doors=[("w", 4, 3)], ruined=True)   # у стен C нет проломов
     k.scatter(["Object25_N", "Object26_N", "Object24_N"], 37, 7, 43, 14, 5)
-    k.building(36, 19, 44, 28, "C", floor="Ground E1_N", doors=[("w", 4, 3)])
+    k.building(36, 19, 44, 28, "D", floor="Ground E1_N", doors=[("w", 4, 3)], sign="АНГАР 2")
     k.scatter(["Object25_E", "Object26_E"], 38, 20, 43, 27, 4)
     # командный бункер: маленький, бетонный, в центре плаца у флагштока
     k.building(26, 18, 32, 23, "A", floor="Ground C1_N", doors=[("s", 3, 3)], sign="КОМАНДОВАНИЕ")

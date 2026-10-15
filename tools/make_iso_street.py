@@ -189,7 +189,7 @@ def zebra(seed, along_y):
                     px, py = int(CX + (u - v) * 64), int(CY + (u + v) * 32)
                     if inside(px, py):
                         shade = random.Random(px * 31 + py).uniform(0.78, 1.0)
-                        img.set_at((px, py), (int(205 * shade), int(203 * shade), int(190 * shade), 255))
+                        img.set_at((px, py), (int(150 * shade), int(148 * shade), int(138 * shade), 255))
     return img
 
 
