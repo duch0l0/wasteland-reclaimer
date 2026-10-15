@@ -67,13 +67,25 @@ def auto_ambient(m, step=6):
                     if m.maybe(f"x_vd_wl_{kind}", x, y, check=False, allow_reserved=True):
                         last[y] = x
                         n += 1
-    # потолочные светильники в глубине комнат: круг света без предмета, по сетке на свободном полу вдали от стен
+    # потолочные светильники в глубине комнат: не сеткой, а с разбросом, и только там, где своих источников света нет
+    import random
+    from src import props as P_
+    rnd = random.Random(m.W * 131 + m.H * 7)
+    have = [(x, y) for p in m.props if P_.CATALOG.get(p[0], {}).get("light") for x, y in [(p[1], p[2])]]
+    have += [(int(L[0]) // 48, int(L[1]) // 48) for L in getattr(m, "lights", [])]
     col = tuple(int(c * (0.62 if kind == "cold" else 0.8)) for c in COLORS_RGB[kind])
-    gx, gy = (10, 8) if kind == "cold" else (7, 6)
+    gx, gy = (9, 7) if kind == "cold" else (7, 6)
     for y in range(6, m.H - 3, gy):
         for x in range(5 + (y // gy) % 2 * (gx // 2), m.W - 4, gx):
-            if all(m.ground[y + dy][x + dx] not in m.walls and m.ground[y + dy][x + dx] not in ("_", "x")
-                   for dx in (-2, 0, 2) for dy in (-2, 0, 2) if 0 <= y + dy < m.H and 0 <= x + dx < m.W):
-                m.ceiling(x, y, 130 if kind == "cold" else 150, col)
+            x += rnd.randint(-2, 2)
+            y2 = y + rnd.randint(-1, 1)
+            if not (3 <= x < m.W - 3 and 3 <= y2 < m.H - 3):
+                continue
+            if any(abs(x - hx) + abs(y2 - hy) < 6 for hx, hy in have):
+                continue
+            if all(m.ground[y2 + dy][x + dx] not in m.walls and m.ground[y2 + dy][x + dx] not in ("_", "x")
+                   for dx in (-2, 0, 2) for dy in (-2, 0, 2) if 0 <= y2 + dy < m.H and 0 <= x + dx < m.W):
+                m.ceiling(x, y2, rnd.choice((120, 140, 160)), col, rnd.choice((0.0, 0.0, 0.04, 0.1)))
+                have.append((x, y2))
                 n += 1
     return n

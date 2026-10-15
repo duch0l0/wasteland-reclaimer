@@ -28,6 +28,14 @@ from . import settings as S
 
 _GRAD = {}
 HERO_LIGHT = (150, (70, 68, 78))
+NIGHT_FLOOR = 96            # темнее этого интерьер не бывает: глаз должен различать пол и предметы без лампы
+
+
+def ambient(night):
+    """Цвет темноты карты с нижним порогом яркости по каналам (оттенок сохраняется)."""
+    lo = min(night)
+    k = max(0, NIGHT_FLOOR - lo)
+    return tuple(min(255, c + k) for c in night)
 
 
 def gradient(radius, color):
@@ -88,7 +96,7 @@ class Lighting:
         w, h = surf.get_size()
         view = pygame.Rect(int(cam.x), int(cam.y), w, h)
         lm = self._lightmap((w, h))
-        lm.fill(tuple(night))
+        lm.fill(ambient(night))
         visible = []
         for i, (x, y, rad, color, flick, flame, src, tile) in enumerate(self._sources):
             if not view.inflate(rad * 2, rad * 2).collidepoint(x, y):
@@ -109,6 +117,8 @@ class Lighting:
             lm.blit(g, (x - view.x - r, y - view.y - r), special_flags=pygame.BLEND_RGB_ADD)
             visible.append((x, y, rad, color, flick, flame, src, k))
         hr, hc = HERO_LIGHT
+        if min(night) < 110:        # тёмное место: свет героя шире и ярче
+            hr, hc = 200, (96, 94, 104)
         if getattr(level, "iso", False):
             hr = int(hr * 1.8)
         lm.blit(gradient(hr, hc), (hero_screen[0] - hr, hero_screen[1] - hr), special_flags=pygame.BLEND_RGB_ADD)

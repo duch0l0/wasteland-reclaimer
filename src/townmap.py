@@ -348,21 +348,99 @@ def _roof_image(r):
                 pygame.draw.rect(img, (34, 28, 26), (cx - 14, mid - 48, 28, 6))
         img.fill((34, 26, 20), (6, h - 14, w - 12, 4))        # жёлоб по нижней кромке
         img.fill((120, 98, 76), (6, h - 18, w - 12, 2))
-    # мелочи на крыше: короба вентиляции, люк, хлам
-    for _ in range(max(1, (w * h) // (T * T * 14))):
-        bw, bh = rnd.choice(((20, 16), (26, 18), (16, 16), (34, 20)))
-        x, y = rnd.randrange(10, max(11, w - bw - 10), 2), rnd.randrange(10, max(11, h - bh - 14), 2)
-        kind = rnd.random()
-        if kind < 0.5:    # вентиляция
-            pygame.draw.rect(img, (64, 66, 70), (x, y + 4, bw, bh))
-            pygame.draw.rect(img, (140, 142, 146), (x, y, bw, bh))
+    # оборудование на крыше: кондиционеры, световые люки, баки, солнечные панели, антенны, заплаты, трубы — по площади,
+    # без наложения; на скатных крышах (дерево, металл) — только то, что уместно на скате
+    pitched = style in ("planks", "metal")
+    used = []
+
+    def free(x, y, bw, bh):
+        r2 = pygame.Rect(x - 8, y - 8, bw + 16, bh + 16)
+        if r2.collidelist(used) >= 0:
+            return False
+        used.append(pygame.Rect(x, y, bw, bh))
+        return True
+
+    def shadow(x, y, bw, bh):
+        sh = pygame.Surface((bw + 6, bh + 6), pygame.SRCALPHA)
+        sh.fill((0, 0, 0, 70))
+        img.blit(sh, (x + 3, y + 5))
+    flat_kinds = ("ac", "ac", "sky", "tank", "solar", "vent", "hatch", "tarp", "pipe", "antenna", "junk")
+    sloped_kinds = ("tarp", "tarp", "sky", "antenna", "patch")
+    for _ in range(max(2, (w * h) // (T * T * 6))):
+        kind = rnd.choice(sloped_kinds if pitched else flat_kinds)
+        bw, bh = {"ac": (36, 28), "sky": (30, 22), "tank": (30, 30), "solar": (44, 30), "vent": (22, 18), "hatch": (20, 18),
+                  "tarp": (rnd.choice((40, 54)), rnd.choice((26, 34))), "pipe": (rnd.choice((60, 84)), 8),
+                  "antenna": (14, 14), "junk": (30, 12), "patch": (rnd.choice((28, 40)), 14)}[kind]
+        if w < bw + 24 or h < bh + 28:
+            continue
+        x, y = rnd.randrange(12, w - bw - 12, 2), rnd.randrange(12, h - bh - 16, 2)
+        if not free(x, y, bw, bh):
+            continue
+        if kind == "ac":                                          # кондиционер: короб, решётка вентилятора, тень
+            shadow(x, y, bw, bh)
+            pygame.draw.rect(img, (74, 78, 84), (x, y, bw, bh))
+            pygame.draw.rect(img, (156, 160, 166), (x + 1, y + 1, bw - 2, bh - 5))
+            pygame.draw.circle(img, (60, 62, 68), (x + bw // 2, y + bh // 2 - 2), 9)
+            pygame.draw.circle(img, (110, 114, 120), (x + bw // 2, y + bh // 2 - 2), 7)
+            for k in range(-6, 7, 3):
+                pygame.draw.line(img, (70, 72, 78), (x + bw // 2 - 6, y + bh // 2 - 2 + k // 2), (x + bw // 2 + 6, y + bh // 2 - 2 - k // 2))
+            img.fill((92, 96, 102), (x + 1, y + bh - 4, bw - 2, 3))
+        elif kind == "sky":                                       # световой люк: рама и два стекла с бликом
+            shadow(x, y, bw, bh)
+            pygame.draw.rect(img, (52, 52, 56), (x, y, bw, bh))
+            for gx in (x + 3, x + bw // 2 + 1):
+                pygame.draw.rect(img, (112, 150, 170), (gx, y + 3, bw // 2 - 4, bh - 6))
+                pygame.draw.line(img, (200, 226, 236), (gx + 2, y + bh - 6), (gx + bw // 2 - 6, y + 5))
+        elif kind == "tank":                                      # бак: круг с обручами, вид сверху
+            shadow(x, y, bw, bh)
+            pygame.draw.circle(img, (64, 48, 36), (x + 15, y + 15), 15)
+            pygame.draw.circle(img, (122, 94, 66), (x + 15, y + 15), 13)
+            pygame.draw.circle(img, (92, 70, 50), (x + 15, y + 15), 9, 2)
+            pygame.draw.circle(img, (60, 62, 66), (x + 15, y + 15), 3)
+        elif kind == "solar":                                     # солнечные панели: синяя сетка на каркасе
+            shadow(x, y, bw, bh)
+            pygame.draw.rect(img, (50, 52, 58), (x, y, bw, bh))
+            for gx in range(x + 2, x + bw - 4, 14):
+                pygame.draw.rect(img, (46, 72, 120), (gx, y + 2, 12, bh - 4))
+                pygame.draw.line(img, (110, 144, 190), (gx + 1, y + 3), (gx + 10, y + 3))
+                pygame.draw.line(img, (28, 44, 80), (gx + 6, y + 2), (gx + 6, y + bh - 3))
+                pygame.draw.line(img, (28, 44, 80), (gx, y + bh // 2), (gx + 11, y + bh // 2))
+        elif kind == "vent":                                      # короб вентиляции
+            shadow(x, y, bw, bh)
+            pygame.draw.rect(img, (64, 66, 70), (x, y + 4, bw, bh - 4))
+            pygame.draw.rect(img, (140, 142, 146), (x, y, bw, bh - 4))
             for k in range(3, bw - 2, 4):
-                img.fill((90, 92, 96), (x + k, y + 3, 2, bh - 6))
-        elif kind < 0.75:  # люк
-            pygame.draw.rect(img, (50, 44, 38), (x, y, 18, 16))
-            pygame.draw.rect(img, (110, 100, 88), (x + 2, y + 2, 14, 12))
-            img.fill((70, 62, 54), (x + 2, y + 7, 14, 2))
-        else:              # хлам: доска, бочка
+                img.fill((90, 92, 96), (x + k, y + 3, 2, bh - 10))
+        elif kind == "hatch":                                     # люк
+            pygame.draw.rect(img, (50, 44, 38), (x, y, bw, bh))
+            pygame.draw.rect(img, (110, 100, 88), (x + 2, y + 2, bw - 4, bh - 4))
+            img.fill((70, 62, 54), (x + 2, y + bh // 2 - 1, bw - 4, 2))
+        elif kind == "tarp":                                      # брезент заплатой, прижат кирпичами
+            c = rnd.choice(((52, 92, 120), (78, 98, 66), (112, 70, 56)))
+            pygame.draw.rect(img, tuple(max(0, v - 30) for v in c), (x, y, bw, bh))
+            pygame.draw.rect(img, c, (x + 1, y + 1, bw - 2, bh - 3))
+            for k in range(6, bw - 4, 9):
+                pygame.draw.line(img, tuple(max(0, v - 18) for v in c), (x + k, y + 2), (x + k - 3, y + bh - 4))
+            for cx2, cy2 in ((x + 3, y + 3), (x + bw - 7, y + 3), (x + 3, y + bh - 7), (x + bw - 7, y + bh - 7)):
+                pygame.draw.rect(img, (138, 98, 78), (cx2, cy2, 5, 4))
+        elif kind == "pipe":                                      # труба с коленом и хомутами
+            pygame.draw.rect(img, (50, 52, 56), (x, y + 2, bw, 7))
+            pygame.draw.rect(img, (136, 138, 142), (x, y, bw, 6))
+            img.fill((190, 192, 196), (x, y + 1, bw, 1))
+            for k in range(8, bw - 4, 18):
+                img.fill((70, 72, 76), (x + k, y - 1, 3, 9))
+        elif kind == "antenna":                                   # антенна: основание и растяжки
+            shadow(x, y, 8, 8)
+            pygame.draw.rect(img, (70, 70, 74), (x + 3, y + 3, 8, 8))
+            pygame.draw.line(img, (190, 192, 196), (x + 7, y + 7), (x + 7, y - 6), 2)
+            pygame.draw.line(img, (150, 152, 156), (x + 2, y - 2), (x + 12, y - 2))
+            for ex, ey in ((x - 6, y + 14), (x + 20, y + 14), (x + 7, y + 22)):
+                pygame.draw.line(img, (110, 112, 116), (x + 7, y + 7), (ex, ey))
+        elif kind == "patch":                                     # заплата из других листов/дранки на скате
+            c = tuple(min(255, int(v * rnd.choice((0.72, 1.16)))) for v in pal[0])
+            pygame.draw.rect(img, c, (x, y, bw, bh))
+            pygame.draw.rect(img, tuple(max(0, v - 30) for v in c), (x, y, bw, bh), 1)
+        else:                                                     # хлам: доска, бочка
             pygame.draw.rect(img, (120, 90, 60), (x, y, 28, 6))
             pygame.draw.circle(img, (80, 90, 70), (x + 36, y + 6), 6)
     # надписи на крышах выключены: где что — подсказывают жители в диалогах

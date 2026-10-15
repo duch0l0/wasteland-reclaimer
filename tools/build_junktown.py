@@ -303,6 +303,24 @@ jt.maybe(JSHOP, 38, 5)
 # северо-запад и северо-восток за домами — огороды из хлама и хлам
 jt.scatter(JUNK + ["r_trash", "pile_scrap"], 5, 5, 66, 7, 8)
 jt.scatter(["r_trash", "pile_cans", "pile_bottles", "r_planks"], 5, 30, 66, 46, 14)
+
+# изнутри стена — не просто мусор: караульные огни, фонари, мешки, сторожевые вышки, вывески-предупреждения, рваный профиль
+for x in range(12, 64, 9):
+    jt.maybe("x_fire_barrel", x, 6, check=False)
+    jt.maybe("x_fire_barrel", x + 4, 45, check=False)
+for x in range(9, 66, 7):
+    jt.maybe("lantern_lit", x, 7)
+    jt.maybe("lantern_lit", x + 3, 44)
+for x in (16, 33, 47, 60):
+    jt.maybe("x_sandbags", x, 8, check=False)
+    jt.maybe("x_sandbags", x + 6, 43, check=False)
+for x, y in ((12, 3), (38, 3), (62, 3), (14, 48), (40, 48), (60, 48)):
+    jt.maybe("r_derrick", x, y, check=False)                   # сторожевые вышки над стеной
+for x in (20, 28, 44, 56):
+    jt.maybe("r_pole_wire", x, 3, check=False)
+    jt.maybe("r_pole_wire", x + 5, 48, check=False)
+for x, y in ((10, 6), (26, 6), (42, 6), (58, 6), (10, 45), (26, 45), (42, 45), (58, 45)):
+    jt.maybe(SIGN if x % 2 else SIGN_B, x, y)
 jt.scatter(["r_dry_bush", "r_rocks"], 0, 0, 2, H - 1, 6)
 jt.scatter(["r_dry_bush", "r_rocks", "r_bones"], 69, 0, W - 1, H - 1, 6)
 

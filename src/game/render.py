@@ -133,7 +133,10 @@ class RenderMixin:
         if getattr(self.level, "dark", False):
             me = self.player.rect
             fx, fy = cam.foot(self.player)
-            combat_ui.draw_darkness(surf, (fx, fy - 30), self.level.dark)
+            dk = self.level.dark
+            if getattr(self.level, "night", None) and dk is not True:
+                dk = min(int(dk), 105)         # ночной фон уже затемняет: виньетка поверх него — лёгкая
+            combat_ui.draw_darkness(surf, (fx, fy - 30), dk)
         hint = self.cursor_hint()
         cursor.draw_cursor_hint(surf, hint and (None, *hint[1:]), cam)
         if surf is not screen:  # мир — на экран с масштабом; подписи дальше — в размер экрана

@@ -362,6 +362,13 @@ b.box(CRATE, 5, 20, "ящик Речной стражи", {"патроны": 15,
 b.put("r_car_wreck", 22, 14, allow_reserved=True)
 b.put("r_car_b", 44, 16, allow_reserved=True)
 b.put(TIRES, 27, 16, allow_reserved=True)
+# отмели и острова посреди реки: песок, камыш, коряги, пёстрые птицы; ржавые остовы лодок на мели
+for cx, cy, rx, ry in ((20, 6, 3, 2), (44, 9, 3, 2), (22, 23, 3, 2), (42, 25, 3, 2), (17, 21, 2, 1), (46, 4, 2, 1)):
+    b.blob("s", cx, cy, rx, ry, wobble=0.3)
+    for dx, dy in ((0, 0), (1, 1), (-1, 0)):
+        b.maybe(["r_rocks", "rock_grass", "r_dry_bush", "r_logs"][(cx + dy + dx) % 4], cx + dx, cy + dy, check=False)
+for x, y in ((24, 8), (40, 22), (30, 4), (36, 27)):
+    b.maybe("r_planks", x, y)
 # река живёт: камни и коряги в воде, плоты и брошенные лодки у быков моста, коряги и костры на берегах, лампы на мосту, граффити Стражи
 for x, y in ((18, 6), (24, 4), (40, 5), (46, 8), (20, 24), (28, 26), (42, 22), (47, 25), (38, 27), (16, 9)):
     b.maybe(["r_rocks", "rock_grass", "rock_grass_b"][(x + y) % 3], x, y)

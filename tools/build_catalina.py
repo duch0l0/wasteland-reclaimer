@@ -195,6 +195,37 @@ for x, y in ((6, 17), (12, 17), (18, 17), (48, 17), (54, 17), (60, 17)):
     av.maybe(FLOWERS[(x + y) % 6], x, y)
 av.grow(1, 1, W - 2, 25, 5, names=PALMS + BUSHES)
 av.scatter(FLOWERS + ROCKS, 1, 1, W - 2, 25, 18)
+# дальний северо-запад — одичавший остров: густые пальмы и кусты, поваленные стволы, старые лагеря, хижины, гамаки, тики-факелы
+av.floor_code("j", "pk:zcity/zcity_f2_00")
+for _ in range(0):
+    pass
+for x, y in ((3, 3), (9, 5), (15, 4), (5, 10), (12, 9), (20, 8), (4, 17), (10, 15), (17, 13), (22, 18), (8, 22), (15, 22)):
+    av.maybe(PALM_BIG[(x + y) % 2], x, y)
+for x, y in ((6, 6), (13, 7), (7, 13), (19, 11), (13, 18), (24, 14), (3, 24), (20, 23)):
+    av.maybe(PALMS[(x + y) % 3], x, y)
+av.grow(1, 1, 26, 25, 18, names=PALMS + BUSHES)
+av.scatter(FLOWERS + ROCKS + ["r_logs", "r_dry_bush"], 1, 1, 26, 25, 34)
+for x, y in ((8, 8), (16, 16), (6, 19)):                       # старые лагеря потерпевших кораблекрушение
+    av.maybe(TENT, x, y)
+    av.maybe(CAMPFIRE, x + 2, y + 1)
+    av.maybe("r_logs", x + 3, y + 2)
+    av.maybe(BONES, x - 1, y + 2)
+    av.maybe("barrel_wood", x + 1, y + 3)
+av.maybe(HAMMOCK, 11, 12)
+av.maybe(HAMMOCK, 19, 19)
+av.maybe(GAZEBO, 3, 9, allow_reserved=True)
+for x, y in ((5, 5), (14, 11), (21, 15), (9, 20), (6, 15), (18, 6)):
+    av.maybe(TORCH, x, y, allow_reserved=True)
+for x, y in ((2, 26), (7, 29), (11, 27), (4, 31), (13, 31)):        # западная опушка до пляжа
+    av.maybe(PALM_BIG[(x + y) % 2] if x % 2 else PALMS[(x + y) % 3], x, y)
+av.grow(1, 25, 16, 34, 8, names=PALMS + BUSHES)
+av.scatter(FLOWERS + ROCKS + ["r_logs"], 1, 25, 16, 34, 14)
+for x, y in ((9, 25), (3, 28)):
+    av.maybe(TORCH, x, y, allow_reserved=True)
+av.maybe(SHIPWRECK, 22, 22)
+for x, y in ((11, 3), (18, 20), (3, 14)):
+    av.maybe("x_vd_blood0", x, y, check=False)
+
 
 
 # ================================================================ Казино — Совет
