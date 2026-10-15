@@ -310,7 +310,7 @@ for e in n.props:
 
 # ================================================================ мост
 W, H = 64, 30
-b = CityMap(city, "needles_bridge", "Мост через Колорадо", W, H, start=(6, 15), seed=92, music="raiders")
+b = CityMap(city, "needles_bridge", "Мост через Колорадо", W, H, start=(6, 15), seed=92, music="raiders", night=[170, 152, 160])
 b.floor_code("s", *SAND)
 b.floor_code("~", *WATER)
 b.floor_code("≈", *DEEP)
@@ -362,6 +362,24 @@ b.box(CRATE, 5, 20, "ящик Речной стражи", {"патроны": 15,
 b.put("r_car_wreck", 22, 14, allow_reserved=True)
 b.put("r_car_b", 44, 16, allow_reserved=True)
 b.put(TIRES, 27, 16, allow_reserved=True)
+# река живёт: камни и коряги в воде, плоты и брошенные лодки у быков моста, коряги и костры на берегах, лампы на мосту, граффити Стражи
+for x, y in ((18, 6), (24, 4), (40, 5), (46, 8), (20, 24), (28, 26), (42, 22), (47, 25), (38, 27), (16, 9)):
+    b.maybe(["r_rocks", "rock_grass", "rock_grass_b"][(x + y) % 3], x, y)
+for x, y in ((21, 8), (44, 10), (26, 22), (36, 25)):
+    b.maybe("r_logs" if (x + y) % 2 else "r_planks", x, y)
+for x in range(16, 50, 6):
+    if not 31 <= x <= 36:
+        b.maybe("r_streetlamp" if x % 4 else "r_streetlamp_b", x, 12, allow_reserved=True)
+for x, y in ((6, 5), (6, 24), (58, 6), (60, 24)):
+    b.maybe("x_fire_barrel", x, y, check=False)
+for x, y in ((3, 4), (4, 26), (56, 26), (61, 4), (2, 12), (62, 20)):
+    b.maybe("r_dry_bush", x, y)
+b.scatter(["r_rocks", "pile_tires", "crate_broken", "pile_rags", "r_trash", "r_bones"], 1, 1, 12, H - 2, 8)
+b.scatter(["r_rocks", "r_bones", "r_trash", "pile_scrap", "pile_tires"], 52, 1, W - 2, H - 2, 8)
+for x, y in ((16, 14), (20, 16), (26, 13), (40, 14), (47, 16)):
+    b.maybe("x_vd_blood0", x, y, check=False)
+for x, y in ((18, 13), (28, 16), (42, 15)):
+    b.maybe("x_vd_oil0", x, y, check=False)
 
 
 # ================================================================ салун

@@ -420,6 +420,23 @@ sn.maybe(NEON_CASH, 33, 28)
 sn.maybe(NEON_JP, 45, 28)
 for x, y in ((9, 14), (57, 14), (9, 38), (57, 38)):
     sn.maybe(FIRE_BARREL, x, y)
+
+# окружение Змей: разбитые кварталы Вегаса вокруг рынка — фасады, остовы, обломки, сломанные фонари; пятна земли
+sn.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1")
+sn.patchwork("r", ["t"], 30, 2, 5, seed=41)
+for x, y in ((2, 2), (12, 3), (24, 4), (49, 3), (58, 4), (2, 14), (2, 30), (60, 12), (60, 28), (3, 40), (14, 41), (28, 41), (46, 41), (58, 41)):
+    sn.maybe(["ruin_facade_a", "ruin_facade_b"][(x + y) % 2], x, y)
+for x, y in ((6, 8), (20, 9), (46, 9), (54, 9), (4, 24), (62, 20), (5, 34), (59, 34), (20, 41), (40, 41)):
+    sn.maybe(WRECKS[(x + y) % 7], x, y)
+sn.scatter(RUBBLE, 1, 1, W - 2, H - 2, 24)
+sn.scatter(["r_trash", "r_bones", "pile_tires", "pile_scrap", "r_dry_bush"], 1, 1, W - 2, H - 2, 30)
+for x, y in ((14, 8), (30, 8), (52, 8), (4, 18), (60, 18), (4, 36), (60, 36)):
+    sn.maybe("x_fire_barrel", x, y, check=False)
+# рынок плотнее: ящики, бочки, кувшины, мешки, ковры, подвесные огни
+sn.scatter(["crate", "crate_b", "barrel_wood", "pile_bags", "sack", "pile_rags", "bucket"], 9, 15, 57, 37, 22)
+sn.scatter([LANTERN], 9, 15, 57, 37, 8)
+for x, y in ((14, 24), (18, 24), (24, 30), (46, 26), (52, 28)):
+    sn.maybe("x_vd_blood0", x, y, check=False)
 sn.scatter(RUBBLE + ["r_trash", "r_bones"], 1, 1, W - 2, 12, 10)
 sn.scatter(["r_trash", "pile_cans"], 8, 14, 58, 38, 10)
 

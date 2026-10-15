@@ -134,7 +134,8 @@ CAVE_GRAVEL = cells("dcave/p2", [(4, 7), (5, 7), (6, 7), (7, 7)])
 # на юг — поперечная улица к площади с колодцем. Северо-запад — пожарная часть, северо-восток — церковь с кладбищем,
 # юго-запад — дома шахтёров с огородами, юго-восток — лагерь Братства за мешками с песком.
 W, H = 64, 46
-sl = CityMap(city, "searchlight", "Сёрчлайт", W, H, start=(1, 22), seed=211, music="desert", world_pos=(2430, 870))
+sl = CityMap(city, "searchlight", "Сёрчлайт", W, H, start=(1, 22), seed=211, music="desert", world_pos=(2430, 870),
+             night=[176, 150, 138])
 PLAZA_FL = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])         # булыжник
 sl.floor_code("s", *SAND)
 sl.floor_code("d", *DIRT)
@@ -257,6 +258,18 @@ for _, x, y in sl.npcs:
 for x, y in ((4, 4), (60, 42), (2, 44), (62, 6)):
     sl.maybe(TREES[(x + y) % 3], x, y)
 sl.scatter(GRASS + ["r_rocks", "r_dry_bush"] + ROCKS, 1, 1, W - 2, H - 2, 18)
+# шахтёрский посёлок вечером: окна и фонари тёплые, огонь в бочках у шахты и у лагеря, колея вагонеток, пыль и уголь на земле
+sl.floor_code("k", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
+sl.patchwork("d", ["k"], 26, 2, 4, seed=61)
+for x, y in ((26, 8), (34, 8), (27, 18), (34, 18), (32, 29), (26, 29), (10, 20), (54, 20)):
+    sl.maybe("x_fire_barrel", x, y, check=False)
+for x, y in ((12, 26), (17, 28), (46, 26), (50, 28), (6, 40), (52, 40)):
+    sl.maybe("lantern_lit", x, y)
+for x, y in ((29, 12), (30, 16), (29, 28)):
+    sl.maybe("x_vd_ruts_v", x, y, check=False)
+for x, y in ((40, 6), (46, 10), (54, 5)):
+    sl.maybe("x_vd_blood0", x, y, check=False)
+sl.scatter(["crate", "crate_b", "barrel_wood", "pile_bags", "pile_scrap", "bucket", "pile_cans", "r_logs"], 4, 4, 60, 44, 20)
 
 
 # ================================================================ пожарная часть
@@ -356,7 +369,7 @@ mn.enemies += [["radroach", 18, 18], ["radroach", 25, 6], ["rat", 38, 7]]
 
 # ================================================================ Форт Сёрчлайт
 W, H = 70, 50
-ft = CityMap(city, "fort_searchlight", "Форт Сёрчлайт", W, H, start=(1, 23), seed=214, music="lab")
+ft = CityMap(city, "fort_searchlight", "Форт Сёрчлайт", W, H, start=(1, 23), seed=214, music="lab", night=[168, 150, 150])
 ft.floor_code("s", *SAND)
 ft.floor_code("a", *GROUND)
 ft.floor_code("a", *GROUND)
@@ -422,6 +435,24 @@ ft.terminal(48, 38, "fort_security")          # пульт охраны у бу�
 for _, x, y in ft.npcs:
     ft.reserve(x, y, x, y)
 ft.scatter(["r_rocks", "r_dry_bush"], 1, 1, 9, H - 2, 6)
+# форт обжит заново: щебень и трещины на бетоне, воронки, прожекторы на вышках, огонь караула, ряды ящиков, палатки у плаца
+ft.floor_code("k", "pk:desnat/p1/10,4,1,1")
+ft.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1")
+ft.patchwork("a", ["k", "t"], 46, 1, 3, seed=51)
+for x, y in ((12, 10), (16, 36), (60, 14), (58, 38), (40, 8), (46, 46)):
+    ft.maybe("x_vd_blood0", x, y, check=False)
+for x, y in ((15, 21), (15, 24), (24, 18), (24, 28), (33, 13), (47, 13), (52, 28), (44, 40), (20, 40)):
+    ft.maybe("x_fire_barrel", x, y, check=False)
+for x, y in ((16, 14), (22, 34), (54, 20), (58, 26), (38, 36), (62, 30), (14, 30)):
+    ft.maybe("r_tent_green" if (x + y) % 2 else "r_tent_low", x, y)
+for x in range(12, 28, 3):
+    ft.maybe("r_streetlamp" if x % 2 else "r_streetlamp_b", x, 20)
+for x, y in ((31, 15), (49, 15), (31, 33), (49, 33)):
+    ft.maybe("r_streetlamp", x, y)
+ft.scatter(["crate", "crate_b", "ammo_box", "r_barrels", "pile_scrap", "pile_tires", "r_sandbag_row", "r_sandbag_row_b"], 10, 5, 66, 46, 24)
+for x, y in ((20, 8), (36, 6), (56, 8)):
+    ft.maybe("x_vd_oil0", x, y, check=False)
+ft.scatter(["x_vd_ruts_h"], 12, 20, 55, 42, 6)
 ft.scatter(["r_rocks", "r_dry_bush"], 67, 1, W - 2, H - 2, 4)
 
 
