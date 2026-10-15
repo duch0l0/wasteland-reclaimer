@@ -355,7 +355,9 @@
       "p7_dome",
       "p7_generator",
       "p7_relay",
-      "sl_headframe"
+      "sl_headframe",
+      "p7_vertibird",
+      "p7_bay_empty"
     ]
   },
   "outposts_half": {
@@ -562,6 +564,12 @@
       "pr_booth0",
       "pr_booth1",
       "pr_booth2"
+    ]
+  },
+  "pads": {
+    "scale": 3,
+    "names": [
+      "p7_pad"
     ]
   }
 }

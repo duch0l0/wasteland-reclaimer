@@ -37,7 +37,7 @@ SATELLITE = P("p7_satellite", "pk:fmbase/fmbase_1_002", foot=[2, 1], sight=True)
 GENERATOR = P("p7_generator", "pk:fmbase/fmbase_1_003", foot=[2, 1], sight=True, light=GLOW([110, 200, 255]))
 DOME = P("p7_dome", "pk:fmbase/fmbase_1_007", foot=[2, 1], sight=True, light=GLOW([110, 200, 255]))
 TURRET = [P("p7_turret", "pk:fmbase/fmbase_1_008", foot=[2, 1], sight=True), P("p7_turret_b", "pk:fmbase/fmbase_1_013", foot=[2, 1], sight=True)]
-PAD = P("p7_pad", "pk:fmbase/fmbase_1_006", block=False, layer="floor")
+PAD = P("p7_pad", "pk:fmbase/fmbase_1_006", foot=[4, 4], block=False, layer="floor")
 TANKS = [P("p7_tank_blue", "pk:fmbase/fmbase_1_004", sight=True, light=GLOW([110, 200, 255])),
          P("p7_tank_green", "pk:fmbase/fmbase_1_010", sight=True, light=GLOW([140, 255, 140])),
          P("p7_tank_vre", "pk:fmbase/fmbase_1_011", sight=True, light=GLOW([160, 255, 120]))]
@@ -94,8 +94,7 @@ pe.paint("m", 14, 6, 56, 40)
 # техника и посадочная площадка (юго-запад), склады (юго-восток), охранный периметр с дорожкой вдоль ограды.
 pe.paint("n", 10, 22, 36, 23)                           # проезд от ворот к командному пункту
 pe.paint("n", 33, 19, 36, 24)
-pe.paint("n", 18, 25, 22, 34)                           # к посадочной площадке
-pe.paint("t", 17, 27, 29, 37)                           # плиты площадки винтокрыла
+pe.paint("t", 15, 25, 29, 38)                           # бетон вокруг площадки
 pe.paint("g", 42, 8, 56, 8)                             # кабельный канал вдоль энергетики
 pe.paint("g", 42, 8, 42, 20)
 pe.paint("t", 40, 21, 55, 33)                           # технические плиты на юго-востоке
@@ -126,8 +125,13 @@ pe.put(DOME, 50, 9)
 pe.put(GENERATOR, 44, 14)
 pe.put(PIPELINE, 40, 34)
 # посадочная площадка винтокрыла
-pe.put(PAD, 22, 28)
-pe.box(AMMO, 20, 33, "ящик у площадки", {"форма Анклава": 1, "патроны": 15})   # сменная форма пилотов
+pe.put(PAD, 16, 26, check=False, allow_reserved=True)        # площадка с тремя реактивными машинами и куполом — в рост (×3): самолёт теперь с несколько человек, а не игрушка
+for _qx, _qy in ((0, 0), (0, 1), (1, 1), (1, 0)):             # самолёты и купол не проходимы насквозь: внутренние 4×4 каждой ячейки
+    for _dx in range(1, 5):
+        for _dy in range(1, 5):
+            pe.blocked.add((16 + _qx * 6 + _dx, 26 + _qy * 6 + _dy))
+pe.box(AMMO, 29, 33, "ящик у площадки", {"форма Анклава": 1, "патроны": 15})   # сменная форма пилотов
+pe.reserve(15, 25, 28, 38)                                   # на площадке самолётов ничего лишнего
 # командный пункт — вход в станцию
 pe.put(COMMAND, 32, 17)                     # в рост (data/prop_scale.json): пятно 4×2, дверь над порталом
 pe.put(CONTROL, 37, 17)
@@ -156,7 +160,7 @@ for x, y in ((45, 24), (49, 24), (45, 28), (49, 28), (52, 24)):
     pe.maybe(VRE_CRATE, x, y)
 pe.scatter(["r_trash", "pile_junk", "barrel_wood"], 16, 9, 54, 37, 8)
 pe.npcs += [["enclave_gate", 18, 23], ["enclave_officer", 34, 23]]
-pe.enemies += [["enclave_mech", 27, 27]]               # шагоход у ворот — молчит, пока нет тревоги
+pe.enemies += [["enclave_mech", 31, 28]]               # шагоход у ворот — молчит, пока нет тревоги
 for _, x, y in pe.npcs:
     pe.reserve(x, y, x, y)
 pe.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
@@ -225,8 +229,8 @@ hg.props.append(["x_ladder", 6, 4])
 hg.portal([(6, 4)], "poseidon7_base", (40, 27), "Лифт наверх")
 hg.reserve(4, 4, 9, 8)
 # винтокрыл на площадке посередине, ворота ангара на восток
-hg.put(VERTIBIRD, 18, 11)
-hg.put(BAY_EMPTY, 26, 11)                                # второй отсек пуст — винтокрыл на задании
+hg.put(VERTIBIRD, 12, 9)                                  # ангарные отсеки — в рост (×2): винтокрыл размером с дом, а не с тумбочку
+hg.put(BAY_EMPTY, 24, 9)                                # второй отсек пуст — винтокрыл на задании
 hg.put(BAY_DOOR, 42, 14)
 hg.terminal(36, 20, "p7_vertibird")
 # стойки силовой брони вдоль северной стены

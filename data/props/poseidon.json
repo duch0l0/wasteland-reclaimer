@@ -155,6 +155,10 @@
 "img": "pk:fmbase/fmbase_1_006",
 "block": false,
 "sight": false,
+"foot": [
+4,
+4
+],
 "layer": "floor"
 },
 "p7_tank_blue": {
