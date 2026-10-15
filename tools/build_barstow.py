@@ -105,6 +105,12 @@ def build_road():
     k.grass(1, 1, W - 2, H - 2, 30)
     k.scatter(["Tree A1_N"], 1, 1, W - 2, 8, 3, only_dust=True)
     # блокпост при въезде: ползунки из бетонных блоков и полицейской машины, шагов за десять — укрытия под огнём
+    k.crosswalk(14, 20, 14, 22)
+    k.crosswalk(32, 20, 32, 22)
+    k.crosswalk(20, 18, 22, 18)
+    k.manhole(6, 21)
+    k.manhole(25, 21)
+    k.manhole(21, 28)
     k.barrier(7, 20, 7, 21)
     k.car(6, 9, 22, "E")
     k.car(6, 15, 20, "N")
@@ -201,6 +207,8 @@ def build_depot():
             k.prop(["Object25_N", "Object26_N", "Object24_N"][(x + y) % 3], x, y)
     k.prop("Object22_N", 6, 26)
     k.prop("Object23_N", 9, 26)
+    k.manhole(20, 22)
+    k.manhole(20, 30)
     # ворота двора: огонь, блоки и скорая поперёк дороги — вход под перекрёстным огнём
     k.fire_barrel(18, 19)
     k.fire_barrel(22, 19)
@@ -301,7 +309,13 @@ def build_center():
     k.prop("Object4_N", 38, 12)
     # руины квартала, светящиеся
     k.building(27, 25, 40, 37, "A", floor="Ground A6_N", doors=[("n", 5, 3)], ruined=True)
-    k.scatter(["Object18_N", "Object13_N"], 28, 26, 39, 36, 6, block=False)
+    k.scatter(["Object18_N", "Object13_N", "Object12_N"], 28, 26, 39, 36, 14, block=False)
+    k.scatter(["Object10_N", "Object11_N", "Object25_N", "Object26_N", "Object24_N", "Object14_N", "Object19_N"], 28, 26, 39, 36, 18)
+    k.car(7, 31, 29, "E")
+    k.car(1, 35, 33, "N")
+    for x, y in ((30, 28), (37, 28), (33, 31), (38, 34), (30, 35)):
+        k.light(x, y, 230, (120, 255, 140), 0.5, dy=-30)       # светящаяся гниль в руинах — зелёный отсвет
+    k.fire_barrel(29, 31, block=False)
     ghouls(k, 28, 26, 39, 36, 3, glowing=1)
 
     # улицы: машины, фонари, мусор, гули
@@ -328,6 +342,10 @@ def build_center():
     k.scatter(["Tree A1_N"], 1, 1, W - 2, H - 2, 6, only_dust=True)
     k.scatter(["Object18_N", "Object13_N", "Object12_N"], 1, 1, W - 2, H - 2, 24, block=False, only_dust=True)
     k.scatter(["Object20_N", "Object28_N", "Object10_S", "Object16_N"], 0, 15, W - 1, 23, 10)
+    for cw in ((20, 14, 22, 14), (20, 24, 22, 24), (16, 18, 16, 20), (26, 18, 26, 20)):
+        k.crosswalk(*cw)
+    for mx, my in ((21, 9), (21, 30), (8, 19), (32, 19), (21, 36)):
+        k.manhole(mx, my)
     # баррикада на перекрёстке: кольцо из машин и блоков вокруг уцелевшего «поста» — здесь будет главная драка
     k.car(6, 18, 14, "E")
     k.car(4, 24, 14, "E")
@@ -426,6 +444,8 @@ def build_base():
     k.obj("StreetLamp 2_N", 24, 16)                # флагшток
     for x, y in ((14, 8), (14, 27), (35, 17)):
         k.lamp(x, y)
+    k.manhole(8, 17)
+    k.manhole(30, 17)
     # КПП и плац: пулемётные гнёзда из блоков и ящиков, огонь, бронемашины
     k.fire_barrel(14, 16, block=False)
     k.fire_barrel(14, 18, block=False)

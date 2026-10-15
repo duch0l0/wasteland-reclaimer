@@ -37,7 +37,7 @@ def walk(seed, curb=None):
     slab = {}
     for a in (0, 1):
         for b in (0, 1):
-            slab[(a, b)] = rnd.uniform(0.93, 1.07)
+            slab[(a, b)] = rnd.uniform(0.84, 1.1)
     cracks = []
     for _ in range(rnd.choice((0, 1, 1, 2))):
         u, v = rnd.uniform(-0.45, 0.45), rnd.uniform(-0.45, 0.45)
@@ -56,7 +56,7 @@ def walk(seed, curb=None):
             u, v = uv(px, py)
             k = slab[(int(u >= 0), int(v >= 0))]
             n = rnd.uniform(0.95, 1.05)
-            base = 98 * k * n
+            base = 90 * k * n * (0.92 + 0.16 * math.sin(u * 5.3 + seed) * math.cos(v * 4.1 + seed * 2))
             col = [base * 1.04, base * 0.99, base * 0.90]
             # швы между плитами 2×2: тонкие, с бликом с одной стороны
             du, dv = abs(u), abs(v)
@@ -123,11 +123,88 @@ def asphalt(seed):
     return img
 
 
+def rubble(seed):
+    """Обломки: тёмный щебень со светлыми осколками плит и пятнами сажи — вместо кубиков набора в руинах."""
+    rnd = random.Random(seed)
+    img = pygame.Surface((128, 256), pygame.SRCALPHA)
+    for py in range(CY - 34, CY + 34):
+        for px in range(128):
+            if inside(px, py):
+                b = rnd.uniform(44, 72)
+                if rnd.random() < 0.1:
+                    b = rnd.uniform(100, 150)
+                img.set_at((px, py), (int(b * 1.05), int(b), int(b * 0.9), 255))
+    for _ in range(5):
+        u, v = rnd.uniform(-0.4, 0.4), rnd.uniform(-0.4, 0.4)
+        cx, cy = CX + (u - v) * 64, CY + (u + v) * 32
+        pygame.draw.polygon(img, (96, 90, 82, 255), [(cx - 5, cy), (cx, cy - 3), (cx + 6, cy), (cx, cy + 3)])
+        pygame.draw.line(img, (30, 28, 26, 255), (cx - 5, cy), (cx, cy + 3))
+    for _ in range(0):
+        u, v = rnd.uniform(-0.3, 0.3), rnd.uniform(-0.3, 0.3)
+        for py in range(CY - 34, CY + 34):
+            for px in range(128):
+                if inside(px, py):
+                    a, b = uv(px, py)
+                    if (a - u) ** 2 + (b - v) ** 2 < 0.02:
+                        c = img.get_at((px, py))
+                        img.set_at((px, py), (c.r // 2, c.g // 2, c.b // 2, 255))
+    return img
+
+
+def pothole(seed):
+    """Плитка тротуара, выбитая посередине: тёмная яма с щебнем."""
+    img = walk(seed)
+    rnd = random.Random(seed + 99)
+    u0, v0 = rnd.uniform(-0.15, 0.15), rnd.uniform(-0.15, 0.15)
+    for py in range(CY - 34, CY + 34):
+        for px in range(128):
+            if inside(px, py):
+                a, b = uv(px, py)
+                d = ((a - u0) ** 2 + (b - v0) ** 2) ** 0.5 + rnd.uniform(-0.04, 0.04)
+                if d < 0.22:
+                    t = rnd.uniform(26, 48) if rnd.random() > 0.1 else rnd.uniform(100, 130)
+                    img.set_at((px, py), (int(t * 1.05), int(t), int(t * 0.9), 255))
+                elif d < 0.25:
+                    img.set_at((px, py), (30, 28, 26, 255))
+    return img
+
+
+def manhole(seed):
+    img = asphalt(seed)
+    for r, col in ((15, (20, 20, 22)), (13, (58, 56, 54)), (10, (44, 43, 42))):
+        pygame.draw.ellipse(img, col + (255,), (CX - r * 1.0, CY - r * 0.5, r * 2, r))
+    for off in (-5, 0, 5):
+        pygame.draw.line(img, (28, 28, 28, 255), (CX - 9, CY + off // 2), (CX + 9, CY + off // 2))
+    return img
+
+
+def zebra(seed, along_y):
+    """Пешеходный переход: белые полосы на асфальте вдоль x или вдоль y."""
+    img = asphalt(seed)
+    for k in range(-2, 3):
+        for t in range(-18, 19):
+            for w in range(-4, 5):
+                u, v = (k * 0.2 + w * 0.011, t * 0.026) if along_y else (t * 0.026, k * 0.2 + w * 0.011)
+                if abs(u) < 0.5 and abs(v) < 0.5:
+                    px, py = int(CX + (u - v) * 64), int(CY + (u + v) * 32)
+                    if inside(px, py):
+                        shade = random.Random(px * 31 + py).uniform(0.78, 1.0)
+                        img.set_at((px, py), (int(205 * shade), int(203 * shade), int(190 * shade), 255))
+    return img
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
-    for i in range(4):
+    for i in range(6):
         pygame.image.save(walk(i), f"{OUT}/x_walk_{i}.png")
         pygame.image.save(asphalt(10 + i), f"{OUT}/x_asph_{i}.png")
+    for i in range(3):
+        pygame.image.save(rubble(40 + i), f"{OUT}/x_rubble_{i}.png")
+    for i in range(2):
+        pygame.image.save(pothole(60 + i), f"{OUT}/x_hole_{i}.png")
+    pygame.image.save(manhole(70), f"{OUT}/x_manhole.png")
+    pygame.image.save(zebra(71, True), f"{OUT}/x_zebra_y.png")
+    pygame.image.save(zebra(72, False), f"{OUT}/x_zebra_x.png")
     for i, s in enumerate(SIDE):
         pygame.image.save(walk(20 + i, s), f"{OUT}/x_curb_{s}.png")
     print("нарисовано: 12 тайлов")

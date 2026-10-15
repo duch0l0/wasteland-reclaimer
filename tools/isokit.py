@@ -57,6 +57,8 @@ class IsoKit:
         for y in range(max(0, y0), min(self.H, y1 + 1)):
             for x in range(max(0, x0), min(self.W, x1 + 1)):
                 n = self._pick(name, rot)
+                if n.startswith("Ground A6"):            # руины: обломки вместо кубиков набора
+                    n = f"x_rubble_{self.rnd.randrange(3)}"
                 self.floor[y][x] = n if n.startswith("x_") else need_tile(n)
 
     def _pick(self, name, rot=True):
@@ -285,13 +287,23 @@ class Town(IsoKit):
         for y in range(y0, y1 + 1):
             for x in range(x0, x1 + 1):
                 if self.rnd.random() < broken * 0.5:
-                    self.ground(f"Ground A{self.rnd.choice((6, 7))}_{self.rnd.choice('NESW')}", x, y, x, y)
+                    self.ground(f"x_hole_{self.rnd.randrange(2)}", x, y, x, y)
                 else:
-                    self.ground(f"x_walk_{self.rnd.randrange(4)}", x, y, x, y)
+                    self.ground(f"x_walk_{self.rnd.randrange(6)}", x, y, x, y)
+
+    def crosswalk(self, x0, y0, x1, y1):
+        """Пешеходный переход: полосы вдоль направления дороги (по большей стороне прямоугольника)."""
+        along_y = (x1 - x0) >= (y1 - y0)
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                self.floor[y][x] = "x_zebra_y" if along_y else "x_zebra_x"
+
+    def manhole(self, x, y):
+        self.floor[y][x] = "x_manhole"
 
     def curbs(self):
         """Тротуарные плитки, соседние с дорогой, получают бордюр с той стороны, где дорога."""
-        road = lambda t: t is not None and (t.startswith("ground_b") or t.startswith("x_asph"))
+        road = lambda t: t is not None and (t.startswith("ground_b") or t.startswith("x_asph") or t.startswith("x_zebra") or t == "x_manhole")
         for y in range(self.H):
             for x in range(self.W):
                 t = self.floor[y][x]
