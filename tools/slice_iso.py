@@ -84,6 +84,23 @@ def need_tile(name):
     return tid
 
 
+ANIM_SRC = os.path.join(PACK, "Animations", "Individual sprites", "Animated Tiles")
+
+
+def need_anim(folder, prefix, step=1):
+    """Анимированный тайл набора (кадры 128×256): assets/iso/tiles/<prefix>_<i>.png. Возвращает список id кадров."""
+    files = sorted(glob.glob(os.path.join(ANIM_SRC, folder, "*.png")))[::step]
+    ids = []
+    for i, f in enumerate(files):
+        tid = f"{prefix}_{i}"
+        dst = os.path.join(OUT, "tiles", tid + ".png")
+        if not os.path.isfile(dst):
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copyfile(f, dst)
+        ids.append(tid)
+    return ids
+
+
 def slice_char(cid, folder, actions):
     src_root = os.path.join(SPRITES_SRC, folder)
     frames = {}

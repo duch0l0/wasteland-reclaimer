@@ -60,9 +60,10 @@ def light_sources(level):
         sx, sy = r.x + r.w * ax, r.y + r.h * ay
         ground = (sx, r.bottom - 4)
         out.append((ground[0], ground[1], spec["r"], spec["color"], spec.get("flicker", 0),
-                    (sx, sy) if spec.get("flame") else None, (sx, sy)))
-    for x, y, rad, color, flick in getattr(level, "lights", []):
-        out.append((x, y, rad, color, flick, None, (x, y)))
+                    (sx, sy) if spec.get("flame") else None, (sx, sy), None))
+    for L in getattr(level, "lights", []):
+        x, y, rad, color, flick = L[:5]
+        out.append((x, y, rad, color, flick, None, (x, y), L[5] if len(L) > 5 else None))
     return out
 
 
@@ -88,10 +89,13 @@ class Lighting:
         lm = self._lightmap((w, h))
         lm.fill(tuple(night))
         visible = []
-        for i, (x, y, rad, color, flick, flame, src) in enumerate(self._sources):
+        for i, (x, y, rad, color, flick, flame, src, tile) in enumerate(self._sources):
             if not view.inflate(rad * 2, rad * 2).collidepoint(x, y):
                 continue
-            roof = level.roof_over((int(x) // S.TILE, int(y) // S.TILE)) if hasattr(level, "roof_over") else None
+            if getattr(level, "iso", False):
+                roof = level.roof_over(tile) if tile and hasattr(level, "roof_over") else None
+            else:
+                roof = level.roof_over((int(x) // S.TILE, int(y) // S.TILE)) if hasattr(level, "roof_over") else None
             if roof is not None and roof["alpha"] > 128:
                 continue   # лампа в доме под крышей: снаружи её свет не виден
             k = 1.0
@@ -102,6 +106,8 @@ class Lighting:
             lm.blit(g, (x - view.x - r, y - view.y - r), special_flags=pygame.BLEND_RGB_ADD)
             visible.append((x, y, rad, color, flick, flame, src, k))
         hr, hc = HERO_LIGHT
+        if getattr(level, "iso", False):
+            hr = int(hr * 1.8)
         lm.blit(gradient(hr, hc), (hero_screen[0] - hr, hero_screen[1] - hr), special_flags=pygame.BLEND_RGB_ADD)
         surf.blit(lm, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
         # тёплый отсвет поверх: без него круг света выходит бело-серым, а нужен оранжевый, как у огня

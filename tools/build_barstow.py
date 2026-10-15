@@ -103,6 +103,29 @@ def build_road():
     k.scatter(["Object18_N", "Object13_N", "Object12_N"], 1, 1, W - 2, H - 2, 14, block=False, only_dust=True)
     k.grass(1, 1, W - 2, H - 2, 30)
     k.scatter(["Tree A1_N"], 1, 1, W - 2, 8, 3, only_dust=True)
+    # блокпост при въезде: ползунки из бетонных блоков и полицейской машины, шагов за десять — укрытия под огнём
+    k.barrier(7, 20, 7, 21)
+    k.car(6, 9, 22, "E")
+    k.car(6, 15, 20, "N")
+    k.barrier(17, 22, 19, 22, hazard=False)
+    k.fire_barrel(8, 19)
+    k.fire_barrel(11, 24)
+    k.fire_barrel(16, 18)
+    k.splats(5, 19, 18, 24, 12)
+    # второй рубеж перед лагерем: скорая и блоки, засада из руин
+    k.car(4, 27, 20, "E")
+    k.barrier(30, 20, 30, 21)
+    k.barrier(25, 23, 27, 23, hazard=False)
+    k.fire_barrel(29, 24)
+    k.fire_barrel(32, 18)
+    k.scatter(["Object27_N"], 5, 18, 34, 24, 8, block=False)
+    # свет: неон мотеля, тёплые окна номеров, огонь в лагере караванщиков
+    k.light(6, 16, 280, (255, 70, 190), 0.12, dy=-90)
+    for x0 in (12, 17, 22, 27):
+        k.light(x0 + 1, 17, 200, (255, 200, 120), 0.03, dy=-70)
+    k.fire_barrel(37, 12, block=False)
+    k.fire_barrel(40, 14, block=False)
+    k.night = [118, 112, 138]
     k.check()
     k.save("data/maps/barstow.json", hordes=k.hordes)
     return k
@@ -161,8 +184,32 @@ def build_depot():
     horde(k, (15, 20, 18, 26), (12, 23), 18, "Ворота ангара трещат — изнутри лезет целая стая!")
     horde(k, (24, 28, 31, 31), (27, 25), 12, "Из конторы депо с воем выбегают гули!",
           kinds=HORDE + ["rad_mutant"])
+    # ворота двора: огонь, блоки и скорая поперёк дороги — вход под перекрёстным огнём
+    k.fire_barrel(18, 19)
+    k.fire_barrel(22, 19)
+    k.barrier(17, 22, 18, 22, hazard=False)
+    k.barrier(22, 22, 23, 22, hazard=False)
+    k.car(4, 19, 25, "E")
+    # «вагоны» на путях — ряды кузовов с проходами между ними: бег от укрытия к укрытию
+    for n, x, y, side in ((12, 9, 5, "E"), (4, 14, 5, "E"), (3, 22, 9, "E"), (9, 28, 9, "E"), (11, 4, 13, "E"), (8, 33, 13, "E")):
+        k.car(n, x, y, side)
+    k.barrier(11, 8, 13, 8)
+    k.barrier(26, 12, 27, 12)
+    k.barrier(30, 15, 33, 15, hazard=False)
+    k.fire_barrel(6, 17)
+    k.fire_barrel(37, 17)
+    k.fire_barrel(10, 2, block=False)
+    k.fire_barrel(24, 2, block=False)
+    # свет: аварийный красный в конторе, холодный в ангаре, семафоры
+    for x, y in ((28, 22), (33, 24)):
+        k.light(x, y, 260, (255, 60, 50), 0.35, dy=-90)
+    for x, y in ((8, 22), (11, 25)):
+        k.light(x, y, 240, (120, 220, 170), 0.25, dy=-90)
+    for x in (3, 15, 27, 39):
+        k.light(x, 5, 150, (90, 255, 110), 0.1, dy=-120)
+    k.night = [96, 100, 128]
     k.grass(1, 1, W - 2, H - 2, 18)
-    k.splats(1, 1, W - 2, H - 2, 8)
+    k.splats(1, 1, W - 2, H - 2, 14)
     k.check()
     k.save("data/maps/barstow_depot.json", hordes=k.hordes)
     return k
@@ -244,8 +291,27 @@ def build_center():
     k.scatter(["Tree A1_N"], 1, 1, W - 2, H - 2, 6, only_dust=True)
     k.scatter(["Object18_N", "Object13_N", "Object12_N"], 1, 1, W - 2, H - 2, 24, block=False, only_dust=True)
     k.scatter(["Object20_N", "Object28_N", "Object10_S", "Object16_N"], 0, 15, W - 1, 23, 10)
-    k.splats(17, 0, 25, H - 1, 14)
-    k.splats(0, 18, W - 1, 20, 8)
+    # баррикада на перекрёстке: кольцо из машин и блоков вокруг уцелевшего «поста» — здесь будет главная драка
+    k.car(6, 18, 14, "E")
+    k.car(4, 24, 14, "E")
+    k.car(12, 24, 23, "E")
+    k.barrier(17, 20, 17, 21, hazard=False)
+    k.barrier(21, 13, 22, 13)
+    k.barrier(21, 24, 22, 24)
+    k.fire_barrel(20, 15)
+    k.fire_barrel(22, 23)
+    k.fire_barrel(18, 24)
+    k.fire_barrel(25, 18)
+    k.fire_barrel(8, 18)
+    k.fire_barrel(36, 19)
+    # свет: неон кинотеатра и MART, окна отеля
+    k.light(7, 34, 300, (255, 70, 190), 0.12, dy=-90)
+    k.light(33, 13, 260, (120, 255, 200), 0.5, dy=-80)
+    k.light(8, 13, 260, (255, 210, 130), 0.1, dy=-80)
+    k.light(30, 26, 220, (255, 120, 60), 0.4, dy=-60)
+    k.night = [100, 98, 128]
+    k.splats(17, 0, 25, H - 1, 22)
+    k.splats(0, 18, W - 1, 20, 12)
     k.grass(1, 1, W - 2, H - 2, 16)
     k.check()
     k.save("data/maps/barstow_center.json", hordes=k.hordes)

@@ -70,6 +70,8 @@ class IsoMap(MapBase):
             d = json.load(f)
         self.width, self.height = d["w"], d["h"]
         self.dark = d.get("dark", False)
+        self.night = d.get("night")                   # ночь: цвет темноты (src/lighting.py), свет — lights и огонь анимаций
+        self.lights = [tuple(L[:5]) + ((tuple(L[5]) if len(L) > 5 else None),) for L in d.get("lights", [])]
         pal = d["palette"]
         self.floor = [[pal[i] if i >= 0 else None for i in row] for row in d["floor"]]
         self.ground = ["".join("." for _ in row) for row in d["floor"]]  # для миникарты и проверок
@@ -91,7 +93,9 @@ class IsoMap(MapBase):
             img = tile_image(o["t"])
             cx, cy = tile_center_iso(o["x"], o["y"])
             rect = img.get_rect(topleft=(cx - TILE_ANCHOR[0] + o.get("dx", 0), cy - TILE_ANCHOR[1] + o.get("dy", 0)))
-            obj = {"name": o["t"], "img": img, "rect": rect, "tile": (o["x"], o["y"]), "foot": [(o["x"], o["y"])],
+            anim = o.get("anim")
+            obj = {"name": o["t"], "anim": ([tile_image(t) for t in anim["frames"]], anim["ms"], anim.get("phase", 0))
+                   if anim else None, "img": img, "rect": rect, "tile": (o["x"], o["y"]), "foot": [(o["x"], o["y"])],
                    "key": o["x"] + o["y"] + o.get("k", 1.0), "floor": o.get("floor", False),
                    "front": o.get("front"), "container": None}
             if o.get("b"):
@@ -206,6 +210,10 @@ class IsoMap(MapBase):
         self._draw_ways(surf, cam)
         self.draw_pickups(surf, cam)
 
+    def draw_arrows(self, surf, cam):
+        """Ночью ромбы выходов рисуются поверх темноты, чтобы не терялись."""
+        self._draw_ways(surf, cam)
+
     def _draw_ways(self, surf, cam):
         """Выходы на карту мира и переходы в другие районы — жёлтые ромбы на земле со стрелкой."""
         cells = [(t, True) for t in self.exits] + [(t, not p.get("requires")) for p in self.portals for t in p["tiles"]]
@@ -223,6 +231,9 @@ class IsoMap(MapBase):
             if o["floor"] or o.get("hidden") or not self._visible(o["rect"], cam, size):
                 continue
             img = o["img"]
+            if o.get("anim"):
+                frames, ms, phase = o["anim"]
+                img = frames[(pygame.time.get_ticks() // ms + phase) % len(frames)]
             c = o["container"]
             if c is not None and c["opened"] and not c["loot"]:
                 img = img.copy()

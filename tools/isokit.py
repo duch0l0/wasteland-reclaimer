@@ -23,7 +23,7 @@ os.chdir(ROOT)
 
 import pygame  # noqa: E402
 
-from slice_iso import need_tile  # noqa: E402
+from slice_iso import need_tile, need_anim  # noqa: E402
 
 os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 pygame.init()
@@ -48,6 +48,8 @@ class IsoKit:
         self.blocked, self.sight, self.taken = set(), set(), set()
         self.enemies, self.npcs, self.pickups, self.exits, self.portals = [], [], [], [], []
         self.hordes = []   # толпы в домах (экшен-режим)
+        self.lights = []   # источники света ночных карт: [x, y, радиус, [r,g,b], мерцание, [клетка x, y]] в пикселях экрана
+        self.night = None
 
     # -------------------------------------------------------- пол
     def ground(self, name, x0, y0, x1, y1, rot=True):
@@ -83,6 +85,22 @@ class IsoKit:
         self.objs.append(o)
         self.taken.add((x, y))
         return len(self.objs) - 1
+
+    def light(self, x, y, r=190, color=(255, 170, 90), flick=0.0, dy=-70):
+        """Источник света в клетке (x, y); dy — на сколько выше земли горит (пикселей экрана)."""
+        from math import floor
+        cx = (x - y + 0) * 64.0
+        cy = (x + y + 1) * 32.0 + dy
+        self.lights.append([cx, cy, r, list(color), flick, [x, y]])
+
+    def fire_barrel(self, x, y, light=True, block=True):
+        """Горящая бочка: анимированный тайл набора + мерцающий свет."""
+        frames = need_anim("Fire barrel", "fx_firebarrel")
+        i = self.obj(frames[0], x, y, block=block, k=0.96)
+        self.objs[i]["anim"] = {"frames": frames, "ms": 75, "phase": (x * 7 + y * 3) % len(frames)}
+        if light:
+            self.light(x, y, 230, (255, 150, 60), 0.5, dy=-40)
+        return i
 
     def free(self, x, y):
         return (0 < x < self.W - 1 and 0 < y < self.H - 1 and (x, y) not in self.taken
@@ -198,6 +216,10 @@ class IsoKit:
                "containers": self.containers, "terminals": self.terminals, "roofs": self.roofs,
                "exits": [list(t) for t in self.exits], "portals": self.portals,
                "enemies": self.enemies, "npcs": self.npcs, "pickups": self.pickups, **extra}
+        if self.night:
+            out["night"] = self.night
+        if self.lights:
+            out["lights"] = self.lights
         with open(path, "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -243,6 +265,7 @@ class Town(IsoKit):
     def lamp(self, x, y):
         if self.free(x, y):
             self.obj("StreetLamp 1_N", x, y)
+            self.light(x, y, 300, (255, 205, 130), 0.04, dy=-135)
 
     def car(self, n, x, y, side="N"):
         """Машина 2×2 клетки (картинка 256×512): ставится по левой-верхней клетке."""
@@ -254,6 +277,18 @@ class Town(IsoKit):
             self.blocked.add(c)
             self.taken.add(c)
         return True
+
+    def barrier(self, x0, y0, x1, y1, gaps=(), hazard=True):
+        """Ряд дорожных бетонных блоков по линии (вдоль x или y): укрытие и заграждение; gaps — клетки-проходы."""
+        horiz = y0 == y1
+        for x in range(min(x0, x1), max(x0, x1) + 1):
+            for y in range(min(y0, y1), max(y0, y1) + 1):
+                if (x, y) in gaps or not self.free(x, y):
+                    continue
+                if hazard:
+                    self.obj("Object16_N" if not horiz else "Object16_E", x, y)
+                else:
+                    self.obj("Object16_S" if not horiz else "Object16_W", x, y)
 
     def sign(self, name, x, y, edge):
         """Вывеска/деталь стены набора (HOTEL, MART, MOTEL, пожарная лестница) на ребре клетки.
