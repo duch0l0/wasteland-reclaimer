@@ -350,6 +350,19 @@ hatch([(9, 19), (8, 19), (6, 20), (9, 20)], "fifteen_cellar", (3, 5), "Подв�
 hatch([(20, 18), (22, 18), (25, 19), (19, 19)], "fifteen_saloon_cellar", (3, 5), "Подвал салуна",
       {"flag": "mo_cellar", "msg": "Люк за стойкой. Мо, не оборачиваясь: «Это мой подвал. Даже не думай»."})
 
+# ------------------------------------------------------------ пустыри обживаются сценками (экскурсия по городам)
+print("обжито:", m.dress_empty([
+    [("r_tent_beige", 0, 0), ("campfire", 3, 2), ("r_logs", 2, 3), ("barrel_wood", 0, 3), ("pile_rags", 4, 0)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3), ("barrel_wood", 4, 1)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3), ("crate_broken", 4, 2)],
+    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("sack", 4, 2), ("bucket", 5, 1)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("r_dtree_a", 4, 1)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
+    [("r_water_tower_b", 3, 0), ("barrel_wood", 4, 1), ("bucket", 2, 1), ("r_barrels", 5, 1)],
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
+], ground=("s", "t", "q", "d"), block=7, margin=1, chance=0.9, max_uses=2))
+
 
 # ------------------------------------------------------------ проверки и запись
 reach = m.check(gap_exempt=("dog",))
