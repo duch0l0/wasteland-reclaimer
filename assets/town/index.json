@@ -4945,5 +4945,75 @@
    240
   ],
   "made_by": "ring script"
+ },
+ "x_fence_side": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "fence side script"
+ },
+ "x_fence_side_post": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "fence side script"
+ },
+ "x_fs_wood": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_wood_post": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_wire": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_wire_post": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_picket": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_picket_post": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_iron": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_iron_post": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
  }
 }

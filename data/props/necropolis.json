@@ -496,6 +496,33 @@
 ],
 "keybg": true
 },
+"nc_rope_a": {
+"img": "pk:casino/casino_4_045",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"nc_rope_b": {
+"img": "pk:casino/casino_4_050",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"nc_grate": {
+"img": "pk:zcity/p3/12,14,1,1",
+"block": false,
+"sight": false,
+"layer": "floor",
+"keybg": true
+},
 "nc_chandelier": {
 "img": "pk:casino/casino_4_007",
 "block": false,

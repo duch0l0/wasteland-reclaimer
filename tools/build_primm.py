@@ -188,8 +188,8 @@ for i, (x, y) in enumerate(((30, 22), (47, 22))):
 # ---- северо-восток: парк аттракционов «Огненные горки» — за забором, ворота на трассу
 for _x0, _x1, _y in ((54, 77, 2), (54, 77, 22)):
     pm.hwall(PARK_FENCE, _x0, _x1, _y, gaps=(63, 64, 65, 66) if _y == 22 else ())
-pm.vline(PARK_FENCE, 54, 3, 21)
-pm.vline(PARK_FENCE, 77, 3, 21)
+pm.side_fence("picket", 54, 3, 21)
+pm.side_fence("picket", 77, 3, 21)
 # горки — главный аттракцион: длинный пролёт, короткий пролёт, петля; опоры в рост (в 2 раза крупнее)
 pm.put(COASTER[1], 55, 5, check=False)
 pm.put(COASTER[0], 67, 5, check=False)
@@ -199,8 +199,8 @@ for x, y in ((57, 9), (63, 9), (58, 11), (62, 11), (60, 10), (65, 11)):
     pm.maybe(BUMPERS[(x + y) % 6], x, y)
 pm.hwall(PARK_FENCE, 56, 66, 8)
 pm.hwall(PARK_FENCE, 56, 66, 13)
-pm.vline(PARK_FENCE, 56, 9, 12)
-pm.vline(PARK_FENCE, 66, 9, 12)
+pm.side_fence("picket", 56, 9, 12)
+pm.side_fence("picket", 66, 9, 12)
 # ларьки: крендели, напитки, сувениры
 pm.put(PRETZEL, 69, 10)
 pm.put(DRINKS, 72, 10)
@@ -493,8 +493,8 @@ for x, y in ((38, 12), (40, 26), (8, 22)):
 cp.maybe(TENT_WHITE, 8, 28)
 cp.hwall([BARBED_P], 8, 42, 7, gaps=(20, 21, 22))             # колючка по северной границе лагеря
 cp.hwall([BARBED_P], 8, 42, 31)
-cp.vline([BARBED_P], 8, 8, 30, gaps=(17, 18, 19))
-cp.vline([BARBED_P], 42, 8, 30)
+cp.side_fence("wire", 8, 8, 30, gaps=(17, 18, 19))
+cp.side_fence("wire", 42, 8, 30)
 for x, y in ((9, 8), (41, 8), (9, 30), (41, 30)):
     cp.maybe(TORCH_PR, x, y)
 cp.put(VAN, 42, 18)

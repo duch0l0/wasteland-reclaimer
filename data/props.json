@@ -3552,6 +3552,96 @@
    ],
    "block": false,
    "layer": "floor"
+  },
+  "x_fence_side": {
+   "img": "x_fence_side",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fence_side_post": {
+   "img": "x_fence_side_post",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_wood": {
+   "img": "x_fs_wood",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_wood_post": {
+   "img": "x_fs_wood_post",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_wire": {
+   "img": "x_fs_wire",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_wire_post": {
+   "img": "x_fs_wire_post",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_picket": {
+   "img": "x_fs_picket",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_picket_post": {
+   "img": "x_fs_picket_post",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_iron": {
+   "img": "x_fs_iron",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_iron_post": {
+   "img": "x_fs_iron_post",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
   }
  }
 }

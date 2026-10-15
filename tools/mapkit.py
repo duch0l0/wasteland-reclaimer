@@ -504,6 +504,13 @@ class MapKit:
                 continue
             x += fw
 
+    def side_fence(self, kind, x, y0, y1, gaps=()):
+        """Ограда вдоль севера—юга (kind: wood, wire, picket, iron): звенья-рейки и столб через два звена.
+        Не vline из горизонтальных секций — те складываются в лестницу."""
+        for i, y in enumerate(range(y0, y1 + 1)):
+            if y not in gaps:
+                self.put(f"x_fs_{kind}_post" if i % 3 == 0 else f"x_fs_{kind}", x, y, check=False)
+
     def vline(self, names, x, y0, y1, gaps=()):
         for y in range(y0, y1 + 1):
             if y not in gaps:

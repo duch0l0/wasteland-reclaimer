@@ -58,6 +58,8 @@ SUBWAY = P("nc_subway", "pk:zcity/p3/2,8,2,2", foot=[2, 1], sight=True)     # в
 BARRIER = [P("nc_barrier_a", "pk:zcity/zcity_3_007", foot=[2, 1], keybg=True), P("nc_barrier_b", "pk:zcity/zcity_3_008", foot=[2, 1], keybg=True)]
 ROAD_SIGNS = [P("nc_road_sign_a", "pk:zcity/zcity_3_035", foot=[1, 1], keybg=True), P("nc_road_sign_b", "pk:zcity/zcity_3_036", foot=[1, 1], keybg=True)]
 SLABS = [f"pk:zcity/p3/{x},{y},2,2" for x, y in ((10, 10), (14, 10), (12, 11), (10, 13), (14, 12))]     # растрескавшиеся плиты тротуара
+ROPE_N = [P("nc_rope_a", "pk:casino/casino_4_045", foot=[1, 1], keybg=True), P("nc_rope_b", "pk:casino/casino_4_050", foot=[1, 1], keybg=True)]
+GRATE_N = P("nc_grate", "pk:zcity/p3/12,14,1,1", block=False, layer="floor", keybg=True)
 CHANDELIER_N = P("nc_chandelier", "pk:casino/casino_4_007", block=False, light={"r": 110, "color": [255, 210, 150], "at": [0.5, 0.5], "flicker": 0.1})
 RAILS_N = P("nc_rails", "pk:wrail/p1/4,4,4,2", block=False, layer="floor")
 WALK_TILES = [f"pk:zcity/p3/{x},{y},2,2" for x, y in ((8, 10), (10, 10), (12, 10), (14, 10), (0, 12), (2, 12),
@@ -140,7 +142,6 @@ WATER = ["pk:sewer/p1/10,1,1,1"]
 W, H = 80, 60
 nc = CityMap(city, "necropolis", "Некрополь", W, H, start=(1, 29), seed=121, music="vats", world_pos=(1200, 1090))
 nc.floor_code("r", *RUBBLE_FL)
-nc.floor_code("a", *ROAD)
 nc.floor_code("p", *WALK)
 nc.floor_code("d", *DIRT)
 nc.floor_code("s", *STONE)
@@ -148,10 +149,14 @@ nc.floor_code("c", "noise:pk:zcity/zcity_f3_08")                    # светл
 nc.floor_code("o", "noise:pk:zcity/zcity_f2_22")                    # тёмная земля с мусором
 nc.paint("r", 0, 0, W - 1, H - 1)
 nc.paint("p", 0, 26, W - 1, 33)                       # тротуары бульвара
-nc.paint("a", 0, 28, W - 1, 31)                       # бульвар через весь город
+nc.paint("a", 0, 28, W - 1, 31)                       # бульвар через весь город (встроенный асфальт: разметка и трещины)
+for _x in range(0, W, 4):
+    nc.ground[29][_x] = nc.ground[29][_x + 1] = "h"          # осевая — штрихи
 nc.paint("p", 36, 19, 43, 57)                         # тротуары проспекта
 nc.paint("a", 38, 19, 41, 57)                         # проспект: от Зала Мёртвых к Водоразделу
-nc.paint("d", 3, 37, 32, 56)                          # кладбище
+for _y in range(21, 57, 4):
+    nc.ground[_y][39] = nc.ground[_y + 1][39] = "v"         # осевая проспекта
+nc.paint("d", 3, 37, 32, 56)                          # кладбище — за оградой со всех сторон
 nc.paint("s", 46, 40, 64, 56)                         # площадь Водораздела
 nc.paint("s", 30, 19, 49, 22)                         # паперть Зала Мёртвых: каменная площадка перед фасадом
 nc.paint("p", 2, 23, 34, 25)                          # тротуар под высотками
@@ -161,7 +166,7 @@ nc.reserve(0, 27, W - 1, 32)
 nc.reserve(37, 19, 42, 57)
 
 # север: Зал Мёртвых — бывшая мэрия; по бокам статуи, у дверей — стража Сета
-nc.building(28, 3, 24, 16, "concrete", south=(10,))
+nc.building(28, 3, 24, 16, "metal", south=(10,))
 nc.reserve(38, 19, 39, 21)
 nc.put(STATUES[0], 33, 20)
 nc.put(STATUES[1], 45, 20)
@@ -175,7 +180,7 @@ for i, x in enumerate((0, 4)):                        # высотки в рос
 nc.put(SHOP_ROW, 13, 25)                              # ряд лавок: 12 клеток фасада
 nc.put(TOWER_BROKEN, 25, 23)
 nc.put(TOWERS[2], 29, 23)
-nc.building(6, 9, 12, 10, "brick", south=(4,))        # дом капрала Коббса
+nc.building(6, 9, 12, 10, "planks", south=(4,))        # дом капрала Коббса
 nc.put(CAR_PILE, 20, 12)
 nc.put(BILLBOARDS[0], 21, 17)
 nc.put(TREES[0], 3, 6)
@@ -205,6 +210,9 @@ nc.put(SIGNS[1], 44, 33)
 
 # юго-запад: кладбище за чугунной оградой, ворота с бульвара
 nc.hwall(FENCE, 3, 32, 36, gaps=(16, 17))
+nc.hwall(FENCE, 3, 32, 57)                               # южная ограда кладбища
+nc.side_fence("iron", 2, 38, 56)                         # боковые ограды: столб через два звена, между ними — рейка
+nc.side_fence("iron", 33, 38, 56)
 nc.reserve(16, 34, 17, 39)
 nc.put(CHAPEL, 4, 39)
 nc.put(CRYPT, 26, 39)
@@ -236,6 +244,12 @@ nc.put(BASIN, 50, 49)                                    # чаша, куда н
 nc.put(BARREL, 54, 53)
 nc.put(BARREL, 55, 53)
 nc.box(CRATES, 63, 47, "ящик с запчастями", {"гаечный ключ": 1, "изолента": 1})
+# следы очереди и воды: лужи у чаши и насоса, верёвочное ограждение очереди, ведро, решётка стока, мокрые следы
+for x, y in ((51, 50), (60, 50)):
+    nc.props.append(["x_puddle", x, y])
+for x, y in ((51, 51), (62, 49), (48, 44)):
+    nc.maybe("bucket", x, y)
+nc.maybe(GRATE_N, 55, 50, allow_reserved=True)
 nc.props.append(["x_manhole", 59, 52])
 nc.reserve(58, 51, 60, 53)
 
