@@ -16,8 +16,10 @@ wasteland-laboratory (wlab), nuclear-power-plant (npower).
 import json
 
 from citykit import City, CityMap, tech_scenes
+from vaultkit import Lamps
 
 city = City("ares", "«Арес»")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -93,14 +95,23 @@ GRATE = cells("nbunk/p2", [(0, 12), (1, 13), (2, 14), (3, 12)])
 
 # ================================================================ полигон REPCONN
 W, H = 56, 40
-rp = CityMap(city, "repconn", "Полигон REPCONN", W, H, start=(1, 20), seed=271, music="desert", world_pos=(2680, 640))
+rp = CityMap(city, "repconn", "Полигон REPCONN", W, H, start=(1, 20), seed=271, music="desert", world_pos=(2680, 640),
+             night=[176, 152, 150])
 rp.floor_code("s", *SAND)
 rp.floor_code("c", *CONCRETE)
 rp.paint("s", 0, 0, W - 1, H - 1)
 rp.floor_code("r", *PAVE)
+rp.floor_code("p", *MARS_PAD)
+rp.floor_code("k", "pk:desnat/p1/10,4,1,1")
+rp.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1")
 rp.paint_ragged("c", 7, 1, 55, 38, depth=3)          # площадка с рваным краем, как вытоптанная земля
-rp.paint("r", 10, 19, 31, 21)                         # дорога от ворот к стартовому столу
-rp.paint("r", 20, 6, 22, 36)                          # магистраль вдоль ангаров и бункера
+rp.paint("a", 0, 19, 31, 21)                          # дорога от ворот к стартовому столу
+rp.paint("p", 35, 11, 47, 23)                         # стартовый стол — плиты
+rp.paint("a", 20, 6, 22, 36)                          # магистраль вдоль ангаров и бункера
+for _y in range(6, 37, 4):
+    rp.ground[_y][21] = rp.ground[_y + 1][21] = "v" if _y not in range(19, 22) else "a"
+for _x in range(2, 31, 4):
+    rp.ground[20][_x] = rp.ground[20][_x + 1] = "h"
 rp.exits = [(0, y) for y in range(18, 23)]
 rp.reserve(0, 18, 12, 22)
 rp.reserve(10, 19, 31, 21)
@@ -126,6 +137,35 @@ rp.put(FUEL[1], 46, 30)
 for x, y in ((30, 7), (36, 9), (46, 14), (48, 20), (30, 26), (36, 30), (18, 14), (18, 22), (48, 34), (14, 33)):
     rp.maybe(CRATES[(x + y) % 2], x, y)
 rp.scatter(["r_trash", "pile_junk", "barrel_wood", "r_rocks"], 12, 6, 50, 34, 14)
+
+# ---- полигон живёт: блокпост на въезде, прожекторы, стоянка машин, ряды бочек, засевшие в бункере; подсветка вечернего дня
+rp.patchwork("s", ["t"], 16, 2, 5, seed=11)
+rp.patchwork("c", ["k"], 20, 1, 3, seed=12)
+for x in list(range(4, 32, 8)) + [50]:
+    rp.maybe("r_streetlamp", x, 18)
+    rp.maybe("r_streetlamp", x + 4, 22)
+for x, y in ((8, 17), (8, 23)):
+    rp.maybe("r_sandbag_row", x, y)
+for x, y in ((6, 18), (6, 22), (23, 12), (31, 24), (38, 26), (42, 11)):
+    rp.maybe("x_fire_barrel", x, y, check=False)
+for x, y in ((24, 6), (26, 30), (36, 33)):
+    rp.maybe("r_army_truck", x, y)
+for x, y in ((30, 14), (44, 25), (30, 32)):
+    rp.maybe("r_pickup", x, y)
+rp.maybe("r_tanker", 38, 34)
+for x, y in ((28, 6), (33, 7), (47, 11), (46, 27), (28, 28), (24, 33)):
+    rp.maybe("r_barrels", x, y)
+for x, y in ((26, 11), (28, 11), (30, 11)):
+    rp.maybe("r_sandbag_row_b", x, y)
+rp.maybe("sign_72", 3, 17)
+rp.maybe("sign_stop", 9, 17)
+rp.maybe("r_billboard", 3, 24)
+for x, y in ((44, 14), (36, 21)):
+    rp.maybe("lantern_lit", x, y)
+LM.decals(rp, "x_vd_hz_h", [(36, 17), (37, 17), (38, 17)])
+LM.decals(rp, "x_vd_blood0", [(24, 20), (29, 20), (34, 24)])
+LM.decals(rp, "x_vd_oil0", [(18, 8), (30, 28), (44, 32)])
+LM.decals(rp, "x_vd_ruts_h", [(12, 20), (16, 20), (24, 20)])
 rp.enemies += [["feral", 20, 30], ["ghoul_runner", 28, 10], ["feral", 46, 24]]
 rp.npcs += [["repconn_ghoul", 30, 22]]
 
@@ -196,7 +236,8 @@ for _ in range(600):
 
 # ================================================================ жилой модуль
 W, H = 40, 30
-hb = CityMap(city, "ares_hab", "«Арес»: жилой модуль", W, H, start=(16, 26), seed=273, interior=True, music="lab")
+hb = CityMap(city, "ares_hab", "«Арес»: жилой модуль", W, H, start=(16, 26), seed=273, interior=True, music="lab",
+             night=[118, 126, 150])
 hb.floor_code("F", *FLOOR)
 hb.floor_code("B", *FLOOR_B)
 hb.floor_code("G", *GRATE)
@@ -236,6 +277,25 @@ for i, x in enumerate((29, 31, 33, 35)):
 hb.put(CONSOLES[4], 29, 9)
 hb.terminal(36, 10, "ares_comm")
 
+# кают-компания живёт: диваны, столы со стульями, торговый автомат; каюты — личные вещи; рубка — карты и свет
+for x, y in ((6, 24), (14, 24), (20, 24)):
+    hb.maybe(TABLE, x, y)
+for x, y in ((3, 22), (22, 18), (30, 24), (26, 26)):
+    hb.maybe(PLANTS[(x + y) % 7], x, y)
+for x, y in ((24, 17), (32, 17), (30, 21)):
+    hb.maybe(LOCKERS[(x + y) % 2], x, y)
+for x, y in ((3, 8), (6, 8), (11, 8), (3, 12), (11, 12)):
+    hb.maybe(LOCKERS[(x + y) % 2], x, y)
+for x, y in ((18, 12), (22, 12), (26, 8)):
+    hb.maybe(PLANTERS[(x + y) % 3], x, y)
+LM.lamps(hb, "cold", [(12, 19), (28, 19), (8, 6), (22, 6), (33, 6)])
+LM.decals(hb, "x_vd_hz_h", [(12, 26), (13, 26), (14, 26)])
+LM.decals(hb, "x_vd_tally", [(4, 15), (24, 15)])
+LM.decals(hb, "x_vd_drawing", [(9, 15), (35, 3)])
+LM.decals(hb, "x_vd_map", [(31, 3)])
+LM.doors(hb)
+print("жилой модуль hb:", hb.dress_empty(tech_scenes(city, "ar6"), ground="F", block=7, margin=1, chance=0.9))
+
 
 # ================================================================ лаборатория
 W, H = 40, 30
@@ -264,6 +324,13 @@ lb.box(LOCKERS[0], 36, 4, "стенд прототипа «Арес»", {"вин
 lb.enemies += [["robot_guard", 30, 8], ["robot_guard", 20, 20], ["turret", 37, 8]]
 
 print("техзал lb:", lb.dress_empty(tech_scenes(city, "ar5"), ground="F", block=7, margin=1, chance=1.0))
+
+LM.lamps(lb, "cold", [(18, 8), (28, 9), (22, 21)])
+LM.lamps(lb, "red", [(3, 14), (37, 12)])
+LM.decals(lb, "x_vd_hz_h", [(18, 18), (19, 18), (20, 18)])
+LM.decals(lb, "x_vd_blood1", [(20, 22), (12, 18)])
+LM.decals(lb, "x_vd_sparks", [(30, 10), (14, 21)])
+LM.doors(lb)
 
 city.save(gap_exempt=("repconn_ghoul",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
