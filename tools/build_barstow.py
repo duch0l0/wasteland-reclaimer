@@ -32,11 +32,12 @@ def horde(k, trigger, door, count, msg, kinds=HORDE):
 def ghouls(k, x0, y0, x1, y1, n, glowing=0):
     """Стая гулей в прямоугольнике (на свободных клетках)."""
     placed = 0
+    reach = k.reachable()
     for _ in range(n * 40):
         if placed >= n + glowing:
             break
         x, y = k.rnd.randint(x0, x1), k.rnd.randint(y0, y1)
-        if not k.free(x, y) or (x, y) in {(e[1], e[2]) for e in k.enemies}:
+        if not k.free(x, y) or (x, y) not in reach or (x, y) in {(e[1], e[2]) for e in k.enemies}:
             continue
         kind = "rad_mutant" if placed < glowing else k.rnd.choice(GHOULS)
         k.enemies.append([kind, x, y])
@@ -188,10 +189,9 @@ def build_depot():
           kinds=HORDE + ["rad_mutant"])
     # контора депо: перегородки — диспетчерская, кладовая, коридор; в каждой комнате своя картина
     k.partition("D", 30, 20, 30, 26, gaps={(30, 23)})
-    k.partition("D", 31, 23, 35, 23, gaps={(33, 23)})
     for x, y in ((26, 21), (28, 21), (27, 25), (29, 25)):
         k.prop("Object14_N", x, y)
-    for x, y in ((32, 21), (34, 21), (32, 25), (35, 25), (34, 24)):
+    for x, y in ((33, 21), (34, 21), (33, 25), (35, 25), (34, 25)):
         k.prop(["Object25_N", "Object24_N", "Object17_N"][(x + y) % 3], x, y)
     k.prop("Object4_N", 25, 24)
     k.prop("Object22_N", 35, 21)
@@ -232,6 +232,8 @@ def build_depot():
     k.splats(1, 1, W - 2, H - 2, 14)
     for _ri in range(len(k.roofs)):
         k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
+    _reach = k.reachable()
+    k.enemies[:] = [e for e in k.enemies if (e[1], e[2]) in _reach]
     k.check()
     k.save("data/maps/barstow_depot.json", hordes=k.hordes)
     return k
@@ -356,6 +358,8 @@ def build_center():
     k.grass(1, 1, W - 2, H - 2, 16)
     for _ri in range(len(k.roofs)):
         k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
+    _reach = k.reachable()
+    k.enemies[:] = [e for e in k.enemies if (e[1], e[2]) in _reach]     # декорации не должны запирать гулей
     k.check()
     k.save("data/maps/barstow_center.json", hordes=k.hordes)
     return k
@@ -459,6 +463,8 @@ def build_base():
     k.grass(1, 1, W - 2, H - 2, 14)
     for _ri in range(len(k.roofs)):
         k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
+    _reach = k.reachable()
+    k.enemies[:] = [e for e in k.enemies if (e[1], e[2]) in _reach]
     k.check()
     k.save("data/maps/barstow_base.json", hordes=k.hordes)
     return k

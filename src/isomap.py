@@ -71,7 +71,7 @@ class IsoMap(MapBase):
         self.width, self.height = d["w"], d["h"]
         self.dark = d.get("dark", False)
         self.night = d.get("night")                   # ночь: цвет темноты (src/lighting.py), свет — lights и огонь анимаций
-        self.lights = [tuple(L[:5]) + ((tuple(L[5]) if len(L) > 5 else None),) for L in d.get("lights", [])]
+        self.lights = [tuple(L[:5]) + ((tuple(L[5]) if len(L) > 5 else None),) + tuple(L[6:8]) for L in d.get("lights", [])]
         pal = d["palette"]
         self.floor = [[pal[i] if i >= 0 else None for i in row] for row in d["floor"]]
         self.ground = ["".join("." for _ in row) for row in d["floor"]]  # для миникарты и проверок

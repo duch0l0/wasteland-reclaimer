@@ -63,7 +63,8 @@ def light_sources(level):
                     (sx, sy) if spec.get("flame") else None, (sx, sy), None))
     for L in getattr(level, "lights", []):
         x, y, rad, color, flick = L[:5]
-        out.append((x, y, rad, color, flick, None, (x, y), L[5] if len(L) > 5 else None))
+        halo = (L[6], L[7]) if len(L) > 7 else (x, y)
+        out.append((x, y, rad, color, flick, None, halo, L[5] if len(L) > 5 else None))
     return out
 
 

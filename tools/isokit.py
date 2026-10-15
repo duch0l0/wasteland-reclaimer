@@ -56,7 +56,8 @@ class IsoKit:
         """Залить пол тайлом; name — «Ground A» (варианты A1..An выбираются случайно) или точное имя."""
         for y in range(max(0, y0), min(self.H, y1 + 1)):
             for x in range(max(0, x0), min(self.W, x1 + 1)):
-                self.floor[y][x] = need_tile(self._pick(name, rot))
+                n = self._pick(name, rot)
+                self.floor[y][x] = n if n.startswith("x_") else need_tile(n)
 
     def _pick(self, name, rot=True):
         if "_" in name:
@@ -92,12 +93,15 @@ class IsoKit:
             return None
         return self.obj(name, x, y, **kw)
 
-    def light(self, x, y, r=190, color=(255, 170, 90), flick=0.0, dy=-70):
+    def light(self, x, y, r=190, color=(255, 170, 90), flick=0.0, dy=-70, halo=None):
         """Источник света в клетке (x, y); dy — на сколько выше земли горит (пикселей экрана)."""
         from math import floor
         cx = (x - y + 0) * 64.0
         cy = (x + y + 1) * 32.0 + dy
-        self.lights.append([cx, cy, r, list(color), flick, [x, y]])
+        L = [cx, cy, r, list(color), flick, [x, y]]
+        if halo:                      # пятно света — на земле (cx, cy), светящаяся точка лампы — выше: (dx, dy) от центра клетки
+            L += [(x - y) * 64.0 + halo[0], (x + y + 1) * 32.0 + halo[1]]
+        self.lights.append(L)
 
     def fire_barrel(self, x, y, light=True, block=True):
         """Горящая бочка: анимированный тайл набора + мерцающий свет."""
@@ -237,6 +241,7 @@ class IsoKit:
         return reach
 
     def save(self, path, **extra):
+        self.curbs()
         pal, idx = [], {}
         rows = []
         for row in self.floor:
@@ -276,22 +281,44 @@ class Town(IsoKit):
                 self.ground(DUST.format(r=self.rnd.choice("NESW")), x, y, x, y)
 
     def pavers(self, x0, y0, x1, y1, broken=0.12):
+        """Тротуар: ровные плиты (tools/make_iso_street.py); доля broken — выбитые участки набора. Бордюр у дороги — в save()."""
         for y in range(y0, y1 + 1):
             for x in range(x0, x1 + 1):
-                n = self.rnd.choice((1, 2, 3, 4, 5)) if self.rnd.random() > broken else self.rnd.choice((6, 7))
-                self.ground(f"Ground A{n}_{self.rnd.choice('NESW')}", x, y, x, y)
+                if self.rnd.random() < broken * 0.5:
+                    self.ground(f"Ground A{self.rnd.choice((6, 7))}_{self.rnd.choice('NESW')}", x, y, x, y)
+                else:
+                    self.ground(f"x_walk_{self.rnd.randrange(4)}", x, y, x, y)
+
+    def curbs(self):
+        """Тротуарные плитки, соседние с дорогой, получают бордюр с той стороны, где дорога."""
+        road = lambda t: t is not None and (t.startswith("ground_b") or t.startswith("x_asph"))
+        for y in range(self.H):
+            for x in range(self.W):
+                t = self.floor[y][x]
+                if not (t and t.startswith("x_walk")):
+                    continue
+                for side, (dx, dy) in (("s", (0, 1)), ("e", (1, 0)), ("n", (0, -1)), ("w", (-1, 0))):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < self.W and 0 <= ny < self.H and road(self.floor[ny][nx]):
+                        self.floor[y][x] = f"x_curb_{side}"
+                        break
+
+    def _asphalt(self, x0, y0, x1, y1):
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                self.ground(f"x_asph_{self.rnd.randrange(4)}", x, y, x, y)
 
     def road_x(self, y0, y1, x0=0, x1=None, center="Ground B2_E"):
         """Дорога вдоль x (на экране — вниз-вправо), по середине — разметка."""
         x1 = self.W - 1 if x1 is None else x1
-        self.ground("Ground B1_N", x0, y0, x1, y1, rot=False)
+        self._asphalt(x0, y0, x1, y1)
         if center and y1 - y0 >= 2:
             self.ground(center, x0, (y0 + y1) // 2, x1, (y0 + y1) // 2, rot=False)
 
     def road_y(self, x0, x1, y0=0, y1=None, dashes=True):
         """Дорога вдоль y (на экране — вниз-влево), прерывистая по оси."""
         y1 = self.H - 1 if y1 is None else y1
-        self.ground("Ground B1_N", x0, y0, x1, y1, rot=False)
+        self._asphalt(x0, y0, x1, y1)
         if dashes and x1 - x0 >= 2:
             for y in range(y0, y1 + 1, 2):
                 self.ground("Ground B7_N", (x0 + x1) // 2, y, (x0 + x1) // 2, y, rot=False)
@@ -304,7 +331,7 @@ class Town(IsoKit):
     def lamp(self, x, y):
         if self.free(x, y):
             self.obj("StreetLamp 1_N", x, y)
-            self.light(x, y, 300, (255, 205, 130), 0.04, dy=-135)
+            self.light(x, y, 300, (255, 205, 130), 0.04, dy=-8, halo=(24, -192))   # пятно — у подножия, свет — из плафона
 
     def car(self, n, x, y, side="N"):
         """Машина 2×2 клетки (картинка 256×512): ставится по левой-верхней клетке."""
