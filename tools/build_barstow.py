@@ -413,7 +413,12 @@ def build_base():
     k.dust(0, 0, W - 1, H - 1)
     k.road_x(16, 18, x1=12)                        # дорога от депо к КПП
     k.portal([(0, y) for y in (16, 17, 18)], "barstow_depot", (40, 16), "Депо")
-    k.pavers(13, 6, 33, 28, broken=0.2)            # плац и проезды внутри периметра
+    k.plaza(13, 6, 44, 28)                         # плац: бетонные плиты
+    k.paint_line(14, 14, 33, 14)                   # разметка проезда от КПП и вокруг бункера
+    k.paint_line(14, 20, 33, 20)
+    k.paint_line(25, 17, 25, 24)
+    k.paint_line(33, 14, 33, 20)
+    k.bays(16, 25, 29, 25)                         # стоянка бронемашин
     # периметр: ограда с воротами на западе (КПП)
     k.edge_line("Fence A1", [(13, y) for y in range(5, 30) if y not in (16, 17, 18)], "w")
     k.edge_line("Fence A1", [(x, 5) for x in range(13, 45)], "n")

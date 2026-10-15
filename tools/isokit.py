@@ -291,6 +291,26 @@ class Town(IsoKit):
                 else:
                     self.ground(f"x_walk_{self.rnd.randrange(6)}", x, y, x, y)
 
+    def plaza(self, x0, y0, x1, y1):
+        """Плац: крупные бетонные плиты; чаще чистые, иногда масло, подтёки и трещины (tools/make_iso_street.py)."""
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                r = self.rnd.random()
+                i = self.rnd.randrange(3) if r < 0.68 else self.rnd.choice((3, 4, 5, 5))
+                self.floor[y][x] = f"x_slab_{i}"
+
+    def paint_line(self, x0, y0, x1, y1):
+        """Жёлтая линия разметки по клеткам (вдоль x при y0 == y1, иначе вдоль y)."""
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                self.floor[y][x] = "x_slab_6" if y0 == y1 else "x_slab_7"
+
+    def bays(self, x0, y0, x1, y1):
+        """Стоянка: ряд клеток с белой разметкой по сторонам."""
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                self.floor[y][x] = "x_slab_8"
+
     def crosswalk(self, x0, y0, x1, y1):
         """Пешеходный переход: полосы вдоль направления дороги (по большей стороне прямоугольника)."""
         along_y = (x1 - x0) >= (y1 - y0)

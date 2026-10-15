@@ -193,6 +193,72 @@ def zebra(seed, along_y):
     return img
 
 
+def slab(seed, kind="plain"):
+    """Бетонная плита плаца: крупные плиты с деформационным швом, зерно, пятна масла и подтёки; kind — разметка:
+    plain, oil, stain, crack, line_x/line_y (жёлтая полоса), bay (стоянка: белая рамка), arrow."""
+    rnd = random.Random(seed)
+    img = pygame.Surface((128, 256), pygame.SRCALPHA)
+    tone = rnd.uniform(0.9, 1.08)
+    for py in range(CY - 34, CY + 34):
+        for px in range(128):
+            if not inside(px, py):
+                continue
+            u, v = uv(px, py)
+            b = 106 * tone * rnd.uniform(0.94, 1.06) * (0.95 + 0.1 * math.sin(u * 3.1 + seed) * math.cos(v * 2.7))
+            col = [b * 1.02, b, b * 0.94]
+            if abs(u - 0.5 + 0.0) < 0.012 or abs(v - 0.5) < 0.012 or abs(u + 0.5) < 0.012 or abs(v + 0.5) < 0.012:
+                col = [c * 0.62 for c in col]              # шов по краю плиты
+            elif abs(u) < 0.008:
+                col = [c * 0.75 for c in col]              # деформационный шов посередине
+            if rnd.random() < 0.012:
+                col = [c * 0.7 for c in col]
+            img.set_at((px, py), tuple(min(255, int(c)) for c in col) + (255,))
+
+    def blobuv(u0, v0, r, f):
+        for py in range(CY - 34, CY + 34):
+            for px in range(128):
+                if inside(px, py):
+                    u, v = uv(px, py)
+                    d = ((u - u0) ** 2 + (v - v0) ** 2) ** 0.5
+                    if d < r * (1 + 0.25 * math.sin(math.atan2(v - v0, u - u0) * 3 + seed)):
+                        c = img.get_at((px, py))
+                        img.set_at((px, py), (int(c.r * f), int(c.g * f), int(c.b * f * 1.04), 255))
+    if kind == "oil":
+        blobuv(rnd.uniform(-0.2, 0.2), rnd.uniform(-0.2, 0.2), 0.16, 0.45)
+        blobuv(rnd.uniform(-0.3, 0.3), rnd.uniform(-0.3, 0.3), 0.07, 0.4)
+    if kind == "stain":
+        blobuv(rnd.uniform(-0.2, 0.2), rnd.uniform(-0.2, 0.2), 0.2, 0.72)
+    if kind == "crack":
+        u, v = rnd.uniform(-0.4, 0.0), rnd.uniform(-0.4, 0.4)
+        ang = rnd.uniform(0, 6.28)
+        pts = [(u, v)]
+        for _ in range(8):
+            ang += rnd.uniform(-0.7, 0.7)
+            u, v = u + math.cos(ang) * 0.1, v + math.sin(ang) * 0.1
+            pts.append((u, v))
+        for (u1, v1), (u2, v2) in zip(pts, pts[1:]):
+            pygame.draw.line(img, (20, 19, 18, 255), (CX + (u1 - v1) * 64, CY + (u1 + v1) * 32), (CX + (u2 - v2) * 64, CY + (u2 + v2) * 32), 1)
+    def paint_line(color, pts_uv, w=2):
+        for (u1, v1), (u2, v2) in zip(pts_uv, pts_uv[1:]):
+            for k in range(-w, w + 1):
+                pygame.draw.line(img, color, (CX + (u1 - v1) * 64, CY + (u1 + v1) * 32 + k), (CX + (u2 - v2) * 64, CY + (u2 + v2) * 32 + k))
+    if kind in ("line_x", "line_y"):
+        pts = [(-0.5, 0.0), (0.5, 0.0)] if kind == "line_x" else [(0.0, -0.5), (0.0, 0.5)]
+        paint_line((232, 188, 44, 255), pts, 1)
+        for px in range(128):                                  # выцветшие места
+            for py in range(CY - 34, CY + 34):
+                if rnd.random() < 0.06 and img.get_at((px, py)).r > 150:
+                    img.set_at((px, py), (96, 84, 50, 255))
+    if kind == "bay":
+        paint_line((215, 212, 196, 255), [(-0.45, -0.5), (-0.45, 0.5)], 1)
+        paint_line((215, 212, 196, 255), [(0.45, -0.5), (0.45, 0.5)], 1)
+    if kind == "arrow":
+        paint_line((215, 212, 196, 255), [(-0.35, 0.0), (0.2, 0.0)], 1)
+        paint_line((215, 212, 196, 255), [(0.2, 0.0), (0.05, -0.15)], 1)
+        paint_line((215, 212, 196, 255), [(0.2, 0.0), (0.05, 0.15)], 1)
+    return img
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for i in range(6):
@@ -205,6 +271,8 @@ if __name__ == "__main__":
     pygame.image.save(manhole(70), f"{OUT}/x_manhole.png")
     pygame.image.save(zebra(71, True), f"{OUT}/x_zebra_y.png")
     pygame.image.save(zebra(72, False), f"{OUT}/x_zebra_x.png")
+    for i, kind in enumerate(("plain", "plain", "plain", "oil", "stain", "crack", "line_x", "line_y", "bay", "arrow")):
+        pygame.image.save(slab(80 + i, kind), f"{OUT}/x_slab_{i}.png")
     for i, s in enumerate(SIDE):
         pygame.image.save(walk(20 + i, s), f"{OUT}/x_curb_{s}.png")
     print("нарисовано: 12 тайлов")
