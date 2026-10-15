@@ -125,8 +125,27 @@ put("chair_2", 31, 28, check=False)
 box("locker_4", 37, 31, "шкафчик охраны", {"стимулятор": 1, "патроны": 8, "граната": 1})
 scatter(["pile_computers", "pile_electronics", "pile_rags"], 24, 29, 37, 32, 3)
 
+# атмосфера: ярус А — тусклый жёлтый (аварийное питание города), ярус Б — красный и мёртвая зелень лаборатории
+def lamp(kind, x, y):
+    put(f"x_vd_stand_{kind}", x, y, check=False, allow_reserved=True)
+
+
+for x, y in ((15, 3), (24, 3), (9, 11), (16, 11), (24, 11), (30, 11), (3, 11), (35, 11), (4, 15), (35, 15)):
+    lamp("amber", x, y)
+for x, y in ((8, 22), (18, 22), (28, 22), (4, 26), (12, 30), (26, 26), (35, 30), (20, 26)):
+    lamp("red", x, y)
+lamp("green", 7, 26)
+lamp("green", 4, 31)
+for x, y in ((12, 21), (24, 21)):
+    put("x_vd_blood0", x, y, check=False, allow_reserved=True)
+put("x_vd_hz_h", 19, 21, check=False, allow_reserved=True)
+put("x_vd_hz_h", 20, 21, check=False, allow_reserved=True)
+for x in range(9, 31):
+    put("x_vd_cab_h", x, 17, check=False, allow_reserved=True)
+put("x_vd_sparks", 30, 22, check=False, allow_reserved=True)
+
 v.check(npc_enemy_gap=0, passable=v.footprint(*v.props[gate_prop]))
-v.save("data/maps/vault57.json", style="vault", dark=140,   # верхний ярус город освещает
+v.save("data/maps/vault57.json", style="vault", dark=140, night=[96, 92, 88],   # верхний ярус город освещает
        gates=[{"prop": gate_prop, "flag": "vault_b_open", "key": "ключ-карта Б",
                "msg": "Гермодверь яруса Б. Табло: «ДОПУСК: СМОТРИТЕЛЬ». Нужна ключ-карта — или терминал рядом."}])
 print(f"Убежище 57: объектов {len(v.props)}, врагов {len(v.enemies)}, контейнеров {len(v.containers)}")

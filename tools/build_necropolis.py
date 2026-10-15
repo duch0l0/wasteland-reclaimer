@@ -20,8 +20,10 @@ underground-survivor-camp (ucamp), cult-temple (cult), nuclear-bunker (nbunk).
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("necropolis", "Некрополь")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -467,7 +469,7 @@ un.scatter(["r_trash", "r_bones"] + SEWER_RUBBLE, 43, 4, 62, 38, 10)
 
 # ================================================================ Убежище 12
 W, H = 44, 34
-v = CityMap(city, "vault12", "Убежище 12", W, H, start=(20, 5), seed=125, interior=True, music="lab")
+v = CityMap(city, "vault12", "Убежище 12", W, H, start=(20, 5), seed=125, interior=True, music="lab", night=[84, 90, 78])
 v.floor_code("F", *VAULT_FL)
 v.floor_code("M", *METAL)
 v.wall_code("W", "pk:nbunk/nbunk_w3_17")
@@ -525,6 +527,16 @@ print("обжито:", nc.dress_empty([
     [("r_car_wreck", 0, 0), ("r_trash", 3, 1)],
     [("pile_junk", 0, 0), ("x_fire_barrel", 2, 1), ("pile_cans", 0, 2)],
 ]))
+
+# атмосфера Убежища 12: дверь не закрылась — аварийный жёлто-зелёный свет, тьма в углах, подтёки
+LM.lamps(v, "amber", [(8, 3), (14, 3), (26, 3), (34, 3), (6, 18), (12, 18), (6, 28), (12, 28)])
+LM.lamps(v, "green", [(20, 20), (26, 20), (22, 28), (38, 18), (34, 28), (40, 28)])
+LM.lamps(v, "red", [(18, 8), (19, 8)])
+LM.decals(v, "x_vd_wet0", [(10, 22), (24, 24), (36, 26)])
+LM.decals(v, "x_vd_rust1", [(8, 8), (32, 8)])
+LM.decals(v, "x_vd_blood0", [(15, 7), (25, 8)])
+LM.decals(v, "x_vd_tally", [(4, 14), (20, 14)])
+LM.decals(v, "x_vd_hz_v", [(22, 7), (23, 7)])
 
 city.save(gap_exempt=("nc_guard", "nc_guard_b", "cult_envoy", "harry_mech", "water_queue", "water_queue_b"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
