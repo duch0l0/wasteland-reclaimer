@@ -420,7 +420,7 @@ def lamps():
 for fn in (frames, lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
            ruts, footprints, caps, drop, sparks):
     fn()
-for _n in (15, 4, 11, 12, 22, 57):
+for _n in (7, 15, 4, 11, 12, 22, 57):
     stencil(_n)
 hazard(False)
 hazard(True)

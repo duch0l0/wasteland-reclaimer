@@ -68,6 +68,26 @@ for x, y in ((16, 18), (27, 14), (25, 22)):
 sf.maybe(BONES[0], 18, 15)
 sf.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 20 <= x <= 23 and 6 <= y <= 7, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
+
+# склон после жребия: ступени «тех, кто вышел» — колея на восток, остатки их первого лагеря, пять крестов у скалы, табличка «Ниптон»
+sf.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
+sf.floor_code("q", "pk:desnat/p1/10,4,1,1")
+sf.patchwork("s", ["t"], 10, 2, 4, seed=71)
+sf.patchwork("s", ["q"], 7, 1, 2, seed=72)
+for x in range(7, 22, 2):
+    sf.maybe("x_vd_ruts_h", x, 22, check=False)
+for x, y in ((9, 21), (12, 23), (16, 21), (19, 23), (23, 24)):
+    sf.maybe("x_vd_steps", x, y, check=False)
+for i, x in enumerate((26, 28, 30, 32, 34)):
+    sf.maybe("x_cross" if i % 2 == 0 else "x_tombstone", x, 12 + i % 2)
+sf.maybe("r_tent_low", 30, 19)
+sf.maybe("campfire", 28, 21)
+sf.maybe("r_logs", 27, 22)
+sf.maybe("barrel_wood", 31, 21)
+sf.maybe("pile_bags", 33, 20)
+for x, y in ((6, 8), (10, 6), (34, 7), (36, 12), (4, 14), (3, 27), (33, 26), (37, 22)):
+    sf.maybe(["r_dtree_a", "r_dtree_b", "r_dry_bush"][(x + y) % 3], x, y)
+sf.scatter(["r_dry_bush", "r_rocks", "r_bones", "r_trash", "pile_cans"], 1, 1, 38, 28, 22)
 sf.enemies += [["radroach", 24, 18], ["radroach", 17, 22]]
 
 

@@ -4375,6 +4375,15 @@
     ],
     "flicker": 0.0
    }
+  },
+  "x_vd_num7": {
+   "img": "x_vd_num7",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false
   }
  }
 }
