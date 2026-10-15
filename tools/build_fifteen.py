@@ -100,6 +100,13 @@ out.enemies += [["radroach", 55, 22], ["radroach", 58, 24], ["radroach", 56, 26]
                 ["rat", 10, 38], ["rat", 14, 40], ["mutant", 52, 39]]
 for _, x, y in out.enemies + out.npcs:
     out.reserve(x, y, x, y)
+out.floors = getattr(out, "floors", {})
+out.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
+out.floor_code("q", "pk:desnat/p1/10,4,1,1")
+out.floor_code("s", "pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1")
+out.paint("s", 0, 0, W - 1, H - 1)
+out.patchwork("s", ["t"], 70, 2, 5, seed=21)
+out.patchwork("s", ["q"], 30, 1, 3, seed=22)
 out.paint("a", 0, y_road, W - 1, y_road + 3)
 for x in range(0, W, 4):
     out.ground[y_road + 1][x] = out.ground[y_road + 1][x + 1] = "h"
@@ -155,10 +162,19 @@ out.box("crate", 30, 38, "ящик за закусочной", {"консерв�
 out.box("r_dumpster", 22, 41, "мусорный бак", {"пружина": 1, "изолента": 1})
 for name, x, y in (("r_shack", 4, 38), ("r_cabin", 48, 40), ("r_shed_tin", 56, 38)):
     out.put(name, x, y)
-out.grow(1, 1, W - 2, 5, 10, GRASS + BUSHES)
+out.grow(1, 1, W - 2, 5, 16, GRASS + BUSHES)
 out.grow(1, 20, 12, 27, 4, GRASS)
 out.grow(1, 34, W - 2, H - 2, 14, GRASS + BUSHES)
 out.scatter(STONES + ["r_rocks", "r_trash"], 1, 1, W - 2, H - 2, 14)
+print("обжито out:", out.dress_empty([
+    [("r_tent_beige", 0, 0), ("campfire", 3, 2), ("r_logs", 2, 3), ("barrel_wood", 0, 3)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("r_dtree_a", 4, 1)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("x_fire_barrel", 3, 3)],
+], ground=("s", "t", "q"), block=7, margin=1, chance=0.9, max_uses=2))
 for x, y in ((4, 3), (9, 4), (58, 4), (61, 12), (6, 15)):
     out.put("dead_tree", x, y)
 

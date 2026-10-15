@@ -83,6 +83,8 @@ VWALL = "pk:nbunk/nbunk_w3_17"
 GWALL = "pk:ghouse/ghouse_w3_09"
 
 
+POTS_S = [f'v22_pot{i}' for i in range(5)]
+
 # ================================================================ поверхность
 W, H = 46, 34
 sf = CityMap(city, "vault22", "Убежище 22", W, H, start=(1, 26), seed=191, music="desert", world_pos=(2390, 470), night=[150, 142, 145])
@@ -112,6 +114,33 @@ sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 22 <= x <= 25 and 6 <= y <= 7, d
 sf.npcs += [["v22_gardener_out", 17, 16]]
 sf.grow(10, 8, 38, 30, 6, names=TREES)
 sf.scatter(GRASS, 10, 8, 38, 30, 24)
+
+# двор огородов: изгородь, пугало-робот, лейки, бочки с водой, ящики с урожаем, лампы — убежище любит своё поле
+for x in range(11, 22, 2):
+    sf.maybe("fence_picket", x, 9, check=False)
+for x in range(27, 38, 2):
+    sf.maybe("fence_picket", x, 9, check=False)
+for x, y in ((11, 12), (36, 12), (11, 26), (36, 26)):
+    sf.maybe("barrel_wood", x, y)
+for x, y in ((14, 20), (30, 20), (34, 16), (16, 24), (33, 25)):
+    sf.maybe("crate_open" if (x + y) % 2 else "crate_b", x, y)
+for x, y in ((15, 12), (33, 12), (20, 22), (27, 22)):
+    sf.maybe("bucket", x, y)
+for x, y in ((20, 14), (26, 14), (20, 24), (26, 24)):
+    sf.maybe("lantern_lit", x, y)
+sf.maybe("x_sandbags", 21, 28)
+for x in (14, 17, 30, 34):
+    for y in (12, 16, 20, 24):
+        sf.maybe(POTS_S[(x + y) % 5], x, y)
+print("обжито sf:", sf.dress_empty([
+    [("r_tent_beige", 0, 0), ("campfire", 3, 2), ("r_logs", 2, 3), ("barrel_wood", 0, 3)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("r_dtree_a", 4, 1)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("x_fire_barrel", 3, 3)],
+], ground=("s","g"), block=7, margin=1, chance=0.9, max_uses=2))
 
 
 # ================================================================ жилой ярус

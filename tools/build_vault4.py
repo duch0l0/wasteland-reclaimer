@@ -104,6 +104,15 @@ for x, y in ((15, 12), (36, 10), (34, 26)):
     sf.maybe(OUTCROP, x, y)
 sf.enemies += [["radscorpion", 36, 14]]
 sf.scatter(["r_dry_bush", "r_rocks"], 14, 8, 40, 28, 10)
+print("обжито sf:", sf.dress_empty([
+    [("r_tent_beige", 0, 0), ("campfire", 3, 2), ("r_logs", 2, 3), ("barrel_wood", 0, 3)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("r_dtree_a", 4, 1)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("x_fire_barrel", 3, 3)],
+], ground=("s","g"), block=7, margin=1, chance=0.9, max_uses=2))
 
 
 # ================================================================ жилой ярус
