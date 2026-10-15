@@ -235,8 +235,25 @@ LM.lamps(lw, "red", [(14, 12), (14, 30), (44, 20), (20, 33)])
 LM.decals(lw, "x_vd_blood0", [(6, 18), (12, 20), (27, 12)])
 LM.decals(lw, "x_vd_blood1", [(8, 30), (35, 25)])
 LM.decals(lw, "x_vd_hz_h", [(20, 18), (21, 18), (22, 18)])
+# лаборатория: вторая линия столов, консоли у южной стены, баки у восточной; хранилище: штабели контейнеров и разбитые колбы
+for x in (35, 41):
+    lw.maybe(LAB_DESK, x, 14)
+lw.maybe(CONSOLE[0], 22, 16)
+lw.maybe(CONSOLE[1], 29, 16)
+lw.maybe(TANK, 44, 9)
+lw.maybe(TANK_B, 45, 12)
+lw.maybe(VAT, 44, 15)
+for x, y in ((22, 31), (26, 31), (30, 31), (22, 33), (30, 33), (40, 33), (44, 24), (45, 28)):
+    lw.maybe(CRATE, x, y)
+for i, x in enumerate((36, 40, 44)):
+    lw.maybe(BIG_TUBES[i % 3], x, 32)
+lw.maybe(BIOHAZ, 20, 28)
+lw.maybe(BONES[0], 33, 22)
+LM.lamps(lw, "green", [(24, 14), (38, 12), (45, 20), (30, 28), (42, 30)])
 LM.decals(lw, "x_vd_wet0", [(9, 7), (14, 26)])
 
+LM.doors(up)
+LM.doors(lw)
 city.save(gap_exempt=("v4_mutant", "v4_gardener"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["vault4"].update({"world_name": "Убежище 4", "discover": True})

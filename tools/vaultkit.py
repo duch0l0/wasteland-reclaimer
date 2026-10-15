@@ -24,3 +24,17 @@ class Lamps:
     def decals(self, m, name, pts):
         for x, y in pts:
             self.decal(m, name, x, y)
+
+    def doors(self, m):
+        """Рамы во всех проёмах карты (m.opening): стойки по краям, над северным проходом — перемычка с индикатором."""
+        for x0, y0, x1, y1 in getattr(m, "openings", []):
+            if (y1 - y0) >= (x1 - x0):                      # проход с севера на юг (в толще стены три ряда)
+                for y in range(y0, y1 + 1):
+                    self.decal(m, "x_vd_fr_l", x0, y)
+                    self.decal(m, "x_vd_fr_r", x1, y)
+                for x in range(x0, x1 + 1):
+                    self.decal(m, "x_vd_fr_hdr", x, y0)
+            else:                                           # с запада на восток: по краям — верхняя и нижняя кромка
+                for x in range(x0, x1 + 1):
+                    self.decal(m, "x_vd_fr_t", x, y0)
+                    self.decal(m, "x_vd_fr_b", x, y1)

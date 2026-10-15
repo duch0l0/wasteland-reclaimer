@@ -268,6 +268,9 @@ LM.lamps(lb, "violet", [(24, 6), (32, 6), (40, 6), (24, 14), (40, 14), (28, 22),
 LM.decals(lb, "x_vd_blood0", [(10, 20)])
 LM.decals(lb, "x_vd_hz_h", [(18, 15), (19, 15)])
 
+LM.doors(lv)
+LM.doors(gd)
+LM.doors(lb)
 city.save(gap_exempt=("hugo_lee",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["vault22"].update({"world_name": "Убежище 22", "discover": True})

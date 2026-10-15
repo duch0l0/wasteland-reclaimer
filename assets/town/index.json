@@ -5379,5 +5379,40 @@
    48
   ],
   "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_fr_l": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_fr_r": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_fr_t": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_fr_b": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_fr_hdr": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
  }
 }

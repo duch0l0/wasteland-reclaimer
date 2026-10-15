@@ -77,6 +77,8 @@ hl = CityMap(city, "vault11_hall", "Убежище 11: зал выборов", W
              music="lab", night=[112, 118, 128])
 hl.floor_code("F", *PLATES)
 hl.floor_code("C", *CARPET)
+hl.floor_code("D", "pk:lrest/lrest_f1_00")                  # помост — шахматная плитка
+hl.floor_code("A", "pk:lrest/lrest_f1_01")                  # проход к помосту
 hl.wall_code("W", VWALL)
 hl.wall_code("E", "pk:nbunk/nbunk_w3_02")
 hl.wall_code("L", "pk:nbunk/nbunk_w3_10")
@@ -92,6 +94,8 @@ hl.props.append(["x_ladder", 40, 4])
 hl.portal([(40, 4)], "vault11_core", (6, 5), "Вниз, к вычислительному центру")
 hl.reserve(38, 4, 42, 7)
 # помост: кресло смотрителя, перед ним — ряды стульев; на стенах плакаты блоков
+hl.paint("D", 3, 15, 10, 19)
+hl.paint("A", 13, 15, 14, 30)
 hl.put(THRONE, 5, 16)
 for x, y in ((8, 14), (18, 14), (6, 26), (22, 26)):
     hl.put(POSTERS[(x + y) % 2], x, y)
@@ -145,13 +149,37 @@ LM.lamps(hl, "warm", [(14, 16), (14, 26)])
 LM.decals(hl, "x_vd_plaque", [(23, 2)])
 LM.decals(hl, "x_vd_num11", [(12, 2), (30, 2)])
 LM.decals(hl, "x_vd_hz_v", [(22, 6), (23, 6), (22, 8), (23, 8)])
+LM.decals(hl, "x_vd_tally", [(5, 14), (7, 14), (10, 14)])          # двадцать зарубок — двадцать выборов
+LM.decals(hl, "x_vd_plaque", [(16, 14), (22, 14)])
+LM.lamp(hl, "amber", 7, 17)
+LM.lamp(hl, "amber", 4, 18)
+hl.maybe(TABLE, 18, 17)                                             # стол счётной комиссии
+hl.maybe(CHAIR, 18, 18)
+hl.maybe(CHAIR, 20, 18)
+hl.maybe("candles", 19, 17, check=False)
+hl.maybe(TABLE, 18, 25)
+hl.maybe(CHAIR, 19, 26)
+for y in range(16, 30, 2):                                          # свечи вдоль прохода — поминальные
+    hl.maybe("candles", 12, y, check=False)
+hl.maybe("crate_broken", 24, 22)
+hl.maybe("crate_broken", 3, 24)
 LM.decals(hl, "x_vd_oil0", [(10, 22), (18, 28)])
 LM.lamps(cr, "cold", [(6, 6), (14, 6), (22, 6), (30, 6), (8, 16), (18, 16), (28, 16)])
 LM.lamps(cr, "red", [(4, 20), (33, 20), (18, 21)])
+for x in (9, 12, 15):                                              # ряды стоек — «машина», которой отдавали смотрителей
+    cr.maybe(SERVERS[0], x, 15)
+for x in (22, 25, 28):
+    cr.maybe(SERVERS[0], x, 15)
+for x in (4, 5):
+    cr.maybe(SERVERS[1], x * 2 + 8, 20)
+LM.lamps(cr, "green", [(20, 13), (20, 19), (10, 12), (28, 12)])
+LM.decals(cr, "x_vd_cab_v", [(20, y) for y in range(11, 20)])
 LM.decals(cr, "x_vd_cab_h", [(x, 10) for x in range(8, 30)])
 LM.decals(cr, "x_vd_sparks", [(26, 14)])
 LM.decals(cr, "x_vd_blood0", [(15, 18)])
 
+LM.doors(hl)
+LM.doors(cr)
 city.save()
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["vault11"].update({"world_name": "Убежище 11", "discover": True})

@@ -548,6 +548,7 @@ for x, y in ((6, 8), (14, 9), (38, 8), (32, 9)):
     v.maybe("bench_16", x, y)
 LM.decals(v, "x_vd_hz_v", [(22, 7), (23, 7)])
 
+LM.doors(v)
 city.save(gap_exempt=("nc_guard", "nc_guard_b", "cult_envoy", "harry_mech", "water_queue", "water_queue_b"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["necropolis"].update({"world_name": "Некрополь", "discover": True})

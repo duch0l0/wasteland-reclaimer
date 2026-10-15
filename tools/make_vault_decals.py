@@ -351,6 +351,37 @@ def sparks():
     save("x_vd_sparks", img, light={"r": 90, "color": [255, 220, 120], "at": [0.5, 0.5], "flicker": 0.9})
 
 
+def frames():
+    """Дверные рамы проёмов: стальные стойки по краям, перемычка с индикатором и жёлтой полосой."""
+    steel, dark, edge = (84, 88, 98, 255), (40, 42, 48, 255), (130, 136, 148, 255)
+
+    def strip(img, rect):
+        pygame.draw.rect(img, dark, rect)
+        x, y, w, h = rect
+        pygame.draw.rect(img, steel, (x + 1, y + 1, max(1, w - 2), max(1, h - 2)))
+    for name, rect in (("l", (0, 0, 8, T)), ("r", (T - 8, 0, 8, T)), ("t", (0, 0, T, 8)), ("b", (0, T - 8, T, 8))):
+        img = new()
+        strip(img, rect)
+        x, y, w, h = rect
+        if name in "lr":
+            for yy in range(2, T, 8):
+                pygame.draw.rect(img, (232, 192, 36, 255), (x + 1, yy, w - 2, 3))
+        else:
+            for xx in range(2, T, 8):
+                pygame.draw.rect(img, (232, 192, 36, 255), (xx, y + 1, 3, h - 2))
+        save(f"x_vd_fr_{name}", img, layer="floor")
+    # перемычка над проёмом: лежит на верхней клетке; зелёный индикатор «открыто»
+    img = new()
+    pygame.draw.rect(img, dark, (0, 2, T, 14))
+    pygame.draw.rect(img, steel, (0, 3, T, 11))
+    pygame.draw.line(img, edge, (0, 4), (T, 4))
+    for xx in range(2, T, 8):
+        pygame.draw.rect(img, (232, 192, 36, 255), (xx, 10, 4, 3))
+    pygame.draw.rect(img, (20, 20, 22, 255), (20, 5, 8, 4))
+    pygame.draw.rect(img, (110, 240, 140, 255), (22, 6, 4, 2))
+    save("x_vd_fr_hdr", img, light={"r": 60, "color": [110, 240, 140], "at": [0.5, 0.3], "flicker": 0.0})
+
+
 LAMPCOL = {"warm": (255, 190, 110), "cold": (160, 200, 235), "red": (255, 60, 50), "green": (130, 235, 160),
            "violet": (200, 130, 255), "amber": (255, 160, 50)}
 
@@ -386,7 +417,7 @@ def lamps():
              light={"r": 160, "color": list(c), "at": [0.5, 0.3], "flicker": 0.3 if kind == "red" else 0.05})
 
 
-for fn in (lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
+for fn in (frames, lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
            ruts, footprints, caps, drop, sparks):
     fn()
 for _n in (15, 4, 11, 12, 22, 57):

@@ -270,7 +270,7 @@ for x in (21, 23, 25):                       # девять свечей — п�
         at.maybe(CANDLES, x, y, check=False)
 for x, y in ((17, 24), (17, 26), (27, 17), (27, 19)):
     at.maybe(PLANTERS[(x + y) % 4], x, y)
-at.maybe(POT_PLANT, 19, 14)
+at.maybe(POT_PLANT, 18, 14)
 at.maybe(POT_PLANT, 28, 14)
 at.maybe(CANDLES, 21, 22, check=False)
 for x, y in ((21, 21), (25, 21), (21, 25)):
@@ -395,6 +395,8 @@ for x, y in ((12, 27), (12, 30)):
 lw.enemies += [["radroach", 12, 10], ["radroach", 8, 25], ["rat", 30, 8], ["rat", 38, 12], ["radroach", 42, 28],
                ["radroach", 25, 24]]
 
+LM.doors(at)
+LM.doors(lw)
 city.save()
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["vault15"].update({"world_name": "Убежище 15", "discover": True})

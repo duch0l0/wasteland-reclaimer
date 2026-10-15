@@ -4313,6 +4313,68 @@
    ],
    "block": false,
    "sight": false
+  },
+  "x_vd_fr_l": {
+   "img": "x_vd_fr_l",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false,
+   "layer": "floor"
+  },
+  "x_vd_fr_r": {
+   "img": "x_vd_fr_r",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false,
+   "layer": "floor"
+  },
+  "x_vd_fr_t": {
+   "img": "x_vd_fr_t",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false,
+   "layer": "floor"
+  },
+  "x_vd_fr_b": {
+   "img": "x_vd_fr_b",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false,
+   "layer": "floor"
+  },
+  "x_vd_fr_hdr": {
+   "img": "x_vd_fr_hdr",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false,
+   "light": {
+    "r": 60,
+    "color": [
+     110,
+     240,
+     140
+    ],
+    "at": [
+     0.5,
+     0.3
+    ],
+    "flicker": 0.0
+   }
   }
  }
 }
