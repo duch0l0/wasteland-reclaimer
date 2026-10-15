@@ -403,6 +403,9 @@ class City:
             print(f"   {m.id}: обставлено ({style}) +{n}")
 
     def save(self, gap_exempt=()):
+        from vaultkit import auto_ambient
+        for _m in self.maps:
+            auto_ambient(_m)                        # интерьеры без своего света получают фон и лампы
         self.furnish_sparse()
         os.makedirs(os.path.join(ROOT, "data", "props"), exist_ok=True)
         with open(os.path.join(ROOT, "data", "props", f"{self.id}.json"), "w", encoding="utf-8") as f:

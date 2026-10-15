@@ -38,3 +38,27 @@ class Lamps:
                 for x in range(x0, x1 + 1):
                     self.decal(m, "x_vd_fr_t", x, y0)
                     self.decal(m, "x_vd_fr_b", x, y1)
+
+
+# освещение интерьеров по умолчанию: цвет темноты и лампы сеткой на свободном полу (по музыке карты — характер места)
+AMBIENT = {"hub": ([132, 118, 104], "warm"), "reno": ([126, 108, 120], "amber"), "desert": ([134, 120, 108], "warm"),
+           "lab": ([112, 118, 132], "cold"), "vats": ([88, 96, 108], "amber"), "caves": ([84, 84, 98], "amber"),
+           "junktown": ([130, 116, 104], "warm")}
+
+
+def auto_ambient(m, step=8):
+    """Интерьеру без своего света: ночной фон и лампы сеткой (только на пустом полу, не в проходах и не у стен)."""
+    if not m.interior or m.night:
+        return 0
+    night, kind = AMBIENT.get(m.music, AMBIENT["hub"])
+    if kind == "cold":
+        step = 11
+    m.night = night
+    n = 0
+    for y in range(4, m.H - 2, step // 2 + 2 if step > 8 else step // 2 + 1):
+        for x in range(3 + (y // 4) % 2 * (step // 2), m.W - 2, step):
+            if m.ground[y][x] in m.walls or m.ground[y][x] in ("_", "x") or (x, y) in m.blocked or (x, y) in m.reserved:
+                continue
+            if m.maybe(f"x_vd_stand_{kind}", x, y, check=False):
+                n += 1
+    return n
