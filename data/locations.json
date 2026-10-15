@@ -12,39 +12,12 @@
   },
   "station": {
     "name": "Заправка «Последний шанс»",
-    "map": "data/maps/station.txt",
-    "npcs": [],
-    "containers": [
-      {
-        "name": "сейф заправщика",
-        "owner": "gang",
-        "loot": {
-          "крышки": 70,
-          "бронежилет из дорожных знаков": 1,
-          "тоник": 1
-        }
-      },
-      {
-        "name": "тайник Панка",
-        "owner": "gang",
-        "loot": {
-          "доля Панка": 1,
-          "крышки": 15
-        }
-      }
-    ],
+    "map": "data/maps/station.json",
     "world_pos": [
       1760,
       900
     ],
-    "entry": [
-      1,
-      7
-    ],
     "known": false,
-    "terminals": [
-      "station"
-    ],
     "music": "raiders"
   },
   "baker": {

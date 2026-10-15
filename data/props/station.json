@@ -1,0 +1,67 @@
+{
+"props": {
+"st_safe": {
+"img": "pk:west/west_2_105",
+"block": true,
+"sight": false,
+"search": "military",
+"title": "сейф заправщика"
+},
+"st_stash": {
+"img": "pk:ucamp/ucamp_2_030",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "тайник Панка"
+},
+"st_counter": {
+"img": "pk:pmall/pmall_2_017",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"st_shelf": {
+"img": "pk:store/store_1_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_fridge": {
+"img": "pk:aoffice/aoffice_1_017",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "холодильник"
+},
+"st_toolwall": {
+"img": "pk:nbunk/nbunk_2_007",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_lift": {
+"img": "pk:nbunk/nbunk_2_014",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"x_door": {
+"img": "pk:west/p2/12,6,1,2",
+"block": false,
+"sight": false,
+"layer": "floor"
+}
+}
+}
