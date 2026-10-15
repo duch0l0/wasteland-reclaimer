@@ -65,6 +65,15 @@ for *_, x, y in m.pickups:
     m.reserve(x, y, x, y)
 
 
+# ------------------------------------------------------------ земля: пятна песка, утоптанной глины и сухой травы поверх основной
+m.floors = {"s": ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"],
+            "t": ["pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1"],        # сухая растрескавшаяся глина
+            "q": ["pk:desnat/p1/10,4,1,1"]}                                                         # щебень
+m.paint("s", 0, 0, W - 1, H - 1)
+m.patchwork("s", ["t"], 46, 3, 6, seed=2)
+m.patchwork("s", ["q"], 26, 2, 3, seed=1)
+
+
 # ------------------------------------------------------------ дороги
 m.paint("a", 0, 30, W - 1, 33)                    # главная улица
 for x in range(0, W, 4):
@@ -344,6 +353,6 @@ hatch([(20, 18), (22, 18), (25, 19), (19, 19)], "fifteen_saloon_cellar", (3, 5),
 
 # ------------------------------------------------------------ проверки и запись
 reach = m.check(gap_exempt=("dog",))
-m.save("data/maps/town.json")
+m.save("data/maps/town.json", floors=m.floors)
 print(f"город {W}×{H}: объектов {len(m.props)}, пятен {len(m.decals)}, обыскиваемых {len(m.containers)}, "
       f"врагов {len(m.enemies)}, NPC {len(m.npcs)}, предметов {len(m.pickups)}; доступно клеток {len(reach)}")

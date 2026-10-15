@@ -188,16 +188,19 @@ wall = next(o for o in lv.objects if o["name"].startswith("wall_"))
 wx, wy = wall["foot"][0]
 ok(not has_los(lv, (wx * T + 24, (wy - 2) * T + 24), (wx * T + 24, (wy + 2) * T + 24)), "стена закрывает обзор")
 
-for e in list(g.enemies):
-    if not e.alive:
-        continue
-    g.player.rect.topleft = rect_pos_for_tile(g.player, tile_of(e))
-    g.combat._snap_to_grid(g.player)
-    g.snap_camera()
-    fr(1)
-    if not g.combat.active:
-        g.combat.start(player_first=True)
-    fight()
+for _pass in range(3):                    # раненый враг мог отбежать из боя — добиваем вторым заходом
+    for e in list(g.enemies):
+        if not e.alive:
+            continue
+        g.player.rect.topleft = rect_pos_for_tile(g.player, tile_of(e))
+        g.combat._snap_to_grid(g.player)
+        g.snap_camera()
+        fr(1)
+        if not g.combat.active:
+            g.combat.start(player_first=True)
+        fight()
+    if all(not e.alive for e in g.enemies):
+        break
 ok(all(not e.alive for e in g.enemies), f"все враги побеждены, уровень {g.player.level_sys.level}")
 
 g.player.rect.topleft = rect_pos_for_tile(g.player, (45, 61))
