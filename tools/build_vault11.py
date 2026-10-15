@@ -78,9 +78,11 @@ hl = CityMap(city, "vault11_hall", "Убежище 11: зал выборов", W
 hl.floor_code("F", *PLATES)
 hl.floor_code("C", *CARPET)
 hl.wall_code("W", VWALL)
+hl.wall_code("E", "pk:nbunk/nbunk_w3_02")
+hl.wall_code("L", "pk:nbunk/nbunk_w3_10")
 hl.room(1, 1, 43, 12, "W", "F")                       # входной зал
-hl.room(1, 12, 28, 31, "W", "C")                      # зал выборов: ковёр, помост
-hl.room(28, 12, 43, 31, "W", "F")                     # жилой блок
+hl.room(1, 12, 28, 31, "E", "C")                      # зал выборов: ковёр, помост
+hl.room(28, 12, 43, 31, "L", "F")                     # жилой блок
 hl.put("x_vault_gear11", 19, 3, force=True)
 hl.portal([(19, 4), (20, 4)], "vault11", (20, 11), "Наружу")
 hl.reserve(17, 4, 23, 7)

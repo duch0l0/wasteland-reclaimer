@@ -348,6 +348,74 @@
 "block": true,
 "sight": false
 },
+"v15_counter": {
+"img": "pk:pmall/pmall_2_017",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v15_kitchen": {
+"img": "pk:mars/mars_2_023",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
+"v15_planter0": {
+"img": "pk:wfarm/wfarm_1_058",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_planter1": {
+"img": "pk:wfarm/wfarm_1_059",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_planter2": {
+"img": "pk:wfarm/wfarm_1_072",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_planter3": {
+"img": "pk:wfarm/wfarm_1_073",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"v15_pot_plant": {
+"img": "pk:wfarm/wfarm_1_027",
+"block": true,
+"sight": false
+},
+"v15_pipes": {
+"img": "pk:npower/npower_1_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
 "v15_bones": {
 "img": "pk:grave/grave_2_022",
 "block": false,

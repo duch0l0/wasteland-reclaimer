@@ -120,11 +120,15 @@ lv = CityMap(city, "vault22_living", "Убежище 22: жилой ярус", W
 lv.floor_code("F", *PLATES)
 lv.floor_code("T", *TILE_W)
 lv.wall_code("W", VWALL)
+lv.wall_code("K", "pk:nbunk/nbunk_w3_22")
+lv.wall_code("L", "pk:nbunk/nbunk_w3_10")
+lv.wall_code("H", "pk:nbunk/nbunk_w3_06")
+lv.wall_code("O", "pk:nbunk/nbunk_w3_04")
 lv.room(1, 1, 43, 12, "W", "F")                       # входной зал
-lv.room(1, 12, 15, 31, "W", "T")                      # столовая
-lv.room(15, 12, 29, 31, "W", "F")                     # жилой блок
-lv.room(29, 12, 43, 22, "W", "F")                     # пост охраны Хьюго
-lv.room(29, 22, 43, 31, "W", "T")                     # кабинет смотрителя
+lv.room(1, 12, 15, 31, "K", "T")                      # столовая
+lv.room(15, 12, 29, 31, "L", "F")                     # жилой блок
+lv.room(29, 12, 43, 22, "H", "F")                     # пост охраны Хьюго
+lv.room(29, 22, 43, 31, "O", "T")                     # кабинет смотрителя
 lv.put("x_vault_gear22", 19, 3, force=True)
 lv.portal([(19, 4), (20, 4)], "vault22", (22, 11), "Наружу")
 lv.reserve(17, 4, 23, 7)

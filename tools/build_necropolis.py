@@ -473,12 +473,15 @@ v = CityMap(city, "vault12", "Убежище 12", W, H, start=(20, 5), seed=125,
 v.floor_code("F", *VAULT_FL)
 v.floor_code("M", *METAL)
 v.wall_code("W", "pk:nbunk/nbunk_w3_17")
+v.wall_code("L", "pk:nbunk/nbunk_w3_10")
+v.wall_code("O", "pk:nbunk/nbunk_w3_04")
+v.wall_code("U", "pk:nbunk/nbunk_w3_21")
 v.wall_code("V", "pk:nbunk/nbunk_w3_01")
 v.room(1, 1, 43, 12, "V", "F")                       # входной зал: дверь-шестерня, которая не закрылась
-v.room(1, 12, 16, 33, "W", "F")                      # жилой ярус
+v.room(1, 12, 16, 33, "L", "F")                      # жилой ярус
 v.room(16, 12, 30, 33, "W", "F")                     # атриум
-v.room(30, 12, 43, 22, "W", "M")                     # кабинет смотрителя
-v.room(30, 22, 43, 33, "W", "M")                     # водоочистка
+v.room(30, 12, 43, 22, "O", "M")                     # кабинет смотрителя
+v.room(30, 22, 43, 33, "U", "M")                     # водоочистка
 v.put("x_vault_gear12", 18, 3, force=True)                 # дверь-шестерня в стене, откачена на ладонь
 v.portal([(18, 4), (19, 4)], "necropolis_under", (58, 37), "Назад, в канализацию")
 v.reserve(17, 3, 23, 7)

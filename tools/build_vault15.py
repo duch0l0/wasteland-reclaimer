@@ -62,6 +62,12 @@ CRATES = [P(f"v15_crate{i}", f"pk:nbunk/nbunk_2_{n:03d}", search="crate", title=
 TABLE = P("v15_table", "pk:west/west_2_000", foot=[2, 1])
 CHAIR = P("v15_chair", "pk:west/west_2_001")
 SANDBAGS = "x_sandbags"
+COUNTER = P("v15_counter", "pk:pmall/pmall_2_017", foot=[4, 1])
+KITCHEN = P("v15_kitchen", "pk:mars/mars_2_023", foot=[4, 1])
+PLANTERS = [P(f"v15_planter{i}", f"pk:wfarm/wfarm_{n}", foot=[2, 1]) for i, n in enumerate(("1_058", "1_059", "1_072", "1_073"))]
+POT_PLANT = P("v15_pot_plant", "pk:wfarm/wfarm_1_027")
+PIPES = P("v15_pipes", "pk:npower/npower_1_029", foot=[2, 1])
+BARREL = "barrel_wood"
 BONES = [P("v15_bones", "pk:grave/grave_2_022", block=False), P("v15_bones_b", "pk:grave/grave_2_027", block=False)]
 DEBRIS = P("v15_debris", "pk:pmall/pmall_2_042")
 
@@ -85,7 +91,7 @@ TAN = ["pk:store/p1/12,0,1,1"]
 
 
 def decal(m, name, x, y):
-    m.put(name, x, y, check=False, allow_reserved=True)
+    m.maybe(name, x, y, check=False, allow_reserved=True)
 
 
 # ================================================================ поверхность
@@ -170,11 +176,14 @@ at.floor_code("F", *PLATES)
 at.floor_code("C", *CONCRETE)
 at.floor_code("T", *TAN)
 at.wall_code("W", VWALL)
+at.wall_code("K", "pk:nbunk/nbunk_w3_22")                # столовая — тёплый бежевый
+at.wall_code("O", "pk:nbunk/nbunk_w3_04")                # кабинет — тёмное дерево
+at.wall_code("L", "pk:nbunk/nbunk_w3_10")                # жилой блок — серо-голубой
 at.room(1, 1, 43, 12, "W", "C")                       # входной зал
-at.room(1, 12, 16, 33, "W", "T")                      # столовая — тёплая плитка
+at.room(1, 12, 16, 33, "K", "T")                      # столовая — тёплая плитка
 at.room(16, 12, 30, 33, "W", "F")                     # атриум
-at.room(30, 12, 43, 22, "W", "F")                     # кабинет смотрителя
-at.room(30, 22, 43, 33, "W", "T")                     # жилой блок девяти
+at.room(30, 12, 43, 22, "O", "F")                     # кабинет смотрителя
+at.room(30, 22, 43, 33, "L", "T")                     # жилой блок девяти
 at.put("x_vault_gear15", 19, 3, force=True)
 at.portal([(19, 4), (20, 4)], "vault15", (25, 11), "Наружу")
 at.reserve(17, 4, 23, 7)
@@ -219,18 +228,30 @@ at.npcs += [["v15_sentry", 24, 10]]
 decal(at, "x_vd_tally", 3, 14)
 decal(at, "x_vd_drawing", 14, 14)
 decal(at, "x_vd_nine", 8, 14)
-for y in (17, 21, 25):
-    at.put(TABLE, 4, y)
-    at.put(TABLE, 9, y)
-    at.put(CHAIR, 6, y)
-    at.put(CHAIR, 11, y)
+# одна длинная общая стойка-стол на девять мест: так ели все двадцать лет
+for x in (4, 6, 8, 10):
+    at.put(TABLE, x, 21)
+for x in (4, 5, 6, 7, 8):
+    at.maybe(CHAIR, x, 20)
+for x in (4, 5, 6, 8):
+    at.maybe(CHAIR, x, 23)
+at.maybe(CHAIR, 12, 21)                      # место во главе стола — пустое
+at.maybe(CHAIR, 13, 26)                      # упавший стул
+at.maybe(COUNTER, 3, 27)                     # раздача
+at.maybe(KITCHEN, 10, 28)
+at.maybe(POT_PLANT, 13, 17)
+at.maybe(POT_PLANT, 13, 31)
+at.maybe(PLANTERS[0], 3, 32)
+at.maybe(PLANTERS[1], 6, 32)
 for x, y in ((6, 19), (8, 23), (13, 27)):
     decal(at, "x_vd_oil0", x, y)
 at.box(SHELF, 3, 15, "стеллаж столовой", {"консервы": 2})
 at.put(TANKS, 11, 15)
-LM.lamp(at, "warm", 7, 20)
-LM.lamp(at, "warm", 7, 27)
-at.maybe(CANDLES, 6, 17, check=False)
+LM.lamp(at, "warm", 3, 19)
+LM.lamp(at, "warm", 12, 24)
+LM.lamp(at, "warm", 12, 31)
+at.maybe(CANDLES, 5, 22, check=False)
+at.maybe(CANDLES, 9, 22, check=False)
 at.npcs += [["v15_cook", 8, 29]]
 # --- кадр 3. Атриум: центр жизни; рабочие столы, схема убежищ, кабели от аварийной линии
 decal(at, "x_vd_map", 25, 14)
@@ -242,7 +263,15 @@ at.put(WORKBENCH, 18, 16)
 at.put(TOOLBOARD, 25, 15)
 at.put(DESK_CANS, 18, 28)
 LM.lamp(at, "warm", 23, 19)
-LM.lamp(at, "warm", 23, 26)
+LM.lamp(at, "warm", 20, 30)
+LM.lamp(at, "warm", 26, 30)
+for x in (21, 23, 25):                       # девять свечей — по одной на каждого оставшегося
+    for y in (26, 28, 30):
+        at.maybe(CANDLES, x, y, check=False)
+for x, y in ((17, 24), (17, 26), (27, 17), (27, 19)):
+    at.maybe(PLANTERS[(x + y) % 4], x, y)
+at.maybe(POT_PLANT, 19, 14)
+at.maybe(POT_PLANT, 28, 14)
 at.maybe(CANDLES, 21, 22, check=False)
 for x, y in ((21, 21), (25, 21), (21, 25)):
     decal(at, "x_vd_steps", x, y)
@@ -276,11 +305,13 @@ lw = CityMap(city, "vault15_lower", "Убежище 15: нижний ярус", 
 lw.floor_code("F", *GRATE)
 lw.floor_code("C", *CONCRETE)
 lw.floor_code("~", *WATER)
-lw.wall_code("W", VWALL)
+lw.wall_code("W", "pk:nbunk/nbunk_w3_18")
+lw.wall_code("S", "pk:nbunk/nbunk_w3_06")
+lw.wall_code("G", "pk:nbunk/nbunk_w3_14")
 lw.water_codes = ("~",)
 lw.room(1, 1, 18, 33, "W", "F")                       # технический коридор
-lw.room(18, 1, 47, 16, "W", "C")                      # склад
-lw.room(18, 16, 47, 33, "W", "F")                     # генераторная — затоплена
+lw.room(18, 1, 47, 16, "S", "C")                      # склад
+lw.room(18, 16, 47, 33, "G", "F")                     # генераторная — затоплена
 lw.props.append(["x_ladder", 6, 4])
 lw.portal([(6, 4)], "vault15_atrium", (27, 32), "Наверх, в атриум")
 lw.reserve(4, 4, 9, 7)
@@ -289,6 +320,10 @@ lw.opening(18, 25, 18, 26, "F")
 lw.paint("~", 3, 14, 16, 22)
 lw.paint("F", 9, 14, 10, 22)
 lw.paint("~", 22, 26, 38, 31)
+lw.paint("F", 22, 28, 38, 28)                          # мостки через затопленный зал
+lw.paint("S", 2, 23, 9, 32)                           # насосная — сухая, своя стена и дверной проём
+lw.paint("C", 3, 26, 8, 31)
+lw.opening(9, 28, 9, 29, "C")
 # коридор: красные аварийные лампы, сырость на стенах, ржавые подтёки, линия ватерлинии
 for y in (7, 12, 25, 30):
     LM.lamp(lw, "red", 3, y)
@@ -303,10 +338,32 @@ decal(lw, "x_vd_drip", 9, 4)
 decal(lw, "x_vd_drip", 4, 12)
 for y in range(5, 33, 3):
     decal(lw, "x_vd_cab_v", 1, y)
+for x in (4, 7, 12, 15):
+    lw.maybe(PIPES, x, 4)
+for x, y in ((4, 18), (7, 21), (13, 16), (5, 15), (14, 20), (12, 17)):
+    lw.maybe(BARREL, x, y)
+for x, y in ((6, 19), (13, 22)):
+    lw.maybe(DEBRIS, x, y)
+lw.maybe(CRATES[1], 5, 21)
+lw.maybe(CRATES[2], 14, 15)
+lw.maybe(TANKS, 3, 26)
+lw.maybe(WORKBENCH, 5, 30)
+lw.maybe(TOOLBOARD, 7, 26)
+LM.lamp(lw, "warm", 7, 29)
+for x, y in ((24, 27), (30, 30), (36, 27)):
+    lw.maybe(CRATES[(x + y) % 4], x, y)
+for x, y in ((26, 30), (34, 30)):
+    lw.maybe(BARREL, x, y)
 # склад: сухой, но тёмный; пролом — луч дня
 decal(lw, "x_vd_hz_h", 24, 8)
 for x in (21, 25, 29):
     lw.put(SHELF, x, 5)
+    lw.maybe(SHELF, x, 9)
+for x in (22, 27, 31):
+    lw.maybe(CRATES[x % 4], x, 13)
+for x in (33, 37, 41):                         # у восточной стены — разграбленные ряды, полки пусты и перевёрнуты
+    lw.maybe(SHELF, x, 8)
+    lw.maybe(CRATES[(x + 1) % 4], x + 1, 12)
 for x, y in ((34, 5), (36, 5), (34, 10), (40, 10)):
     lw.put(CRATES[(x + y) % 4], x, y)
 lw.box(CRATES[0], 44, 5, "ящик с предохранителями", {"предохранитель Vault-Tec": 1, "изолента": 1})
@@ -333,7 +390,7 @@ for x, y in ((23, 23), (28, 23), (41, 23), (35, 24)):
 for x in range(30, 41):
     decal(lw, "x_vd_cab_h", x, 22)
 decal(lw, "x_vd_rust1", 34, 21)
-for x, y in ((5, 27), (12, 30)):
+for x, y in ((12, 27), (12, 30)):
     lw.put(BONES[(x + y) % 2], x, y)
 lw.enemies += [["radroach", 12, 10], ["radroach", 8, 25], ["rat", 30, 8], ["rat", 38, 12], ["radroach", 42, 28],
                ["radroach", 25, 24]]

@@ -113,11 +113,15 @@ up.floor_code("F", *PLATES)
 up.floor_code("T", *TILE_W)
 up.floor_code("g", *GRASS)
 up.wall_code("W", VWALL)
+up.wall_code("K", "pk:nbunk/nbunk_w3_22")
+up.wall_code("G", "pk:nbunk/nbunk_w3_09")
+up.wall_code("O", "pk:nbunk/nbunk_w3_04")
+up.wall_code("L", "pk:nbunk/nbunk_w3_10")
 up.room(1, 1, 45, 12, "W", "F")                       # входной зал
-up.room(1, 12, 15, 35, "W", "T")                      # столовая и класс
-up.room(15, 12, 31, 35, "W", "g")                     # атриум-оранжерея
-up.room(31, 12, 45, 22, "W", "T")                     # кабинет смотрительницы
-up.room(31, 22, 45, 35, "W", "F")                     # жилой блок
+up.room(1, 12, 15, 35, "K", "T")                      # столовая и класс
+up.room(15, 12, 31, 35, "G", "g")                     # атриум-оранжерея
+up.room(31, 12, 45, 22, "O", "T")                     # кабинет смотрительницы
+up.room(31, 22, 45, 35, "L", "F")                     # жилой блок
 up.put("x_vault_gear4", 19, 3, force=True)
 up.portal([(19, 4), (20, 4)], "vault4", (22, 11), "Наружу")
 up.reserve(17, 4, 23, 7)
@@ -172,9 +176,11 @@ lw = CityMap(city, "vault4_lower", "Убежище 4: нижний ярус", W,
 lw.floor_code("F", *GRATE)
 lw.floor_code("T", *TILE_W)
 lw.wall_code("W", LWALL)
+lw.wall_code("B", "pk:nbunk/nbunk_w3_08")
+lw.wall_code("S", "pk:nbunk/nbunk_w3_18")
 lw.room(1, 1, 16, 35, "W", "F")                       # коридор с клетками
-lw.room(16, 1, 47, 18, "W", "T")                      # лаборатория
-lw.room(16, 18, 47, 35, "W", "F")                     # хранилище ВРЭ
+lw.room(16, 1, 47, 18, "B", "T")                      # лаборатория
+lw.room(16, 18, 47, 35, "S", "F")                     # хранилище ВРЭ
 lw.props.append(["x_ladder", 6, 4])
 lw.portal([(6, 4)], "vault4_upper", (29, 34), "Наверх, в атриум")
 lw.reserve(4, 4, 9, 7)
