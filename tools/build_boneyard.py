@@ -46,6 +46,8 @@ WRECKS = [P(f"by_wreck{i}", f"pk:zcity/zcity_2_{n:03d}", foot=[2, 1], sight=True
 CAR_PILE = P("by_car_pile", "pk:zcity/zcity_5_026", foot=[2, 1], sight=True)
 BUS = P("by_bus", "pk:zcity/zcity_5_019", foot=[2, 1], sight=True)
 LAMPS = [P("by_lamp", "pk:zcity/zcity_3_011"), P("by_lamp_b", "pk:zcity/zcity_3_012")]
+ROAD_SIGN = [P("by_road_sign_a", "pk:zcity/zcity_3_035", foot=[1, 1], keybg=True), P("by_road_sign_b", "pk:zcity/zcity_3_036", foot=[1, 1], keybg=True)]
+BARRIER_B = [P("by_barrier_a", "pk:zcity/zcity_3_007", foot=[2, 1], keybg=True), P("by_barrier_b", "pk:zcity/zcity_3_008", foot=[2, 1], keybg=True)]
 BILLBOARDS = [P(f"by_billboard{i}", f"pk:zcity/zcity_4_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((142, 143, 145))]
 SIGNS = [P("by_sign", "pk:zcity/zcity_3_036"), P("by_sign_b", "pk:zcity/zcity_3_039")]
 TREES = [P("by_tree", "pk:zcity/zcity_4_126"), P("by_tree_b", "pk:zcity/zcity_4_127")]
@@ -125,7 +127,7 @@ WALK = ["pk:zcity/zcity_f1_22"]
 RUBBLE_FL = ["noise:pk:zcity/zcity_f2_26"]
 DIRT = ["noise:pk:zcity/zcity_f2_22"]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]
-TILES = ["pk:zcity/zcity_f3_00"]
+TILES = ["noise:pk:zcity/zcity_f3_08"]       # светлый бетон вместо чёрно-белой шахматки
 CARPET = ["pk:aoffice/p3/3,1,1,1"]
 WOOD = ["pk:zcity/zcity_f1_00"]
 STONE = ["pk:zcity/zcity_f1_23"]
@@ -138,15 +140,19 @@ MALL_TILE = ["pk:store/p1/12,0,1,1"]
 W, H = 84, 60
 by = CityMap(city, "boneyard", "Боунъярд", W, H, start=(1, 29), seed=141, music="reno", world_pos=(760, 1290))
 by.floor_code("r", *RUBBLE_FL)
-by.floor_code("a", *ROAD)
 by.floor_code("p", *WALK)
 by.floor_code("d", *DIRT)
 by.floor_code("c", *YARD_FL)
 by.paint("r", 0, 0, W - 1, H - 1)
 by.paint("p", 0, 26, W - 1, 33)                        # шоссе через весь город
 by.paint("a", 0, 27, W - 1, 32)
+for _x in range(0, W, 4):
+    by.ground[29][_x] = by.ground[29][_x + 1] = "h"          # осевая шоссе — штрихи
 by.paint("p", 40, 0, 45, H - 1)                        # улица с севера на юг
 by.paint("a", 41, 0, 44, H - 1)
+for _y in range(2, H, 4):
+    by.ground[_y][42] = by.ground[_y + 1][42] = "v"          # осевая улицы
+by.crisp = True                                         # мощёный город: чёткий край мостовой
 by.paint("d", 4, 3, 34, 23)                            # двор Адитума
 by.paint("c", 50, 37, 80, 57)                          # площадка стройки
 by.exits = [(0, y) for y in range(27, 33)]
@@ -156,11 +162,10 @@ by.reserve(41, 0, 44, H - 1)
 # северо-запад: Адитум — торговый центр за стеной из мешков и сетки; ворота на шоссе
 by.hwall([SANDBAGS], 4, 34, 3)
 by.hwall([SANDBAGS, "chain_a", "chain_b"], 4, 34, 23, gaps=(18, 19, 20))
-for x in (4, 34):
-    for y in range(4, 23):
-        by.maybe(SANDBAGS if y % 3 else "chain_c", x, y, check=False)
+by.side_fence("sand", 4, 4, 22)                         # боковые стены из мешков — настоящий вал, не столбик
+by.side_fence("sand", 34, 4, 22)
 by.reserve(17, 20, 21, 25)
-by.building(8, 5, 22, 12, "concrete", south=(10,))
+by.building(8, 5, 22, 12, "metal", south=(10,))
 by.reserve(18, 17, 19, 20)
 by.put(TANKS, 6, 19)                                    # цистерны и огородик во дворе
 by.put(FIRE_BARREL, 16, 22)
@@ -199,8 +204,19 @@ for x in (10, 30, 56, 66):
 by.put(SIGNS[0], 39, 25)
 by.put(SIGNS[1], 46, 34)
 
+# ритм улицы: знаки и ограждения у перекрёстка, мёртвые деревья вдоль проспекта, разбитые витрины у лавок
+for x, y in ((38, 28), (47, 31), (36, 34), (50, 24)):
+    by.maybe(ROAD_SIGN[(x + y) % 2], x, y, allow_reserved=True)
+for x in (36, 48, 52, 60):
+    by.maybe(BARRIER_B[x % 2], x, 25, allow_reserved=True)
+for y in (6, 14, 40, 48, 56):
+    by.maybe(TREES[y % 2], 39, y, allow_reserved=True)
+    by.maybe(TREES[(y + 1) % 2], 46, y, allow_reserved=True)
+for y in (4, 12, 38, 50):
+    by.maybe(LAMPS[y % 2], 40, y, allow_reserved=True)
+    by.maybe(LAMPS[(y + 1) % 2], 45, y + 4, allow_reserved=True)
 # юго-запад: руины офиса Vault-Tec — фасад, щит с рекламой убежищ, дикие гули у входа
-by.building(8, 38, 18, 12, "concrete", north=(8,))
+by.building(8, 38, 18, 12, "planks", north=(8,))
 by.reserve(16, 35, 17, 38)
 by.put(BILLBOARDS[2], 28, 37)
 by.put(RUIN_WALL, 5, 54)

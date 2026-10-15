@@ -5015,5 +5015,19 @@
    48
   ],
   "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_sand": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
+ },
+ "x_fs_sand_post": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_fence_side.py"
  }
 }

@@ -3642,6 +3642,24 @@
    ],
    "block": true,
    "sight": false
+  },
+  "x_fs_sand": {
+   "img": "x_fs_sand",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
+  },
+  "x_fs_sand_post": {
+   "img": "x_fs_sand_post",
+   "foot": [
+    1,
+    1
+   ],
+   "block": true,
+   "sight": false
   }
  }
 }

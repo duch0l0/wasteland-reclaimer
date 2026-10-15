@@ -20,6 +20,7 @@ KINDS = {
     "wire":   ((150, 150, 156), (206, 206, 212), (96, 68, 46), (138, 100, 70), None, True),
     "picket": ((96, 66, 44), (140, 104, 72), (70, 48, 32), (112, 80, 54), None, False),
     "iron":   ((44, 46, 52), (96, 100, 112), (92, 92, 86), (124, 124, 112), (62, 62, 60), True),
+    "sand":   ((176, 150, 100), (212, 186, 132), (140, 116, 78), (190, 164, 112), None, False),
 }
 
 
@@ -29,7 +30,14 @@ def draw(kind, with_post):
     if plinth:
         pygame.draw.rect(img, plinth, (20, 0, 8, H))
         pygame.draw.rect(img, post, (21, 0, 5, H))
-    if kind == "picket":
+    if kind == "sand":
+        for y in range(1, H, 12):                                  # мешки с песком, сложенные в стенку
+            pygame.draw.rect(img, post, (4, y, 40, 11), border_radius=5)
+            pygame.draw.rect(img, rail, (5, y + 1, 38, 8), border_radius=5)
+            pygame.draw.rect(img, rail_l, (9, y + 2, 28, 2), border_radius=1)
+            pygame.draw.line(img, post, (24, y + 2), (24, y + 8))
+        with_post = False
+    elif kind == "picket":
         for y in range(2, H, 6):                                   # штакетины — короткие чёрточки поперёк рейки
             pygame.draw.rect(img, rail, (19, y, 10, 3))
             pygame.draw.rect(img, rail_l, (19, y, 10, 1))

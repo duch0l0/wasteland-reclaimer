@@ -325,6 +325,46 @@
 "block": true,
 "sight": false
 },
+"by_road_sign_a": {
+"img": "pk:zcity/zcity_3_035",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"by_road_sign_b": {
+"img": "pk:zcity/zcity_3_036",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"keybg": true
+},
+"by_barrier_a": {
+"img": "pk:zcity/zcity_3_007",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
+"by_barrier_b": {
+"img": "pk:zcity/zcity_3_008",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true
+},
 "by_billboard0": {
 "img": "pk:zcity/zcity_4_142",
 "block": true,
