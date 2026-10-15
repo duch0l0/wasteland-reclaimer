@@ -42,7 +42,8 @@ BARBED_B = P("mp_barbed_b", "pk:mbase/p1/10,2,2,2", foot=[2, 1], keybg=True)
 SANDBAG_WALL = P("mp_sandbag_wall", "pk:mbase/p1/10,0,2,1", foot=[2, 1], keybg=True)
 FENCE_MIX = [BARBED, BARBED_B, BARBED, SANDBAG_WALL, BARBED_B]                           # секции разные, не один кадр
 AMMO = P("mp_ammo", "pk:mbase/mbase_2_001", foot=[2, 1], search="military", title="армейский ящик")
-DEBRIS = [P("mp_helmet", "pk:mbase/p1/6,8,1,1", block=False), P("mp_gasmask", "pk:mbase/p1/7,9,1,1", block=False)]
+DEBRIS = [P("mp_helmet", "pk:mbase/p1/6,8,1,1", block=False, keybg=True), P("mp_gasmask", "pk:mbase/p1/7,9,1,1", block=False, keybg=True)]
+CAMPFIRE_M = P("mp_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1], light={"r": 120, "color": [255, 150, 70], "at": [0.5, 0.5], "flicker": 0.35})
 TENT_WHITE = P("mp_tent_white", "pk:bazaar/bazaar_1_004", foot=[2, 2], sight=True)
 VAN = P("mp_cult_van", "pk:zcity/zcity_2_098", foot=[2, 1], sight=True)
 ALTAR = P("mp_altar", "pk:cult/cult_2_045", foot=[2, 1], sight=True)
@@ -67,11 +68,11 @@ ARM = P("mp_arm", "pk:wlab/wlab_1_029", foot=[2, 1])
 CHEM = P("mp_chem", "pk:wlab/wlab_1_012", foot=[2, 1])
 OP_TABLE = P("mp_op_table", "pk:hosp/hosp_1_001", foot=[4, 2])
 BIOHAZ = P("mp_biohazard", "pk:hosp/hosp_1_012")
-BONES = [P("mp_bones", "pk:grave/grave_2_022", block=False), P("mp_bones_b", "pk:grave/grave_2_027", block=False)]
+BONES = [P("mp_bones", "pk:grave/grave_2_022", block=False, keybg=True), P("mp_bones_b", "pk:grave/grave_2_027", block=False, keybg=True)]
 VRE_CRATE = P("mp_vre_crate", "pk:wlab/wlab_2_024", foot=[2, 1], sight=True)
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
-GRAVEL = ["noise:pk:mbase/p1/9,9,1,1"]
+GRAVEL = ["noise:pk:zcity/zcity_f3_10"]
 PLATE = ["pk:fstation/fstation_f2_09"]
 TILE = ["pk:store/p1/12,0,1,1"]
 GRATE = cells("nbunk/p2", [(0, 12), (1, 13), (2, 14), (3, 12)])
@@ -81,17 +82,20 @@ SLIME = cells("gcave/p1", [(1, 4), (1, 5), (2, 6), (3, 6)])
 # ================================================================ двор базы
 W, H = 68, 48
 mp = CityMap(city, "mariposa", "База Марипоза", W, H, start=(1, 24), seed=241, music="vats", world_pos=(1180, 760),
-             night=[60, 70, 90])
+             night=[138, 138, 158])
 mp.floor_code("s", *SAND)
 mp.floor_code("g", *GRAVEL)
 mp.paint("s", 0, 0, W - 1, H - 1)
 FLOOR = set()
 for x0, y0, x1, y1 in ((0, 21, 14, 27), (10, 4, 62, 44)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
-mp.floor_code("r", "noise:pk:zcity/zcity_f2_26")
+mp.floor_code("r", "pk:zcity/zcity_f3_09")                 # асфальт проездов базы
 mp.paint_ragged("g", 8, 2, 64, 46, depth=3)           # двор с рваным краем, а не ровный прямоугольник
 mp.paint("r", 8, 22, 46, 26)                          # дорога от ворот к бункеру
 mp.paint("r", 36, 7, 38, 41)                          # проезд вдоль двора
+mp.floor_code("n", "pk:nbunk/p2/4,8,1,1")
+mp.floor_code("k", "noise:pk:zcity/zcity_f2_22")
+mp.paint_ragged("k", 18, 17, 40, 33, depth=2)          # вытоптанная земля вокруг алтаря
 mp.exits = [(0, y) for y in range(22, 27)]
 mp.reserve(0, 22, 16, 26)
 mp.reserve(8, 22, 46, 26)
@@ -118,6 +122,17 @@ mp.put(CANDELABRA, 26, 25)
 mp.put(CANDELABRA, 31, 25)
 mp.put(VAN, 42, 22)
 mp.put(VAN, 42, 27)
+# лагерь культа: костры между шатрами, коврики для молитв, знамёна у алтаря; армейский двор: ряд ящиков, бочки, лавки у казарм
+for x, y in ((24, 20), (36, 20), (24, 31)):
+    mp.maybe(CAMPFIRE_M, x, y)
+for x, y in ((25, 23), (33, 23), (28, 29)):
+    mp.stamp(f"mp_prayer_rug_{x}_{y}", "pk:lhotel/p2/10,12,2,2", x, y, water=False)
+for x in (26, 31):
+    mp.maybe(BANNERS[x % 2], x, 24)
+for x, y in ((20, 14), (24, 14), (48, 12), (52, 12), (48, 36), (52, 36)):
+    mp.maybe(AMMO, x, y)
+for x, y in ((16, 10), (50, 40), (14, 30)):
+    mp.maybe("barrel_wood", x, y)
 # восток: бункер — спуск к лаборатории и чанам; супермутанты на часах
 mp.put(BUNKER, 50, 20)
 mp.portal([(51, 23), (52, 23)], "mariposa_lab", (20, 5), "Спуск в лабораторию")
@@ -147,7 +162,7 @@ mp.cliff_walls(CLIFFS, FLOOR, decor=["r_rocks", "r_dry_bush", "r_bones"], platea
 # ================================================================ лаборатория
 W, H = 44, 32
 lb = CityMap(city, "mariposa_lab", "Марипоза: лаборатория", W, H, start=(20, 5), seed=242, interior=True, music="vats",
-             night=[60, 66, 80])
+             night=[112, 118, 138])
 lb.floor_code("T", *TILE)
 lb.floor_code("G", *GRATE)
 lb.wall_code("W", "pk:fstation/fstation_w1_10")
@@ -191,7 +206,7 @@ lb.enemies += [["super_mutant", 14, 29]]
 # ================================================================ чаны и командный бункер
 W, H = 48, 34
 vt = CityMap(city, "mariposa_vats", "Марипоза: чаны", W, H, start=(6, 5), seed=243, interior=True, music="vats",
-             night=[40, 56, 48])                          # полумрак — светятся только чаны
+             night=[78, 108, 92])                          # полумрак — светятся только чаны
 vt.floor_code("M", *PLATE)
 vt.floor_code("S", *GRATE)
 vt.wall_code("W", "pk:fstation/fstation_w1_08")

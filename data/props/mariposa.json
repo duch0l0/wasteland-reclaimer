@@ -128,12 +128,36 @@
 "mp_helmet": {
 "img": "pk:mbase/p1/6,8,1,1",
 "block": false,
-"sight": false
+"sight": false,
+"keybg": true
 },
 "mp_gasmask": {
 "img": "pk:mbase/p1/7,9,1,1",
 "block": false,
-"sight": false
+"sight": false,
+"keybg": true
+},
+"mp_campfire": {
+"img": "pk:ucamp/ucamp_2_040",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+150,
+70
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.35
+}
 },
 "mp_tent_white": {
 "img": "pk:bazaar/bazaar_1_004",
@@ -405,12 +429,14 @@
 "mp_bones": {
 "img": "pk:grave/grave_2_022",
 "block": false,
-"sight": false
+"sight": false,
+"keybg": true
 },
 "mp_bones_b": {
 "img": "pk:grave/grave_2_027",
 "block": false,
-"sight": false
+"sight": false,
+"keybg": true
 },
 "mp_vre_crate": {
 "img": "pk:wlab/wlab_2_024",
@@ -420,6 +446,36 @@
 2,
 1
 ]
+},
+"mp_prayer_rug_25_23": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"mp_prayer_rug_33_23": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"mp_prayer_rug_28_29": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
 },
 "mariposa_f_tech_2_073": {
 "img": "pk:npower/npower_2_073",
