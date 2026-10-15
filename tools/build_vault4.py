@@ -16,8 +16,10 @@ desert-natural (desnat), desert-town (destown), zombie-city (zcity), cult-temple
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("vault4", "Убежище 4")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -76,7 +78,7 @@ LWALL = "pk:pmall/pmall_w3_10"
 
 # ================================================================ поверхность
 W, H = 48, 34
-sf = CityMap(city, "vault4", "Убежище 4", W, H, start=(1, 26), seed=161, music="desert", world_pos=(720, 1380))
+sf = CityMap(city, "vault4", "Убежище 4", W, H, start=(1, 26), seed=161, music="desert", world_pos=(720, 1380), night=[150, 140, 140])
 sf.floor_code("s", *SAND)
 sf.floor_code("g", *GRAVEL)
 sf.paint("s", 0, 0, W - 1, H - 1)
@@ -106,7 +108,7 @@ sf.scatter(["r_dry_bush", "r_rocks"], 14, 8, 40, 28, 10)
 
 # ================================================================ жилой ярус
 W, H = 46, 36
-up = CityMap(city, "vault4_upper", "Убежище 4: жилой ярус", W, H, start=(20, 6), seed=162, interior=True, music="lab")
+up = CityMap(city, "vault4_upper", "Убежище 4: жилой ярус", W, H, start=(20, 6), seed=162, interior=True, music="lab", night=[125, 128, 112])
 up.floor_code("F", *PLATES)
 up.floor_code("T", *TILE_W)
 up.floor_code("g", *GRASS)
@@ -166,7 +168,7 @@ up.reserve(28, 32, 30, 34)
 
 # ================================================================ нижний ярус — лаборатория
 W, H = 48, 36
-lw = CityMap(city, "vault4_lower", "Убежище 4: нижний ярус", W, H, start=(6, 5), seed=163, interior=True, music="vats")
+lw = CityMap(city, "vault4_lower", "Убежище 4: нижний ярус", W, H, start=(6, 5), seed=163, interior=True, music="vats", night=[70, 84, 80])
 lw.floor_code("F", *GRATE)
 lw.floor_code("T", *TILE_W)
 lw.wall_code("W", LWALL)
@@ -204,6 +206,20 @@ lw.put(BIOHAZ, 43, 21)
 lw.terminal(43, 31, "v4_vault")
 lw.enemies += [["beast", 10, 20], ["rad_mutant", 30, 15], ["joined", 25, 30], ["rad_mutant", 44, 26]]
 lw.npcs += [["marta_subject", 6, 31]]       # «Беглый субъект»: Марта из Ниптона, субъект № 12, в последней клетке
+
+# ---- атмосфера: «образцовая колония» — ровный свет, зелень, улыбки на стенах; внизу — холодный зелёный и тревога
+LM.lamps(up, "warm", [(8, 3), (16, 3), (29, 3), (38, 3), (6, 18), (12, 18), (6, 30), (11, 30)])
+LM.lamps(up, "green", [(18, 20), (26, 20), (22, 31), (18, 26), (27, 26)])      # лампы роста над грядками
+LM.lamps(up, "warm", [(34, 14), (41, 14), (35, 28), (41, 28)])
+LM.decals(up, "x_vd_drawing", [(5, 14), (10, 14)])                            # детские рисунки в классе
+LM.decal(up, "x_vd_plaque", 22, 2)
+LM.decals(up, "x_vd_oil0", [(21, 18), (24, 24)])
+LM.lamps(lw, "green", [(4, 8), (4, 16), (4, 24), (4, 32), (22, 3), (30, 3), (38, 3), (25, 22), (33, 22), (41, 22)])
+LM.lamps(lw, "red", [(14, 12), (14, 30), (44, 20), (20, 33)])
+LM.decals(lw, "x_vd_blood0", [(6, 18), (12, 20), (27, 12)])
+LM.decals(lw, "x_vd_blood1", [(8, 30), (35, 25)])
+LM.decals(lw, "x_vd_hz_h", [(20, 18), (21, 18), (22, 18)])
+LM.decals(lw, "x_vd_wet0", [(9, 7), (14, 26)])
 
 city.save(gap_exempt=("v4_mutant", "v4_gardener"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

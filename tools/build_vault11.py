@@ -15,8 +15,10 @@
 import json
 
 from citykit import City, CityMap, tech_scenes
+from vaultkit import Lamps
 
 city = City("vault11", "Убежище 11")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -49,7 +51,7 @@ VWALL = "pk:nbunk/nbunk_w3_17"
 
 # ================================================================ склон
 W, H = 40, 30
-sf = CityMap(city, "vault11", "Убежище 11", W, H, start=(1, 22), seed=111, music="desert", world_pos=(2330, 820))
+sf = CityMap(city, "vault11", "Убежище 11", W, H, start=(1, 22), seed=111, music="desert", world_pos=(2330, 820), night=[150, 142, 145])
 sf.floor_code("s", *SAND)
 sf.paint("s", 0, 0, W - 1, H - 1)
 FLOOR = set()
@@ -72,7 +74,7 @@ sf.enemies += [["radroach", 24, 18], ["radroach", 17, 22]]
 # ================================================================ зал выборов и жилой блок
 W, H = 44, 32
 hl = CityMap(city, "vault11_hall", "Убежище 11: зал выборов", W, H, start=(20, 6), seed=112, interior=True,
-             music="lab", night=[70, 70, 80])
+             music="lab", night=[112, 118, 128])
 hl.floor_code("F", *PLATES)
 hl.floor_code("C", *CARPET)
 hl.wall_code("W", VWALL)
@@ -116,7 +118,7 @@ hl.enemies += [["feral", 34, 18], ["feral", 22, 28], ["radroach", 8, 9]]
 # ================================================================ вычислительный центр
 W, H = 36, 24
 cr = CityMap(city, "vault11_core", "Убежище 11: вычислительный центр", W, H, start=(6, 5), seed=113, interior=True,
-             music="vats", night=[50, 60, 80])
+             music="vats", night=[64, 76, 96])
 cr.floor_code("G", *GRATE)
 cr.wall_code("W", VWALL)
 cr.room(1, 1, 35, 23, "W", "G")
@@ -134,6 +136,19 @@ cr.put(BONES[0], 20, 15)
 cr.enemies += [["robot_skel", 26, 16]]
 
 print("техзал cr:", cr.dress_empty(tech_scenes(city, "v11"), ground="G", block=7, margin=1, chance=1.0))
+
+# ---- атмосфера: зал выборов — холодный казённый свет и одна лампа над помостом; вычислительный центр — синий и красный
+LM.lamps(hl, "cold", [(8, 3), (16, 3), (29, 3), (36, 3), (7, 18), (21, 18), (7, 26), (21, 26), (34, 16), (40, 16), (34, 26), (40, 26)])
+LM.lamps(hl, "warm", [(14, 16), (14, 26)])
+LM.decals(hl, "x_vd_plaque", [(23, 2)])
+LM.decals(hl, "x_vd_num15", [(12, 2), (30, 2)])
+LM.decals(hl, "x_vd_hz_v", [(22, 6), (23, 6), (22, 8), (23, 8)])
+LM.decals(hl, "x_vd_oil0", [(10, 22), (18, 28)])
+LM.lamps(cr, "cold", [(6, 6), (14, 6), (22, 6), (30, 6), (8, 16), (18, 16), (28, 16)])
+LM.lamps(cr, "red", [(4, 20), (33, 20), (18, 21)])
+LM.decals(cr, "x_vd_cab_h", [(x, 10) for x in range(8, 30)])
+LM.decals(cr, "x_vd_sparks", [(26, 14)])
+LM.decals(cr, "x_vd_blood0", [(15, 18)])
 
 city.save()
 L = json.load(open("data/locations.json", encoding="utf-8"))

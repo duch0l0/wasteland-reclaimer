@@ -17,8 +17,10 @@
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("vault22", "Убежище 22")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -83,7 +85,7 @@ GWALL = "pk:ghouse/ghouse_w3_09"
 
 # ================================================================ поверхность
 W, H = 46, 34
-sf = CityMap(city, "vault22", "Убежище 22", W, H, start=(1, 26), seed=191, music="desert", world_pos=(2390, 470))
+sf = CityMap(city, "vault22", "Убежище 22", W, H, start=(1, 26), seed=191, music="desert", world_pos=(2390, 470), night=[150, 142, 145])
 sf.floor_code("g", *GRASS_FL)
 sf.floor_code("s", *SAND)
 sf.floor_code("o", *SOIL)
@@ -114,7 +116,7 @@ sf.scatter(GRASS, 10, 8, 38, 30, 24)
 
 # ================================================================ жилой ярус
 W, H = 44, 32
-lv = CityMap(city, "vault22_living", "Убежище 22: жилой ярус", W, H, start=(20, 6), seed=192, interior=True, music="lab")
+lv = CityMap(city, "vault22_living", "Убежище 22: жилой ярус", W, H, start=(20, 6), seed=192, interior=True, music="lab", night=[118, 118, 108])
 lv.floor_code("F", *PLATES)
 lv.floor_code("T", *TILE_W)
 lv.wall_code("W", VWALL)
@@ -167,7 +169,7 @@ lv.npcs += [["overseer_keene", 36, 28]]
 
 # ================================================================ оранжереи
 W, H = 48, 34
-gd = CityMap(city, "vault22_garden", "Убежище 22: оранжереи", W, H, start=(4, 5), seed=193, interior=True, music="lab")
+gd = CityMap(city, "vault22_garden", "Убежище 22: оранжереи", W, H, start=(4, 5), seed=193, interior=True, music="lab", night=[78, 70, 96])
 gd.floor_code("F", *GRATE)
 gd.floor_code("o", *SOIL)
 gd.wall_code("W", GWALL)
@@ -210,7 +212,7 @@ gd.npcs += [["v22_scientist", 32, 24]]
 
 # ================================================================ лаборатория и грибная ферма
 W, H = 46, 32
-lb = CityMap(city, "vault22_lab", "Убежище 22: лаборатория", W, H, start=(5, 5), seed=194, interior=True, music="vats")
+lb = CityMap(city, "vault22_lab", "Убежище 22: лаборатория", W, H, start=(5, 5), seed=194, interior=True, music="vats", night=[72, 80, 74])
 lb.floor_code("T", *TILE_W)
 lb.floor_code("o", *MOLD)
 lb.wall_code("W", "pk:pmall/pmall_w3_10")
@@ -240,6 +242,19 @@ for _, x, y in lb.enemies:
     lb.reserve(x, y, x, y)
 lb.scatter(MUSH + [BONES], 21, 3, 44, 30, 40)            # грибница расползлась по всему залу
 
+
+# ---- атмосфера: жилой ярус — тусклый тёплый; оранжереи — лиловые лампы роста; лаборатория и грибная ферма — зелёный и болезненный фиолетовый
+LM.lamps(lv, "warm", [(8, 3), (16, 3), (29, 3), (36, 3), (6, 18), (11, 18), (6, 26), (11, 26), (20, 18), (24, 26), (34, 28), (40, 28)])
+LM.lamps(lv, "cold", [(33, 15), (40, 15)])
+LM.decals(lv, "x_vd_tally", [(4, 14), (20, 14)])
+LM.decals(lv, "x_vd_oil1", [(8, 22), (22, 24)])
+LM.lamps(gd, "violet", [(6, 6), (6, 14), (6, 24), (22, 4), (30, 4), (38, 4), (22, 11), (30, 11), (38, 11), (22, 20), (30, 20), (38, 20), (22, 28), (30, 28), (38, 28)])
+LM.decals(gd, "x_vd_wet0", [(24, 22), (36, 26)])
+LM.decals(gd, "x_vd_wet1", [(28, 8), (40, 14)])
+LM.lamps(lb, "green", [(5, 5), (14, 5), (5, 15), (14, 15), (5, 25), (14, 25)])
+LM.lamps(lb, "violet", [(24, 6), (32, 6), (40, 6), (24, 14), (40, 14), (28, 22), (36, 22), (24, 28), (40, 28)])
+LM.decals(lb, "x_vd_blood0", [(10, 20)])
+LM.decals(lb, "x_vd_hz_h", [(18, 15), (19, 15)])
 
 city.save(gap_exempt=("hugo_lee",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
