@@ -279,6 +279,36 @@
 1
 ]
 },
+"p7_floodlight": {
+"img": "pk:csite/csite_1_024",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 190,
+"color": [
+210,
+230,
+255
+],
+"at": [
+0.5,
+0.1
+]
+}
+},
+"p7_warn": {
+"img": "pk:npower/npower_1_069",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
 "p7_console": {
 "img": "pk:npower/npower_2_006",
 "block": true,

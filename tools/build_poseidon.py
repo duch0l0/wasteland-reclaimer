@@ -50,6 +50,8 @@ VERTIBIRD = P("p7_vertibird", "pk:fmbase/p1/0,8,4,4", foot=[4, 3], sight=True)  
 BAY_EMPTY = P("p7_bay_empty", "pk:fmbase/p1/8,8,4,4", foot=[4, 3], sight=True)
 FENCE = P("p7_fence", "pk:mbase/p2/12,6,4,2", foot=[4, 1])
 SANDBAGS = "x_sandbags"
+FLOOD_P = P("p7_floodlight", "pk:csite/csite_1_024", foot=[1, 1], sight=True, light={"r": 190, "color": [210, 230, 255], "at": [0.5, 0.1]})
+WARN_P = P("p7_warn", "pk:npower/npower_1_069", foot=[1, 1])
 CONSOLES = [P("p7_console", "pk:npower/npower_2_006", foot=[2, 1]), P("p7_console_b", "pk:npower/npower_2_013", foot=[2, 1]),
             P("p7_console_c", "pk:npower/npower_2_036", foot=[2, 1])]
 SERVER = P("p7_server", "pk:npower/npower_2_042")
@@ -66,6 +68,9 @@ SAFE = P("p7_safe", "pk:west/west_2_105", search="military", title="сейф к�
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
 PLATE = ["pk:fstation/fstation_f2_09"]
+APRON = ["noise:pk:zcity/zcity_f3_10"]                   # нейтральный серый бетон площадок
+STEEL_P = ["pk:nbunk/p2/4,8,1,1"]                        # стальные плиты проездов
+GRILLE_P = ["pk:nbunk/p2/0,12,1,1"]                      # решётки люков и кабельных каналов
 PLATE_B = ["pk:fstation/fstation_f2_04"]
 PLATE_C = ["pk:fstation/fstation_f2_00"]
 TILE = ["pk:fstation/fstation_f1_08"]
@@ -75,12 +80,30 @@ TILE = ["pk:fstation/fstation_f1_08"]
 W, H = 64, 46
 pe = CityMap(city, "poseidon7", "«Посейдон-7»", W, H, start=(1, 23), seed=231, music="lab", world_pos=(2820, 900))
 pe.floor_code("s", *SAND)
-pe.floor_code("m", *PLATE)
+pe.floor_code("m", *PLATE)                              # основа — светлая плитка комплекса
+pe.floor_code("n", *STEEL_P)
+pe.floor_code("g", *GRILLE_P)
+pe.floor_code("t", *APRON)
+pe.crisp = True                                         # военная база: стыки покрытий чёткие, без размытия
 pe.paint("s", 0, 0, W - 1, H - 1)
 FLOOR = set()
 for x0, y0, x1, y1 in ((0, 20, 14, 26), (10, 4, 58, 42)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
 pe.paint("m", 14, 6, 56, 40)
+# Планировка комплекса: от ворот на запад — стальной проезд к командному пункту; по бокам зоны — энергетика (север-восток),
+# техника и посадочная площадка (юго-запад), склады (юго-восток), охранный периметр с дорожкой вдоль ограды.
+pe.paint("n", 10, 22, 36, 23)                           # проезд от ворот к командному пункту
+pe.paint("n", 33, 19, 36, 24)
+pe.paint("n", 18, 25, 22, 34)                           # к посадочной площадке
+pe.paint("t", 17, 27, 29, 37)                           # плиты площадки винтокрыла
+pe.paint("g", 42, 8, 56, 8)                             # кабельный канал вдоль энергетики
+pe.paint("g", 42, 8, 42, 20)
+pe.paint("t", 40, 21, 55, 33)                           # технические плиты на юго-востоке
+pe.paint("n", 15, 7, 55, 7)                             # дорожка охраны вдоль северной ограды
+pe.paint("n", 15, 39, 55, 39)
+pe.reserve(10, 22, 36, 23)
+pe.reserve(15, 7, 55, 7)
+pe.reserve(15, 39, 55, 39)
 pe.exits = [(0, y) for y in range(21, 26)]
 pe.reserve(0, 21, 16, 25)
 pe.reserve(14, 22, 36, 24)
@@ -119,7 +142,19 @@ for x, y in ((18, 9), (20, 9), (52, 28), (52, 31), (48, 36), (28, 37), (30, 37),
     pe.maybe(VRE_CRATE if (x + y) % 2 else AMMO, x, y)
 for x, y in ((46, 22), (49, 26), (40, 28), (44, 30)):
     pe.maybe(SERVER if (x + y) % 3 else SUIT_STAND, x, y)
-pe.scatter(["r_trash", "pile_junk", "barrel_wood"], 16, 8, 54, 38, 14)
+# охрана и обслуживание: прожекторы по периметру, баррикады у проезда, сигнальные знаки, лавки у казарм, аварийные пульты
+for x in range(16, 56, 8):
+    pe.maybe(FLOOD_P, x, 8, allow_reserved=True)
+    pe.maybe(FLOOD_P, x, 38, allow_reserved=True)
+for x, y in ((14, 19), (14, 26), (24, 20), (24, 25)):
+    pe.maybe(SANDBAGS, x, y, allow_reserved=True)
+for x, y in ((20, 34), (28, 34), (21, 30), (27, 30)):
+    pe.maybe(WARN_P, x, y)
+for x, y in ((26, 12), (32, 12), (38, 12), (26, 30), (36, 30)):
+    pe.maybe(CONSOLES[(x + y) % 3], x, y)
+for x, y in ((45, 24), (49, 24), (45, 28), (49, 28), (52, 24)):
+    pe.maybe(VRE_CRATE, x, y)
+pe.scatter(["r_trash", "pile_junk", "barrel_wood"], 16, 9, 54, 37, 8)
 pe.npcs += [["enclave_gate", 18, 23], ["enclave_officer", 34, 23]]
 pe.enemies += [["enclave_mech", 27, 27]]               # шагоход у ворот — молчит, пока нет тревоги
 for _, x, y in pe.npcs:
