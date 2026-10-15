@@ -5260,5 +5260,89 @@
    48
   ],
   "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wl_warm": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_stand_warm": {
+  "size": [
+   48,
+   64
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wl_cold": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_stand_cold": {
+  "size": [
+   48,
+   64
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wl_red": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_stand_red": {
+  "size": [
+   48,
+   64
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wl_green": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_stand_green": {
+  "size": [
+   48,
+   64
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wl_violet": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_stand_violet": {
+  "size": [
+   48,
+   64
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_wl_amber": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_stand_amber": {
+  "size": [
+   48,
+   64
+  ],
+  "made_by": "tools/make_vault_decals.py"
  }
 }

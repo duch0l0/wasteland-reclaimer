@@ -300,7 +300,7 @@ def ruts():
         for i in range(2, T, 6):
             a = (16, 32) if vert else (i, 16)
             for p in ((i, 16), (i, 32)) if not vert else ((16, i), (32, i)):
-                pygame.draw.line(img, (104, 80, 50, 120), (p[0] - 1, p[1]) if not vert else (p[0], p[1] - 1),
+                pygame.draw.line(img, (104, 80, 50, 200), (p[0] - 1, p[1]) if not vert else (p[0], p[1] - 1),
                                  (p[0] + 1, p[1]) if not vert else (p[0], p[1] + 1))
         save("x_vd_ruts_v" if vert else "x_vd_ruts_h", img, layer="floor")
 
@@ -351,7 +351,42 @@ def sparks():
     save("x_vd_sparks", img, light={"r": 90, "color": [255, 220, 120], "at": [0.5, 0.5], "flicker": 0.9})
 
 
-for fn in (tally, drawing, nine_board, map_board, sheet_banner, stencil15, exit_arrow, plaque, waterline, cables, stains,
+LAMPCOL = {"warm": (255, 190, 110), "cold": (160, 200, 235), "red": (255, 60, 50), "green": (130, 235, 160),
+           "violet": (200, 130, 255), "amber": (255, 160, 50)}
+
+
+def lamps():
+    """Свои лампы: настенный плафон в стальной решётке и торшер на ножке; цвет — как у света."""
+    for kind, c in LAMPCOL.items():
+        dark = tuple(int(v * 0.45) for v in c)
+        # настенный плафон: кронштейн, решётка, горящая колба и ореол на стене
+        img = new()
+        for r, a in ((15, 40), (11, 70)):
+            pygame.draw.circle(img, c + (a,), (24, 20), r)
+        pygame.draw.rect(img, (46, 48, 54, 255), (14, 10, 20, 20), border_radius=4)
+        pygame.draw.rect(img, dark + (255,), (17, 13, 14, 14), border_radius=3)
+        pygame.draw.rect(img, c + (255,), (19, 15, 10, 10), border_radius=2)
+        pygame.draw.rect(img, (255, 255, 240, 255), (22, 18, 4, 4))
+        for x in (19, 23, 27):                                              # прутья решётки
+            pygame.draw.line(img, (30, 32, 36, 255), (x, 13), (x, 27))
+        pygame.draw.line(img, (30, 32, 36, 255), (17, 20), (31, 20))
+        pygame.draw.rect(img, (70, 72, 80, 255), (20, 30, 8, 3))
+        outline(img)
+        fl = 0.3 if kind == "red" else 0.05
+        save(f"x_vd_wl_{kind}", img, light={"r": 150, "color": list(c), "at": [0.5, 0.45], "flicker": fl})
+        # торшер: основание, тонкая стойка, конический абажур
+        img = new(48, 64)
+        pygame.draw.ellipse(img, (30, 30, 34, 255), (16, 54, 16, 7))
+        pygame.draw.rect(img, (66, 68, 76, 255), (22, 24, 4, 33))
+        pygame.draw.polygon(img, dark + (255,), [(14, 24), (34, 24), (29, 10), (19, 10)])
+        pygame.draw.polygon(img, c + (255,), [(17, 22), (31, 22), (28, 13), (20, 13)])
+        pygame.draw.rect(img, (255, 255, 235, 255), (22, 17, 4, 3))
+        outline(img)
+        save(f"x_vd_stand_{kind}", img, block=False, foot=(1, 1),
+             light={"r": 160, "color": list(c), "at": [0.5, 0.3], "flicker": 0.3 if kind == "red" else 0.05})
+
+
+for fn in (lamps, tally, drawing, nine_board, map_board, sheet_banner, stencil15, exit_arrow, plaque, waterline, cables, stains,
            ruts, footprints, caps, drop, sparks):
     fn()
 hazard(False)
