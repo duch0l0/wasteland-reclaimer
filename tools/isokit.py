@@ -86,6 +86,12 @@ class IsoKit:
         self.taken.add((x, y))
         return len(self.objs) - 1
 
+    def prop(self, name, x, y, **kw):
+        """Объект, если клетка свободна и в ней не стоит враг/NPC (для обстановки после расстановки гулей)."""
+        if not self.free(x, y) or any((e[1], e[2]) == (x, y) for e in self.enemies + self.npcs):
+            return None
+        return self.obj(name, x, y, **kw)
+
     def light(self, x, y, r=190, color=(255, 170, 90), flick=0.0, dy=-70):
         """Источник света в клетке (x, y); dy — на сколько выше земли горит (пикселей экрана)."""
         from math import floor
@@ -168,6 +174,27 @@ class IsoKit:
                 for dy in (-1, 0, 1):
                     self.taken.add((x + dx, y + dy))
         return ri
+
+    def partition(self, style, x0, y0, x1, y1, gaps=(), num=1, windows=()):
+        """Внутренняя стена по линии клеток (вдоль x при y0 == y1, иначе вдоль y). Проёмы gaps — клетки без стены
+        (в них дверной косяк); стена стоит на северном (вдоль x) или западном (вдоль y) ребре клетки."""
+        horiz = y0 == y1
+        busy = {(e[1], e[2]) for e in self.enemies + self.npcs}
+        for x in range(min(x0, x1), max(x0, x1) + 1):
+            for y in range(min(y0, y1), max(y0, y1) + 1):
+                if (x, y) in busy:
+                    gaps = set(gaps) | {(x, y)}
+                if (x, y) in gaps:
+                    self.obj(f"Wall {style}3_{'W' if horiz else 'S'}", x, y, block=False, k=0.0)
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            self.taken.add((x + dx, y + dy))
+                    continue
+                n = 21 if (x, y) in windows else num
+                self.obj(f"Wall {style}{n}_{'W' if horiz else 'S'}", x, y, block=False, k=0.0)
+                self.blocked.add((x, y))
+                self.sight.add((x, y))
+                self.taken.add((x, y))
 
     # -------------------------------------------------------- проверка и запись
     def reachable(self):
