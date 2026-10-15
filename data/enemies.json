@@ -458,7 +458,11 @@
       ]
     },
     "iso_sprite": "zombie1",
-    "level": 4
+    "level": 4,
+    "iso_alt": [
+      "zombie2",
+      "zombie4"
+    ]
   },
   "turret": {
     "name": "турель Vault-Tec",
@@ -596,7 +600,11 @@
         90
       ]
     },
-    "level": 3
+    "level": 3,
+    "iso_alt": [
+      "zombie4",
+      "zombie2"
+    ]
   },
   "cult_guard": {
     "name": "страж Единства",

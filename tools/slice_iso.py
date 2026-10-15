@@ -37,6 +37,10 @@ CHARS = {
                                  "hit": "TakeDamage", "die": "Die"}),
     "zombie5": ("CityZombie 5", {"idle": "Idle", "walk": "Walk", "run": "Run", "attack_melee": "Attack1",
                                  "hit": "TakeDamage", "die": "Die"}),
+    "zombie2": ("CityZombie 2", {"idle": "Idle", "walk": "Walk", "run": "Run", "attack_melee": "Attack1",
+                                 "hit": "TakeDamage", "die": "Die"}),
+    "zombie4": ("CityZombie 4", {"idle": "Idle", "walk": "Walk", "run": "Run", "attack_melee": "Attack1",
+                                 "hit": "TakeDamage", "die": "Die"}),
 }
 
 

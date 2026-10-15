@@ -148,6 +148,9 @@ def make_enemy(pos, type_id, iso=False):
     """iso — на изометрической карте: кадры из iso_sprite (data/enemies.json), если есть."""
     sprite = ENEMY_DEFS[type_id].get("iso_sprite") if iso else None
     if sprite:
+        alt = ENEMY_DEFS[type_id].get("iso_alt")       # другие горожане набора — чтобы толпа не была клоном
+        if alt:
+            sprite = ([sprite] + alt)[(int(pos[0]) // 48 * 7 + int(pos[1]) // 48 * 3) % (len(alt) + 1)]
         from .iso import char_animator
         e = Enemy(pos, {"idle": [pygame.Surface((1, 1))]}, type_id, ENEMY_DEFS[type_id])
         e.anim = char_animator(sprite)
