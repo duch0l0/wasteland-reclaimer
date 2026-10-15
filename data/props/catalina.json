@@ -721,6 +721,36 @@
 ],
 "layer": "floor"
 },
+"ct_ball_rug_a": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ct_ball_rug_b": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"ct_ball_rug_c": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
 "ct_navy_crate": {
 "img": "pk:pmars/pmars_1_035",
 "block": true,

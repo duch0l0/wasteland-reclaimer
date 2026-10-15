@@ -87,6 +87,7 @@ GRASS = cells("sisland/p1", [(8, 0), (9, 0), (8, 1), (9, 2)])
 SEA = cells("mport/p1", [(8, 4), (9, 4), (10, 4), (11, 4)])
 SEA_DEEP = cells("mport/p1", [(8, 4), (9, 4), (10, 4), (11, 4)])
 PATH = ["pk:iresort/iresort_f1_02"]
+STONE_C = ["pk:iresort/iresort_f1_02"]
 WOOD = ["pk:iresort/iresort_f1_23"]
 MARBLE = ["pk:lrest/p1/0,12,1,1"]
 CAVE = cells("dcave/p1", [(0, 2), (1, 2), (0, 3), (1, 3)])          # серо-бурая земля Dragon Cave
@@ -101,6 +102,7 @@ av.floor_code("g", *GRASS)
 av.floor_code("~", *SEA)
 av.floor_code("w", *SEA_DEEP)
 av.floor_code("p", *PATH)
+av.floor_code("q", *STONE_C)
 av.water_codes = ("~", "w")
 av.paint("g", 0, 0, W - 1, H - 1)
 av.paint("s", 0, 30, W - 1, 42)                         # пляж вдоль бухты
@@ -113,6 +115,13 @@ av.floor_code("d", "pk:seaport/seaport_f1_21")        # доски причал�
 av.piers = ("d",)
 av.paint("d", 35, 41, 36, 46)                            # мостки от пляжа в бухту
 
+# Дорожки: от набережной к каждому домику, вокруг гостиницы; газон не сплошной — клумбы, живая изгородь, пальмы
+for _x in (4, 10, 16, 47, 53, 59):
+    av.paint("s", _x + 1, 16, _x + 2, 25)                 # песчаная дорожка от крыльца к набережной
+av.paint("p", 4, 18, 22, 18)
+av.paint("p", 46, 18, 66, 18)
+av.paint_ragged("q", 30, 11, 41, 13, depth=1)            # ступени-площадка перед Казино — неровный камень
+av.paint_ragged("q", 56, 11, 66, 13, depth=1)
 av.exits = [(35, 46), (36, 46)]
 av.reserve(33, 40, 38, 46)
 av.reserve(4, 26, 66, 28)
@@ -173,7 +182,18 @@ av.npcs += [["harbor_master", 37, 39], ["quarantine_nurse", 48, 30], ["fisher_an
             ["island_kid", 15, 38], ["island_old", 27, 18], ["sailor_finn", 30, 39], ["island_teacher", 20, 26]]
 for _, x, y in av.npcs:
     av.reserve(x, y, x, y)
-av.grow(1, 1, W - 2, 25, 10, names=PALMS + BUSHES)
+# сады и дворики: штакетник вокруг каждого домика, клумбы, скамья, фонари вдоль дорожек, пальмы вдоль аллеи
+for x in (3, 9, 15, 46, 52, 58):
+    av.hwall([FENCE], x, x + 5, 20, gaps=(x + 2, x + 3))
+    av.maybe("bench_7", x + 1, 13, allow_reserved=True)
+for y in (14, 19, 24):
+    av.maybe(PALM_BIG[y % 2], 31, y)
+    av.maybe(PALM_BIG[(y + 1) % 2], 40, y)
+for x, y in ((26, 12), (44, 12), (22, 24), (50, 24), (30, 24), (42, 24)):
+    av.maybe(TORCH, x, y, allow_reserved=True)
+for x, y in ((6, 17), (12, 17), (18, 17), (48, 17), (54, 17), (60, 17)):
+    av.maybe(FLOWERS[(x + y) % 6], x, y)
+av.grow(1, 1, W - 2, 25, 5, names=PALMS + BUSHES)
 av.scatter(FLOWERS + ROCKS, 1, 1, W - 2, 25, 18)
 
 
@@ -204,6 +224,13 @@ cs.stamp("ct_dance_floor", "pk:casino/p1/8,13,2,2", 13, 18, water=False)   # п�
 for x, y in ((2, 22), (26, 22), (2, 4), (26, 4)):
     cs.put(PALMS[x % 3], x, y)
 cs.put(TIKI_BAR, 22, 18)
+cs.stamp("ct_ball_rug_a", "pk:lhotel/p2/10,12,2,2", 8, 6, water=False)
+cs.stamp("ct_ball_rug_b", "pk:lhotel/p2/10,12,2,2", 20, 7, water=False)
+cs.stamp("ct_ball_rug_c", "pk:lhotel/p2/10,12,2,2", 6, 17, water=False)
+for x, y in ((4, 10), (24, 10), (4, 16), (24, 16)):
+    cs.maybe(PALMS[(x + y) % 3], x, y)
+for x, y in ((8, 20), (16, 22), (22, 21)):
+    cs.maybe("bench_7", x, y)
 cs.npcs += [["elder_mora", 14, 10], ["elder_bram", 17, 17], ["young_jude", 6, 20]]
 # кабинет Основателя: стол, портрет, сейф с правдой
 cs.put(DESK, 32, 6)
