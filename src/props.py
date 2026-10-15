@@ -244,6 +244,19 @@ def info(name):
             "sight": d.get("sight", False), "layer": d.get("layer", "obj")}
 
 
+def strip_grey_base(img):
+    """У пальм в наборах под стволом нарисована светло-серая «подставка» — в траве она торчит заплаткой.
+    В нижней трети картинки блёклые светлые пиксели становятся прозрачными."""
+    out = img.convert_alpha().copy()
+    w, h = out.get_size()
+    for y in range(h * 2 // 3, h):
+        for x in range(w):
+            c = out.get_at((x, y))
+            if c.a and min(c[:3]) > 150 and max(c[:3]) - min(c[:3]) < 22:
+                out.set_at((x, y), (c.r, c.g, c.b, 0))
+    return out
+
+
 _IMAGES = {}
 
 
@@ -258,6 +271,8 @@ def image(name, darken=False):
             sc = d.get("scale", 1.0) * world_scale(name)   # целый множитель — по пикселям (пиксель-арт не мылится)
             img = pygame.transform.scale(img, d["size"]) if (float(sc).is_integer() or sc > 1) else \
                 pygame.transform.smoothscale(img, d["size"])     # увеличение — по пикселям, без мыла
+        if name in _KEEP_FOOT and "palm" in name:
+            img = strip_grey_base(img)
         if d.get("keybg"):              # скала/камень на квадрате песка — песок прозрачный
             img = key_background(img)
         if d.get("soft") == "pond":    # водоём на улице: свой берег, без прямоугольника
