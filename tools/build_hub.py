@@ -19,8 +19,10 @@ wasteland-port (wport), nuclear-bunker (nbunk).
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("hub", "Хаб")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -462,6 +464,12 @@ print("обжито:", hb.dress_empty([
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2)],
 ], block=7, margin=1, chance=1.0))
 
+# ---- вечерний свет интерьеров: тёплый полумрак и лампы
+fc.night, wa.night, tn.night = [128, 112, 100], [116, 120, 132], [78, 82, 98]
+LM.lamps(fc, "warm", [(4, 8), (11, 11), (19, 11), (23, 8), (12, 18), (4, 17)])
+LM.lamps(wa, "cold", [(6, 8), (14, 8), (22, 8), (8, 15), (20, 15)])
+LM.lamps(wa, "warm", [(26, 10), (28, 16)])
+LM.lamps(tn, "amber", [(8, 8), (18, 12), (30, 9), (38, 14), (12, 20), (26, 19), (36, 21)])
 city.save(gap_exempt=("dolores", "water_clerk", "falcon_barkeep", "hub_guard", "decker", "falcon_gambler",
                       "falcon_drunk", "falcon_singer"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

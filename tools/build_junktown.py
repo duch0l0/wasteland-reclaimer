@@ -21,8 +21,10 @@ hospital (hosp), desert-town (destown), wild-west (west), bazaar (bazaar), nucle
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("junktown", "Джанктаун")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -585,6 +587,17 @@ for x, y in ((22, 4), (26, 4), (22, 16), (26, 16)):
 sk.box("wardrobe", 27, 9, "сундук постояльца", {"самогон": 1, "крышки": 12})
 
 
+# ---- вечерний свет интерьеров
+hl.night, cs.night, st.night, cl.night, cr.night, sk.night = [130, 115, 100], [128, 112, 128], [128, 112, 98], \
+    [135, 140, 140], [92, 86, 82], [110, 98, 96]
+LM.lamps(hl, "warm", [(4, 7), (19, 7), (4, 13), (19, 13)])
+LM.lamps(cs, "violet", [(6, 9), (14, 12), (22, 12), (28, 9)])
+LM.lamps(cs, "amber", [(8, 18), (20, 18), (28, 18)])
+LM.lamps(st, "warm", [(5, 8), (20, 8), (12, 12)])
+LM.lamps(cl, "cold", [(6, 8), (14, 8), (22, 8), (10, 16), (22, 16)])
+LM.lamps(cr, "amber", [(6, 8), (18, 10)])
+LM.lamps(sk, "red", [(6, 8), (22, 8)])
+LM.lamps(sk, "amber", [(14, 8), (10, 14), (20, 14)])
 city.save(gap_exempt=("spike", "scrapper", "scrapper_girl"))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["junktown"].update({"world_name": "Джанктаун", "discover": True})
