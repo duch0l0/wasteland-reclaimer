@@ -16,8 +16,10 @@
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("mariposa", "База Марипоза")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -260,6 +262,26 @@ vt.terminal(36, 16, "mariposa_1977")
 # склад: контейнеры, которые культ свёз отовсюду
 for x, y in ((35, 24), (39, 24), (43, 24), (35, 29), (39, 29)):
     vt.put(VRE_CRATE, x, y)
+
+# лаборатория: холодные лампы 2077-го в коридоре, красные в клетках, свечи часовни; в чанах — зелёное свечение и тревога
+LM.lamps(lb, "cold", [(6, 6), (14, 6), (26, 6), (34, 6), (40, 6), (8, 19), (18, 19), (28, 27), (38, 22)])
+LM.lamps(lb, "red", [(4, 22), (13, 20), (19, 26)])
+LM.lamps(lb, "violet", [(27, 17), (36, 17), (31, 23)])
+LM.decals(lb, "x_vd_blood0", [(5, 18), (9, 26), (30, 22), (33, 28)])
+LM.decals(lb, "x_vd_blood1", [(13, 22), (36, 24)])
+LM.decals(lb, "x_vd_hz_h", [(8, 10), (9, 10), (36, 10), (37, 10)])
+LM.decals(lb, "x_vd_wet0", [(6, 28), (16, 18)])
+LM.decals(lb, "x_vd_plaque", [(22, 2)])
+LM.doors(lb)
+LM.lamps(vt, "green", [(8, 8), (16, 9), (24, 9), (9, 22), (17, 24), (26, 22), (10, 31), (22, 30)])
+LM.lamps(vt, "cold", [(36, 8), (44, 8), (38, 14), (36, 26), (44, 28)])
+LM.lamps(vt, "red", [(30, 14), (40, 30)])
+LM.decals(vt, "x_vd_hz_h", [(34, 14), (35, 14)])
+LM.decals(vt, "x_vd_oil0", [(14, 16), (23, 20), (28, 12)])
+LM.decals(vt, "x_vd_blood0", [(18, 24), (31, 30)])
+LM.decals(vt, "x_vd_drip", [(8, 3), (20, 3)])
+LM.decals(vt, "x_vd_sparks", [(41, 9)])
+LM.doors(vt)
 
 city.save(gap_exempt=("tobi_mp", "ezekiel_mp", "nipton_bride_mp", "brother_t_mp"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

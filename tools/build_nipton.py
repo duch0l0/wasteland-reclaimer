@@ -17,8 +17,10 @@ desert-natural (desnat), cult-temple (cult), underground-survivor-camp (ucamp), 
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("nipton", "Ниптон")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -264,7 +266,7 @@ sh.npcs += [["np_bride", 6, 10], ["np_bride_b", 13, 9]]
 
 # ================================================================ лагерь «женихов»
 W, H = 56, 40
-cp = CityMap(city, "nipton_camp", "Лагерь «женихов»", W, H, start=(1, 20), seed=204, music="raiders")
+cp = CityMap(city, "nipton_camp", "Лагерь «женихов»", W, H, start=(1, 20), seed=204, music="raiders", night=[156, 128, 126])
 cp.floor_code("s", *SAND)
 cp.paint("s", 0, 0, W - 1, H - 1)
 FLOOR = set()
@@ -292,6 +294,24 @@ cp.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/
 cp.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 31 <= x <= 35 and 4 <= y <= 6, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 cp.npcs += [["groom_cal", 34, 21], ["groom_a", 28, 17], ["groom_b", 40, 24], ["groom_c", 26, 30]]
 cp.scatter(["r_bones", "r_rocks", "r_dry_bush"], 14, 6, 50, 34, 14)
+# лагерь живёт: огонь по кругу, палатки, жертвы лотереи в клетках, дозорные костры, лиловая метка культа
+cp.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
+cp.patchwork("s", ["t"], 24, 2, 4, seed=31)
+for x, y in ((28, 17), (36, 21), (30, 23), (25, 20), (38, 18), (45, 25), (20, 20), (44, 14), (27, 33), (47, 29)):
+    cp.maybe("x_fire_barrel", x, y, check=False)
+for x, y in ((29, 20), (35, 19), (31, 18), (33, 22)):
+    cp.maybe("r_logs" if (x + y) % 2 else "pile_rags", x, y)
+for x, y in ((22, 22), (36, 28), (45, 18), (30, 12), (38, 32)):
+    cp.maybe("r_tent_orange" if x % 2 else "r_tent_low", x, y)
+for x, y in ((26, 24), (37, 15), (42, 27), (47, 12)):
+    cp.maybe("pile_bottles" if x % 2 else "crate_broken", x, y)
+for x, y in ((34, 25), (27, 21), (44, 20)):
+    cp.maybe("x_vd_blood0", x, y, check=False)
+cp.maybe("x_sandbags", 24, 22, check=False)
+cp.maybe("x_sandbags", 24, 19, check=False)
+for x, y in ((40, 22), (43, 22)):
+    cp.maybe("r_bones", x, y)
+
 
 
 # ================================================================ шахта: брат Т.

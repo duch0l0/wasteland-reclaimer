@@ -14,9 +14,12 @@ nuclear-power-plant (npower), wasteland-laboratory (wlab), nbunk, cult (клет
 """
 import json
 
-from citykit import City, CityMap, tech_scenes
+from citykit import City, CityMap
+from citykit import tech_scenes
+from vaultkit import Lamps
 
 city = City("poseidon", "«Посейдон-7»")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -221,7 +224,8 @@ bs.npcs += [["darnell", 38, 14], ["enclave_scientist", 33, 13]]
 
 # ================================================================ ангар
 W, H = 46, 32
-hg = CityMap(city, "poseidon7_hangar", "«Посейдон-7»: ангар", W, H, start=(6, 5), seed=233, interior=True, music="vats")
+hg = CityMap(city, "poseidon7_hangar", "«Посейдон-7»: ангар", W, H, start=(6, 5), seed=233, interior=True, music="vats",
+             night=[108, 112, 134])
 hg.floor_code("M", *PLATE_C)
 hg.wall_code("W", "pk:fmbase/fmbase_w2_08")
 hg.room(1, 1, 45, 31, "W", "M")
@@ -246,6 +250,20 @@ hg.box(AMMO, 16, 27, "ящик Анклава", {"патроны": 30, "гран
 hg.enemies += [["enclave_soldier", 24, 24], ["enclave_soldier", 32, 10], ["enclave_soldier", 38, 26]]
 
 print("техзал hg:", hg.dress_empty(tech_scenes(city, "p7"), ground="M", block=7, margin=1, chance=1.0))
+
+# ангар: рабочий свет над отсеками, красные огни у ворот, разметка посадочных мест, следы масла, тросы и контейнеры
+LM.lamps(hg, "cold", [(10, 7), (22, 7), (34, 8), (10, 16), (22, 16), (34, 16), (8, 26), (20, 28), (34, 28)])
+LM.lamps(hg, "red", [(41, 12), (41, 18), (44, 14)])
+LM.lamps(hg, "amber", [(5, 20), (18, 22)])
+for x in range(9, 20):
+    LM.decal(hg, "x_vd_hz_h", x, 15)
+for x in range(21, 32):
+    LM.decal(hg, "x_vd_hz_h", x, 15)
+LM.decals(hg, "x_vd_oil0", [(14, 12), (16, 17), (28, 19), (30, 12), (22, 25)])
+LM.decals(hg, "x_vd_oil1", [(11, 19), (36, 23)])
+LM.decals(hg, "x_vd_blood0", [(32, 11), (38, 24)])
+LM.decals(hg, "x_vd_sparks", [(26, 21)])
+LM.doors(hg)
 
 city.save(gap_exempt=("enclave_gate", "enclave_officer"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

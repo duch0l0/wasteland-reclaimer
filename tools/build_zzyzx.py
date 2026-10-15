@@ -17,8 +17,10 @@ modern-hotel (hotel), nuclear-bunker-interior (nbunk), wasteland-laboratory (wla
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps
 
 city = City("zzyzx", "Зайзикс")
+LM = Lamps(city)
 
 
 def P(name, img, **kw):
@@ -357,7 +359,7 @@ ht.put(LAMP, 33, 22)
 
 # ================================================================ цистерна
 cs = CityMap(city, "zzyzx_cistern", "Цистерна под купальнями", 34, 22, start=(4, 5), seed=84, interior=True,
-             music="lab")
+             music="lab", night=[78, 92, 104])
 cs.floor_code("M", *METAL)
 cs.wall_code("K", "pk:nbunk/nbunk_w1_12")
 cs.room(1, 1, 33, 21, "K", "M")
@@ -381,6 +383,18 @@ cs.put(GEN, 29, 12)
 cs.box(CRATE, 31, 18, "ящик Vault-Tec", {"антирадин": 2, "образец «Чистый лист»": 1, "батарейки": 2})
 cs.enemies += [["radroach", 12, 11], ["radroach", 16, 12], ["radroach", 20, 18], ["rat", 7, 17], ["rat", 6, 19],
                ["robot_skel", 27, 16]]
+
+# цистерна: сырость, подтёки, зелёная подсветка воды и красные лампы у фильтра, тросы и трубы по стенам
+LM.lamps(cs, "green", [(8, 5), (20, 5), (13, 13), (22, 15), (8, 18)])
+LM.lamps(cs, "cold", [(26, 7), (30, 10)])
+LM.lamps(cs, "red", [(24, 14), (31, 15)])
+LM.decals(cs, "x_vd_wet0", [(5, 10), (20, 11), (7, 12), (24, 18), (14, 4)])
+LM.decals(cs, "x_vd_wet1", [(11, 19), (28, 8)])
+LM.decals(cs, "x_vd_waterline", [(8, 7), (19, 7), (8, 15), (19, 15)])
+LM.decals(cs, "x_vd_drip", [(10, 4), (17, 4), (30, 3)])
+LM.decals(cs, "x_vd_rust0", [(3, 12), (23, 5)])
+LM.decals(cs, "x_vd_hz_h", [(24, 11), (25, 11)])
+LM.doors(cs)
 
 city.save(gap_exempt=("springer", "nurse_ava", "gus", "bath_pilgrim", "bath_pilgrim_b"))
 # на карте мира — «Зайзикс»; открывается, если пройти рядом, или после Бейкера (src/game/quests.py)
