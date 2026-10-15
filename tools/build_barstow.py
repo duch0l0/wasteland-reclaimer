@@ -126,6 +126,8 @@ def build_road():
     k.fire_barrel(37, 12, block=False)
     k.fire_barrel(40, 14, block=False)
     k.night = [118, 112, 138]
+    for _ri in range(len(k.roofs)):
+        k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
     k.check()
     k.save("data/maps/barstow.json", hordes=k.hordes)
     return k
@@ -222,9 +224,14 @@ def build_depot():
         k.light(x, y, 240, (120, 220, 170), 0.25, dy=-90)
     for x in (3, 15, 27, 39):
         k.light(x, 5, 150, (90, 255, 110), 0.1, dy=-120)
-    k.night = [96, 100, 128]
+    for x, y in ((6, 6), (16, 8), (26, 6), (34, 6), (10, 10), (20, 14), (30, 14), (38, 10), (8, 16), (34, 17)):
+        k.light(x, y, 210, (255, 190, 110), 0.15, dy=-60)          # тлеющие угли и лампы на путях
+    k.light(21, 3, 260, (120, 180, 255), 0.05, dy=-100)             # водонапорная башня — холодный прожектор
+    k.night = [104, 106, 132]
     k.grass(1, 1, W - 2, H - 2, 18)
     k.splats(1, 1, W - 2, H - 2, 14)
+    for _ri in range(len(k.roofs)):
+        k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
     k.check()
     k.save("data/maps/barstow_depot.json", hordes=k.hordes)
     return k
@@ -347,6 +354,8 @@ def build_center():
     k.splats(17, 0, 25, H - 1, 22)
     k.splats(0, 18, W - 1, 20, 12)
     k.grass(1, 1, W - 2, H - 2, 16)
+    for _ri in range(len(k.roofs)):
+        k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
     k.check()
     k.save("data/maps/barstow_center.json", hordes=k.hordes)
     return k
@@ -416,10 +425,15 @@ def build_base():
     # КПП и плац: пулемётные гнёзда из блоков и ящиков, огонь, бронемашины
     k.fire_barrel(14, 16, block=False)
     k.fire_barrel(14, 18, block=False)
-    k.barrier(17, 15, 20, 15, hazard=False)
-    k.barrier(17, 19, 20, 19, hazard=False)
-    k.barrier(22, 13, 22, 15)
-    k.barrier(22, 19, 22, 22)
+    k.barrier(17, 15, 18, 15, hazard=False)
+    k.barrier(20, 14, 21, 14, hazard=False)
+    k.barrier(17, 19, 18, 19, hazard=False)
+    k.barrier(20, 20, 21, 20, hazard=False)
+    k.barrier(23, 13, 23, 14)
+    k.barrier(22, 17, 22, 18)
+    k.barrier(23, 21, 23, 22)
+    k.prop("Object2_N", 19, 17)
+    k.prop("Object2_E", 21, 17)
     k.car(4, 20, 20, "E")
     k.car(4, 14, 22, "E")
     k.car(12, 34, 23, "E")
@@ -443,6 +457,8 @@ def build_base():
     horde(k, (16, 13, 24, 15), (20, 11), 12, "Из казармы, на ходу застёгивая истлевшую форму, выбегает подъём по тревоге.")
     k.splats(13, 6, 33, 28, 12)
     k.grass(1, 1, W - 2, H - 2, 14)
+    for _ri in range(len(k.roofs)):
+        k.roof_props(_ri, ["Object4_N", "Object5_N", "Object3_N", "Object6_N", "Object24_N", "Object9_N"], 3 + _ri % 2, seed=k.W)
     k.check()
     k.save("data/maps/barstow_base.json", hordes=k.hordes)
     return k

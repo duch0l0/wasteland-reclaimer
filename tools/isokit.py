@@ -175,6 +175,18 @@ class IsoKit:
                     self.taken.add((x + dx, y + dy))
         return ri
 
+    def roof_props(self, ri, names, n, seed=0):
+        """Хлам на крыше здания ri: кондиционеры, антенна, бак, ящики — стоят на плите крыши, не мешают ходить."""
+        from random import Random
+        r = self.roofs[ri]
+        rnd = Random(seed + ri)
+        cells = [(x, y) for x in range(r["x0"] + 1, r["x1"]) for y in range(r["y0"] + 1, r["y1"])]
+        rnd.shuffle(cells)
+        for x, y in cells[:n]:
+            t = names[rnd.randrange(len(names))]
+            k = r["x1"] + r["y1"] + 2.3 - (x + y)
+            self.objs.append({"t": need_tile(t), "x": x, "y": y, "k": k, "dy": -132, "roof": ri})
+
     def partition(self, style, x0, y0, x1, y1, gaps=(), num=1, windows=()):
         """Внутренняя стена по линии клеток (вдоль x при y0 == y1, иначе вдоль y). Проёмы gaps — клетки без стены
         (в них дверной косяк); стена стоит на северном (вдоль x) или западном (вдоль y) ребре клетки."""

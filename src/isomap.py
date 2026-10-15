@@ -97,7 +97,7 @@ class IsoMap(MapBase):
             obj = {"name": o["t"], "anim": ([tile_image(t) for t in anim["frames"]], anim["ms"], anim.get("phase", 0))
                    if anim else None, "img": img, "rect": rect, "tile": (o["x"], o["y"]), "foot": [(o["x"], o["y"])],
                    "key": o["x"] + o["y"] + o.get("k", 1.0), "floor": o.get("floor", False),
-                   "front": o.get("front"), "container": None}
+                   "front": o.get("front"), "roof": o.get("roof"), "container": None}
             if o.get("b"):
                 self.blocked.add((o["x"], o["y"]))
             if o.get("s"):
@@ -238,6 +238,13 @@ class IsoMap(MapBase):
             if c is not None and c["opened"] and not c["loot"]:
                 img = img.copy()
                 img.fill((150, 140, 130, 255), special_flags=pygame.BLEND_RGBA_MULT)
+            if o.get("roof") is not None:   # хлам на крыше тает вместе с ней
+                a = self.roofs[o["roof"]]["alpha"]
+                if a <= 1:
+                    continue
+                if a < 255:
+                    img = img.copy()
+                    img.set_alpha(int(a))
             if o["front"] is not None:   # передняя стена здания, где стоит герой, — полупрозрачная
                 a = self.roofs[o["front"]]["alpha"]
                 if a < 255:
