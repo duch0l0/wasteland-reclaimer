@@ -47,6 +47,7 @@ CAR_PILE = P("by_car_pile", "pk:zcity/zcity_5_026", foot=[2, 1], sight=True)
 BUS = P("by_bus", "pk:zcity/zcity_5_019", foot=[2, 1], sight=True)
 LAMPS = [P("by_lamp", "pk:zcity/zcity_3_011"), P("by_lamp_b", "pk:zcity/zcity_3_012")]
 ROAD_SIGN = [P("by_road_sign_a", "pk:zcity/zcity_3_035", foot=[1, 1], keybg=True), P("by_road_sign_b", "pk:zcity/zcity_3_036", foot=[1, 1], keybg=True)]
+SLABS_B = [f"pk:zcity/p3/{x},{y},2,2" for x, y in ((10, 10), (14, 10), (12, 11), (10, 13), (14, 12))]
 BARRIER_B = [P("by_barrier_a", "pk:zcity/zcity_3_007", foot=[2, 1], keybg=True), P("by_barrier_b", "pk:zcity/zcity_3_008", foot=[2, 1], keybg=True)]
 BILLBOARDS = [P(f"by_billboard{i}", f"pk:zcity/zcity_4_{n:03d}", foot=[2, 1], sight=True) for i, n in enumerate((142, 143, 145))]
 SIGNS = [P("by_sign", "pk:zcity/zcity_3_036"), P("by_sign_b", "pk:zcity/zcity_3_039")]
@@ -132,7 +133,7 @@ CARPET = ["pk:aoffice/p3/3,1,1,1"]
 WOOD = ["pk:zcity/zcity_f1_00"]
 STONE = ["pk:zcity/zcity_f1_23"]
 CONCRETE = ["pk:zcity/zcity_f3_08"]
-YARD_FL = ["noise:pk:zcity/zcity_f3_08"]
+YARD_FL = ["noise:pk:zcity/zcity_f2_22"]
 MALL_TILE = ["pk:store/p1/12,0,1,1"]
 
 
@@ -255,6 +256,13 @@ by.npcs += [["cult_foreman", 58, 41], ["cult_worker", 64, 54], ["cult_worker_b",
 
 for _, x, y in by.npcs:
     by.reserve(x, y, x, y)
+# земля не пустует: пятна тёмной земли и бетона, разбитые плиты тротуара, ограждения у руин, ряды мусора вдоль бордюра
+by.floor_code("o", "noise:pk:zcity/zcity_f2_26")
+by.patchwork("r", ["o"], 24, 1, 3, seed=9)
+for i, (x, y) in enumerate(((10, 25), (30, 34), (50, 22), (66, 34), (18, 34), (60, 22), (74, 34), (24, 25))):
+    by.stamp(f"by_slab_{i}", SLABS_B[i % 5], x, y, water=False)
+for x, y in ((48, 20), (53, 20), (59, 20), (64, 20)):
+    by.maybe(BARRIER_B[x % 2], x, y)
 by.scatter(RUBBLE + [VENDING, "r_trash"], 36, 1, 39, 24, 4)
 by.scatter(RUBBLE + WRECKS[5:] + ["r_trash", "r_bones"], 46, 1, W - 2, 22, 10)
 by.scatter(RUBBLE + ["r_trash", "r_bones"], 1, 35, 38, H - 2, 12)

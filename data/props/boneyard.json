@@ -941,6 +941,86 @@
 "sight": false,
 "layer": "floor"
 },
+"by_slab_0": {
+"img": "pk:zcity/p3/10,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_1": {
+"img": "pk:zcity/p3/14,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_2": {
+"img": "pk:zcity/p3/12,11,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_3": {
+"img": "pk:zcity/p3/10,13,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_4": {
+"img": "pk:zcity/p3/14,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_5": {
+"img": "pk:zcity/p3/10,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_6": {
+"img": "pk:zcity/p3/14,10,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"by_slab_7": {
+"img": "pk:zcity/p3/12,11,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
 "boneyard_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,
