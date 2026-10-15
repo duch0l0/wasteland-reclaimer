@@ -161,8 +161,17 @@ for x in (12, 13, 14):
 ar.npcs += [["unity_sister", 11, 21], ["settler_kai", 15, 21]]
 
 # север: дом собраний Арадеша; перед ним — костёр и скамьи: здесь решают всё
-ar.building(28, 4, 14, 10, "planks", south=(6,))
+ar.building(30, 6, 10, 8, "planks", south=(4,))        # дом собраний — компактнее: большая крыша давила на лагерь
 ar.reserve(34, 14, 35, 16)
+# пристройки дома собраний: навес-склад слева, сторожка справа, знамёна и лавки у крыльца — дом больше не одинокая плита
+ar.maybe(SHED, 24, 7)
+ar.maybe(SHACK_TIN, 41, 7)
+for x in (31, 38):
+    ar.maybe("bench_7", x, 14)
+ar.maybe(WATER_BARREL, 29, 12)
+ar.maybe(WATER_BARREL, 41, 12)
+for x in (32, 37):
+    ar.maybe("lantern_lit", x, 14, allow_reserved=True)
 ar.put(CAMPFIRE, 34, 18)
 for x, y in ((32, 18), (37, 18), (33, 20), (36, 20)):      # табуреты вокруг костра
     ar.put(BENCH, x, y)
