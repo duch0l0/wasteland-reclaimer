@@ -172,11 +172,11 @@ def sheet_banner():
     save("x_vd_sheet", img)
 
 
-def stencil15():
-    """Большая трафаретная «15» жёлтым с чёрным контуром."""
+def stencil(num):
+    """Большой трафаретный номер убежища жёлтым с чёрным контуром."""
     img = new(96, T)
     font = pygame.font.Font(None, 54)
-    txt = font.render("15", False, (255, 255, 255))
+    txt = font.render(str(num), False, (255, 255, 255))
     w, h = txt.get_size()
     ox, oy = (96 - w) // 2, (T - h) // 2 + 1
     mask = pygame.mask.from_surface(txt, 100)
@@ -194,7 +194,7 @@ def stencil15():
             if img.get_at((x, y)).a and (x * 7 + y * 13) % 11 == 0:
                 c = img.get_at((x, y))
                 img.set_at((x, y), (c.r * 3 // 4, c.g * 3 // 4, c.b * 3 // 4, c.a))
-    save("x_vd_num15", img)
+    save(f"x_vd_num{num}", img)
 
 
 def exit_arrow():
@@ -386,9 +386,11 @@ def lamps():
              light={"r": 160, "color": list(c), "at": [0.5, 0.3], "flicker": 0.3 if kind == "red" else 0.05})
 
 
-for fn in (lamps, tally, drawing, nine_board, map_board, sheet_banner, stencil15, exit_arrow, plaque, waterline, cables, stains,
+for fn in (lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
            ruts, footprints, caps, drop, sparks):
     fn()
+for _n in (15, 4, 11, 12, 22, 57):
+    stencil(_n)
 hazard(False)
 hazard(True)
 

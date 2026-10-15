@@ -539,6 +539,13 @@ LM.decals(v, "x_vd_wet0", [(10, 22), (24, 24), (36, 26)])
 LM.decals(v, "x_vd_rust1", [(8, 8), (32, 8)])
 LM.decals(v, "x_vd_blood0", [(15, 7), (25, 8)])
 LM.decals(v, "x_vd_tally", [(4, 14), (20, 14)])
+LM.decals(v, "x_vd_num12", [(10, 2), (30, 2)])
+for x, y in ((18, 18), (21, 24), (25, 29), (20, 31)):     # атриум: перевёрнутая мебель и брошенные пожитки
+    v.maybe("chair_1", x, y)
+for x, y in ((24, 17), (18, 27)):
+    v.maybe("table_2", x, y)
+for x, y in ((6, 8), (14, 9), (38, 8), (32, 9)):
+    v.maybe("bench_16", x, y)
 LM.decals(v, "x_vd_hz_v", [(22, 7), (23, 7)])
 
 city.save(gap_exempt=("nc_guard", "nc_guard_b", "cult_envoy", "harry_mech", "water_queue", "water_queue_b"))

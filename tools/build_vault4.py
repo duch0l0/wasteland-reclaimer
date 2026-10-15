@@ -219,6 +219,16 @@ LM.lamps(up, "green", [(18, 20), (26, 20), (22, 31), (18, 26), (27, 26)])      #
 LM.lamps(up, "warm", [(34, 14), (41, 14), (35, 28), (41, 28)])
 LM.decals(up, "x_vd_drawing", [(5, 14), (10, 14)])                            # детские рисунки в классе
 LM.decal(up, "x_vd_plaque", 22, 2)
+LM.decals(up, "x_vd_num4", [(12, 2), (34, 2)])
+COUNTER = P("v4_counter", "pk:pmall/pmall_2_017", foot=[4, 1])
+up.maybe(COUNTER, 19, 7)                                  # стойка встречающей: у неё — анкеты и дезинфекция
+for x, y in ((6, 8), (10, 8), (34, 8), (38, 8)):
+    up.maybe("bench_16", x, y)
+for x, y in ((14, 9), (30, 9), (4, 10), (42, 10)):
+    up.maybe(POT_PLANT, x, y)
+for x in (17, 27):
+    up.maybe(PLANTERS[x % 5], x, 4)
+LM.lamps(up, "warm", [(22, 8), (14, 8), (30, 8)])
 LM.decals(up, "x_vd_oil0", [(21, 18), (24, 24)])
 LM.lamps(lw, "green", [(4, 8), (4, 16), (4, 24), (4, 32), (22, 3), (30, 3), (38, 3), (25, 22), (33, 22), (41, 22)])
 LM.lamps(lw, "red", [(14, 12), (14, 30), (44, 20), (20, 33)])

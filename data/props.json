@@ -4268,6 +4268,51 @@
     ],
     "flicker": 0.05
    }
+  },
+  "x_vd_num4": {
+   "img": "x_vd_num4",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false
+  },
+  "x_vd_num11": {
+   "img": "x_vd_num11",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false
+  },
+  "x_vd_num12": {
+   "img": "x_vd_num12",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false
+  },
+  "x_vd_num22": {
+   "img": "x_vd_num22",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false
+  },
+  "x_vd_num57": {
+   "img": "x_vd_num57",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "sight": false
   }
  }
 }

@@ -370,6 +370,15 @@
 "block": true,
 "sight": false
 },
+"v4_counter": {
+"img": "pk:pmall/pmall_2_017",
+"block": true,
+"sight": false,
+"foot": [
+4,
+1
+]
+},
 "vault4_f_tech_2_073": {
 "img": "pk:npower/npower_2_073",
 "block": true,

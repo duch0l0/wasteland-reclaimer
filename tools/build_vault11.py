@@ -143,7 +143,7 @@ print("техзал cr:", cr.dress_empty(tech_scenes(city, "v11"), ground="G", b
 LM.lamps(hl, "cold", [(8, 3), (16, 3), (29, 3), (36, 3), (7, 18), (21, 18), (7, 26), (21, 26), (34, 16), (40, 16), (34, 26), (40, 26)])
 LM.lamps(hl, "warm", [(14, 16), (14, 26)])
 LM.decals(hl, "x_vd_plaque", [(23, 2)])
-LM.decals(hl, "x_vd_num15", [(12, 2), (30, 2)])
+LM.decals(hl, "x_vd_num11", [(12, 2), (30, 2)])
 LM.decals(hl, "x_vd_hz_v", [(22, 6), (23, 6), (22, 8), (23, 8)])
 LM.decals(hl, "x_vd_oil0", [(10, 22), (18, 28)])
 LM.lamps(cr, "cold", [(6, 6), (14, 6), (22, 6), (30, 6), (8, 16), (18, 16), (28, 16)])
