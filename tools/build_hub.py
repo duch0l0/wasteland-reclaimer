@@ -444,6 +444,37 @@ tn.reserve(2, 4, 7, 8)
 tn.enemies += [["ratman", 14, 7], ["ratman", 24, 18], ["ratman", 36, 8], ["ratman_boss", 42, 6]]
 tn.put("x_pipe", 12, 4)
 tn.put("x_pipe", 26, 4)
+# своды: два ряда каменных простенков делят зал на камеры с арочными проходами; канал течёт сквозь арки
+tn.wall_code("A", "pk:bazaar/bazaar_w1_07")
+for x in (16, 28, 40):
+    for y in range(5, 11):
+        if y not in (7, 8):
+            tn.paint("A", x, y, x, y)
+    for y in range(16, 25):
+        if y not in (19, 20):
+            tn.paint("A", x, y, x, y)
+tn.paint("M", 10, 5, 12, 6)
+SEW = [P("hb_sew_rubble", "pk:sewer/sewer_1_042", foot=[2, 1]), P("hb_sew_moss", "pk:sewer/sewer_1_041", foot=[2, 1])]
+SEW_GATE = P("hb_sew_gate", "pk:sewer/sewer_1_001", foot=[2, 1], sight=True)
+SEW_OUT = P("hb_sew_outlet", "pk:sewer/sewer_1_008", foot=[3, 1], sight=True)
+tn.maybe(SEW_OUT, 22, 4)
+tn.maybe(SEW_GATE, 34, 4)
+for x, y in ((6, 15), (12, 20), (20, 16), (24, 22), (33, 21), (43, 15), (8, 9), (22, 8)):
+    tn.maybe(SEW[(x + y) % 2], x, y)
+# обжитый угол крыс: тряпьё, костёр, объедки у восточной камеры
+tn.maybe("campfire", 36, 8)
+for x, y in ((34, 9), (38, 9), (35, 6), (38, 6)):
+    tn.maybe("pile_rags" if (x + y) % 2 else "pile_junk", x, y)
+tn.maybe("x_cross", 43, 10)
+tn.maybe("r_bones", 24, 8)
+tn.maybe("r_bones", 14, 18)
+# шлюз у юго-востока: трубы и вентиль, ящики с чужими метками
+for x in (30, 34, 38):
+    tn.maybe("x_pipe", x, 24)
+LM.decals(tn, "x_vd_wet0", [(8, 18), (22, 20), (30, 8), (14, 7)])
+LM.decals(tn, "x_vd_wet1", [(26, 15), (40, 18), (5, 12)])
+LM.decals(tn, "x_vd_drip", [(14, 3), (28, 3), (40, 3)])
+LM.decals(tn, "x_vd_waterline", [(20, 12), (34, 12)])
 # у шлюза: следы недавней работы — бочки с жёлтыми треугольниками и чужой ящик
 tn.put(BARREL, 38, 17)
 tn.put(BARREL, 40, 17)
@@ -469,7 +500,9 @@ fc.night, wa.night, tn.night = [128, 112, 100], [116, 120, 132], [78, 82, 98]
 LM.lamps(fc, "warm", [(4, 8), (11, 11), (19, 11), (23, 8), (12, 18), (4, 17)])
 LM.lamps(wa, "cold", [(6, 8), (14, 8), (22, 8), (8, 15), (20, 15)])
 LM.lamps(wa, "warm", [(26, 10), (28, 16)])
-LM.lamps(tn, "amber", [(8, 8), (18, 12), (30, 9), (38, 14), (12, 20), (26, 19), (36, 21)])
+LM.lamps(tn, "amber", [(8, 8), (18, 14), (24, 9), (32, 9), (12, 20), (26, 19), (36, 21), (22, 22)])
+LM.lamps(tn, "green", [(34, 15), (44, 16)])
+LM.lamps(tn, "red", [(38, 18)])
 city.save(gap_exempt=("dolores", "water_clerk", "falcon_barkeep", "hub_guard", "decker", "falcon_gambler",
                       "falcon_drunk", "falcon_singer"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

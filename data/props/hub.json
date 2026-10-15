@@ -675,6 +675,42 @@
 ],
 "layer": "floor"
 },
+"hb_sew_rubble": {
+"img": "pk:sewer/sewer_1_042",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_sew_moss": {
+"img": "pk:sewer/sewer_1_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"hb_sew_gate": {
+"img": "pk:sewer/sewer_1_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"hb_sew_outlet": {
+"img": "pk:sewer/sewer_1_008",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
 "hub_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,
