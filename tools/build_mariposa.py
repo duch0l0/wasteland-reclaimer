@@ -72,7 +72,7 @@ BONES = [P("mp_bones", "pk:grave/grave_2_022", block=False, keybg=True), P("mp_b
 VRE_CRATE = P("mp_vre_crate", "pk:wlab/wlab_2_024", foot=[2, 1], sight=True)
 
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # песок под цвет окружающей пустыни
-GRAVEL = ["noise:pk:zcity/zcity_f3_10"]
+GRAVEL = ["noise:pk:zcity/zcity_f3_08"]                # светлый бетонный щебень двора
 PLATE = ["pk:fstation/fstation_f2_09"]
 TILE = ["pk:store/p1/12,0,1,1"]
 GRATE = cells("nbunk/p2", [(0, 12), (1, 13), (2, 14), (3, 12)])
@@ -133,6 +133,21 @@ for x, y in ((20, 14), (24, 14), (48, 12), (52, 12), (48, 36), (52, 36)):
     mp.maybe(AMMO, x, y)
 for x, y in ((16, 10), (50, 40), (14, 30)):
     mp.maybe("barrel_wood", x, y)
+# автопарк у восточной стены: ряд фургонов культа и грузовик под навесом, бочки с топливом, ящики стопками — армия, которой нет дела до порядка
+for i, (x, y) in enumerate(((50, 10), (54, 10), (58, 10), (50, 36), (54, 36), (58, 36))):
+    mp.maybe(VAN, x, y)
+for x, y in ((48, 14), (60, 14), (48, 34), (60, 34)):
+    mp.maybe("x_fire_barrel", x, y)
+for x, y in ((46, 16), (46, 32), (22, 8), (28, 8), (14, 38), (20, 38), (26, 38)):
+    mp.maybe(AMMO, x, y)
+    mp.maybe(AMMO, x + 2, y)
+# укрытия из мешков вдоль проезда и у ворот, дозорные огни, палатки обслуживания у южной стены
+for x, y in ((18, 20), (18, 28), (30, 20), (30, 28)):
+    mp.maybe("x_sandbags", x, y)
+for x, y in ((16, 40), (22, 40), (40, 40), (46, 40), (52, 40)):
+    mp.maybe(TENT_WHITE, x, y)
+for x, y in ((14, 9), (60, 38), (60, 8)):
+    mp.maybe(CAMPFIRE_M, x, y)
 # восток: бункер — спуск к лаборатории и чанам; супермутанты на часах
 mp.put(BUNKER, 50, 20)
 mp.portal([(51, 23), (52, 23)], "mariposa_lab", (20, 5), "Спуск в лабораторию")
