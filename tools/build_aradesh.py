@@ -63,6 +63,8 @@ CAMPFIRE = P("ar_campfire", "pk:ucamp/ucamp_2_040", foot=[2, 1],
 GOODS = [P("ar_cans", "pk:ucamp/ucamp_2_031", foot=[2, 1], search="shelf", title="стол с консервами"),
          P("ar_water_tbl", "pk:ucamp/ucamp_2_032", foot=[2, 1])]
 WELL = P("ar_well", "pk:desnat/desnat_3_026", foot=[2, 1])
+BARBED_A = P("ar_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1], keybg=True)
+WATCH_A = P("ar_watch_torch", "pk:cult/cult_2_068", block=False, light={"r": 120, "color": [255, 170, 80], "at": [0.5, 0.3], "flicker": 0.5})
 TENT_WHITE = P("ar_tent_white", "pk:bazaar/bazaar_1_004", foot=[2, 2], sight=True)
 WATER_BARREL = P("ar_water_barrel", "pk:desnat/desnat_3_037")
 CACTI = ["r_dry_bush", "r_rocks"]
@@ -106,7 +108,7 @@ PIT_A = [P("ar_pit_a", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=
 MOSS_A = [P("ar_moss", "pk:dcave/p1/10,14,2,2", block=False, layer="floor", keybg=True)]
 PEBBLE_A = [P(f"ar_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
 SAND = ["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"]   # тот же песок, что в каньоне: граница без скачка цвета
-GRAVEL = ["noise:pk:destown/p2/4,0,1,1"]
+GRAVEL = ["noise:pk:mbase/p1/9,9,1,1"]                 # серый укатанный гравий колеи — читается на глине и песке
 CRACK = ["noise:pk:rvill/p2/0,11,1,1"]                # тёплая приглушённая глина лагеря — не оранжевая заливка
 PLAZA_A = cells("destown/p2", [(4, 0), (5, 0), (4, 1), (5, 1)])
 PLANK = ["pk:bazaar/bazaar_f1_21"]
@@ -129,8 +131,14 @@ ar.piers = ("w",)
 ar.paint("s", 0, 0, W - 1, H - 1)
 ar.paint_ragged("k", 5, 3, 65, 47, depth=4)            # утоптанная земля лагеря — край рваный, в песок
 ar.paint("g", 0, 23, W - 1, 26)                        # колея от въезда до каньона
-ar.hwall([FENCE], 5, 65, 2)                            # хлипкий забор лагеря по северной и южной границе
-ar.hwall([FENCE], 5, 65, 47)
+ar.hwall([FENCE], 5, 30, 2, gaps=(17, 18))             # северная граница: забор, ворота, дальше — колючка за домом собраний
+ar.hwall([BARBED_A], 31, 65, 2)
+ar.hwall([FENCE], 5, 30, 47, gaps=(17, 18))
+ar.hwall([BARBED_A], 31, 65, 47, gaps=(54, 55))
+ar.side_fence("wire", 5, 3, 46, gaps=(23, 24, 25, 26))   # западная и восточная — колючка, въезд по колее свободен
+ar.side_fence("wire", 65, 3, 46, gaps=(23, 24, 25, 26))
+for x, y in ((6, 3), (64, 3), (6, 46), (64, 46), (17, 3), (54, 46)):
+    ar.maybe(WATCH_A, x, y, allow_reserved=True)
 # Дорожки: от колеи к дому собраний, к палаткам, к полям и к мастерской — лагерь ходит по тропам, а не по целине
 ar.paint("q", 34, 14, 35, 22)                          # к дому собраний
 ar.paint("q", 8, 20, 12, 22)                           # к шатру у въезда

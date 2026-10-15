@@ -38,6 +38,14 @@ WELL = P("np_well", "pk:rvill/rvill_1_060", foot=[2, 1])
 TREES = [P(f"np_tree{i}", f"pk:rvill/rvill_2_{n:03d}", scale=S, foot=[2, 1]) for i, n in enumerate((10, 11, 12))]
 GRASS = [P(f"np_grass{i}", f"pk:rvill/rvill_2_{n:03d}", block=False) for i, n in enumerate((14, 15, 16, 17))]
 CACTUS = P("np_cactus", "pk:west/west_1_008")
+BED_N = [P("np_bed_a", "pk:wfarm/p1/0,8,2,2", foot=[2, 1], keybg=True), P("np_bed_b", "pk:wfarm/p1/2,8,2,2", foot=[2, 1], keybg=True)]
+LAUNDRY_N = P("np_laundry", "pk:wfarm/p3/0,0,4,3", foot=[4, 1], keybg=True)
+FRONT_STORE = P("np_front_store", "pk:west/p1/12,12,2,2", foot=[2, 1], sight=True)
+FRONT_SALOON = P("np_front_saloon", "pk:west/p1/10,12,2,2", foot=[2, 1], sight=True)
+FRONT_SHERIFF = P("np_front_sheriff", "pk:west/p1/14,12,2,2", foot=[2, 1], sight=True)
+HITCH_N = P("np_hitch", "pk:west/p1/1,13,3,1", foot=[3, 1], keybg=True)
+TANK_N = P("np_tank", "pk:wfarm/p3/12,4,2,3", foot=[2, 1], sight=True, keybg=True)
+PLAZA_RUG = "pk:casino/p3/0,0,2,2"
 FENCE = [P("np_fence", "pk:west/west_1_013", foot=[2, 1]), P("np_fence_b", "pk:west/west_1_014")]
 TROUGH = P("np_trough", "pk:west/west_1_016")
 BARREL = P("np_barrel", "pk:west/west_1_017", search="junk", title="бочка")
@@ -86,7 +94,8 @@ COT = P("np_cot", "pk:ucamp/ucamp_3_027", foot=[4, 1])
 HAY = P("np_hay", "pk:west/west_1_004", block=False)
 
 DIRT = ["noise:pk:rvill/p2/0,11,1,1"]
-ROAD = ["noise:pk:west/p1/0,1,1,1"]
+BOARDS = ["pk:fishv/p4/6,10,1,1", "pk:fishv/p4/6,11,1,1", "pk:fishv/p4/5,10,1,1"]
+ROAD = ["noise:pk:mbase/p1/9,9,1,1"]            # серый укатанный гравий улицы — читается на фоне песка и досок
 STONE = cells("west/p1", [(4, 0), (5, 0), (4, 1), (5, 1)])
 PEBBLE_N = [P(f"np_pebbles{i}", f"pk:dcave/p1/{x},{y},1,1", block=False, keybg=True) for i, (x, y) in enumerate(((2, 4), (3, 4), (4, 4), (2, 5), (5, 5)))]
 PIT_N = P("np_pit", "pk:dcave/p1/2,8,2,2", block=False, layer="floor", keybg=True)
@@ -104,10 +113,16 @@ np_.floor_code("s", *SAND)
 np_.floor_code("d", *DIRT)
 np_.floor_code("r", *ROAD)
 np_.floor_code("t", *STONE)
+np_.floor_code("w", *BOARDS)
+np_.piers = ("w",)
 np_.paint("s", 0, 0, W - 1, H - 1)
 np_.paint_ragged("d", 3, 4, 66, 46, depth=4)
 np_.paint("r", 0, 24, W - 1, 28)                        # главная улица
 np_.paint("t", 26, 10, 46, 22)                          # ярмарочная площадь
+for _x0, _x1 in ((3, 25), (47, 68)):                     # дощатые тротуары вдоль фасадов главной улицы
+    np_.paint("w", _x0, 23, _x1, 23)
+    np_.paint("w", _x0, 29, _x1, 29)
+np_.paint("w", 26, 23, 46, 23)
 np_.exits = [(0, y) for y in range(24, 29)]
 np_.reserve(0, 24, W - 1, 28)
 
@@ -127,7 +142,7 @@ np_.put(LAMP, 46, 22)
 np_.put(LAMP, 26, 10)
 np_.put(LAMP, 46, 10)
 # север: ратуша (с крышей), лавка, дома
-np_.building(8, 6, 14, 11, "brick", south=(6,))           # ратуша
+np_.building(8, 6, 14, 11, "planks", south=(6,))          # ратуша
 np_.reserve(14, 17, 15, 23)
 np_.put(SIGN, 10, 17)
 np_.put(HOUSES[0], 50, 8)
@@ -154,7 +169,54 @@ np_.npcs += [["mayor_carroll", 16, 20], ["grace_widow", 24, 30], ["np_storekeepe
              ["np_old_mae", 20, 36], ["np_farmer", 48, 39], ["np_kid", 30, 23], ["np_drunk", 42, 23]]
 for _, x, y in np_.npcs:
     np_.reserve(x, y, x, y)
-np_.grow(1, 1, W - 2, H - 2, 8, names=[CACTUS] + TREES)
+np_.reserve(26, 10, 46, 23)                              # ярмарочная площадь — без деревьев и кустов
+np_.reserve(3, 23, 68, 29)
+# ряды фасадов вдоль улицы: у главной улицы Нипtона — лавка, салун, контора, дома с коновязями (как в Гудспрингсе)
+for x, name in ((26, FRONT_STORE), (30, FRONT_SALOON), (47, FRONT_SHERIFF), (52, FRONT_STORE)):
+    np_.maybe(name, x, 20)
+for x in (26, 30, 47, 52, 58):
+    np_.maybe(HITCH_N, x, 25, allow_reserved=True)
+for i, x in enumerate((4, 10, 16, 36, 42, 48, 54, 60)):
+    np_.maybe(HOUSES[(i + 1) % 6], x, 36)
+    np_.maybe(HITCH_N, x, 34, allow_reserved=True)
+np_.maybe(TANK_N, 38, 28, allow_reserved=True)
+# площадь ярмарки: ковры у помоста, вокруг — каменная кромка из плит и ряд флажков по углам; не плоский серый квадрат
+for x, y in ((29, 12), (40, 12), (29, 17), (40, 17), (34, 15)):
+    np_.stamp(f"np_plaza_rug_{x}_{y}", PLAZA_RUG, x, y, water=False)
+for x, y in ((27, 21), (45, 21)):
+    np_.maybe(STALLS[x % 2], x, y)
+for x, y in ((28, 11), (44, 11), (28, 20), (44, 20)):
+    np_.maybe(CRATE, x, y)
+# окраины: мёртвые деревья и кактусы вдоль краёв, а не кучами на площади
+np_.scatter(TREES, 1, 1, 24, 22, 2)
+np_.scatter(TREES, 48, 1, W - 2, 22, 2)
+np_.scatter(TREES, 1, 31, W - 2, H - 2, 4)
+np_.scatter([CACTUS], 1, 1, W - 2, H - 2, 10)
+# фонари вдоль дощатых тротуаров, скамьи у лавок, бочки с дождевой водой, коновязи
+for x in range(6, 68, 10):
+    if not 24 <= x <= 48:
+        np_.maybe(LAMP, x, 22, allow_reserved=True)
+    if not 24 <= x + 5 <= 48:
+        np_.maybe(LAMP, x + 5, 30, allow_reserved=True)
+for x, y in ((5, 22), (22, 22), (48, 22), (62, 22), (12, 30), (36, 30), (60, 30)):
+    np_.maybe(BENCH, x, y, allow_reserved=True)
+for x, y in ((4, 22), (66, 22), (4, 30), (66, 30)):
+    np_.maybe(BARREL, x, y, allow_reserved=True)
+# дворы и огороды: штакетник, грядки, бельё
+for x in (6, 12, 44):
+    np_.hwall(FENCE, x, x + 5, 43, gaps=(x + 2, x + 3))
+for i, (x, y) in enumerate(((6, 38), (9, 38), (12, 38), (46, 40), (49, 40))):
+    np_.maybe(BED_N[i % 2], x, y)
+np_.maybe(LAUNDRY_N, 18, 38)
+np_.maybe(LAUNDRY_N, 58, 38)
+np_.side_fence("wood", 63, 36, 42)
+np_.side_fence("wood", 3, 36, 42)
+# ярмарка: гирлянды, лавки, скамьи — оставлено как есть, но вокруг — второй ряд флажков и лампы по периметру
+
+# восточный посёлок: дома вдоль дороги, мастерская, загон, повозки
+np_.maybe(HOUSES[3], 58, 16)
+np_.maybe(HOUSES[4], 64, 8)
+np_.maybe(WAGON, 60, 25, allow_reserved=True)
 np_.scatter(GRASS + ["r_rocks"], 1, 1, W - 2, H - 2, 24)
 
 
