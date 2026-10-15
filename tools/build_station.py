@@ -111,6 +111,16 @@ m.enemies += [["gang", 29, 24], ["gang", 38, 25], ["gang", 28, 31], ["gang", 39,
 m.scatter(["r_dry_bush", "r_rocks", "r_bones"], 1, 1, W - 2, H - 2, 26)
 m.scatter(["r_trash", "pile_cans", "pile_scrap"], 1, 21, W - 2, H - 2, 12)
 m.grow(1, 1, W - 2, H - 2, 12)
+
+print("обжито:", m.dress_empty([
+    [("r_tent_beige", 0, 0), ("pile_rags", 3, 1), ("barrel_wood", 0, 3)],
+    [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3)],
+    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3)],
+    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
+    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("x_grave", 2, 1), ("r_dtree_a", 4, 1)],
+    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
+    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("x_fire_barrel", 3, 3)],
+], ground=("s", "t", "q"), block=7, margin=1, chance=0.95, max_uses=2))
 # свет: навес — жёлтый, лагерь — костёр и огонь бочек (уже у объектов), лампы над въездом
 LM.lamps(m, "warm", [(21, 9), (35, 9)])
 
