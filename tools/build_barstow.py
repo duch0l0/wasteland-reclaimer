@@ -144,6 +144,17 @@ def build_depot():
     k.scatter(["Object25_N", "Object26_N", "Object24_N"], 5, 20, 13, 26, 6)
     k.box("Object24_N", 12, 25, "ящик с маркировкой West Tek", {"химикаты": 3, "антирадин": 1})
 
+    # брошенные на путях «вагоны» — ржавые кузова, сараи для инструмента, ограда двора, мусор и бурьян
+    for i, (n, x, y, side) in enumerate(((3, 4, 4, "E"), (7, 12, 4, "E"), (5, 26, 4, "E"), (9, 34, 8, "E"), (2, 8, 8, "E"),
+                                         (10, 18, 12, "E"), (4, 30, 12, "E"), (1, 36, 4, "E"))):
+        k.car(n, x, y, side)
+    k.building(30, 1, 36, 3, "B", floor="Ground E1_N", doors=[("s", 2, 12)], ruined=True)
+    k.building(2, 30, 8, 32, "A", floor="Ground A6_N", doors=[("n", 2, 3)], ruined=True)
+    k.edge_line("Fence A1", [(x, 17) for x in range(1, 17)], "n")
+    k.edge_line("Fence A1", [(x, 17) for x in range(24, 40)], "n")
+    k.scatter(["Object18_N", "Object13_N", "Object12_N"], 1, 1, W - 2, H - 2, 26, block=False, only_dust=True)
+    k.scatter(["Object20_N", "Object28_N", "Object10_S"], 1, 18, W - 2, H - 2, 10)
+    k.scatter(["Tree A1_N"], 1, 1, W - 2, 6, 4, only_dust=True)
     ghouls(k, 2, 2, W - 3, 17, 14, glowing=2)
     ghouls(k, 5, 20, 13, 26, 3)
     ghouls(k, 25, 20, 35, 26, 2)
@@ -228,6 +239,11 @@ def build_center():
     horde(k, (17, 26, 19, 32), (13, 29), 15, "Сеанс окончен: из «Миража» выходят зрители.")
     horde(k, (29, 22, 35, 24), (32, 28), 15, "Руины оживают — гули лезут из-под обломков!",
           kinds=HORDE + ["rad_mutant"])
+    for n, x, y, side in ((5, 18, 12, "N"), (3, 22, 24, "N"), (6, 20, 33, "N"), (10, 6, 22, "E"), (2, 36, 17, "E"), (7, 12, 18, "E")):
+        k.car(n, x, y, side)
+    k.scatter(["Tree A1_N"], 1, 1, W - 2, H - 2, 6, only_dust=True)
+    k.scatter(["Object18_N", "Object13_N", "Object12_N"], 1, 1, W - 2, H - 2, 24, block=False, only_dust=True)
+    k.scatter(["Object20_N", "Object28_N", "Object10_S", "Object16_N"], 0, 15, W - 1, 23, 10)
     k.splats(17, 0, 25, H - 1, 14)
     k.splats(0, 18, W - 1, 20, 8)
     k.grass(1, 1, W - 2, H - 2, 16)
