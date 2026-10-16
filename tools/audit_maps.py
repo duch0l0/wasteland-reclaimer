@@ -130,9 +130,66 @@ def audit(path):
     return mid, out
 
 
+def overlaps(path):
+    """Предметы, спрайты которых заметно налезают друг на друга (стопка из двух), и спрайты, торчащие за край карты."""
+    d = load(path)
+    if d is None:
+        return None
+    mid = os.path.basename(path)[:-5]
+    T = 48
+    W, H = d["w"], d["h"]
+    rects = []
+    for e in d["props"]:
+        try:
+            inf = P.info(e[0])
+        except Exception:
+            continue
+        if inf.get("layer") == "floor" or e[0].startswith(FLAT) or not inf["block"]:
+            continue
+        w, h = inf["size"]
+        fw, fh = inf["foot"]
+        x = e[1] * T + (e[3] if len(e) > 3 else 0)
+        y = (e[2] + fh) * T - h + (e[4] if len(e) > 4 else 0)
+        rects.append((e[0], pygame.Rect(x, y, w, h), (e[1], e[2])))
+    out = []
+    for i in range(len(rects)):
+        n1, r1, p1 = rects[i]
+        if r1.right > W * T + 12 or r1.left < -12:
+            out.append(("край", n1, p1, "спрайт выходит за край карты"))
+        for j in range(i + 1, len(rects)):
+            n2, r2, p2 = rects[j]
+            if p1 == p2:
+                continue
+            ov = r1.clip(r2)
+            if ov.w <= 0 or ov.h <= 0:
+                continue
+            small = min(r1.w * r1.h, r2.w * r2.h)
+            if small and ov.w * ov.h / small > 0.55 and not n1.startswith(("x_cliff", "vwall_", "wall_")) and not n2.startswith(("x_cliff", "vwall_", "wall_")):
+                out.append(("стопка", f"{n1} + {n2}", p1, f"спрайты накладываются на {int(100 * ov.w * ov.h / small)}%"))
+    return mid, out
+
+
+def run_overlaps(files):
+    total = 0
+    for f in files:
+        r = overlaps(f)
+        if not r or not r[1]:
+            continue
+        mid, out = r
+        total += len(out)
+        print(f"\n== {mid}: {len(out)}")
+        for kind, name, pos, why in out[:25]:
+            print(f"   {kind:7s} {name:44s} {pos}  {why}")
+    print(f"\nвсего наложений: {total}")
+
+
 if __name__ == "__main__":
-    files = sys.argv[1:] or sorted(glob.glob("data/maps/*.json"))
+    args = [a for a in sys.argv[1:] if a != "--overlaps"]
+    files = args or sorted(glob.glob("data/maps/*.json"))
     files = [f if f.endswith(".json") else f"data/maps/{f}.json" for f in files]
+    if "--overlaps" in sys.argv:
+        run_overlaps(files)
+        sys.exit(0)
     total = 0
     for f in files:
         r = audit(f)
@@ -144,3 +201,4 @@ if __name__ == "__main__":
         for kind, name, pos, why in out[:40]:
             print(f"   {kind:7s} {name:22s} {pos}  {why}")
     print(f"\nвсего: {total}")
+
