@@ -421,7 +421,15 @@ class City:
         loc_path = os.path.join(ROOT, "data", "locations.json")
         with open(loc_path, "r", encoding="utf-8") as f:
             locs = json.load(f)
+        from vaultkit import tidy_lamps, exit_glow, clear_exits
         for m in self.maps:
+            cx = clear_exits(m)
+            if cx:
+                print(f"   {m.id}: у выходов расчищено предметов — {cx}")
+            tl = tidy_lamps(m)
+            exit_glow(m)
+            if tl[0] or tl[1]:
+                print(f"   {m.id}: лампы — сдвинуто к стене {tl[0]}, заменено потолочным светом {tl[1]}")
             m.fix_ladders()
             reach = m.check(gap_exempt=gap_exempt, npc_enemy_gap=0 if m.interior else 6, passable=m.gate_tiles())
             m.save(os.path.join("data", "maps", f"{m.id}.json"), **m.extra())

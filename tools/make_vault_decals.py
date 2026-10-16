@@ -381,6 +381,22 @@ def frames():
     pygame.draw.rect(img, (110, 240, 140, 255), (22, 6, 4, 2))
     save("x_vd_fr_hdr", img, light={"r": 60, "color": [110, 240, 140], "at": [0.5, 0.3], "flicker": 0.0})
 
+def exit_glow():
+    """Свет из распахнутого выхода: у южной стены интерьера клетка выхода упирается в чёрную пустоту — здесь тёплый
+    дневной свет падает на пол трапецией; ряд ниже (у самой кромки) — яркий порог. Кладётся поверх пола."""
+    for name, bright in (("x_vd_exitlight", 1.0), ("x_vd_exitlight_far", 0.55)):
+        img = new()
+        for y in range(T):
+            t = y / T
+            half = int(T * (0.34 + 0.16 * (1 - t))) if name == "x_vd_exitlight" else int(T * 0.46)
+            a = int((150 if name == "x_vd_exitlight" else 70) * (t ** 1.4) * bright) if name == "x_vd_exitlight" else int(60 * (t ** 1.2))
+            if a > 0:
+                img.fill((255, 236, 190, min(220, a)), (T // 2 - half, y, half * 2, 1))
+        if name == "x_vd_exitlight":
+            img.fill((255, 250, 225, 230), (6, T - 4, T - 12, 4))                   # порог — яркая полоса
+            img.fill((255, 240, 200, 120), (4, T - 8, T - 8, 4))
+        save(name, img, layer="floor", light=None)
+
 
 LAMPCOL = {"warm": (255, 190, 110), "cold": (160, 200, 235), "red": (255, 60, 50), "green": (130, 235, 160),
            "violet": (200, 130, 255), "amber": (255, 160, 50)}
@@ -417,7 +433,7 @@ def lamps():
              light={"r": 235, "color": [int(v * 0.72) for v in c], "at": [0.5, 0.3], "flicker": 0.3 if kind == "red" else 0.05})
 
 
-for fn in (frames, lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
+for fn in (exit_glow, frames, lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
            ruts, footprints, caps, drop, sparks):
     fn()
 for _n in (7, 15, 4, 11, 12, 22, 57):

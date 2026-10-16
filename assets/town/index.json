@@ -5421,5 +5421,19 @@
    48
   ],
   "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_exitlight": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
+ },
+ "x_vd_exitlight_far": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_vault_decals.py"
  }
 }

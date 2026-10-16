@@ -20,6 +20,7 @@
 Запуск из папки game_project:  .venv/bin/python tools/build_underground.py
 """
 from mapkit import MapKit, CRATES, BARRELS, LOCKERS, JUNK_PILES, CLOTH_PILES, RUBBLE
+from vaultkit import tidy_lamps
 from citykit import City
 
 city = City("underground", "Подземелья")     # реестр объектов из наборов: data/props/underground.json
@@ -145,7 +146,8 @@ for x in range(9, 31):
 put("x_vd_sparks", 30, 22, check=False, allow_reserved=True)
 
 v.check(npc_enemy_gap=0, passable=v.footprint(*v.props[gate_prop]))
-v.save("data/maps/vault57.json", style="vault", dark=140, night=[96, 92, 88],   # верхний ярус город освещает
+tidy_lamps(v)
+v.save("data/maps/vault57.json", style="vault", dark=140, night=[96, 92, 88], lights=getattr(v, "lights", []),   # верхний ярус город освещает
        gates=[{"prop": gate_prop, "flag": "vault_b_open", "key": "ключ-карта Б",
                "msg": "Гермодверь яруса Б. Табло: «ДОПУСК: СМОТРИТЕЛЬ». Нужна ключ-карта — или терминал рядом."}])
 print(f"Убежище 57: объектов {len(v.props)}, врагов {len(v.enemies)}, контейнеров {len(v.containers)}")
@@ -214,7 +216,8 @@ for x, y in ((12, 17), (13, 18)):
     d.put("x_vd_waterline", x, y, check=False, allow_reserved=True)
 
 d.check(npc_enemy_gap=0)
-d.save("data/maps/drain.json", style="drain", dark=195, night=[142, 152, 138])
+tidy_lamps(d)
+d.save("data/maps/drain.json", style="drain", dark=195, night=[142, 152, 138], lights=getattr(d, "lights", []))
 print(f"Ливнёвка: объектов {len(d.props)}, врагов {len(d.enemies)}, контейнеров {len(d.containers)}")
 
 
@@ -284,6 +287,7 @@ for x, y in ((22, 4), (30, 7), (19, 15), (32, 15)):
 for x, y in ((24, 12), (28, 12)):
     b.put("x_vd_stand_green", x, y, check=False, allow_reserved=True)
 b.check(npc_enemy_gap=0)
-b.save("data/maps/baker7.json", style="vault", dark=170, night=[76, 84, 96], floors={"m": STEEL, "G": GRILLE})
+tidy_lamps(b)
+b.save("data/maps/baker7.json", style="vault", dark=170, night=[76, 84, 96], floors={"m": STEEL, "G": GRILLE}, lights=getattr(b, "lights", []))
 print(f"Бейкер-7: объектов {len(b.props)}, врагов {len(b.enemies)}, контейнеров {len(b.containers)}")
 city.save()
