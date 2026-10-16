@@ -92,7 +92,17 @@ def auto_ambient(m, step=6):
 
 
 def entry_door(city, m, x, y=3, width=2):
-    """Дверь в проходе-тамбуре у верхнего края интерьера: без неё пол обрывается в чёрную пустоту."""
-    city.prop("x_door", "pk:west/p2/12,6,1,2", block=False, layer="floor")
-    for dx in range(width):
-        m.props.append(["x_door", x + dx, y])
+    """Тамбур у верхнего края интерьера (пол в толще стены, дальше чернота): стена закрывается, портал-выход
+    переносится на линию стены — обычный проём без дверей, в который не нужно «проходить сквозь створки»."""
+    wall = m.ground[1][x - 1]
+    for yy in range(1, y):
+        for dx in range(width):
+            m.ground[yy][x + dx] = wall
+    tiles = {(x + dx, yy) for dx in range(width) for yy in range(1, y)}
+    for p in m.portals:
+        p["tiles"] = [[tx, y] if (tx, ty) in tiles else [tx, ty] for tx, ty in p["tiles"]]
+        seen = []
+        for t in p["tiles"]:
+            if t not in seen:
+                seen.append(t)
+        p["tiles"] = seen

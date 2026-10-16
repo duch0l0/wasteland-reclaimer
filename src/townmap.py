@@ -475,6 +475,71 @@ def _roof_image(r):
     return img
 
 
+_DOOR_FRAMES = {}
+_DOOR_SPILL = {}
+
+
+def door_frame(k):
+    """Дверь здания, открытая на долю k (0..1): за створкой — глубина с тёплым полом у порога, створка поворачивается
+    наружу и сужается к петлям, на косяке — тень от неё; верхняя часть проёма темнее (потолок), к низу — свет внутри."""
+    q = round(k * 8)
+    if q not in _DOOR_FRAMES:
+        base = P.image("x_door")
+        out = base.copy()
+        if q:
+            f = q / 8
+            inner = pygame.Rect(7, 7, base.get_width() - 14, base.get_height() - 12)
+            leaf = base.subsurface(inner).copy()
+            for i in range(inner.h):                                   # глубина: потолок тёмный, ближе к порогу — тёплый свет
+                a = (i / inner.h) ** 1.6
+                out.fill((int(22 + 70 * a * f), int(16 + 52 * a * f), int(12 + 26 * a * f), 255),
+                         (inner.x, inner.y + i, inner.w, 1))
+            for j in range(6):                                          # внутренняя тень у правого косяка и сверху
+                sh = pygame.Surface((2, inner.h), pygame.SRCALPHA)
+                sh.fill((0, 0, 0, 90 - j * 15))
+                out.blit(sh, (inner.right - 2 - j * 2, inner.y))
+                sh2 = pygame.Surface((inner.w, 2), pygame.SRCALPHA)
+                sh2.fill((0, 0, 0, 80 - j * 12))
+                out.blit(sh2, (inner.x, inner.y + j * 2))
+            w = max(5, int(inner.w * (1 - 0.88 * f)))
+            sq = pygame.Surface((w, inner.h), pygame.SRCALPHA)
+            sq.blit(pygame.transform.scale(leaf, (w, inner.h)), (0, 0))
+            for i in range(inner.h):                                    # перспектива: свободный край створки ниже и толще
+                pass
+            shade = pygame.Surface((w, inner.h), pygame.SRCALPHA)
+            shade.fill((0, 0, 0, int(24 + 40 * f)))
+            sq.blit(shade, (0, 0))
+            edge = pygame.Surface((2, inner.h), pygame.SRCALPHA)
+            edge.fill((255, 226, 170, 120))                              # блик на торце створки
+            sq.blit(edge, (w - 2, 0))
+            out.blit(sq, (inner.x, inner.y))
+            cast = pygame.Surface((int(10 * f) + 2, inner.h), pygame.SRCALPHA)   # тень створки на проёме
+            cast.fill((0, 0, 0, int(70 * f)))
+            out.blit(cast, (inner.x + w, inner.y))
+        _DOOR_FRAMES[q] = out
+    return _DOOR_FRAMES[q]
+
+
+def door_spill(k):
+    """Тёплое пятно света на земле перед открытой дверью: трапеция, расширяющаяся от порога, и тень створки сбоку."""
+    q = round(k * 8)
+    if q not in _DOOR_SPILL:
+        w, h = T, T + 12
+        sp = pygame.Surface((w, h), pygame.SRCALPHA)
+        f = q / 8
+        for y in range(h):
+            t = y / h
+            half = int(w * (0.30 + 0.20 * t))
+            a = int(90 * f * (1 - t) ** 1.5)
+            if a > 0:
+                sp.fill((255, 200, 120, a), (w // 2 - half, y, half * 2, 1))
+        lean = pygame.Surface((10, 26), pygame.SRCALPHA)               # тень створки на земле у петель
+        pygame.draw.polygon(lean, (0, 0, 0, int(80 * f)), [(0, 0), (4, 0), (9, 24), (3, 24)])
+        sp.blit(lean, (2, 0))
+        _DOOR_SPILL[q] = sp
+    return _DOOR_SPILL[q]
+
+
 _VOID = None   # пустота за стенами интерьера — чёрная клетка (создаётся в TownMap)
 
 
@@ -707,6 +772,13 @@ class TownMap(MapBase):
     def update_roofs(self, player_tile, dt_ms):
         """Крыша здания, где стоит герой, плавно исчезает; остальные — на месте."""
         inside = self.roof_over(player_tile)
+        px, py = player_tile
+        for o in self.objects:             # двери зданий открываются перед героем и закрываются за ним
+            if o["name"] == "x_door":
+                tx, ty = o["foot"][0]
+                near = abs(px - tx) <= 1 and abs(py - ty) <= 1
+                k = o.get("open", 0.0)
+                o["open"] = min(1.0, k + dt_ms / 180) if near else max(0.0, k - dt_ms / 260)
         for r in self.roofs:
             target = 0.0 if r is inside else 255.0
             step = dt_ms * 1.4
@@ -1239,7 +1311,14 @@ class TownMap(MapBase):
                 surf.blit(P.image(name), (rect.x - cam_x, rect.y - cam_y))
         for o in self.objects:
             if o["floor"] and o["rect"].colliderect(view) and not o.get("hidden"):
-                surf.blit(P.image(o["name"]), (o["rect"].x - cam_x, o["rect"].y - cam_y))
+                if o["name"] == "x_door":
+                    kk = o.get("open", 0.0)
+                    img = door_frame(kk)
+                    if kk > 0.04:
+                        surf.blit(door_spill(kk), (o["rect"].x - cam_x, o["rect"].bottom - cam_y))
+                else:
+                    img = P.image(o["name"])
+                surf.blit(img, (o["rect"].x - cam_x, o["rect"].y - cam_y))
         if not self.night:   # ночью стрелки рисуются поверх темноты (draw_arrows из render)
             self.draw_arrows(surf, cam)
         self.draw_pickups(surf, cam)
