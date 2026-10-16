@@ -598,6 +598,182 @@
 "flicker": 0.15
 }
 },
+"nv_neon_x0": {
+"img": "pk:cyber/cyber_3_013",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+90,
+255,
+200
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_neon_x1": {
+"img": "pk:cyber/cyber_3_014",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+220
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_neon_x2": {
+"img": "pk:cyber/cyber_3_016",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+210,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_neon_x3": {
+"img": "pk:cyber/cyber_3_018",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+220,
+120,
+255
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_neon_x4": {
+"img": "pk:cyber/cyber_3_017",
+"block": false,
+"sight": false,
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+90
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_billboard_c": {
+"img": "pk:cyber/cyber_2_026",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+90,
+200
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_billboard_d": {
+"img": "pk:cyber/cyber_2_027",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+90,
+255,
+150
+],
+"at": [
+0.5,
+0.5
+],
+"flicker": 0.15
+}
+},
+"nv_vend_x0": {
+"img": "pk:cyber/cyber_3_036",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vend_x1": {
+"img": "pk:cyber/cyber_3_037",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vend_x2": {
+"img": "pk:cyber/cyber_3_051",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vend_x3": {
+"img": "pk:cyber/cyber_3_052",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vend_x4": {
+"img": "pk:cyber/cyber_3_053",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
+"nv_vend_x5": {
+"img": "pk:cyber/cyber_3_054",
+"block": true,
+"sight": true,
+"search": "junk",
+"title": "автомат"
+},
 "nv_billboard": {
 "img": "pk:cyber/cyber_2_028",
 "block": true,

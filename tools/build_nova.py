@@ -67,6 +67,11 @@ VENDING = [P(f"nv_vending{i}", f"pk:cyber/cyber_1_{n:03d}", sight=True, search="
 NEON_SIGNS = [P("nv_neon_neon", "pk:cyber/cyber_2_000", block=False, light=NEON([255, 90, 220])),
               P("nv_neon_neon_b", "pk:cyber/cyber_2_001", block=False, light=NEON([90, 200, 255])),
               P("nv_neon_ramen", "pk:cyber/cyber_2_006", block=False, light=NEON([255, 160, 90]))]
+NEON_MORE = [P(f"nv_neon_x{i}", f"pk:cyber/cyber_3_{n:03d}", block=False, light=NEON(c)) for i, (n, c) in enumerate((
+    (13, [90, 255, 200]), (14, [255, 90, 220]), (16, [255, 210, 90]), (18, [220, 120, 255]), (17, [255, 90, 90])))]
+BILLBOARDS_MORE = [P("nv_billboard_c", "pk:cyber/cyber_2_026", foot=[2, 1], sight=True, light=NEON([255, 90, 200])),
+                   P("nv_billboard_d", "pk:cyber/cyber_2_027", foot=[2, 1], sight=True, light=NEON([90, 255, 150]))]
+VENDING_MORE = [P(f"nv_vend_x{i}", f"pk:cyber/cyber_3_{n:03d}", sight=True, search="junk", title="автомат") for i, n in enumerate((36, 37, 51, 52, 53, 54))]
 BILLBOARDS = [P("nv_billboard", "pk:cyber/cyber_2_028", foot=[2, 1], sight=True, light=NEON([255, 120, 200])),
               P("nv_billboard_b", "pk:cyber/cyber_2_029", foot=[2, 1], sight=True, light=NEON([255, 90, 220]))]
 LAMP_N = P("nv_n_lamp", "pk:cyber/cyber_1_030", light={"r": 130, "color": [255, 200, 140], "at": [0.5, 0.1]})
@@ -256,11 +261,24 @@ dn.put(RAMEN_BAR, 20, 26)
 dn.put(STALLS_N[0], 4, 26)
 dn.put(STALLS_N[1], 8, 26)
 for i, (x, y) in enumerate(((26, 14), (27, 14), (54, 14), (55, 14))):
-    dn.put(VENDING[i], x, y)
-for i, (x, y) in enumerate(((22, 10), (40, 8), (16, 24), (40, 26))):
-    dn.put(NEON_SIGNS[i % 3], x, y)
+    dn.put((VENDING + VENDING_MORE)[(i * 3) % 10], x, y)
+ALL_SIGNS = NEON_SIGNS + NEON_MORE
+_sign_i = [0]
+
+
+def sign(x, y, soft=False):
+    """Следующая вывеска по кругу — одинаковые рядом не встают."""
+    n = ALL_SIGNS[_sign_i[0] % len(ALL_SIGNS)]
+    _sign_i[0] += 1
+    return (dn.maybe if soft else dn.put)(n, x, y)
+
+
+for x, y in ((22, 10), (40, 8), (16, 24), (40, 26)):
+    sign(x, y)
 dn.put(BILLBOARDS[0], 60, 12)
-dn.put(BILLBOARDS[1], 60, 30)
+dn.put(BILLBOARDS_MORE[0], 60, 30)
+dn.maybe(BILLBOARDS_MORE[1], 8, 4)
+dn.maybe(BILLBOARDS[1], 50, 4)
 for x, y in ((29, 17), (37, 17), (29, 25), (37, 25)):
     dn.put(LAMP_N, x, y)
 # стоянка аэрокаров и мусор, лужи
@@ -295,7 +313,7 @@ for x, y in ((18, 20), (24, 22), (46, 20), (52, 22)):
     dn.maybe(ROBOTS[(x + y) % 2], x, y)
 # неон по всему дну: вывески над лавками, лампы вдоль бордюров, светящиеся рекламные щиты — чёрных пятен между огнями нет
 for x, y in ((8, 10), (16, 4), (24, 6), (44, 4), (56, 8), (62, 18), (6, 38), (24, 34), (46, 28), (56, 28), (62, 36)):
-    dn.maybe(NEON_SIGNS[(x + y) % 3], x, y)
+    sign(x, y, soft=True)
 for x in range(4, 62, 8):
     if not 24 <= x <= 40:                                # у перекрёстка лампы уже стоят
         dn.maybe(LAMP_N, x, 17)
@@ -410,7 +428,7 @@ print("обжито внизу:", dn.dress_empty([
     [(ROBOTS[0], 0, 0), (TRASH, 2, 1), (PUDDLE, 3, 2), (STEAM, 0, 3)],
     [(DRONE, 0, 0), (CARS[0], 0, 2), (LAMP_N, 3, 0)],
     [(BILLBOARDS[0], 0, 0), (TRASH, 3, 1), (VENDING[2], 0, 2), (PUDDLE, 2, 3)],
-], ground="d", block=7, margin=1, chance=0.8, max_uses=2))
+], ground="d", block=7, margin=1, chance=0.8, max_uses=1))
 
 city.save(gap_exempt=("purity_officer", "purity_bot"))
 L = json.load(open("data/locations.json", encoding="utf-8"))

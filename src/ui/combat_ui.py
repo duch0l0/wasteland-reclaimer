@@ -165,7 +165,7 @@ def draw_tracers(surf, tracers, cam):
         pygame.draw.circle(surf, (255, 250, 220), head, 2)
 
 
-def wrap_text(font, text, max_w, max_lines=3):
+def wrap_text(font, text, max_w, max_lines=4):
     """Перенос по словам в строки не шире max_w; больше max_lines — хвост уходит в многоточие."""
     words, lines, cur = text.split(), [], ""
     for w in words:
@@ -195,12 +195,15 @@ def draw_speech(surf, speech, cam, zoom=1, hint=False):
     font_small = _font(18)
     ent = speech["ent"]
     r = _z(visible_rect(ent, cam), zoom)
-    lines = wrap_text(font_small, speech["text"], 240)
+    lines = wrap_text(font_small, speech["text"], 260)
     rendered = [font_small.render(ln, True, (34, 26, 18)) for ln in lines]
     lh = rendered[0].get_height() + 2
     tw = max(t.get_width() for t in rendered)
     box = pygame.Rect(0, 0, tw + 26, lh * len(rendered) + 14)
     box.midbottom = (r.centerx, r.top - 16)
+    sw, sh = surf.get_size()
+    box.left = max(4, min(box.left, sw - box.w - 4))
+    box.top = max(4, box.top)        # не уходит за верх экрана
     alpha = min(255, speech["t"] // 2)
     bubble = pygame.Surface((box.w, box.h + 11), pygame.SRCALPHA)
     fill = (248, 240, 218, alpha)
