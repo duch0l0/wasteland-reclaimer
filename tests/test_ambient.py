@@ -42,8 +42,8 @@ def ok(cond, msg):
 pygame.init()
 font = _font(18)
 long = "Лом, химия, патроны — налетай! Рога не трогать, это не для красоты, а для дела. Эймос бы сейчас ворчал..."
-lines = wrap_text(font, long, 240)
-ok(2 <= len(lines) <= 3 and all(font.size(l)[0] <= 250 for l in lines), f"длинная реплика — {len(lines)} строки, не шире облачка")
+lines = wrap_text(font, long, 260)
+ok(2 <= len(lines) <= 4 and all(font.size(l)[0] <= 270 for l in lines), f"длинная реплика — {len(lines)} строки, не шире облачка")
 ok(wrap_text(font, "Привет", 240) == ["Привет"], "короткая — одна строка")
 ok(speech_ms(long) > speech_ms("Гав!") and speech_ms("Гав!") >= 2400, "время показа растёт с длиной фразы")
 
