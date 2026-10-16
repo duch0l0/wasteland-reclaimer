@@ -93,7 +93,9 @@ class CtxMenuMixin:
     def look_at_npc(self, npc):
         lines = self.bark_lines(npc)
         if lines:   # житель бормочет что-то своё — облачко над головой
-            self.speech = {"ent": npc, "text": random.choice(lines), "t": 3200}
+            from ..ui.combat_ui import speech_ms
+            text = random.choice(lines)
+            self.speech = {"ent": npc, "text": text, "t": speech_ms(text)}
         p = self.player.skill("steal")
         mood = ("держит руку на кармане и не сводит с вас глаз" if self.flags.get(f"{npc.npc_id}_robbed")
                 else "занят своим делом")

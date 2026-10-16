@@ -48,6 +48,8 @@ from .baker import BakerMixin
 from .crime import CrimeMixin
 from .reputation import ReputationMixin
 from .pickpocket import PickpocketMixin
+from .chatter import ChatterMixin
+from .. import ambient
 from .ctxmenu import CtxMenuMixin
 from .allyvoice import AllyVoiceMixin
 from .worldchanges import WorldChangesMixin
@@ -58,7 +60,7 @@ from .clock import ClockMixin
 
 
 class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, BackpackMixin, TradeMixin,
-           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, ReputationMixin, PickpocketMixin, CtxMenuMixin, AllyVoiceMixin, WorldChangesMixin, RingMixin, CaravanMixin, FishingMixin, ClockMixin,
+           TerminalMixin, SlidesMixin, LootingMixin, MenuMixin, SaveMixin, MercMixin, BakerMixin, CrimeMixin, ReputationMixin, PickpocketMixin, CtxMenuMixin, AllyVoiceMixin, WorldChangesMixin, RingMixin, CaravanMixin, FishingMixin, ClockMixin, ChatterMixin,
            RenderMixin):
     def __init__(self, intro=True, _screen=None, _prologue=False):
         """intro — начать с главного меню (для проверок без окна его пропускают).
@@ -109,6 +111,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         from ..lighting import Lighting
         self.lighting = Lighting()
         self.dialogue = DialogueRunner("data/dialogues.json", self.check_condition)
+        self.dialogue.fallback = lambda tid: ambient.tree_for(self, tid)
         self.dialogue_speaker = None   # NPC или враг, с которым говорим
         self.combat = Combat(self)
         self.perk_choices = None       # 3 перка, пока открыто окно выбора
@@ -226,6 +229,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
             if self.speech["t"] <= 0:
                 self.speech = None
         self._barks(dt_ms)
+        self._chatter(dt_ms)
         self.update_ally_voice(dt_ms)
         self.update_fishing(dt_ms)
         if not self.combat.active:
@@ -272,7 +276,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         Строка — всегда; {"text", "if"} — только когда условие верно (эхо поступков героя, карма, репутация)."""
         from .reputation import town_of
         town = town_of(self.loc.id) if self.loc else None
-        pool = list(BARKS.get(npc.npc_id, []))
+        pool = list(BARKS.get(npc.npc_id, [])) or ambient.barks_for(npc.npc_id)
         if npc.npc_id not in NO_RUMORS:
             pool += BARKS.get(f"@{town}", []) + BARKS.get("@all", [])
         out = []

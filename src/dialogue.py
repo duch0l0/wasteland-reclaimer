@@ -25,12 +25,17 @@ class DialogueRunner:
         self.check = check_fn
         self.active_id = None
         self.active_node = None
+        self.fallback = None
 
     def is_active(self):
         return self.active_node is not None
 
     def start(self, tree_id):
         tree = self.trees.get(tree_id)
+        if not tree and self.fallback:                 # жители и звери из src/ambient.py — дерево собирается на лету
+            tree = self.fallback(tree_id)
+            if tree:
+                self.trees[tree_id] = tree
         if not tree:
             return None
         start = tree["start"]

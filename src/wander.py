@@ -18,7 +18,7 @@ MAX_PATH = 6                # дальше этого за одну прогул
 
 def _init(ent):
     ent.home = tile_of(ent)
-    ent.wander_radius = random.choice((2, 3))
+    ent.wander_radius = getattr(ent, "stroll", None) or random.choice((2, 3))
     ent.wander_path = []
     ent.wander_wait = random.randint(*WAIT_MS)
 
@@ -74,6 +74,8 @@ def update(game, dt_ms, frozen):
         if not hasattr(e, "home"):
             _init(e)
         if not e.wander_path:
+            if getattr(e, "chatting", False):      # беседует (src/game/chatter.py) — стоит, пока не договорит
+                continue
             e.wander_wait -= dt_ms
             if e.wander_wait > 0:
                 continue

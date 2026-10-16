@@ -190,6 +190,8 @@ def assign_squad_roles(loc_id, enemies):
 def npc_variant(npc_id):
     """Житель с общим листом (пятнадцать «folk_c» в разных городах) — свой оттенок одежды и волос, всегда один и тот же."""
     import zlib
+    if npc_id.startswith("amb_critter_"):
+        return 0                                   # зверьё — свои листы цвета, без перекраски
     sheet = NPC_SPRITES.get(npc_id, npc_id)
     if sheet == npc_id or list(NPC_SPRITES.values()).count(sheet) < 2:
         return 0
@@ -268,6 +270,9 @@ class Location:
         self.npcs = [NPC(pos, npc_animations(nid), npc_id=nid, name=NPC_NAMES.get(nid, nid))
                      for pos, nid in self.level.npc_spawns]
         self.npcs_all = list(self.npcs)   # все жители карты — тот, кто ушёл со спутником и вернулся, снова здесь
+        from . import ambient
+        if ambient.enabled() and not (self.is_encounter or d.get("scene")):
+            ambient.populate(self, loc_id)    # живое население: жители с характерами и зверьё (src/ambient.py)
 
     def faction_members(self, faction):
         return [e for e in self.enemies if e.alive and e.faction == faction]

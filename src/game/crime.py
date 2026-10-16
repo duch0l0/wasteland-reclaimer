@@ -111,7 +111,7 @@ class CrimeMixin:
         if victim is not None:
             target = self._npc_to_enemy(victim, fac)
         for n in list(self.npcs):
-            if n.npc_id in SPARE:
+            if n.npc_id in SPARE or n.npc_id.startswith("amb_critter_"):
                 continue
             if fac == "cult" or ROLES.get(n.npc_id, "civilian") != "civilian":
                 self._npc_to_enemy(n, fac)
@@ -123,7 +123,7 @@ class CrimeMixin:
 
     def attack_npc(self, npc):
         """Shift + клик по жителю: напасть. Город это видит."""
-        if npc.npc_id in SPARE or self.merc_mode:
+        if npc.npc_id in SPARE or npc.npc_id.startswith("amb_critter_") or self.merc_mode:
             self.log("Рука не поднимается.")
             return
         name = NPC_NAMES.get(npc.npc_id, npc.name)
