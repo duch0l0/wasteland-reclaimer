@@ -18,6 +18,7 @@ bazaar, underground-survivor-camp (ucamp).
 import json
 
 from citykit import City, CityMap
+from vaultkit import Lamps, entry_door
 
 city = City("primm", "Примм")
 
@@ -526,6 +527,7 @@ print("обжито:", pm.dress_empty([
 
 # подвал казино: склад выпивки и реквизита, ящики с фишками, бочки, битые бутылки
 cl.scatter(["crate", "crate_b", "barrel_wood", "pile_bottles", "crate_broken", "sack", "pile_cans", "pile_rags"], 3, 3, 28, 18, 18)
+entry_door(city, vk, 16)
 city.save()
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["primm"].update({"world_name": "Примм", "discover": True})

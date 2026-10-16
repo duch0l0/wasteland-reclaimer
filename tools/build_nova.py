@@ -385,6 +385,25 @@ print("обжито наверху:", up.dress_empty([
     [(SNOW_TREE, 0, 0), (BALL_TREE, 3, 0), (BENCH_W, 0, 2), (FLOWERS, 3, 2), (PALM_POT, 5, 1)],
     [(CAR_W, 0, 0), (CART, 3, 2), (LAMP_TALL, 0, 2), (BIN_W, 5, 0)],
 ], ground="w", block=7, margin=1, chance=1.0))
+
+# серые кварталы между домами тоже жилые: скверики, парковки, площадки, зелёные стены, дроны; движение на проспектах
+print("обжито серое:", up.dress_empty([
+    [(PARK_TREE, 0, 0), (PARK_TREE, 3, 0), (BENCH_W, 1, 2), (FLOWERS, 4, 2), (LAMP_TALL, 6, 1)],
+    [(CAR_W, 0, 0), (TAXI, 0, 2), (LAMP_TALL, 4, 0), (BIN_W, 5, 2)],
+    [(FOUNTAIN, 1, 1), (FLOWERS, 0, 3), (FLOWERS, 3, 3), (BENCH_W, 4, 1)],
+    [(GREEN_WALL, 0, 0), (GREEN_WALL_B, 2, 0), (BALL_TREE, 4, 0), (FERN_POT, 0, 2), (PALM_POT, 4, 2)],
+    [(SOLAR, 0, 0), (SOLAR, 2, 0), (PURIFIER, 4, 0), (VEND_W, 0, 2), (BIN_W, 1, 2), (ATM_W, 2, 2)],
+    [(SNOW_TREE, 0, 0), (SNOW_TREE, 3, 0), (BENCH_W, 1, 3), (DRONE_W, 4, 2)],
+], ground="g", block=6, margin=1, chance=1.0, max_uses=4))
+up.scatter([TREE_SMALL, BALL_TREE, PALM_POT, FERN_POT, BIN_W, FLOWERS], 1, 1, 28, 20, 26)
+up.scatter([TREE_SMALL, BALL_TREE, PALM_POT, FERN_POT, BIN_W, FLOWERS], 39, 1, 66, 20, 26)
+up.scatter([LAMP_TALL, LAMP_TALL, BENCH_W, FLOWER_BED[0], FLOWER_BED[1], HEDGE_H], 1, 1, 66, 20, 18)
+up.scatter([TREE_SMALL, BALL_TREE, PALM_POT, FERN_POT, BIN_W, FLOWERS, LAMP_TALL], 1, 26, 28, 44, 20)
+up.scatter([TREE_SMALL, BALL_TREE, PALM_POT, FERN_POT, BIN_W, FLOWERS, LAMP_TALL], 39, 26, 66, 44, 20)
+for x, y in ((32, 6), (35, 10), (32, 30), (34, 38), (8, 22), (20, 23), (46, 22), (60, 23), (4, 23), (54, 22)):
+    up.maybe([TAXI, LIMO, CAR_W][(x + y) % 3], x, y, check=False)
+for x in range(4, 64, 6):
+    up.maybe(DRONE_W, x, 17 + (x // 6) % 3)
 print("обжито внизу:", dn.dress_empty([
     [(CARS[1], 0, 0), (TRASH, 3, 0), (PUDDLE, 0, 2), (LAMP_N, 4, 2)],
     [(STALLS_N[1], 0, 0), (VENDING[0], 3, 0), (TRASH, 0, 2), (NEON_SIGNS[2], 2, 2)],

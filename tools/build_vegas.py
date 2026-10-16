@@ -22,6 +22,7 @@ luxury-restaurant (lrest), abandoned-coal-mine (cmine), junkyard (jtown), bazaar
 import json
 
 from citykit import City, CityMap, tech_scenes
+from vaultkit import Lamps, entry_door
 
 city = City("vegas", "Руины Вегаса")
 NIGHT = [92, 98, 140]
@@ -627,7 +628,7 @@ tn.opening(18, 6, 18, 11, "M")
 tn.opening(18, 17, 18, 23, "M")
 tn.opening(34, 6, 34, 11, "M")
 tn.opening(34, 17, 34, 23, "M")
-tn.paint("~", 24, 2, 28, 28)                          # проток коллектора
+tn.paint("~", 24, 4, 28, 28)                          # проток коллектора
 for y0 in (7, 19):
     tn.paint("k", 24, y0, 28, y0 + 2)                 # мостки
 tn.blob("m", 8, 22, 5, 3)                             # мох в западной камере
@@ -641,7 +642,7 @@ tn.props.append(["x_ladder", 45, 25])
 tn.portal([(45, 25)], "vegas_tower", (4, 26), "Подвал башни Vault-Tec")
 tn.reserve(42, 23, 47, 27)
 # центральный зал: коллектор с выпуском на севере, решётки, трубы, фонари на мостках
-tn.maybe(SW_OUTLET, 25, 2)
+tn.maybe(SW_OUTLET, 25, 3, check=False, allow_reserved=True)
 tn.maybe(SW_GATE, 21, 2)
 for y in (5, 11, 16, 24):
     tn.maybe(SW_LANTERN, 23, y)
@@ -841,6 +842,7 @@ print("техзал vt:", vt.dress_empty(tech_scenes(city, "vg"), ground="M", bl
 
 # хранилище «Ноль»: ящики, стеллажи, оборудование по периметру
 vt.scatter(["crate", "toolbox_red", "canister", "pile_scrap", "locker_1", "metal_shelf", "crate_b", "ammo_box"], 3, 3, 36, 28, 14)
+entry_door(city, dn, 15)
 city.save(gap_exempt=("cooper_zero",))
 L = json.load(open("data/locations.json", encoding="utf-8"))
 L["vegas_strip"].update({"world_name": "Руины Вегаса", "discover": True})

@@ -89,3 +89,10 @@ def auto_ambient(m, step=6):
                 have.append((x, y2))
                 n += 1
     return n
+
+
+def entry_door(city, m, x, y=3, width=2):
+    """Дверь в проходе-тамбуре у верхнего края интерьера: без неё пол обрывается в чёрную пустоту."""
+    city.prop("x_door", "pk:west/p2/12,6,1,2", block=False, layer="floor")
+    for dx in range(width):
+        m.props.append(["x_door", x + dx, y])

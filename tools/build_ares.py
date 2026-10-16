@@ -252,6 +252,23 @@ for x, y in ((46, 36), (50, 38), (8, 34)):
     mr.maybe(FUEL[1], x, y)
 LM.decals(mr, "x_vd_oil0", [(14, 22), (47, 24), (26, 20)])
 
+# равнина живёт: тёмные базальтовые пятна и светлая пыль, следы колёс и ног, кучи камней, брошенные ящики, флажки разметки
+for x, y in ((8, 30), (14, 34), (20, 36), (44, 34), (30, 28), (6, 8), (60, 14), (52, 20)):
+    mr.maybe("x_vd_ruts_h", x, y, check=False)
+    mr.maybe("x_vd_ruts_h", x + 1, y, check=False)
+    mr.maybe("x_vd_ruts_h", x + 2, y, check=False)
+for x, y in ((20, 28), (24, 33), (36, 33), (40, 36), (28, 22)):
+    mr.maybe("x_vd_steps", x, y, check=False)
+for x, y in ((6, 20), (14, 4), (26, 3), (46, 4), (62, 18), (4, 42), (58, 42), (44, 42), (12, 41)):
+    mr.maybe(ROCKS[2], x, y)
+for x, y in ((18, 40), (46, 38), (56, 20), (8, 18), (62, 36), (24, 3)):
+    mr.maybe(CRATES[(x + y) % 2], x, y)
+for x, y in ((15, 12), (28, 18), (44, 18), (56, 26), (9, 26)):
+    mr.maybe(SOLAR, x, y)
+for x, y in ((8, 14), (20, 14), (52, 14), (62, 26), (40, 38)):
+    LM.lamp(mr, "cold", x, y)
+mr.scatter([ROCKS[0].replace("ar2_rock", "ar2_rock") if False else "ar2_rock", "ar2_rock_b", "ar2_boulder"], 1, 1, W - 2, H - 2, 34)
+
 
 # ================================================================ жилой модуль
 W, H = 40, 30

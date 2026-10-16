@@ -118,6 +118,33 @@ for y in range(7, 40):
     pe.maybe(SANDBAGS, 56, y, check=False)
 pe.put(TURRET[0], 16, 18)
 pe.put(TURRET[1], 16, 27)
+# внешний мир вокруг ограды: колея к воротам, брошенные машины контрактников, палаточный пост, кучи камней, вышки связи, сухостой
+pe.floor_code("k", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
+pe.floor_code("q", "pk:desnat/p1/10,4,1,1")
+pe.patchwork("s", ["k"], 22, 2, 5, seed=91)
+pe.patchwork("s", ["q"], 14, 1, 3, seed=92)
+for x in range(1, 13, 2):
+    pe.maybe("x_vd_ruts_h", x, 22, check=False)
+    pe.maybe("x_vd_ruts_h", x, 24, check=False)
+for x, y in ((3, 18), (6, 28), (9, 17), (4, 30)):
+    pe.maybe("x_vd_steps", x, y, check=False)
+for x, y in ((3, 15), (8, 29), (5, 33)):
+    pe.maybe(["r_car_wreck", "r_car_a", "r_pickup", "r_taxi"][(x + y) % 4], x, y)
+pe.maybe("r_tent_green", 4, 19)
+pe.maybe("r_tent_low", 6, 20)
+pe.maybe("campfire", 5, 21, check=False)
+pe.maybe("r_logs", 7, 22)
+pe.maybe("pile_bags", 3, 26)
+pe.maybe("barrel_wood", 2, 19)
+for x, y in ((2, 8), (8, 11), (4, 36), (9, 40), (2, 43), (60, 6), (61, 20), (60, 34), (60, 42), (58, 2), (40, 2), (24, 2), (30, 44), (46, 44)):
+    pe.maybe(["r_dtree_a", "r_dry_bush", "r_dtree_b", "r_rocks"][(x + y) % 4], x, y)
+for x, y in ((1, 2), (10, 3), (58, 12), (6, 42), (50, 43), (62, 28)):
+    pe.maybe("r_pole_wire", x, y)
+pe.maybe("r_billboard", 3, 12)
+pe.scatter(["r_rocks", "r_dry_bush", "r_bones"], 0, 0, 13, H - 1, 24)
+pe.scatter(["r_rocks", "r_dry_bush", "r_bones"], 57, 0, W - 1, H - 1, 12)
+for x, y in ((3, 10), (6, 36), (12, 14)):
+    LM.lamp(pe, "warm", x, y)
 # вышка ретранслятора Poseidon Energy — то, что видно с дороги
 pe.put(RELAY, 30, 8)
 pe.put(SATELLITE, 26, 10)
