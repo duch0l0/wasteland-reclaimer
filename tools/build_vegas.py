@@ -643,7 +643,7 @@ tn.portal([(45, 25)], "vegas_tower", (4, 26), "Подвал башни Vault-Tec
 tn.reserve(42, 23, 47, 27)
 # центральный зал: коллектор с выпуском на севере, решётки, трубы, фонари на мостках
 tn.maybe(SW_OUTLET, 25, 3, check=False, allow_reserved=True)
-tn.maybe(SW_GATE, 21, 2)
+tn.maybe(SW_GATE, 21, 3, check=False, allow_reserved=True)
 for y in (5, 11, 16, 24):
     tn.maybe(SW_LANTERN, 23, y)
     tn.maybe(SW_LANTERN, 29, y)
