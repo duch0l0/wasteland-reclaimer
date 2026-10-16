@@ -214,7 +214,7 @@ for x, y in ((12, 17), (13, 18)):
     d.put("x_vd_waterline", x, y, check=False, allow_reserved=True)
 
 d.check(npc_enemy_gap=0)
-d.save("data/maps/drain.json", style="drain", dark=195, night=[84, 92, 88])
+d.save("data/maps/drain.json", style="drain", dark=195, night=[142, 152, 138])
 print(f"Ливнёвка: объектов {len(d.props)}, врагов {len(d.enemies)}, контейнеров {len(d.containers)}")
 
 

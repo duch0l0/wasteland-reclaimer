@@ -309,7 +309,7 @@ dn.scatter([TRASH] + ROBOTS, 1, 1, W - 2, H - 2, 8)
 # ================================================================ Ядро НОВЫ
 W, H = 40, 30
 cr = CityMap(city, "nova_core", "Ядро НОВЫ", W, H, start=(6, 26), seed=263, interior=True, music="lab",
-             night=[40, 50, 80])                           # полумрак, светятся только серверы и голограмма
+             night=[84, 100, 136])                           # полумрак, светятся только серверы и голограмма
 cr.floor_code("M", *GRATE)
 cr.wall_code("W", "pk:cyber/cyber_w1_11")
 cr.room(1, 1, 39, 29, "W", "M")

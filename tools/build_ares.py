@@ -336,7 +336,7 @@ print("жилой модуль hb:", hb.dress_empty(tech_scenes(city, "ar6"), gr
 # ================================================================ лаборатория
 W, H = 40, 30
 lb = CityMap(city, "ares_lab", "«Арес»: лаборатория", W, H, start=(6, 26), seed=274, interior=True, music="vats",
-             night=[60, 70, 96])
+             night=[96, 106, 134])
 lb.floor_code("F", *FLOOR)
 lb.wall_code("W", "pk:mars/mars_w2_10")
 lb.room(1, 1, 39, 29, "W", "F")

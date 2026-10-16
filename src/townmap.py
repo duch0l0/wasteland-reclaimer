@@ -236,6 +236,32 @@ def _roof_texture(style):
     return _ROOF_TEX[style]
 
 
+ROOF_THEMES = {
+    "clinic": ("КЛИНИК", "+"), "sheriff": ("ШЕРИФ", "★", "КОМАНДОВАНИЕ"), "water": ("ВОДА", "КУПАЛЬНИ"),
+    "tavern": ("САЛУН", "ТРАПЕЗНАЯ", "ГРЕК", "БЕЗУМНЫЙ"), "motel": ("МОТЕЛЬ", "HOTEL", "ЗАМОК"), "shop": ("MART", "ЛАВКА"),
+    "show": ("МИРАЖ", "Ω", "КАЗИНО"), "works": ("ГАРАЖ", "ДЕПО", "FREIGHT", "ЗАПРАВКА", "КОНТОРА", "АНГАР", "РОЙ"),
+    "hall": ("СОВЕТ", "ЕДИНСТВО", "КЕЛЬИ")}
+THEME_KINDS = {   # что чаще встречается на крыше такого здания (прочее — общее)
+    "clinic": ("vent", "vent", "sky", "sky", "ac", "hatch"), "sheriff": ("antenna", "antenna", "solar", "vent", "sandbags"),
+    "water": ("tank", "tank", "pipe", "pipe", "hatch"), "tavern": ("chimney", "chimney", "barrel", "barrel", "lights", "crates"),
+    "motel": ("ac", "ac", "ac", "vent", "dish", "laundry"), "shop": ("crates", "crates", "tarp", "sky", "ac"),
+    "show": ("antenna", "antenna", "sky", "lights", "dish"), "works": ("sky", "sky", "vent", "pipe", "crates", "junk", "ac"),
+    "hall": ("sky", "dish", "pots", "vent"),
+    "home_a": ("laundry", "pots", "barrel", "dish", "chimney"), "home_b": ("dish", "ac", "pots", "tarp", "antenna"),
+    "home_c": ("barrel", "chimney", "crates", "laundry", "vent")}
+THEME_SIG = {   # фирменная деталь крыши, ставится один раз
+    "clinic": ("cross",), "sheriff": ("flag",), "water": ("tank",), "tavern": ("chimney",), "motel": ("sign_frame",),
+    "shop": ("sign_frame",), "show": ("sign_frame",), "works": ("mast",), "hall": ("flag",)}
+
+
+def _roof_theme(r):
+    text = (r.get("sign") or "").upper()
+    for th, keys in ROOF_THEMES.items():
+        if any(k in text for k in keys):
+            return th
+    return ("home_a", "home_b", "home_c")[r["seed"] % 3]
+
+
 def _roof_image(r):
     """Крыша по стилю здания, в пиксель-арте 2×2: рубероид с гравием и вентиляцией (кирпич),
     ржавый профнастил (металл), доски (дерево), бетонная плита (бетон). С парапетом."""
@@ -255,17 +281,24 @@ def _roof_image(r):
             base = tuple(min(255, int(c * 1.32) + (12 if i == 0 else 4 if i == 1 else 0)) for i, c in enumerate(base))
         pal = [base] * 4
         img.fill(tuple(int(c * 0.78) for c in base) + (255,))      # подложка: между дранками нет прозрачных щелей
-        rowh = 14 if style == "planks" else 24
-        sw = 40 if style == "planks" else 22
+        # плоские крыши: дерево — настил из длинных досок вдоль крыши, металл — листы кровельного железа со швами
+        if style == "planks":
+            rowh, sw = 12, 90
+        else:
+            rowh, sw = 60, 60
         for ry, y in enumerate(range(0, h, rowh)):
-            off = (ry * 17 + r["seed"]) % sw
+            off = (ry * 37 + r["seed"]) % sw
             for sx in range(-off, w, sw):
-                k = rnd.uniform(0.86, 1.1)
+                k = rnd.uniform(0.9, 1.08)
                 col = tuple(max(0, min(255, int(c * k))) for c in base)
                 img.fill(col, (max(0, sx), y, min(sw, w - max(0, sx)) - (1 if sx >= 0 else 0), rowh - 1))
-                if rnd.random() < 0.1:
-                    img.fill(tuple(int(c * 0.72) for c in base), (max(0, sx) + 3, y + 3, rnd.choice((6, 9)), 3))
-            img.fill(tuple(int(c * 0.62) for c in base), (0, y + rowh - 1, w, 1))
+                if style == "planks" and rnd.random() < 0.08:        # сучок
+                    img.fill(tuple(int(c * 0.7) for c in base), (max(0, sx) + rnd.randrange(8, 70), y + 4, 5, 3))
+                if style == "metal":                                  # рёбра жёсткости на листе
+                    for rx in range(max(0, sx) + 10, min(w, sx + sw) - 4, 12):
+                        img.fill(tuple(min(255, int(c * 1.12)) for c in base), (rx, y + 2, 2, rowh - 5))
+                        img.fill(tuple(int(c * 0.8) for c in base), (rx + 2, y + 2, 1, rowh - 5))
+            img.fill(tuple(int(c * 0.6) for c in base), (0, y + rowh - 1, w, 1))
     elif tex is not None:        # крыша из настоящей текстуры набора (бетонные плиты, гудрон)
         for y in range(0, h, T):
             for x in range(0, w, T):
@@ -310,7 +343,7 @@ def _roof_image(r):
     # объём и износ: двускатная крыша (дерево, металл) — светлый скат и тёмный скат со коньком;
     # плоская (кирпич, бетон) — пятна выцветания и потёки, чтобы плитка не читалась сеткой
     shade = pygame.Surface((w, h), pygame.SRCALPHA)
-    if style in ("planks", "metal"):
+    if False:
         mid = h // 2
         shade.fill((255, 255, 255, 26), (0, 0, w, mid))
         shade.fill((0, 0, 0, 44), (0, mid, w, h - mid))
@@ -328,7 +361,31 @@ def _roof_image(r):
             x = rnd.randrange(8, max(9, w - 8), 2)
             shade.fill((0, 0, 0, 30), (x, 6, 4, rnd.randrange(h // 6, h // 3)))
     img.blit(shade, (0, 0))
-    if style in ("planks", "metal") and w >= 6 * T:      # большая двускатная крыша: слуховые окна, печные трубы, водосток
+    if False:                                             # скатные крыши отключены: все крыши плоские
+        mid = h // 2
+        ridge = pygame.Surface((w, 8), pygame.SRCALPHA)
+        ridge.fill((52, 40, 30, 255))
+        pygame.draw.rect(ridge, (150, 122, 92, 255), (0, 0, w, 3))
+        pygame.draw.rect(ridge, (96, 74, 54, 255), (0, 3, w, 2))
+        img.blit(ridge, (0, mid - 4))
+        cast = pygame.Surface((w, 16), pygame.SRCALPHA)
+        for yy in range(16):
+            cast.fill((0, 0, 0, int(64 * (1 - yy / 16))), (0, yy, w, 1))
+        img.blit(cast, (0, mid + 4))                       # тень конька на южном скате
+        for _ in range(max(2, w // 70)):                   # потёки ржавчины / тёмные разводы по скату
+            x = rnd.randrange(8, max(9, w - 8), 2)
+            ln = rnd.randrange(14, 36)
+            ys = rnd.randrange(mid + 8, max(mid + 9, h - ln - 6))
+            col = (96, 52, 32, 70) if style == "metal" else (30, 22, 16, 60)
+            sg = pygame.Surface((3, ln), pygame.SRCALPHA)
+            sg.fill(col)
+            img.blit(sg, (x, ys))
+        for _ in range(max(1, w // 140)):                  # пятна мха на северном, влажном скате
+            mx, my = rnd.randrange(12, max(13, w - 40)), rnd.randrange(10, max(11, mid - 18))
+            ms = pygame.Surface((rnd.choice((22, 30, 38)), rnd.choice((10, 14))), pygame.SRCALPHA)
+            pygame.draw.ellipse(ms, (64, 92, 52, 80), ms.get_rect())
+            img.blit(ms, (mx, my))
+    if False and style in ("planks", "metal") and w >= 6 * T:      # большая двускатная крыша: слуховые окна, печные трубы, водосток
         mid = h // 2
         for k in range(max(2, w // (4 * T))):
             cx = int((k + 0.5) * w / max(2, w // (4 * T))) + rnd.randrange(-10, 11, 2)
@@ -350,7 +407,11 @@ def _roof_image(r):
         img.fill((120, 98, 76), (6, h - 18, w - 12, 2))
     # оборудование на крыше: кондиционеры, световые люки, баки, солнечные панели, антенны, заплаты, трубы — по площади,
     # без наложения; на скатных крышах (дерево, металл) — только то, что уместно на скате
-    pitched = style in ("planks", "metal")
+    pitched = False
+    DETAIL_SC = 1.7                                   # детали рисуются на уменьшенном слое и растягиваются — крупнее и читаются
+    real_img, real_w, real_h = img, w, h
+    w, h = int(real_w / DETAIL_SC), int(real_h / DETAIL_SC)
+    img = pygame.Surface((w, h), pygame.SRCALPHA)
     used = []
 
     def free(x, y, bw, bh):
@@ -364,18 +425,33 @@ def _roof_image(r):
         sh = pygame.Surface((bw + 6, bh + 6), pygame.SRCALPHA)
         sh.fill((0, 0, 0, 70))
         img.blit(sh, (x + 3, y + 5))
-    flat_kinds = ("ac", "ac", "sky", "tank", "solar", "vent", "hatch", "tarp", "pipe", "antenna", "junk")
-    sloped_kinds = ("tarp", "tarp", "sky", "antenna", "patch")
-    for _ in range(max(2, (w * h) // (T * T * 6))):
-        kind = rnd.choice(sloped_kinds if pitched else flat_kinds)
-        bw, bh = {"ac": (36, 28), "sky": (30, 22), "tank": (30, 30), "solar": (44, 30), "vent": (22, 18), "hatch": (20, 18),
-                  "tarp": (rnd.choice((40, 54)), rnd.choice((26, 34))), "pipe": (rnd.choice((60, 84)), 8),
-                  "antenna": (14, 14), "junk": (30, 12), "patch": (rnd.choice((28, 40)), 14)}[kind]
+    theme = _roof_theme(r)
+    flat_kinds = THEME_KINDS.get(theme, ()) * 2 + ("ac", "sky", "vent", "hatch", "tarp", "pipe", "antenna", "junk")
+    sloped_kinds = flat_kinds
+    SIZES = {"ac": (36, 28), "sky": (30, 22), "tank": (30, 30), "solar": (44, 30), "vent": (22, 18), "hatch": (20, 18),
+             "pipe": (rnd.choice((60, 84)), 8), "antenna": (14, 14), "junk": (30, 12), "patch": (rnd.choice((28, 40)), 14),
+             "tarp": (rnd.choice((40, 54)), rnd.choice((26, 34))), "cross": (40, 40), "flag": (30, 26), "chimney": (22, 22),
+             "barrel": (26, 18), "lights": (rnd.choice((90, 120)), 8), "crates": (34, 24), "dish": (24, 24), "laundry": (rnd.choice((70, 96)), 20),
+             "pots": (34, 14), "sign_frame": (rnd.choice((70, 90)), 22), "mast": (16, 16), "sandbags": (34, 14)}
+
+    def place(kind):
+        bw, bh = SIZES[kind]
         if w < bw + 24 or h < bh + 28:
+            return None
+        for _try in range(14):
+            x, y = rnd.randrange(12, w - bw - 12, 2), rnd.randrange(12, h - bh - 16, 2)
+            if free(x, y, bw, bh):
+                return x, y, bw, bh
+        return None
+
+    todo = [("sig", k) for k in THEME_SIG.get(theme, ())]
+    todo += [("rnd", None)] * max(2, (w * h) // (T * T * 3))
+    for mode, sigkind in todo:
+        kind = sigkind if mode == "sig" else rnd.choice(flat_kinds)
+        spot = place(kind)
+        if spot is None:
             continue
-        x, y = rnd.randrange(12, w - bw - 12, 2), rnd.randrange(12, h - bh - 16, 2)
-        if not free(x, y, bw, bh):
-            continue
+        x, y, bw, bh = spot
         if kind == "ac":                                          # кондиционер: короб, решётка вентилятора, тень
             shadow(x, y, bw, bh)
             pygame.draw.rect(img, (74, 78, 84), (x, y, bw, bh))
@@ -416,7 +492,7 @@ def _roof_image(r):
             pygame.draw.rect(img, (110, 100, 88), (x + 2, y + 2, bw - 4, bh - 4))
             img.fill((70, 62, 54), (x + 2, y + bh // 2 - 1, bw - 4, 2))
         elif kind == "tarp":                                      # брезент заплатой, прижат кирпичами
-            c = rnd.choice(((52, 92, 120), (78, 98, 66), (112, 70, 56)))
+            c = rnd.choice(((78, 86, 88), (84, 88, 70), (104, 82, 68), (92, 80, 72)))
             pygame.draw.rect(img, tuple(max(0, v - 30) for v in c), (x, y, bw, bh))
             pygame.draw.rect(img, c, (x + 1, y + 1, bw - 2, bh - 3))
             for k in range(6, bw - 4, 9):
@@ -440,9 +516,86 @@ def _roof_image(r):
             c = tuple(min(255, int(v * rnd.choice((0.72, 1.16)))) for v in pal[0])
             pygame.draw.rect(img, c, (x, y, bw, bh))
             pygame.draw.rect(img, tuple(max(0, v - 30) for v in c), (x, y, bw, bh), 1)
+        elif kind == "cross":                                     # красный крест на белой плите — «здесь клиника»
+            pygame.draw.rect(img, (214, 210, 200), (x, y, bw, bh))
+            pygame.draw.rect(img, (120, 116, 110), (x, y, bw, bh), 2)
+            pygame.draw.rect(img, (196, 40, 36), (x + 15, y + 6, 10, 28))
+            pygame.draw.rect(img, (196, 40, 36), (x + 6, y + 15, 28, 10))
+        elif kind == "flag":                                      # флагшток: тень полотна и полотно со звездой/полосой
+            shadow(x, y, bw, bh)
+            pygame.draw.line(img, (60, 50, 40), (x + 2, y + 2), (x + 2, y + bh), 2)
+            pygame.draw.polygon(img, (176, 48, 44), [(x + 4, y + 2), (x + bw, y + 6), (x + bw - 3, y + 16), (x + 4, y + 14)])
+            pygame.draw.rect(img, (236, 228, 200), (x + 8, y + 5, 8, 6))
+        elif kind == "chimney":                                   # кирпичная труба с дымом (тёмное пятно)
+            shadow(x, y, bw, bh)
+            pygame.draw.rect(img, (84, 56, 46), (x, y, bw, bh))
+            pygame.draw.rect(img, (132, 84, 66), (x + 1, y + 1, bw - 2, bh - 3))
+            for ry in range(y + 5, y + bh - 2, 5):
+                pygame.draw.line(img, (98, 62, 50), (x + 1, ry), (x + bw - 2, ry))
+            pygame.draw.rect(img, (28, 24, 22), (x + 5, y + 5, bw - 10, bh - 10))
+            sm = pygame.Surface((26, 20), pygame.SRCALPHA)
+            pygame.draw.ellipse(sm, (50, 48, 46, 70), sm.get_rect())
+            img.blit(sm, (x - 2, y - 14))
+        elif kind == "barrel":                                    # бочки с водой, вид сверху
+            for k2 in range(2):
+                cx2 = x + 7 + k2 * 13
+                pygame.draw.circle(img, (46, 52, 60), (cx2 + 1, y + 10), 8)
+                pygame.draw.circle(img, (88, 104, 124), (cx2, y + 9), 7)
+                pygame.draw.circle(img, (120, 150, 176), (cx2, y + 9), 4)
+        elif kind == "lights":                                    # гирлянда лампочек поперёк крыши
+            pygame.draw.line(img, (40, 34, 30), (x, y + 4), (x + bw, y + 4))
+            for lx in range(x + 4, x + bw - 2, 12):
+                pygame.draw.circle(img, rnd.choice(((255, 214, 120), (255, 160, 110), (180, 230, 255))), (lx, y + 5), 3)
+        elif kind == "crates":                                    # штабель ящиков под брезентом
+            shadow(x, y, bw, bh)
+            for k2, (cx2, cy2) in enumerate(((0, 0), (17, 2), (8, 12))):
+                pygame.draw.rect(img, (66, 46, 30), (x + cx2, y + cy2, 16, 12))
+                pygame.draw.rect(img, (140, 104, 70), (x + cx2 + 1, y + cy2 + 1, 14, 9))
+                pygame.draw.line(img, (96, 70, 46), (x + cx2 + 1, y + cy2 + 5), (x + cx2 + 14, y + cy2 + 5))
+        elif kind == "dish":                                      # тарелка спутниковой антенны
+            shadow(x, y, bw, bh)
+            pygame.draw.circle(img, (80, 84, 90), (x + 12, y + 12), 11)
+            pygame.draw.circle(img, (188, 192, 198), (x + 12, y + 11), 10)
+            pygame.draw.circle(img, (140, 144, 150), (x + 12, y + 11), 5)
+            pygame.draw.line(img, (60, 62, 66), (x + 12, y + 11), (x + 19, y + 3), 2)
+        elif kind == "laundry":                                   # бельё на верёвке: цветные прямоугольники
+            pygame.draw.line(img, (60, 52, 44), (x, y + 3), (x + bw, y + 3))
+            xx = x + 4
+            while xx < x + bw - 10:
+                cw = rnd.choice((8, 10, 12))
+                pygame.draw.rect(img, rnd.choice(((214, 206, 190), (150, 80, 70), (84, 110, 150), (186, 164, 96), (96, 120, 88))), (xx, y + 4, cw, rnd.choice((10, 14))))
+                xx += cw + 5
+        elif kind == "pots":                                      # горшки с зеленью
+            for k2 in range(3):
+                cx2 = x + 6 + k2 * 11
+                pygame.draw.circle(img, (84, 52, 38), (cx2, y + 8), 5)
+                pygame.draw.circle(img, (70, 120, 64), (cx2, y + 6), 5)
+                pygame.draw.circle(img, (96, 150, 84), (cx2 - 1, y + 5), 2)
+        elif kind == "sign_frame":                                # крышный щит-вывеска: рама на опорах, цветные «неоновые» полосы
+            c = rnd.choice(((255, 90, 170), (90, 220, 255), (255, 190, 80), (120, 255, 150)))
+            shadow(x, y, bw, bh)
+            pygame.draw.rect(img, (44, 40, 40), (x, y, bw, bh))
+            pygame.draw.rect(img, (74, 70, 70), (x + 2, y + 2, bw - 4, bh - 4))
+            pygame.draw.line(img, c, (x + 6, y + 8), (x + bw - 6, y + 8), 2)
+            pygame.draw.line(img, tuple(int(v * 0.7) for v in c), (x + 6, y + 14), (x + bw - 14, y + 14), 2)
+            for lx in range(x + 8, x + bw - 6, 14):
+                pygame.draw.circle(img, (240, 236, 200), (lx, y + 3), 2)
+        elif kind == "mast":                                      # мачта с растяжками
+            shadow(x, y, 10, 10)
+            pygame.draw.rect(img, (70, 70, 74), (x + 4, y + 4, 8, 8))
+            pygame.draw.line(img, (200, 202, 206), (x + 8, y + 8), (x + 8, y - 8), 2)
+            for ex, ey in ((x - 8, y + 18), (x + 24, y + 18), (x + 8, y + 26), (x + 8, y - 12)):
+                pygame.draw.line(img, (110, 112, 116), (x + 8, y + 8), (ex, ey))
+        elif kind == "sandbags":                                  # мешки с песком — позиция на крыше
+            for k2 in range(5):
+                pygame.draw.ellipse(img, (126, 108, 74), (x + k2 * 6, y + (k2 % 2) * 4, 12, 8))
+                pygame.draw.ellipse(img, (160, 142, 98), (x + k2 * 6 + 1, y + (k2 % 2) * 4, 10, 5))
         else:                                                     # хлам: доска, бочка
             pygame.draw.rect(img, (120, 90, 60), (x, y, 28, 6))
             pygame.draw.circle(img, (80, 90, 70), (x + 36, y + 6), 6)
+    layer = img
+    w, h, img = real_w, real_h, real_img
+    img.blit(pygame.transform.scale(layer, (w, h)), (0, 0))
     # надписи на крышах выключены: где что — подсказывают жители в диалогах
     # (поле sign в картах оставлено, вернуть — SHOW_ROOF_SIGNS = True)
     if SHOW_ROOF_SIGNS and r.get("sign"):

@@ -165,22 +165,54 @@ def draw_tracers(surf, tracers, cam):
         pygame.draw.circle(surf, (255, 250, 220), head, 2)
 
 
-def draw_speech(surf, speech, cam, zoom=1):
-    """Реплика облачком над головой персонажа."""
-    from .common import fonts
-    _, font_small = fonts()
+def wrap_text(font, text, max_w, max_lines=3):
+    """Перенос по словам в строки не шире max_w; больше max_lines — хвост уходит в многоточие."""
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        trial = f"{cur} {w}".strip()
+        if font.size(trial)[0] <= max_w or not cur:
+            cur = trial
+        else:
+            lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        lines[-1] = lines[-1].rstrip(" ,.;:") + "…"
+    return lines
+
+
+def speech_ms(text):
+    """Сколько держать облачко: чтение — около 14 знаков в секунду, не меньше двух секунд."""
+    return max(2400, min(7500, 1500 + 70 * len(text)))
+
+
+def draw_speech(surf, speech, cam, zoom=1, hint=False):
+    """Реплика облачком над головой персонажа: 2–3 строки, крупно, с тёмной каймой; hint — золотая кайма
+    (разговор, который стоит подслушать)."""
+    from .common import _font
+    font_small = _font(18)
     ent = speech["ent"]
     r = _z(visible_rect(ent, cam), zoom)
-    txt = font_small.render(speech["text"], True, (30, 24, 18))
-    box = txt.get_rect(midbottom=(r.centerx, r.top - 18)).inflate(20, 12)
+    lines = wrap_text(font_small, speech["text"], 240)
+    rendered = [font_small.render(ln, True, (34, 26, 18)) for ln in lines]
+    lh = rendered[0].get_height() + 2
+    tw = max(t.get_width() for t in rendered)
+    box = pygame.Rect(0, 0, tw + 26, lh * len(rendered) + 14)
+    box.midbottom = (r.centerx, r.top - 16)
     alpha = min(255, speech["t"] // 2)
-    bubble = pygame.Surface((box.w, box.h + 10), pygame.SRCALPHA)
-    pygame.draw.rect(bubble, (245, 235, 210, alpha), (0, 0, box.w, box.h), border_radius=10)
-    pygame.draw.polygon(bubble, (245, 235, 210, alpha), [(box.w // 2 - 8, box.h - 1), (box.w // 2 + 8, box.h - 1),
-                                                         (box.w // 2, box.h + 9)])
-    pygame.draw.rect(bubble, (60, 45, 30, alpha), (0, 0, box.w, box.h), 2, border_radius=10)
-    txt.set_alpha(alpha)
-    bubble.blit(txt, txt.get_rect(center=(box.w // 2, box.h // 2)))
+    bubble = pygame.Surface((box.w, box.h + 11), pygame.SRCALPHA)
+    fill = (248, 240, 218, alpha)
+    border = (176, 128, 40, alpha) if hint or speech.get("hint") else (60, 45, 30, alpha)
+    pygame.draw.rect(bubble, fill, (0, 0, box.w, box.h), border_radius=10)
+    pygame.draw.polygon(bubble, fill, [(box.w // 2 - 8, box.h - 1), (box.w // 2 + 8, box.h - 1), (box.w // 2, box.h + 10)])
+    pygame.draw.rect(bubble, border, (0, 0, box.w, box.h), 2, border_radius=10)
+    pygame.draw.lines(bubble, border, False, [(box.w // 2 - 8, box.h - 1), (box.w // 2, box.h + 10),
+                                              (box.w // 2 + 8, box.h - 1)], 2)
+    for i, t in enumerate(rendered):
+        t.set_alpha(alpha)
+        bubble.blit(t, t.get_rect(midtop=(box.w // 2, 7 + i * lh)))
     surf.blit(bubble, box.topleft)
 
 

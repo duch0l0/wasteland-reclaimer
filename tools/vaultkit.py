@@ -85,7 +85,7 @@ def auto_ambient(m, step=6):
                 continue
             if all(m.ground[y2 + dy][x + dx] not in m.walls and m.ground[y2 + dy][x + dx] not in ("_", "x")
                    for dx in (-2, 0, 2) for dy in (-2, 0, 2) if 0 <= y2 + dy < m.H and 0 <= x + dx < m.W):
-                m.ceiling(x, y2, rnd.choice((120, 140, 160)), col, rnd.choice((0.0, 0.0, 0.04, 0.1)))
+                m.ceiling(x, y2, rnd.choice((190, 220, 250)), tuple(int(c * 0.7) for c in col), rnd.choice((0.0, 0.0, 0.04, 0.1)))
                 have.append((x, y2))
                 n += 1
     return n

@@ -404,7 +404,7 @@ def lamps():
         pygame.draw.rect(img, (70, 72, 80, 255), (20, 30, 8, 3))
         outline(img)
         fl = 0.3 if kind == "red" else 0.05
-        save(f"x_vd_wl_{kind}", img, light={"r": 150, "color": list(c), "at": [0.5, 0.45], "flicker": fl})
+        save(f"x_vd_wl_{kind}", img, light={"r": 215, "color": [int(v * 0.72) for v in c], "at": [0.5, 0.45], "flicker": fl})
         # торшер: основание, тонкая стойка, конический абажур
         img = new(48, 64)
         pygame.draw.ellipse(img, (30, 30, 34, 255), (16, 54, 16, 7))
@@ -414,7 +414,7 @@ def lamps():
         pygame.draw.rect(img, (255, 255, 235, 255), (22, 17, 4, 3))
         outline(img)
         save(f"x_vd_stand_{kind}", img, block=False, foot=(1, 1),
-             light={"r": 160, "color": list(c), "at": [0.5, 0.3], "flicker": 0.3 if kind == "red" else 0.05})
+             light={"r": 235, "color": [int(v * 0.72) for v in c], "at": [0.5, 0.3], "flicker": 0.3 if kind == "red" else 0.05})
 
 
 for fn in (frames, lamps, tally, drawing, nine_board, map_board, sheet_banner, exit_arrow, plaque, waterline, cables, stains,
