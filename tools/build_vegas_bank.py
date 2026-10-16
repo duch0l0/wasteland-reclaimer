@@ -88,6 +88,21 @@ for x, y in ((31, 9), (35, 9), (31, 17), (35, 17)):
     bk.maybe(CRATES, x, y)
 for x, y in ((31, 26), (35, 26)):
     bk.maybe(SERVER, x, y)
+# хранилище живёт: кабели, разметка к весам, разлитое масло, сброшенные слитки и бумаги, красная лампа над дверью, холодные плафоны
+for x, y in ((29, 12), (30, 12), (31, 12)):
+    bk.maybe("x_vd_hz_h", x, y, check=False)
+for x in range(29, 38):
+    bk.maybe("x_vd_cab_h", x, 15, check=False)
+for x, y in ((33, 6), (36, 19), (30, 24), (34, 20)):
+    bk.maybe("x_vd_oil0", x, y, check=False)
+for x, y in ((32, 5), (36, 11), (31, 21)):
+    bk.maybe("x_vd_blood0", x, y, check=False)
+for x, y in ((33, 3), (37, 3), (30, 11), (35, 24), (36, 7)):
+    bk.maybe("crate_broken" if x % 2 else "pile_scrap", x, y)
+for x, y in ((29, 5), (37, 13), (29, 20)):
+    bk.maybe("x_vd_stand_cold", x, y, check=False, allow_reserved=True)
+bk.maybe("x_vd_stand_red", 27, 11, check=False, allow_reserved=True)
+bk.maybe("x_vd_stand_red", 27, 15, check=False, allow_reserved=True)
 bk.enemies += [["turret", 22, 6], ["robot_guard", 18, 16], ["robot_guard", 10, 22]]
 
 city.save()

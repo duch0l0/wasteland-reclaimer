@@ -72,7 +72,7 @@ sf.cliff_walls(CLIFFS, FLOOR, skip=lambda x, y: 20 <= x <= 23 and 6 <= y <= 7, d
 # склон после жребия: ступени «тех, кто вышел» — колея на восток, остатки их первого лагеря, пять крестов у скалы, табличка «Ниптон»
 sf.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
 sf.floor_code("q", "pk:desnat/p1/10,4,1,1")
-sf.patchwork("s", ["t"], 10, 2, 4, seed=71)
+sf.patchwork("s", ["t"], 9, 1, 3, seed=71)
 sf.patchwork("s", ["q"], 7, 1, 2, seed=72)
 for x in range(7, 22, 2):
     sf.maybe("x_vd_ruts_h", x, 22, check=False)
