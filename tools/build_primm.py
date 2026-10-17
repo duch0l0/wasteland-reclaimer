@@ -503,6 +503,13 @@ cp.box(CRATE, 45, 20, "ящик с печатью круга", {"чистая в
 cp.npcs += [["brother_job", 25, 16], ["cult_guard_pr", 20, 20], ["cult_guard_pr_b", 30, 20], ["tobi", 43, 20],
             ["cult_sister_pr", 16, 15]]
 cp.scatter(["r_dry_bush", "r_rocks", "r_bones"], 1, 1, W - 2, H - 2, 14)
+# за колючкой и над горками — заброшенный парк: билборд, сухие деревья, ржавые машины, кости у ограды
+for name, x, y in (("r_billboard", 4, 2), ("r_dtree_a", 12, 2), ("r_dtree_a", 30, 3), ("r_camper", 44, 3),
+                   ("r_car_wreck", 3, 28), ("r_pickup", 46, 31), ("r_dtree_a", 6, 33), ("r_dumpster", 26, 33),
+                   ("pile_tires", 14, 33), ("r_barrels", 40, 33), ("r_logs", 45, 12)):
+    cp.maybe(name, x, y)
+cp.scatter(["r_rocks", "r_bones", "r_trash", "pile_scrap"], 1, 1, W - 2, 5, 8)
+cp.scatter(["r_rocks", "r_bones", "r_trash", "pile_scrap"], 1, 32, W - 2, H - 2, 8)
 print("лагерь обжит:", cp.dress_empty([
     [("r_tent_beige", 0, 0), ("campfire", 2, 2), ("r_logs", 4, 2), ("sack", 0, 2)],
     [("crate", 0, 0), ("crate", 1, 0), ("barrel_wood", 3, 0), ("sack", 0, 2), ("bucket", 2, 2)],
