@@ -31,13 +31,18 @@ def data():
     if _DATA is None:
         with open("data/chatter.json", "r", encoding="utf-8") as f:
             _DATA = json.load(f)
+        import os
+        if os.path.isfile("data/folk_talks.json"):       # личные разговоры конкретных жителей (tools/folks_*.py)
+            with open("data/folk_talks.json", "r", encoding="utf-8") as f:
+                for loc, convs in json.load(f).items():
+                    _DATA.setdefault(f"loc:{loc}", []).extend(convs)
     return _DATA
 
 
 def _keys(game):
     from .reputation import town_of
     town = town_of(game.loc.id) if game.loc else None
-    return ([f"@{town}"] if town else []) + ["@all"]
+    return ([f"loc:{game.loc.id}"] if game.loc else []) + ([f"@{town}"] if town else []) + ["@all"]
 
 
 def rumors_for(game):
@@ -110,13 +115,43 @@ class ChatterMixin:
                 out.append(c)
         return out
 
+    def _chat_gossip(self):
+        """Сплетня между двумя жителями с анкетами: один пересказывает свой слух, другой отвечает своей репликой.
+        Каждый говорит только своё — повторяться нечему."""
+        folk = [n for n in self.npcs if self._chat_ok(n) and ambient.AMBIENT.get(n.npc_id, {}).get("folk")]
+        hero = tile_of(self.player)
+        near = [n for n in folk if 2 <= _dist(hero, tile_of(n)) <= SPOT_TILES]
+        random.shuffle(near)
+        busy = {tile_of(o) for o in self.npcs} | {tile_of(e) for e in self.enemies if e.alive} | {hero}
+        recent = set(self.chat_recent)
+        for a in near[:5]:
+            others = [n for n in folk if n is not a and _dist(tile_of(a), tile_of(n)) <= 9]
+            others.sort(key=lambda n: _dist(tile_of(a), tile_of(n)))
+            for b in others[:3]:
+                pa, pb = ambient.AMBIENT[a.npc_id], ambient.AMBIENT[b.npc_id]
+                tid = f"g_{a.npc_id}_{b.npc_id}"
+                if tid in recent:
+                    continue
+                news = [t for t in (ambient._cond_text(self, n) for n in pa["news"]) if t]
+                if not news:
+                    continue
+                path = _bfs_to_neighbor(self.level, tile_of(a), tile_of(b), busy - {tile_of(a)} - {tile_of(b)})
+                if path is None:
+                    continue
+                lines = [[ "A", random.choice(news)], ["B", random.choice(pb["barks"] + pb["news"][:1] if all(isinstance(x, str) for x in pb["news"][:1]) else pb["barks"])]]
+                if random.random() < 0.5:
+                    lines.append(["A", random.choice(pa["barks"])])
+                self._chat_start({"id": tid, "lines": lines}, a, b, path)
+                return True
+        return False
+
     def _chat_pick(self, conv):
         """Двое для разговора: (A, B, путь для A | None — говорят на расстоянии)."""
         lv = self.level
         hero = tile_of(self.player)
         by_id = {n.npc_id: n for n in self.npcs}
         if conv.get("pair"):
-            a, b = (by_id.get(i) for i in conv["pair"])
+            a, b = (by_id.get(ambient.KEY2ID.get(i, i)) for i in conv["pair"])
             if a and b and self._chat_ok(a) and self._chat_ok(b) and _dist(tile_of(a), tile_of(b)) <= 9 \
                     and min(_dist(hero, tile_of(a)), _dist(hero, tile_of(b))) <= SPOT_TILES:
                 return a, b, None
@@ -147,6 +182,10 @@ class ChatterMixin:
                 return
             self.chat_cd = 5000
             pool = self._chat_pool()
+            if not pool or random.random() < 0.38:
+                g = self._chat_gossip()
+                if g:
+                    return
             if not pool:
                 return
             weights = [4 if p.get("hint") and not self.flags.get(f"chat_heard_{p['id']}") else 1 for p in pool]

@@ -39,6 +39,19 @@ def data():
     return _DATA
 
 
+_FOLKS = None
+KEY2ID = {}      # ключ анкеты -> id жителя в текущей локации (для личных разговоров)
+
+
+def folks():
+    """Авторские анкеты жителей по локациям (data/folks.json ← tools/folks_*.py)."""
+    global _FOLKS
+    if _FOLKS is None:
+        path = os.path.join("data", "folks.json")
+        _FOLKS = json.load(open(path, "r", encoding="utf-8")) if os.path.isfile(path) else {}
+    return _FOLKS
+
+
 def is_ambient(npc_id):
     return npc_id in AMBIENT
 
@@ -89,6 +102,16 @@ def _persona(rnd, loc_id, i, spec):
                  "about": list(job["about"]), "stroll": 7 if job_key in ("courier", "kid", "musician", "scav") else rnd.choice((4, 5, 6))}
 
 
+def _folk_persona(rnd, loc_id, i, f):
+    """Живой человек с авторской анкетой: своя история, мечта, слухи, взгляд на мир и реплики."""
+    d = data()
+    sheet = rnd.choice(d["sheets"][f["sh"]])
+    return f"amb_{loc_id}_{i}", {"name": f["name"], "kind": "human", "folk": True, "key": f["key"], "gender": f["g"], "sheet": sheet,
+                                 "barks": list(f["barks"]), "greet": f["greet"], "bio": list(f["bio"]), "dream": f["dream"],
+                                 "seek": f.get("seek"), "news": list(f["news"]), "world": f["world"], "tip": f.get("tip"),
+                                 "stroll": f.get("stroll") or rnd.choice((4, 5, 6, 7))}
+
+
 def _critter(rnd, loc_id, i, species):
     c = data()["critters"][species]
     sheet = rnd.choice(c["sheets"])
@@ -131,11 +154,16 @@ def populate(loc, loc_id=None):
         return None
 
     made = []
+    cast = list(folks().get(loc_id, []))
     for i in range(spec["people"]):
         t = pick(4)
         if t is None:
             break
-        nid, p = _persona(rnd, loc_id, i, spec)
+        if i < len(cast):
+            nid, p = _folk_persona(rnd, loc_id, i, cast[i])
+            KEY2ID[p["key"]] = nid
+        else:
+            nid, p = _persona(rnd, loc_id, i, spec)
         made.append((nid, p, t))
     n = 0
     for species, count in spec.get("critters", {}).items():
@@ -197,6 +225,8 @@ def tree_for(game, npc_id):
         text = random.choice(p["talk"])
         return {"start": "t", "nodes": {"t": {"text": text, "options": [{"label": "(погладить и уйти)", "next": None}]}}}
     name = p["name"]
+    if p.get("folk"):
+        return _folk_tree(game, npc, p)
     rumors = []
     if npc is not None:
         pool = rumor_pool(game, npc)
@@ -216,4 +246,47 @@ def tree_for(game, npc_id):
     about = random.choice(p["about"])
     nodes["about"] = {"text": f"{name}: {about}", "options": [{"label": "Интересно. Что ещё слышно?", "next": "r0"},
                                                            {"label": "Бывай.", "next": None}]}
+    return {"start": "greet", "nodes": nodes}
+
+
+def _cond_text(game, item):
+    """Строка слуха или [текст, условие]: возвращает текст, если условие выполнено."""
+    if isinstance(item, str):
+        return item
+    return item[0] if game.check_condition(item[1]) else None
+
+
+def _folk_tree(game, npc, p):
+    """Диалог жителя с анкетой: пять тем — о себе, мечта, кого ищет, слухи, мир; плюс эхо поступков героя и подсказка."""
+    name = p["name"]
+    Q = lambda t: f"{name}: {t}"
+    news = [t for t in (_cond_text(game, n) for n in p["news"]) if t]
+    nodes = {}
+    opts = [{"label": "Расскажи о себе.", "next": "bio0"}, {"label": "О чём мечтаешь? Какие планы?", "next": "dream"}]
+    if p.get("seek"):
+        opts.append({"label": "У тебя такой вид, будто ты кого-то ищешь.", "next": "seek"})
+    opts += [{"label": "Что слышно в городе и вокруг?", "next": "news0"}, {"label": "А что там в мире, по-твоему?", "next": "world"}]
+    echo = [t for t in (rumor_pool(game, npc) if npc else []) if t not in p["barks"]]
+    if echo:
+        nodes["echo"] = {"text": Q(random.choice(echo)), "options": [{"label": "Вот как. Спасибо.", "next": "menu"}]}
+        opts.append({"label": "Какие слухи ходят о недавних событиях?", "next": "echo"})
+    tip = p.get("tip")
+    if tip and (len(tip) < 3 or game.check_condition(tip[2])):
+        nodes["tip"] = {"text": Q(tip[0]), "options": [{"label": "Это пригодится. Спасибо.", "next": "menu", "effects": list(tip[1])}]}
+        opts.append({"label": "Не знаешь чего-нибудь, что мне пригодилось бы?", "next": "tip"})
+    opts.append({"label": "Бывай.", "next": None})
+    nodes["greet"] = {"text": Q(p["greet"]), "options": opts}
+    nodes["menu"] = {"text": Q(random.choice(("Ну? Что ещё?", "Спрашивай, не стесняйся.", "Давай дальше. Я не тороплюсь.", "Слушаю."))),
+                     "options": opts}
+    back = {"label": "Ясно. Спрошу ещё про другое.", "next": "menu"}
+    nodes["bio0"] = {"text": Q(p["bio"][0]), "options": [{"label": "А дальше что было?", "next": "bio1"}, back]}
+    nodes["bio1"] = {"text": Q(p["bio"][1]), "options": [back]}
+    nodes["dream"] = {"text": Q(p["dream"]), "options": [back]}
+    if p.get("seek"):
+        nodes["seek"] = {"text": Q(p["seek"]), "options": [back]}
+    nodes["news0"] = {"text": Q(news[0] if news else "Да всё как всегда."),
+                      "options": ([{"label": "А ещё что слышно?", "next": "news1"}] if len(news) > 1 else []) + [back]}
+    if len(news) > 1:
+        nodes["news1"] = {"text": Q(news[1]), "options": [back]}
+    nodes["world"] = {"text": Q(p["world"]), "options": [back]}
     return {"start": "greet", "nodes": nodes}
