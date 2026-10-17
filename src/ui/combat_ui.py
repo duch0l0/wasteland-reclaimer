@@ -202,17 +202,19 @@ def draw_speech(surf, speech, cam, zoom=1, hint=False):
     box = pygame.Rect(0, 0, tw + 26, lh * len(rendered) + 14)
     box.midbottom = (r.centerx, r.top - 16)
     sw, sh = surf.get_size()
+    if r.right < 0 or r.left > sw or r.bottom < 0 or r.top > sh:
+        return                       # говорящий вне экрана — облачко не «летит» за краем
     box.left = max(4, min(box.left, sw - box.w - 4))
     box.top = max(4, box.top)        # не уходит за верх экрана
+    tx = max(16, min(box.w - 16, r.centerx - box.left))      # хвостик всегда показывает на говорящего
     alpha = min(255, speech["t"] // 2)
     bubble = pygame.Surface((box.w, box.h + 11), pygame.SRCALPHA)
     fill = (248, 240, 218, alpha)
     border = (176, 128, 40, alpha) if hint or speech.get("hint") else (60, 45, 30, alpha)
     pygame.draw.rect(bubble, fill, (0, 0, box.w, box.h), border_radius=10)
-    pygame.draw.polygon(bubble, fill, [(box.w // 2 - 8, box.h - 1), (box.w // 2 + 8, box.h - 1), (box.w // 2, box.h + 10)])
+    pygame.draw.polygon(bubble, fill, [(tx - 8, box.h - 1), (tx + 8, box.h - 1), (tx, box.h + 10)])
     pygame.draw.rect(bubble, border, (0, 0, box.w, box.h), 2, border_radius=10)
-    pygame.draw.lines(bubble, border, False, [(box.w // 2 - 8, box.h - 1), (box.w // 2, box.h + 10),
-                                              (box.w // 2 + 8, box.h - 1)], 2)
+    pygame.draw.lines(bubble, border, False, [(tx - 8, box.h - 1), (tx, box.h + 10), (tx + 8, box.h - 1)], 2)
     for i, t in enumerate(rendered):
         t.set_alpha(alpha)
         bubble.blit(t, t.get_rect(midtop=(box.w // 2, 7 + i * lh)))
