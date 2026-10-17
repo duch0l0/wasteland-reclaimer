@@ -289,8 +289,11 @@ class Bot:
             import glob
             import json
             Bot._graph, Bot._npc_home = {}, {}
+            stem_lid = {os.path.basename(d.get("map", ""))[:-5]: lid           # id локации не всегда совпадает с именем карты
+                        for lid, d in json.load(open("data/locations.json", encoding="utf-8")).items() if d.get("map")}
             for f in glob.glob("data/maps/*.json"):
-                mid = os.path.basename(f)[:-5]
+                stem = os.path.basename(f)[:-5]
+                mid = stem_lid.get(stem, stem)
                 with open(f, encoding="utf-8") as fh:
                     m = json.load(fh)
                 Bot._graph[mid] = [(p["to"], p.get("requires")) for p in m.get("portals", [])]
@@ -305,7 +308,11 @@ class Bot:
             with open(f, encoding="utf-8") as fh:
                 m = json.load(fh)
             if any(t.get("id") == tid for t in m.get("terminals", [])):
-                return os.path.basename(f)[:-5]
+                stem = os.path.basename(f)[:-5]
+                for lid, d in json.load(open("data/locations.json", encoding="utf-8")).items():
+                    if os.path.basename(d.get("map", "")) == stem + ".json":     # id локации не всегда совпадает с именем карты
+                        return lid
+                return stem
         return None
 
     def visit(self, map_id, clear=True):

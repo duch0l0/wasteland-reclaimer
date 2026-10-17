@@ -133,6 +133,22 @@ guards = {getattr(e, "npc_id", "") for e in g.enemies if e.hostile}
 ok({"sheriff", "dale", "mo"} <= guards, f"шериф, Дейл и Мо взялись за оружие ({sorted(guards)[:6]})")
 ok(any(n.npc_id == "gena" for n in g.npcs), "Гена — мирный, прячется")
 
+# ------------------------------------------------------------ стража: броня, оружие, подкрепление
+fighters = [e for e in g.enemies if getattr(e, "npc_id", "") in ("sheriff", "dale", "mo")]
+ok(fighters and all(e.armor >= 3 and e.max_hp >= 60 and e.role for e in fighters),
+   "бойцы города в броне, крепкие и с боевой ролью: " + ", ".join(f"{e.npc_id} броня {e.armor} hp {e.max_hp} {e.role}" for e in fighters))
+ok(all(e.loot for e in fighters), "с бойцов падает снаряжение")
+before = len([e for e in g.enemies if e.alive])
+g.combat.round = 3
+g.crime_reinforce(3)
+after = len([e for e in g.enemies if e.alive])
+ok(after > before, f"на третьем раунде боя сбегается подкрепление ({before} → {after})")
+g.crime_reinforce(4)
+ok(len([e for e in g.enemies if e.alive]) == after, "между волнами — тихо")
+g.player.level_sys.level = 9
+elite = g._hardened(dict(__import__("src.game.crime", fromlist=["STATS"]).STATS["elite"]), "elite")
+ok(elite["hp"] > 120 and elite["damage"] > 9, "город крепчает вместе с героем")
+
 print()
 print("ИТОГ:", "всё прошло" if not failed else f"провалов: {len(failed)}")
 sys.exit(1 if failed else 0)

@@ -309,6 +309,7 @@ class Combat:
             self.turn_idx = (self.turn_idx + 1) % len(self.order)
             if self.turn_idx == 0:
                 self.round += 1
+                self.game.crime_reinforce(self.round)
             if self.current.alive:
                 break
         self._begin_turn()

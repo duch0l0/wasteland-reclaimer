@@ -20,15 +20,27 @@ from ..location import npc_animations, NPC_NAMES
 STATS = {
     "civilian": {"hp": 15, "damage": 3, "ac": 6, "ap": 7, "skill": 40, "sequence": 4, "ai": "melee",
                  "hit_verb": "бьёт вас", "coward": True, "level": 1, "xp": 5},
-    "guard": {"hp": 32, "damage": 7, "ac": 12, "ap": 8, "skill": 60, "sequence": 6, "ai": "ranged", "range": 7,
-              "hit_verb": "стреляет в вас", "level": 4, "xp": 40},
-    "brawler": {"hp": 30, "damage": 10, "ac": 10, "ap": 7, "skill": 60, "sequence": 5, "ai": "ranged", "range": 4,
-                "hit_verb": "палит в вас из обреза", "level": 4, "xp": 40},
-    "elite": {"hp": 55, "damage": 11, "ac": 16, "ap": 9, "skill": 75, "sequence": 8, "ai": "ranged", "range": 9,
-              "hit_verb": "стреляет в вас", "armor": 3, "level": 7, "xp": 120},
-    "cultist": {"hp": 18, "damage": 4, "ac": 8, "ap": 8, "skill": 45, "sequence": 6, "ai": "melee",
-                "hit_verb": "бьёт вас посохом", "level": 2, "xp": 15},
+    # бойцы города — не мишени: в Fallout напасть на город означало смерть. У каждого броня, настоящее оружие
+    # и своя роль в бою (src/ai_roles.py): страж стреляет из-за укрытия, громила заходит с флангов с обрезом,
+    # старший командует и бьёт очередями. Броня гасит слабые стволы, уязвимы глаза; на шум сбегается стража
+    "guard": {"hp": 70, "damage": 11, "ac": 14, "ap": 9, "skill": 75, "sequence": 7, "ai": "ranged", "range": 8,
+              "hit_verb": "стреляет в вас", "armor": 4, "weak_parts": ["eyes", "groin"], "role": "cover",
+              "stims": 1, "level": 5, "xp": 40,
+              "loot": {"патроны": 8, "10-мм пистолет": 0.5, "металлическая броня": 0.25}},
+    "brawler": {"hp": 65, "damage": 15, "ac": 12, "ap": 8, "skill": 70, "sequence": 6, "ai": "ranged", "range": 5,
+                "hit_verb": "палит в вас из обреза", "armor": 3, "weak_parts": ["eyes", "head"], "role": "flanker",
+                "level": 5, "xp": 40, "loot": {"патроны": 6, "обрез": 0.6, "кожаная броня": 0.4}},
+    "elite": {"hp": 120, "damage": 9, "ac": 18, "ap": 10, "skill": 85, "sequence": 9, "ai": "ranged", "range": 9,
+              "hit_verb": "бьёт очередью", "burst": 3, "armor": 7, "weak_parts": ["eyes"], "role": "commander",
+              "grenades": 2, "stims": 2, "level": 8, "xp": 120,
+              "loot": {"патроны": 12, "граната": 1, "стимулятор": 1, "пистолет-пулемёт": 0.5, "боевая броня": 0.3}},
+    "cultist": {"hp": 32, "damage": 6, "ac": 10, "ap": 8, "skill": 55, "sequence": 6, "ai": "melee",
+                "hit_verb": "бьёт вас посохом", "armor": 1, "level": 3, "xp": 15},
 }
+POSSE_EVERY = 3        # раундов боя между волнами подкрепления
+POSSE_SIZE = 2
+
+
 ROLES = {
     # Пятнадцатая
     "sheriff": "guard", "dale": "guard", "dex": "elite", "blondie": "elite", "mo": "brawler", "rose": "guard",
@@ -90,9 +102,21 @@ def faction_of(loc_id):
 
 
 class CrimeMixin:
+    def _hardened(self, d, role):
+        """Город не слабеет с ростом героя: бойцы крепчают вместе с ним (мирных это не касается)."""
+        if role == "civilian":
+            return d
+        k = max(0, self.player.level_sys.level - 1)
+        d["hp"] = round(d["hp"] * (1 + 0.08 * k))
+        d["damage"] += k // 2
+        d["skill"] = min(95, d["skill"] + 2 * k)
+        d["level"] += k
+        return d
+
     def _npc_to_enemy(self, npc, faction):
         role = ROLES.get(npc.npc_id, "civilian")
-        d = {"name": NPC_NAMES.get(npc.npc_id, npc.name), "faction": faction, "hitbox": [28, 32], **STATS[role]}
+        d = self._hardened({"name": NPC_NAMES.get(npc.npc_id, npc.name), "faction": faction, "hitbox": [28, 32],
+                            **STATS[role]}, role)
         e = Enemy(npc.rect.topleft, npc_animations(npc.npc_id), "npc:" + npc.npc_id, d)
         e.rect = npc.rect.copy()
         e.npc_id = npc.npc_id
@@ -150,6 +174,7 @@ class CrimeMixin:
         if self.flags.get(f"town_hostile_{self.loc.id}") or \
                 (self.loc.id in ENCLAVE_ZONES and self.flags.get("enclave_hostile")):
             self.town_turns_hostile()
+            self.crime_sentries()
 
     def scared_line(self, npc):
         """Мирный житель после нападения на город — не разговаривает."""
@@ -157,3 +182,64 @@ class CrimeMixin:
             self.speech = {"ent": npc, "text": "Не подходи! Убийца!", "t": 2200}
             return True
         return False
+
+    # ------------------------------------------------------------------ подкрепление
+    def _posse_sprite(self):
+        """Чей облик у подкрепления: у кого-то из бойцов этого города (остальные берутся из набора врагов)."""
+        for n in list(getattr(self.loc, "npcs_all", [])) + list(self.npcs):
+            if ROLES.get(n.npc_id, "civilian") in ("guard", "brawler"):
+                return npc_animations(n.npc_id), n.npc_id
+        return None, None
+
+    def _spawn_posse(self, n, near, lo, hi, elite=False):
+        """n бойцов города встают на свободных клетках в lo..hi клетках от near и сразу вступают в бой."""
+        import random
+        from ..combat import tile_of, rect_pos_for_tile, chebyshev
+        fac = faction_of(self.loc.id)
+        anims, sprite = self._posse_sprite()
+        c = self.combat
+        px, py = tile_of(self.player)
+        spots = [(x, y) for x in range(px - hi, px + hi + 1) for y in range(py - hi, py + hi + 1)
+                 if lo <= chebyshev((x, y), near) <= hi and c._walkable((x, y))]
+        random.shuffle(spots)
+        made = 0
+        for t in spots:
+            if made >= n:
+                break
+            if t in c._occupied():
+                continue
+            role = "cultist" if fac == "cult" else "elite" if elite else ("guard" if made % 2 == 0 else "brawler")
+            name = {"cult": "фанатик Единства", "enclave": "солдат Анклава"}.get(fac, "боец городской стражи")
+            d = self._hardened({"name": name, "faction": fac, "hitbox": [28, 32], **STATS[role]}, role)
+            e = Enemy(rect_pos_for_tile(self.player, t), anims or _enemy_anims("raider_elite"),
+                      "npc:" + sprite if sprite else "raider_elite", d)
+            e.hostile = True
+            e.wander_wait = 10 ** 9
+            self.loc.enemies.append(e)
+            made += 1
+        return made
+
+    def crime_reinforce(self, round_no):
+        """Вызывается боем в начале каждого раунда: в городе, где напали, к бойцам стягивается стража.
+        Чем дольше бой, тем больше врагов, а на третьей волне приходят лучшие бойцы — расправа или бегство."""
+        loc = self.loc.id
+        if not self.flags.get(f"town_hostile_{loc}") or round_no < POSSE_EVERY or round_no % POSSE_EVERY:
+            return
+        from ..combat import tile_of
+        wave = round_no // POSSE_EVERY
+        made = self._spawn_posse(POSSE_SIZE, tile_of(self.player), 9, 14, elite=wave >= 3 and wave % 2 == 1)
+        if made:
+            self.log("С улиц сбегается городская стража!")
+
+    def crime_sentries(self):
+        """Вход в город, где вас помнят: у ворот уже ждут (не больше трёх бойцов на карте)."""
+        from ..combat import tile_of
+        fac = faction_of(self.loc.id)
+        alive = [e for e in self.enemies if e.alive and e.faction == fac]
+        if len(alive) < 3:
+            self._spawn_posse(3 - len(alive), tile_of(self.player), 5, 9)
+
+
+def _enemy_anims(type_id):
+    from ..location import enemy_animations
+    return enemy_animations(type_id)
