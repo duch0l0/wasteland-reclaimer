@@ -111,6 +111,19 @@ up.floor_code("c", *CIRCUIT)
 up.paint("g", 0, 0, W - 1, H - 1)
 up.paint("r", 31, 0, 36, H - 1)                        # проспект с севера на юг
 up.paint("r", 0, 21, W - 1, 24)                        # поперечный проспект
+up.paint("g", 33, 0, 34, 18)                           # бульвар-разделитель проспектов, у перекрёстка обрывается
+up.paint("g", 33, 27, 34, H - 1)
+up.paint("g", 0, 22, 27, 23)
+up.paint("g", 40, 22, W - 1, 23)
+for _y in range(2, 18, 5):                             # на бульваре: фонари и живая изгородь
+    up.put(LAMPS_W[0], 33, _y, check=False)
+    up.put(HEDGE_G, 34, _y + 1, check=False)
+for _y in range(30, H - 2, 5):
+    up.put(LAMPS_W[0], 34, _y, check=False)
+    up.put(HEDGE_G, 33, _y + 1, check=False)
+for _x in list(range(3, 26, 5)) + list(range(42, W - 2, 5)):
+    up.put(LAMPS_W[0], _x, 22, check=False)
+    up.put(HEDGE_G, _x + 1, 23, check=False)
 for _x0, _y0, _x1, _y1 in ((17, 14, 30, 20), (17, 32, 30, 37), (37, 32, 51, 37), (37, 14, 51, 20), (2, 28, 14, 38), (53, 28, 66, 38)):
     up.paint("w", _x0, _y0, _x1, _y1)                  # белые площади перед входами и скверы — отдельные «кварталы»
 for _x in (31, 33, 35):                                # пешеходные переходы через проспект у перекрёстка
