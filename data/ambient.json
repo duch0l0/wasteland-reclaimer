@@ -800,7 +800,7 @@
    }
   },
   "necropolis": {
-   "people": 12,
+   "people": 13,
    "ghoul": true,
    "jobs": [
     "trader",
@@ -835,7 +835,7 @@
    }
   },
   "boneyard": {
-   "people": 10,
+   "people": 9,
    "jobs": [
     "scav",
     "trader",
