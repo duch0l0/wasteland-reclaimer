@@ -90,10 +90,20 @@ human = next(n for n in g.npcs if ambient.is_ambient(n.npc_id) and not ambient.i
 g.player.rect.center = (human.rect.centerx - 30, human.rect.centery)
 ok(g.talk_to(human, human.npc_id), "с жителем можно заговорить")
 labels = [o["label"] for o in g.dialogue.visible_options()]
-ok("Что нового в городе?" in labels and "Расскажи о себе." in labels, "есть «Что нового?» и «Расскажи о себе»")
-g.dialogue.choose(labels.index("Что нового в городе?"))
-ok(g.dialogue.is_active() and human.name in g.dialogue.current_node()["text"], "рассказывает слух от своего имени")
+ok(any(l.startswith("Расскажи о себе") for l in labels) and any(l.startswith("Что слышно") for l in labels),
+   "есть «Расскажи о себе» и «Что слышно в городе»")
+g.dialogue.choose(next(i for i, l in enumerate(labels) if l.startswith("Что слышно")))
+ok(g.dialogue.is_active() and len(g.dialogue.current_node()["text"]) > 40, "рассказывает слух своими словами")
 g.dialogue.close()
+folk = json.load(open("data/folks.json", encoding="utf-8"))
+people = [p for lst in folk.values() for p in lst]
+ok(len({p["name"] for p in people}) == len(people), f"анкеты: {len(people)} имён, все разные")
+ok(len({p["key"] for p in people}) == len(people), "анкеты: ключи не повторяются")
+barks = [b for p in people for b in p["barks"]]
+ok(len(set(barks)) == len(barks), "анкеты: реплики над головой не повторяются")
+ok(all(len(p["bio"]) == 2 and len(p["news"]) == 2 and p["dream"] and p["world"] for p in people), "у каждого есть история, мечта, новости, взгляд на мир")
+tl = [t["id"] for lst in json.load(open("data/folk_talks.json", encoding="utf-8")).values() for t in lst]
+ok(len(set(tl)) == len(tl), f"личные разговоры: {len(tl)}, id не повторяются")
 critter = next(n for n in g.npcs if ambient.is_critter(n.npc_id))
 ok(g.talk_to(critter, critter.npc_id) and len(g.dialogue.visible_options()) == 1, "зверя можно погладить")
 g.dialogue.close()
