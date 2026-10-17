@@ -370,6 +370,26 @@ bt.put(GALLOWS, 26, 26)
 bt.put(CAMPFIRE, 30, 32)
 # штаб Хэнка «Шпоры» — дом с крышей на востоке
 bt.building(48, 22, 12, 10, "planks", south=(4,))
+# вытоптанный двор, ночлежка байкеров, загон, склад у дороги
+bt.paint("g", 22, 24, 33, 35)
+for i, (x, y) in enumerate(((5, 38), (10, 39), (15, 38), (20, 39))):
+    bt.maybe(TENTS[i % 4], x, y)
+for x, y in ((7, 36), (13, 36), (18, 36)):
+    bt.maybe("barrel_wood", x, y)
+bt.hwall([CHAIN], 3, 21, 20)
+for x in (4, 7, 10, 13, 16):
+    bt.maybe(HAY, x, 22)
+bt.maybe(TROUGH, 18, 24)
+for x, y in ((24, 31), (28, 33), (32, 31)):
+    bt.maybe("x_fire_barrel", x, y, check=False)
+for x, y in ((24, 33), (31, 34)):
+    bt.maybe("pile_tires", x, y)
+for x, y in ((30, 22), (33, 24), (22, 22)):
+    bt.maybe("r_sandbag_row", x, y)
+for x, y in ((46, 36), (50, 36), (56, 36)):
+    bt.maybe("r_barrels", x, y)
+bt.maybe("r_army_truck", 47, 40)
+bt.maybe("r_streetlamp", 46, 34)
 bt.npcs += [["hank_spur", 28, 29], ["boots_engineer", 45, 9], ["boots_rider", 9, 26], ["boots_rider_b", 33, 35],
             ["boots_rider_c", 54, 34]]
 for _, x, y in bt.npcs:
