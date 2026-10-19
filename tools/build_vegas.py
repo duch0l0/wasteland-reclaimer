@@ -691,7 +691,7 @@ for x, y in ((37, 8), (47, 6), (47, 20)):
     tn.maybe(SW_SKULL, x, y)
 tn.maybe(SW_LANTERN, 40, 22)
 tn.maybe(SW_LANTERN, 38, 3)
-tn.enemies += [["ratman", 21, 8], ["ratman", 31, 20], ["mommy_mutant", 42, 8], ["feral", 21, 24], ["feral", 12, 22]]
+tn.enemies += [["ratman", 21, 8], ["ratman", 31, 20], ["mommy_mutant", 42, 8], ["feral", 21, 24]]   # в коридоре не обойти: четыре, не пять
 tn.scatter(["r_bones", "pile_cans"], 2, 3, 48, 28, 8)
 
 
@@ -754,7 +754,10 @@ tw.props.append(["x_ladder", 31, 7])
 tw.portal([(31, 7)], "vegas_zero", (19, 26), "Лифтовая шахта — вниз, к «Нолю»",
           requires={"flag": "zero_power", "msg": "Лифт мёртв уже сорок четыре года. Нужно питание: электростанция Сапогов — или кто-то ещё."})
 tw.reserve(29, 6, 33, 9)
-tw.enemies += [["robot_guard", 30, 20], ["feral", 8, 22], ["feral", 34, 26]]
+tw.enemies += [["robot_guard", 30, 20], ["feral", 8, 22], ["feral", 34, 26],
+               ["robot_guard", 26, 18], ["robot_guard", 12, 24]]
+tw.maybe("x_barrel_boom", 29, 20, check=False)     # бочка под снайпером: выстрел — и позиция выкурена
+tw.maybe("barrel_wood", 27, 21, check=False)       # укрытие на подходе к снайперу
 
 
 # ================================================================ хранилище «Ноль»: шлюз
@@ -798,7 +801,7 @@ for x, y in ((17, 22), (22, 22)):
     zr.maybe(CONSOLES[x % 2], x, y)
 for x, y in ((13, 6), (26, 6), (13, 26), (26, 26)):
     zr.maybe(SERVER, x, y)
-zr.enemies += [["turret", 6, 14], ["turret", 33, 14]]
+zr.enemies += [["turret", 6, 14], ["turret", 33, 14], ["robot_guard", 10, 20], ["robot_guard", 30, 20]]
 
 
 # ================================================================ хранилище «Ноль»: внутри

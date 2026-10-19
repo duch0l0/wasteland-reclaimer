@@ -190,7 +190,8 @@ for x, y in ((45, 24), (49, 24), (45, 28), (49, 28), (52, 24)):
     pe.maybe(VRE_CRATE, x, y)
 pe.scatter(["r_trash", "pile_junk", "barrel_wood"], 16, 9, 54, 37, 8)
 pe.npcs += [["enclave_gate", 18, 23], ["enclave_officer", 34, 23]]
-pe.enemies += [["enclave_mech", 31, 28]]               # шагоход у ворот — молчит, пока нет тревоги
+pe.enemies += [["enclave_mech", 31, 28],                # шагоход у ворот — молчит, пока нет тревоги
+               ["enclave_soldier", 28, 26], ["enclave_soldier", 34, 26]]
 for _, x, y in pe.npcs:
     pe.reserve(x, y, x, y)
 pe.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
@@ -274,7 +275,10 @@ hg.box(SUIT_STAND, 36, 4, "стойка силовой брони", {"улучш
 for x, y in ((4, 22), (8, 22), (12, 22), (4, 26), (8, 26)):
     hg.put(VRE_CRATE, x, y)
 hg.box(AMMO, 16, 27, "ящик Анклава", {"патроны": 30, "граната": 2, "стимулятор": 1})
-hg.enemies += [["enclave_soldier", 24, 24], ["enclave_soldier", 32, 10], ["enclave_soldier", 38, 26]]
+hg.enemies += [["enclave_soldier", 24, 24], ["enclave_soldier", 32, 10], ["enclave_soldier", 38, 26],
+               ["enclave_soldier", 20, 14], ["enclave_mech", 36, 16]]
+hg.maybe("x_barrel_boom", 26, 22, check=False)     # бочка между рядами ящиков
+hg.maybe("x_barrel_boom", 34, 12, check=False)     # вторая — у второго укрытия
 
 print("техзал hg:", hg.dress_empty(tech_scenes(city, "p7"), ground="M", block=7, margin=1, chance=1.0))
 

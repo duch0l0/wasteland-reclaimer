@@ -5,13 +5,28 @@
       "raider",
       1,
       "cover"
+    ],
+    [
+      "rad_mutant",
+      1,
+      "flanker"
     ]
   ],
   "drain": [
     [
       "ratman",
-      1,
+      2,
       "ambush"
+    ],
+    [
+      "ratman_boss",
+      1,
+      "commander"
+    ],
+    [
+      "rat",
+      1,
+      "flanker"
     ]
   ],
   "barstow": [
@@ -30,12 +45,22 @@
   ],
   "barstow_center": [
     [
-      "ghoul_runner",
+      "feral",
       3,
+      "ambush"
+    ],
+    [
+      "ghoul_runner",
+      2,
       "flanker"
     ]
   ],
   "barstow_depot": [
+    [
+      "feral",
+      3,
+      "ambush"
+    ],
     [
       "ghoul_runner",
       2,
@@ -165,17 +190,42 @@
   ],
   "vegas_tunnels": [
     [
-      "ratman",
-      2,
+      "feral",
+      1,
       "ambush"
     ],
     [
       "feral",
-      2,
+      1,
       "flanker"
+    ],
+    [
+      "mommy_mutant",
+      1,
+      "grenadier"
+    ],
+    [
+      "ratman",
+      2,
+      "ambush"
     ]
   ],
   "vegas_tower": [
+    [
+      "robot_guard",
+      1,
+      "sniper"
+    ],
+    [
+      "robot_guard",
+      1,
+      "cover"
+    ],
+    [
+      "robot_guard",
+      1,
+      "gunner"
+    ],
     [
       "feral",
       2,
@@ -208,6 +258,11 @@
     [
       "enclave_soldier",
       1,
+      "sniper"
+    ],
+    [
+      "enclave_soldier",
+      1,
       "cover"
     ]
   ],
@@ -222,35 +277,6 @@
     [
       "super_mutant",
       1,
-      "gunner"
-    ],
-    [
-      "super_mutant",
-      1,
-      "shield"
-    ],
-    [
-      "super_mutant",
-      1,
-      "grenadier"
-    ],
-    [
-      "cult_guard",
-      1,
-      "medic"
-    ]
-  ],
-  "mariposa_lab": [
-    [
-      "super_mutant",
-      1,
-      "cover"
-    ]
-  ],
-  "mariposa_vats": [
-    [
-      "joined",
-      1,
       "commander"
     ],
     [
@@ -264,9 +290,142 @@
       "shield"
     ],
     [
+      "cult_guard",
+      1,
+      "medic"
+    ],
+    [
+      "cult_guard",
+      1,
+      "sniper"
+    ]
+  ],
+  "mariposa_lab": [
+    [
       "super_mutant",
       1,
-      "grenadier"
+      "cover"
+    ],
+    [
+      "joined",
+      1,
+      "flanker"
+    ],
+    [
+      "super_mutant",
+      1,
+      "gunner"
+    ]
+  ],
+  "mariposa_vats": [
+    [
+      "super_mutant",
+      1,
+      "shield"
+    ],
+    [
+      "cult_guard",
+      1,
+      "medic"
+    ],
+    [
+      "cult_guard",
+      1,
+      "sniper"
+    ],
+    [
+      "joined",
+      1,
+      "flanker"
+    ],
+    [
+      "super_mutant",
+      1,
+      "gunner"
+    ]
+  ],
+  "vegas_zero": [
+    [
+      "robot_guard",
+      1,
+      "cover"
+    ],
+    [
+      "robot_guard",
+      1,
+      "gunner"
+    ]
+  ],
+  "poseidon7": [
+    [
+      "enclave_soldier",
+      1,
+      "cover"
+    ],
+    [
+      "enclave_soldier",
+      1,
+      "flanker"
+    ]
+  ],
+  "fort_bunker": [
+    [
+      "robot_guard",
+      1,
+      "runner"
+    ],
+    [
+      "robot_guard",
+      1,
+      "cover"
+    ]
+  ],
+  "station": [
+    [
+      "gang",
+      2,
+      "cover"
+    ],
+    [
+      "gang",
+      1,
+      "flanker"
+    ]
+  ],
+  "vault57": [
+    [
+      "feral",
+      1,
+      "ambush"
+    ],
+    [
+      "ghoul_runner",
+      1,
+      "flanker"
+    ],
+    [
+      "radroach",
+      2,
+      "flanker"
+    ]
+  ],
+  "baker7": [
+    [
+      "robot_guard",
+      2,
+      "cover"
+    ]
+  ],
+  "fifteen_school": [
+    [
+      "radroach",
+      3,
+      "flanker"
+    ],
+    [
+      "mutant",
+      1,
+      "commander"
     ]
   ]
 }

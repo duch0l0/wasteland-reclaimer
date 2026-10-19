@@ -176,7 +176,9 @@ mp.portal([(30, 41)], "mariposa_vats", (30, 31), "Грузовой въезд (�
           requires={"flag": "know_cargo_bay",
                     "msg": "Ржавая решётка в земле, рядом — остов крана. Заперта изнутри. Кто-то знал, как её открыть."})
 mp.npcs += [["cult_herald", 28, 27], ["mp_acolyte", 24, 24], ["mp_acolyte_b", 33, 23]]
-mp.enemies += [["super_mutant", 48, 28], ["super_mutant", 55, 24], ["super_mutant", 46, 16], ["cult_guard", 40, 32]]
+mp.enemies += [["super_mutant", 48, 28], ["super_mutant", 55, 24], ["super_mutant", 46, 16], ["cult_guard", 40, 32],
+               ["super_mutant", 52, 20], ["cult_guard", 50, 32]]
+mp.maybe("x_barrel_boom", 50, 26, check=False)     # бочка у укрытия культистов: выстрел выкуривает
 mp.floor_code("Q", *["pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1"])   # верх плато — песок, как верх скал
 mp.cliff_walls(CLIFFS, FLOOR, decor=["r_rocks", "r_dry_bush", "r_bones"], plateau="Q")
 
@@ -222,7 +224,7 @@ lb.put(ARM, 34, 26)
 lb.put(CHEM, 37, 28)
 lb.terminal(41, 27, "mariposa_lab_log")
 lb.npcs += [["brother_t_mp", 32, 21]]
-lb.enemies += [["super_mutant", 14, 29]]
+lb.enemies += [["super_mutant", 14, 29], ["super_mutant", 20, 20], ["joined", 10, 20]]
 
 
 # ================================================================ чаны и командный бункер
@@ -252,7 +254,9 @@ for x, y in ((9, 9), (17, 17), (25, 15), (11, 30), (24, 31), (29, 24)):
     vt.maybe(PUDDLE, x, y)                             # пролитое ВРЭ светится на решётке
 vt.put(BIOHAZ, 29, 4)
 vt.box(BONES[0], 9, 16, "останки в силовой броне", {"жетон паладина Корвина": 1, "энергоячейка": 10})   # брат Лиры
-vt.enemies += [["super_mutant", 16, 20], ["super_mutant", 26, 8], ["super_mutant", 28, 28], ["joined", 10, 30]]
+vt.enemies += [["super_mutant", 16, 20], ["super_mutant", 26, 8], ["cult_guard", 28, 28], ["cult_guard", 22, 14],
+               ["joined", 10, 30]]
+vt.maybe("x_barrel_boom", 18, 24, check=False)     # танк у чана: бочка рядом с укрытием
 # командный бункер: пульт базы, серверы — отсюда управляли Марипозой в 2077-м
 for x in (35, 37, 39):
     vt.put(SERVER, x, 4)
