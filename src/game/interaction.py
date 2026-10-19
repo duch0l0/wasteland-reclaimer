@@ -34,6 +34,14 @@ class InteractionMixin:
         for npc in self.npcs:
             if reach.colliderect(npc.rect) and self.talk_to(npc, npc.npc_id):
                 return
+        # труп/ящик под ногами: обыскать его, а не терминал рядом. Раньше E на своей
+        # клетке не открывал ничего (adjacent() смотрит соседние клетки), и лут с тела,
+        # на котором стоишь, оставался недоступен.
+        here = (int(self.player.rect.centerx // S.TILE), int(self.player.rect.centery // S.TILE))
+        under = next((c for c in self.level.containers if here in [tuple(t) for t in c["tiles"]]), None)
+        if under is not None:
+            self.open_container(under)
+            return
         term = self.level.terminal_near(self.player.rect)
         box = self.level.container_near(self.player.rect)
         if term and term["id"] and box:   # рядом и терминал, и ящик — открывается тот, что ближе (поровну — терминал)

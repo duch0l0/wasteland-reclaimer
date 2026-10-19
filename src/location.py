@@ -176,6 +176,9 @@ def apply_role(e, role):
         e.medkits = max(getattr(e, "medkits", 0), 3)
     if role == "grenadier":
         e.grenades = max(e.grenades, 3)
+    if role == "sniper":
+        # снайпер бьёт дальше, чем стрелок: иначе он просто идёт в общий ряд и его «прицел» ни на что не влияет
+        e.range = max(getattr(e, "range", 0), 14)
     if role in ROLE_SUFFIX and ROLE_SUFFIX[role] not in e.name:
         e.name = f"{e.name}-{ROLE_SUFFIX[role]}"
 

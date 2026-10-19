@@ -472,14 +472,18 @@ class Combat:
             chance += 30                                  # снайпер целился целый ход
         if prof["ranged"]:
             dist = chebyshev(tile_of(attacker), tile_of(defender))
-            chance -= RANGE_PENALTY_PER_TILE * max(0, dist - 1)
+            # Эффективная дистанция: до половины дальности оружия стрельба точная, дальше
+            # −4% за клетку. Раньше штраф шёл с первой клетки, и пистолет на 6 клетках давал
+            # 20-24% — бой превращался в двадцать раундов промахов.
+            free = max(1, int(prof["range"]) // 2)
+            chance -= RANGE_PENALTY_PER_TILE * max(0, dist - free)
             if prof.get("close_bonus") and dist <= 2:   # дробь вплотную — разлёт сам находит цель
                 chance += prof["close_bonus"]
             if self.in_cover(attacker, defender):
                 chance -= self.COVER_PENALTY
         return max(S.HIT_CHANCE_MIN, min(S.HIT_CHANCE_MAX, chance))
 
-    COVER_PENALTY = 25
+    COVER_PENALTY = 25      # укрытие — главный тактический козырь; ранние враги его не ищут (см. _enemy_ranged)
 
     def in_cover(self, attacker, defender):
         """Цель за низким укрытием (мешки, ящики, бочки) или за щитоносцем со стороны стрелка."""
@@ -583,6 +587,7 @@ class Combat:
         ally_attacks = self.is_ally(attacker)
         name = _cap(attacker.name)
         if random.randint(1, 100) > self.hit_chance(attacker, defender, part_idx) - penalty:
+            self.game.audio.play("miss", self.game.cam.p(*defender.rect.center)[0], delay_ms=impact_ms, volume=0.6)
             if ally_attacks:
                 self.game.log(f"{name} щёлкает зубами — мимо.")
                 self._float(defender, "мимо", (200, 200, 190))
@@ -626,10 +631,13 @@ class Combat:
         absorbed = min(dmg, armor)
         dmg -= absorbed
         if absorbed and (getattr(defender, "robot", False) or absorbed >= dmg):
+            self.game.audio.play(random.choice(("armor_hit", "armor_ricochet")), self.game.cam.p(*defender.rect.center)[0], delay_ms=impact_ms, volume=0.8)
             self.spark(defender, attacker, 10 if absorbed >= dmg else 6)   # звяк: броня приняла удар
             if dmg <= 0:
                 self._float(defender, "звяк", (200, 210, 225))
         defender.apply_damage(dmg)
+        if crit and dmg > 0:
+            self.game.audio.play("crit", self.game.cam.p(*defender.rect.center)[0], delay_ms=impact_ms)
         if crit and dmg > 0:                                   # крит чувствуется: экран вздрагивает, мир на миг замирает
             self.shake(140, 3)
             self.hitstop(70)
@@ -904,11 +912,53 @@ class Combat:
                 return
         self.end_turn()
 
+    def _seek_cover(self, enemy, target):
+        """Шаг в укрытие от цели, если рядом есть клетка, откуда по врагу хуже попадают.
+
+        Умный стрелок не стоит в чистом поле: сначала за мешки или угол, потом огонь.
+        Возвращает True, если шаг сделан.
+        """
+        if self.in_cover(target, enemy):          # уже за укрытием
+            return False
+        here = tile_of(enemy)
+        tgt = tile_of(target)
+        for r in (1, 2):
+            best = None
+            for dx in range(-r, r + 1):
+                for dy in range(-r, r + 1):
+                    if max(abs(dx), abs(dy)) != r:
+                        continue
+                    tile = (here[0] + dx, here[1] + dy)
+                    if not self._walkable(tile) or tile in self._occupied(except_ent=enemy):
+                        continue
+                    if not has_los(self.game.level, tile_center(tile), tile_center(tgt)):
+                        continue                            # из укрытия всё равно надо видеть цель
+                    old = enemy.rect.topleft
+                    enemy.rect.topleft = rect_pos_for_tile(enemy, tile)
+                    ok = self.in_cover(target, enemy)
+                    enemy.rect.topleft = old
+                    if ok:
+                        best = tile
+                        break
+                if best:
+                    break
+            if best and enemy.ap >= S.AP_MOVE:
+                return self.try_step(enemy, best[0] - here[0], best[1] - here[1])
+        return False
+
     def _enemy_ranged(self, enemy):
-        """Стрелок: держит дистанцию, стреляет по линии огня, ищет позицию, если её нет."""
+        """Стрелок: держит дистанцию, ищет укрытие, стреляет по линии огня."""
         p = self._enemy_target(enemy)
         cost = self.attack_cost(enemy)
         here = tile_of(enemy)
+        # один раз за ход — занять укрытие, если его нет и на это хватает ОД вместе с выстрелом.
+        # Только с 4 уровня: в первом акте бандиты ещё бестолковые, иначе старт игры
+        # превращается в перестрелку с инструкторами по тактике.
+        if (getattr(enemy, "level", 1) >= 4 and not getattr(enemy, "cover_tried", False)
+                and enemy.ap >= cost + S.AP_MOVE):
+            enemy.cover_tried = True
+            if self._seek_cover(enemy, p):
+                return
         # игрок вплотную — один раз за ход отступает, если после этого хватит ОД на выстрел
         if chebyshev(here, tile_of(p)) == 1 and not enemy.retreated and enemy.ap >= S.AP_MOVE + cost:
             enemy.retreated = True

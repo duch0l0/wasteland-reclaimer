@@ -9,7 +9,7 @@ from .controls import number_key
 
 SELL_RATE = 0.4          # торговец берёт за 40% цены — добыча не кормит лучше квестов
 SILVER_TONGUE_BONUS = 0.2
-RESTOCK_MS = 8 * 60 * 1000   # через столько игрового времени торговец пополняет товар и кассу
+RESTOCK_MS = 20 * 60 * 1000  # через столько игрового времени торговец пополняет товар и кассу
 
 
 def speech_mult(speech):
@@ -47,7 +47,12 @@ class TradeMixin:
             return
         tr["cash"] = max(tr["cash"], base["cash"])
         for name, qty in base["stock"].items():
-            if items.ITEMS.get(name, {}).get("cat") in ("ammo", "meds") or name in (
+            cat = items.ITEMS.get(name, {}).get("cat")
+            # лекарства — не бесконечный склад: аптека пополняется до половины, а не до полного
+            # прилавка, иначе герой за пару походов набирает лечение на несколько жизней
+            if cat == "meds":
+                tr["stock"][name] = max(tr["stock"].get(name, 0), max(1, qty // 2))
+            elif cat == "ammo" or name in (
                     "отмычка", "изолента", "пружина", "метательный нож", "граната"):
                 tr["stock"][name] = max(tr["stock"].get(name, 0), qty)
 

@@ -38,6 +38,27 @@ import bot_sides as SQ  # noqa: E402
 
 saveload.SAVE_DIR = tempfile.mkdtemp()
 
+
+# ------------------------------------------------------------ воспроизводимость
+# Игра и бот кое-где меряют время pygame.time.get_ticks(), а он идёт от реального
+# времени: на быстрой машине прогон выходит другим. Для замеров баланса подменяем
+# его счётчиком, который двигает каждый Game.update(dt) — «время» теперь часть
+# симуляции, и одинаковый сид даёт одинаковый прогон.
+class _VirtualClock:
+    ms = 0
+
+
+pygame.time.get_ticks = lambda: _VirtualClock.ms     # noqa: E731 — подмена модуля pygame
+_update_real = Game.update
+
+
+def _update_fixed(self, dt_ms):
+    _VirtualClock.ms += int(dt_ms)
+    return _update_real(self, dt_ms)
+
+
+Game.update = _update_fixed
+
 # сборки героя: какие навыки качать (по очереди, пока не выйдет следующий порог)
 BUILDS = {
     "guns": [("guns", 70), ("speech", 60), ("guns", 80), ("science", 55), ("speech", 75), ("medicine", 45),
@@ -55,6 +76,20 @@ PERK_PREF = ["steady_hand", "action_boy", "tough", "silver_tongue", "sharp_eye",
              "hacker", "medic", "point_blank", "bonus_move", "scavenger"]
 HEALS = ["стимулятор", "аптечка армейская", "тоник", "набор", "бинт", "консервы", "вяленое мясо",
          "энергетический батончик", "чистая вода", "самогон", "сушёные травы"]
+
+
+HP_EDGES = ((0, 10), (10, 25), (25, 50), (50, 75), (75, 101))
+
+
+def hp_buckets(vals):
+    """Сколько боёв закончилось с минимумом HP в каждом диапазоне (0-9, 10-24, ...)."""
+    return [sum(1 for v in vals if a <= v < b) for a, b in HP_EDGES]
+
+
+def hp_buckets_text(vals):
+    names = ("0-9%", "10-24%", "25-49%", "50-74%", "75-100%")
+    return ", ".join(f"{n}: {c}" for n, c in zip(names, hp_buckets(vals)) if c) or "нет данных"
+
 
 
 class Stuck(Exception):
@@ -135,13 +170,18 @@ class Critic:
 class Bot:
     Stuck = Stuck
 
-    def __init__(self, seed=7, sides=True, build="guns"):
+    def __init__(self, seed=7, sides=True, build="guns", noheal=False):
         random.seed(seed)
         self.sides = sides
+        # noheal — контрольный прогон: герой не ест лечилки ни в бою, ни после. Нужно, чтобы
+        # понять, бой опасен сам по себе или бота спасает запас лечения. Отдых вне боя остаётся.
+        self.noheal = noheal
         self.build_name = build
         self.build = BUILDS[build]
         self.g = Game(intro=False)
-        self.stats = {"fights": 0, "close_calls": 0, "heals_used": 0, "deaths": 0, "kills": 0}
+        self.stats = {"fights": 0, "close_calls": 0, "heals_used": 0, "deaths": 0, "kills": 0,
+                      "damage_taken": 0, "damage_dealt": 0, "rounds": 0,
+                      "fights_no_damage": 0, "fights_long": 0, "hp_min": []}
         self.rows = []
         self.problems = []
         self.t0 = time.time()
@@ -212,7 +252,7 @@ class Bot:
                     self.fr(2)
                     if g.combat.active:
                         self.fight()
-                    return
+                    return True
         raise Stuck(f"негде встать рядом с {tiles[:2]}")
 
     def goto_portal(self, to):
@@ -792,6 +832,47 @@ class Bot:
                 return False
         return False
 
+
+
+    def flank(self, target, need=12):
+        """Обойти укрытие: шаг на клетку, откуда цель не в укрытии и шанс попасть выше.
+
+        Против стрелков в укрытии стоять и стрелять в лоб — 10-15% на выстрел. Игрок
+        обходит сбоку; бот теперь тоже.
+        """
+        g, c, p = self.g, self.g.combat, self.g.player
+        if p.ap < S.AP_MOVE or not c.los(p, target):
+            return False
+        px, py = tile_of(p)
+        here = p.rect.copy()
+        base = c.hit_chance(p, target)
+        best = None
+        for r in (1, 2, 3):
+            for dx in range(-r, r + 1):
+                for dy in range(-r, r + 1):
+                    if max(abs(dx), abs(dy)) != r:
+                        continue
+                    tile = (px + dx, py + dy)
+                    if not c._walkable(tile) or tile in c._occupied(except_ent=p):
+                        continue
+                    p.rect.topleft = rect_pos_for_tile(p, tile)
+                    if c.los(p, target):
+                        val = c.hit_chance(p, target)
+                        if best is None or val > best[2]:
+                            best = (dx, dy, val)
+                    p.rect = here.copy()
+            if best and best[2] >= base + need:
+                break
+        if best and best[2] >= base + need:
+            before = tile_of(p)
+            c.player_step(best[0], best[1])
+            for _ in range(30):
+                if not c.tweens:
+                    break
+                self.fr(1)
+            return tile_of(p) != before
+        return False
+
     def fight(self):
         g = self.g
         c = g.combat
@@ -801,11 +882,16 @@ class Bot:
         self.best_weapon()
         low = g.player.hp
         hp0 = g.player.hp
+        dmg0 = self.stats["damage_taken"]
         foes = list(c.enemies_in_combat())
         hp_foes = {id(e): e.hp for e in foes}
         rounds0 = c.round
         n = 0
+        last_hp = g.player.hp
         while c.active and g.player.alive:
+            if g.player.hp < last_hp:                      # урон, полученный с прошлого кадра (лечение его не маскирует)
+                self.stats["damage_taken"] += last_hp - g.player.hp
+            last_hp = g.player.hp
             n += 1
             if n > 30000:
                 from src.companion import party
@@ -817,9 +903,12 @@ class Bot:
                 raise Stuck(f"бой не кончается [герой {me}, раунд {c.round}, {g.loc.id}; враги: {foes}; спутники: {pals}]")
             if c.player_can_act():
                 p = g.player
+                if p.ap >= p.max_ap:
+                    p._flank_tried = False
                 urgent = p.hp < max(8, p.max_hp * 0.2)      # совсем плохо — лечиться в любом случае
                 spare = p.ap - S.AP_CRAFT >= c.attack_cost(p)  # после бинта ещё хватит на выстрел
-                if p.hp < p.hp_cap * 0.45 and p.ap >= S.AP_CRAFT and (urgent or spare) and self.heal_if_needed(0.45):
+                if (not self.noheal and p.hp < p.hp_cap * 0.45 and p.ap >= S.AP_CRAFT
+                        and (urgent or spare) and self.heal_if_needed(0.45)):
                     self.fr(1)
                     continue
                 left = c.enemies_in_combat()
@@ -839,6 +928,11 @@ class Bot:
                     c.player_throw()                  # ЭМИ в робота — как сделал бы игрок
                     self.fr(1)
                     continue
+                if (c.hit_chance(p, t) < 38 and p.ap >= S.AP_MOVE + c.attack_cost(p)
+                        and not getattr(p, "_flank_tried", False)):
+                    p._flank_tried = True
+                    if self.flank(t):
+                        continue
                 close_in = (c.can_attack(p, t)[0] and c.hit_chance(p, t) < 45 and chebyshev(here, tile_of(t)) > 2
                             and p.ap >= c.attack_cost(p) + 1)
                 if close_in:                      # мажу издалека — подойду ближе, как сделал бы игрок
@@ -878,11 +972,21 @@ class Bot:
             self.fr(1)
         if low < g.player.hp_cap * 0.25:
             self.stats["close_calls"] += 1
+        rounds = c.round - rounds0 + 1
+        taken = self.stats["damage_taken"] - dmg0
+        self.stats["rounds"] += rounds
+        self.stats["damage_dealt"] += sum(max(0, hp_foes[id(e)] - e.hp) for e in foes)
+        if taken == 0:
+            self.stats["fights_no_damage"] += 1
+        if rounds >= 14:
+            self.stats["fights_long"] += 1
         one = sum(1 for e in foes if not e.alive and hp_foes[id(e)] == e.max_hp and getattr(e, "_hits_taken", 1) <= 1)
         self.stats["kills"] += sum(1 for e in foes if not e.alive)
-        self.critic.on_fight(c.round - rounds0 + 1, len(foes), max(0, hp0 - low), g.player.hp_cap, one)
+        self.critic.on_fight(rounds, len(foes), max(0, hp0 - low), g.player.hp_cap, one)
         self.check_alive("бой")
-        self.heal_if_needed(0.5)
+        self.stats["hp_min"].append(round(100 * low / max(1, g.player.hp_cap)))
+        if not self.noheal:
+            self.heal_if_needed(0.5)
         self.cure_rads()
         self.rest()
         self.loot_bodies()
@@ -1867,10 +1971,17 @@ def main():
             i = args.index(k)
             opts[k] = args[i + 1]
             del args[i:i + 2]
+    stats_path = None
+    if "--stats" in args:
+        i = args.index("--stats")
+        stats_path = args[i + 1]
+        del args[i:i + 2]
+    noheal = "--noheal" in args
+    args = [a for a in args if a != "--noheal"]
     sides = "--nosides" not in args
     args = [a for a in args if a != "--nosides"]
     which = args or list(ACTS)
-    b = Bot(seed=int(opts["--seed"]), sides=sides, build=opts["--build"])
+    b = Bot(seed=int(opts["--seed"]), sides=sides, build=opts["--build"], noheal=noheal)
     print(f"бот: сборка {opts['--build']}, бросок {opts['--seed']}, {'с побочками' if sides else 'только сюжет'}")
     for name in which:
         print(f"\n===== {name} =====", flush=True)
@@ -1885,6 +1996,13 @@ def main():
         print(r)
     print(f"\nбоёв {b.stats['fights']}, убито {b.stats['kills']}, на волоске {b.stats['close_calls']}, "
           f"лечилок съедено {b.stats['heals_used']}, смертей {b.stats['deaths']}, {time.time() - b.t0:.0f} с")
+    st = b.stats
+    if st["fights"]:
+        print(f"раундов {st['rounds']} (в среднем {st['rounds'] / st['fights']:.1f} на бой), "
+              f"урона получено {st['damage_taken']}, нанесено {st['damage_dealt']}, "
+              f"боёв без урона игроку {st['fights_no_damage']}/{st['fights']} "
+              f"({100 * st['fights_no_damage'] / st['fights']:.0f}%), долгих (14+ раундов) {st['fights_long']}")
+        print("минимум HP за бой: " + hp_buckets_text(st.get("hp_min") or []))
     print(f"продал на {b.stats.get('sold', 0)} крышек")
     print("купил:", ", ".join(b.stats.get("bought", [])) or "ничего")
     print("прочитал:", ", ".join(b.stats.get("books", [])) or "ничего")
@@ -1912,6 +2030,22 @@ def main():
     print("\n===== ОТЗЫВ ПРИДИРЧИВОГО ИГРОКА =====")
     for where, text in b.critic.summary() or [("-", "Придраться не к чему. Подозрительно.")]:
         print(f" [{where}] {text}")
+    if stats_path:
+        payload = {
+            "build": opts["--build"], "seed": int(opts["--seed"]), "sides": sides, "acts": which,
+            "noheal": noheal,
+            "elapsed_s": round(time.time() - b.t0, 1),
+            "stats": b.stats,
+            "quests": {"done": len(done), "total": len(Q), "started": started, "untouched": untouched},
+            "ending": ending[0] if ending else None,
+            "problems": b.problems,
+            "critic": [{"where": w, "text": t} for w, t in b.critic.summary()],
+            "steps": b.rows,
+            "side_fails": b.side_fails,
+        }
+        with open(stats_path, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=1)
+        print(f"\nотчёт: {stats_path}")
 
 
 if __name__ == "__main__":

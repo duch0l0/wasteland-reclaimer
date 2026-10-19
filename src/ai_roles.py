@@ -66,6 +66,7 @@ def begin_turn(c, ent):
             g.ow_fired = False          # пулемётчик стреляет по движению раз за ход героя
         return
     ent.inspired = False
+    ent.cover_tried = False          # за ход можно один раз перебежать в укрытие
     if role_of(ent) == "gunner":
         ent.overwatch = None
     from .combat import tile_of, chebyshev

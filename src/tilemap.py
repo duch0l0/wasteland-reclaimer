@@ -143,11 +143,17 @@ class MapBase:
         return next((c for c in self.containers if tuple(tile) in c["tiles"]), None)
 
     def container_near(self, player_rect):
-        """Контейнер вплотную к игроку (любой его клеткой); сначала — ещё не осмотренные."""
-        for c in sorted(self.containers, key=lambda c: c["opened"]):
-            if self.adjacent(c["tiles"], player_rect):
-                return c
-        return None
+        """Контейнер вплотную к игроку: сначала тела (за добычей идут к ним), потом
+        прочее; при равенстве — ближний и ещё не осмотренный."""
+        px, py = player_rect.centerx // S.TILE, player_rect.centery // S.TILE
+
+        def rank(c):
+            own = min(max(abs(t[0] - px), abs(t[1] - py)) for t in c["tiles"])
+            corpse = 0 if str(c.get("name", "")).startswith("тело:") else 1
+            return (corpse, own, bool(c["opened"]))
+
+        near = [c for c in self.containers if self.adjacent(c["tiles"], player_rect)]
+        return min(near, key=rank) if near else None
 
     def draw_pickups(self, surf, cam):
         cam_x, cam_y = int(cam.x), int(cam.y)

@@ -37,7 +37,7 @@ WEAPONS = {
     "sawedoff": {"name": "Обрез", "ranged": True, "skill": "guns", "ap": 4, "range": 3, "damage": 12,
                  "item": "обрез", "ammo": "дробь", "falloff": 0.25, "close_bonus": 25, "req": 40, "tier": 1},
     "pistol10": {"name": "10-мм пистолет", "ranged": True, "skill": "guns", "ap": 4, "range": 8, "damage": 9,
-                 "item": "10-мм пистолет", "ammo": "патроны", "req": 55, "tier": 1},
+                 "item": "10-мм пистолет", "ammo": "патроны", "req": 45, "tier": 1},
     "smg": {"name": "Пистолет-пулемёт", "ranged": True, "skill": "guns", "ap": 5, "range": 6, "damage": 5,
             "item": "пистолет-пулемёт", "ammo": "патроны", "burst": 3, "recoil": 10, "aim": False, "req": 60, "tier": 2},
     # дробовик: огромный урон вплотную (+20% к попаданию на 1–2 клетках), дальше дробь рассеивается
