@@ -97,6 +97,7 @@ class TradeMixin:
         tr["cash"] += price
         tr["stock"][name] -= qty
         self.inventory.add(name, qty)
+        self.audio.play("coins")
         self.log(f"Куплено: {name} ×{qty} за {price} кр.")
 
     def _sell(self, name, qty, price):
@@ -108,6 +109,7 @@ class TradeMixin:
         tr["stock"][name] = tr["stock"].get(name, 0) + qty
         self.inventory.remove(name, qty)
         self.inventory.add("крышки", price)
+        self.audio.play("coins")
         if weapon_for_item(name) == self.player.weapon and not self.inventory.has(name):
             self.player.weapon = "melee"
         self.log(f"Продано: {name} ×{qty} за {price} кр.")

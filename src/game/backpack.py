@@ -195,6 +195,7 @@ class BackpackMixin:
         if not self.combat.spend_player_ap(S.AP_CRAFT):
             return
         before = p.hp
+        self.audio.play("heal")
         if "rads" in use:
             was = p.rads
             p.add_rads(use["rads"])

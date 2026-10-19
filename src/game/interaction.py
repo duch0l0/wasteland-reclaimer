@@ -84,10 +84,12 @@ class InteractionMixin:
         if self.inventory.has("отмычка"):
             self.inventory.remove("отмычка")
             self.level.open_door(tile)
+            self.audio.play("door_open")
             self.log("Отмычка тихо щёлкает. Дверь открыта.")
         elif self.inventory.has("лом"):
             self.inventory.remove("лом")
             self.level.open_door(tile)
+            self.audio.play("door_break")
             self.log("Вы выламываете дверь ломом. Лом гнётся, дверь сдаётся. Грохот на всю округу.")
             factions = {e.faction for e in self.enemies if e.alive and e.faction}
             if factions:
@@ -126,12 +128,13 @@ class InteractionMixin:
         pry — простой засов, который поддевается ломом (лом у героя всегда при себе)."""
         if self.flags.get(gate["flag"]):
             self.level.open_gate(gate)
+            self.audio.play("gate_open")
         elif gate.get("pry") or gate.get("key") and self.inventory.has(gate["key"]):
             self.flags[gate["flag"]] = True
             self.level.open_gate(gate)
             self.log(gate.get("open_msg") or
                      f"Карта «{gate['key']}» пищит в замке. Гермодверь с рёвом откатывается в сторону.")
-            self.audio.play("hit")
+            self.audio.play("gate_open")
             self.sync_story()
         else:
             self.log(gate["msg"])

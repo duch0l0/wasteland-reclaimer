@@ -2,7 +2,9 @@
 Звук: эффекты и фоновая музыка.
 
 Свои звуки (assets/sounds/<имя>.ogg, готовит tools/prepare_sounds.py):
-  shot — выстрел, melee — удар ломом, hit — попадание по телу; музыка — assets/music/.
+  shot, melee, hit — из tools/prepare_sounds.py; интерфейсные (клики, терминал, гейгер, левел-ап,
+  ящики…) синтезирует tools/make_sfx.py; у звука могут быть варианты <имя>_1.ogg, <имя>_2.ogg…
+  Музыка — assets/music/.
 
 Если у игрока установлен Fallout 2 — берутся его музыка и звуки (src/fallout2.py:
 ищется установка, в фоне один раз перекодируется в кэш f2cache/). Тогда у каждого
@@ -17,6 +19,7 @@
 import json
 import os
 import random
+import re
 
 import pygame
 
@@ -28,10 +31,10 @@ MUSIC_DIR = os.path.join("assets", "music")
 DEFAULTS = {"music": 0.5, "sfx": 0.8}
 # базовая громкость (выстрел громкий — его чуть приглушаем)
 BASE = {"shot": 0.7, "shot_pipe": 0.75, "shot_enemy": 0.6, "shot_turret": 0.6, "melee": 0.9, "hit": 0.9,
-        "hit_bullet": 0.8, "explosion": 1.0, "button": 0.5, "geiger": 0.6, "combat_start": 0.8, "combat_end": 0.7}
+        "hit_bullet": 0.8, "explosion": 1.0, "button": 0.5, "geiger": 0.6, "combat_start": 0.8, "combat_end": 0.7,
+        "terminal_key": 0.6, "geiger": 0.6, "dialog": 0.5}
 # чего нет — чем заменить
 FALLBACK = {"shot_pipe": "shot", "shot_enemy": "shot", "shot_turret": "shot", "hit_bullet": "hit", "explosion": "shot"}
-OWN = ("shot", "melee", "hit")
 
 
 class Audio:
@@ -51,17 +54,24 @@ class Audio:
             self.ok = True
         except pygame.error:
             return
-        for name in OWN:
-            path = os.path.join(SFX_DIR, f"{name}.ogg")
-            if os.path.isfile(path):
-                try:
-                    self.sounds[name] = [pygame.mixer.Sound(path)]
-                except pygame.error:
-                    pass
+        self._load_own()
         if game_dir and cache_dir:
             self.f2 = fallout2.Importer(game_dir, cache_dir)
             self.f2.start()
             self.poll()
+
+    def _load_own(self):
+        """assets/sounds/<ключ>.ogg и варианты <ключ>_1.ogg, <ключ>_2.ogg…"""
+        if not os.path.isdir(SFX_DIR):
+            return
+        for fn in sorted(os.listdir(SFX_DIR)):
+            if not fn.endswith(".ogg"):
+                continue
+            name = re.sub(r"_\d+$", "", fn[:-4])
+            try:
+                self.sounds.setdefault(name, []).append(pygame.mixer.Sound(os.path.join(SFX_DIR, fn)))
+            except pygame.error:
+                pass
 
     # ------------------------------------------------------------ Fallout 2
     @property

@@ -167,6 +167,7 @@ class TerminalMixin:
         if word == h["password"]:
             h["log"] += [">Точное совпадение!", ">Вход..."]
             self.flags[self.lock_key(e) + "_open"] = True
+            self.audio.play("terminal_ok")
             self.log("Терминал взломан.")
             self.gain_xp(10)
             self._show_entry(self.term["entry"], e)
@@ -175,6 +176,7 @@ class TerminalMixin:
         h["tried"].append(word)
         h["tries"] -= 1
         h["log"] += [">Отказ в доступе.", f">Совпадение={likeness}"]
+        self.audio.play("terminal_err")
         if h["tries"] <= 0:
             self.flags[self.lock_key(e) + "_lockout"] = True
             h["log"].append(">ТЕРМИНАЛ ЗАБЛОКИРОВАН")
@@ -187,6 +189,7 @@ class TerminalMixin:
     # ------------------------------------------------------------ клавиши
     def terminal_key(self, key):
         t = self.term
+        self.audio.play("terminal_key")
         if key in (pygame.K_ESCAPE, pygame.K_BACKSPACE):
             if t["view"] in ("entry", "locked", "hack") and not t.get("doc"):
                 t.update(view="menu", hack=None, scroll=0)

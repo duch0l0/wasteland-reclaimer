@@ -196,6 +196,22 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
                     or self.loot or self.menu or self.ctx_menu or self.fishing)
 
     # --------------------------------------------------------------- кадр
+    STEP_PX = 44   # шаг героя: столько пикселей между двумя звуками шагов
+
+    def update_steps(self):
+        """Шаги: звук на каждые STEP_PX пройденных пикселей; в убежищах и подземельях — бетон, снаружи — земля."""
+        x, y = self.player.rect.center
+        px, py = getattr(self, "_step_pos", (x, y))
+        self._step_pos = (x, y)
+        d = ((x - px) ** 2 + (y - py) ** 2) ** 0.5
+        if d > 30 or d == 0:   # переход между картами или стоим
+            return
+        self._step_dist = getattr(self, "_step_dist", 0) + d
+        if self._step_dist >= self.STEP_PX:
+            self._step_dist = 0
+            under = LOCATION_DEFS.get(self.loc.id, {}).get("underground")
+            self.audio.play("step_concrete" if under else "step_dirt", volume=0.5)
+
     def update(self, dt_ms):
         self.audio.update(dt_ms)
         if self.menu:  # пауза: мир стоит
@@ -214,6 +230,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         Minimap.reveal(self)  # туман войны: открыть клетки вокруг героя
         self.refresh_hero_look()
         self.player.update(dt_ms)
+        self.update_steps()
         for e in self.enemies:
             e.update(dt_ms)
         for npc in self.npcs:
