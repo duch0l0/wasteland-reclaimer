@@ -187,7 +187,8 @@ class MapBase:
 
 
 class TileMap(MapBase):
-    def __init__(self, rows, npc_ids=None, containers=None, terminals=None):
+    def __init__(self, rows, npc_ids=None, containers=None, terminals=None, map_id=None):
+        self.map_id = map_id
         self.rows = [list(r) for r in rows]
         self.height = len(rows)
         self.width = len(rows[0]) if rows else 0
@@ -229,6 +230,10 @@ class TileMap(MapBase):
                 elif ch in PICKUP_TILES:
                     kind, count = PICKUP_TILES[ch]
                     self.add_pickup((px, py), kind, count)
+
+        if map_id and self.containers:       # пустые ящики получают хлам (src/lootfill.py)
+            from . import lootfill
+            lootfill.fill(map_id, self.containers)
 
     def tile_at(self, x, y):
         if 0 <= y < self.height and 0 <= x < self.width:

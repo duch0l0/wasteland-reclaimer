@@ -19,6 +19,7 @@
 """
 import json
 import math
+import os
 
 import pygame
 
@@ -120,6 +121,9 @@ class IsoMap(MapBase):
                    "on_put": c.get("on_put")}
             obj["container"] = box
             self.containers.append(box)
+        self.map_id = os.path.basename(path)[:-5]
+        from . import lootfill
+        lootfill.fill(self.map_id, self.containers, d.get("style"))   # пустые ящики → хлам
         self.terminals = []
         for t in d.get("terminals", []):
             obj = self.objects[t["obj"]]

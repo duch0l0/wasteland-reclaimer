@@ -241,7 +241,8 @@ class Location:
                 self.level = TownMap(d["map"])  # карта из объектов (tools/build_town.py)
         else:
             self.level = TileMap(rows or load_map_file(d["map"]), npc_ids=d.get("npcs"),
-                                 containers=d.get("containers"), terminals=d.get("terminals"))
+                                 containers=d.get("containers"), terminals=d.get("terminals"),
+                                 map_id=loc_id)
         entry = d.get("entry")
         self.entry = (entry[0] * S.TILE, entry[1] * S.TILE) if entry else self.level.player_spawn
         iso = getattr(self.level, "iso", False)

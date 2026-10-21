@@ -24,6 +24,7 @@ import pygame
 
 from . import settings as S
 from . import loader
+from . import lootfill
 from . import props as P
 from .tilemap import MapBase
 
@@ -764,6 +765,9 @@ class TownMap(MapBase):
                    "on_put": c.get("on_put")}
             obj["container"] = box
             self.containers.append(box)
+        self.map_id = os.path.basename(path)[:-5] if isinstance(path, str) else None
+        if self.map_id:                      # пустые ящики получают хлам (src/lootfill.py)
+            lootfill.fill(self.map_id, self.containers, d.get("style"))
 
         self._dirt = _dirt_tiles()
         self._tiles = {"a": [], "g": []}
@@ -1519,6 +1523,13 @@ class TownMap(MapBase):
                 continue
             c = o["container"]
             opened = c is not None and c["opened"] and not c["loot"]  # пустой — темнее
+            if c is not None and lootfill.looks_empty(c):            # пустой — вскрытый проп
+                v = lootfill.open_variant(o["name"])
+                if v:
+                    img = P.image(v)
+                    out.append((o["sort_y"], img, (o["rect"].centerx - img.get_width() // 2 - cam_x,
+                                                   o["rect"].bottom - img.get_height() - cam_y)))
+                    continue
             out.append((o["sort_y"], P.image(o["name"], darken=opened), (o["rect"].x - cam_x, o["rect"].y - cam_y)))
         for r in self.roofs:
             if r["alpha"] <= 1 or not r["rect"].colliderect(view):
