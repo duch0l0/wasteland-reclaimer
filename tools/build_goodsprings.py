@@ -337,9 +337,9 @@ for x, y in ((12, 5), (18, 5), (20, 11), (13, 11)):
     cv.maybe(CRYSTALS_G[(x + y) % 3], x, y)
 cv.maybe("pickaxe", 4, 7)
 cv.maybe(LANTERN_G, 9, 25)
-for x, y in ((9, 21), (8, 16), (12, 12), (26, 12)):
+for x, y in ((11, 21), (8, 16), (12, 12), (26, 12)):
     cv.maybe(LANTERN_G, x, y)                          # старатели развесили фонари вдоль всего хода
-for x, y in ((7, 19), (13, 15), (11, 24), (28, 14)):
+for x, y in ((7, 19), (13, 15), (12, 22), (28, 14)):
     cv.maybe(MUSH[(x + y) % 2], x, y)                  # редкие грибы в проходе — слабый зелёный свет
 cv.maybe(LANTERN_G, 29, 16)
 cv.maybe(LANTERN_G, 34, 18)

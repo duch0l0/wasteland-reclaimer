@@ -38,6 +38,10 @@ WALL_PROPS = ("wall_", "vwall_", "x_cliff", "roof_")
 # входы-здания: сам портал внутри такого пропа — норма, а не «предмет у портала»
 PORTAL_BUILDINGS = ("ar2_airlock", "p7_command", "r_bunker", "sl_bunker")
 PORTAL_SKIP = ("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_manhole", "x_door")
+# PORTAL_SKIP ниже используется как список префиксов; для аудита дверей есть отдельный точечный список:
+# задуманные преграды-решётки, которые стоят в проёме по логике места (перекрывают устье стока/канала).
+# Формат: (карта, проп, x, y) — как x_door/x_manhole/x_ladder, но не по всему проекту, а по одной клетке.
+AUDIT_OK = {("drain", "bar_fence_a", 46, 12)}
 
 
 def load(path):
@@ -140,6 +144,7 @@ def audit(path):
     for inside_pref in (True, False):
         for name, x, y, cells, block, layer in props:
             if not block or layer == "floor" or name in ("x_door", "x_manhole", "x_ladder") \
+                    or (mid, name, x, y) in AUDIT_OK \
                     or name.startswith(("vwall_", "wall_", "x_cliff", "x_vault_door", "x_vault_gear")):
                 continue
             if any(c in door for c in cells) != inside_pref:
