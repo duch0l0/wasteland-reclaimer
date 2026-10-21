@@ -18,6 +18,11 @@ import pygame
 GRAVITY = 900          # px/с² — падение по высоте
 MAX_STAINS = 400       # пятен на локацию; старые исчезают
 
+# косметика (брызги и ошмётки) — свой генератор: число и разлёт частиц не должны
+# сдвигать глобальный поток random, от которого зависят бой, лут и квесты
+_rng = random.Random()
+
+
 BLOOD = [(150, 14, 12), (178, 22, 18), (120, 8, 8), (200, 30, 24)]
 FLESH = [(170, 60, 60), (140, 40, 45), (196, 96, 90)]
 BONE = [(230, 220, 200), (210, 200, 180)]
@@ -36,12 +41,12 @@ class Gore:
 
         def spray(n, h, speed, colors, size, spread=0.9, up=(40, 160)):
             for _ in range(n):
-                ang = math.atan2(away.y, away.x) + random.uniform(-spread, spread)
-                v = random.uniform(*speed)
+                ang = math.atan2(away.y, away.x) + _rng.uniform(-spread, spread)
+                v = _rng.uniform(*speed)
                 self.parts.append({
-                    "x": cx + random.uniform(-6, 6), "y": ground + random.uniform(-3, 3), "z": h + random.uniform(-6, 6),
-                    "vx": math.cos(ang) * v, "vy": math.sin(ang) * v * 0.6, "vz": random.uniform(*up),
-                    "color": random.choice(colors), "size": random.choice(size), "delay": delay_ms,
+                    "x": cx + _rng.uniform(-6, 6), "y": ground + _rng.uniform(-3, 3), "z": h + _rng.uniform(-6, 6),
+                    "vx": math.cos(ang) * v, "vy": math.sin(ang) * v * 0.6, "vz": _rng.uniform(*up),
+                    "color": _rng.choice(colors), "size": _rng.choice(size), "delay": delay_ms,
                     "level": level})
 
         if kind == "melee":

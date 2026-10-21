@@ -16,6 +16,10 @@ from ..combat import tile_of, chebyshev
 from ..settings import TILE as T
 from .mouse import threat_name
 
+# косметика (реплика жителя при осмотре) — свой генератор: броски не должны
+# сдвигать глобальный поток random, от которого зависят бой, лут и квесты
+_rng = random.Random()
+
 
 class CtxMenuMixin:
     @staticmethod
@@ -94,7 +98,7 @@ class CtxMenuMixin:
         lines = self.bark_lines(npc)
         if lines:   # житель бормочет что-то своё — облачко над головой
             from ..ui.combat_ui import speech_ms
-            text = random.choice(lines)
+            text = _rng.choice(lines)
             self.speech = {"ent": npc, "text": text, "t": speech_ms(text)}
         p = self.player.skill("steal")
         mood = ("держит руку на кармане и не сводит с вас глаз" if self.flags.get(f"{npc.npc_id}_robbed")

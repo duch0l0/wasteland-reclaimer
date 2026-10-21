@@ -1,4 +1,6 @@
 """Отрисовка кадра: карта мира или локация + интерфейс поверх."""
+import random
+
 import pygame
 
 from .. import settings as S
@@ -6,6 +8,10 @@ from ..ui import hud, menus, combat_ui, cursor, inventory_ui, terminal_ui, journ
 from ..ui.common import fonts, begin_frame, PANEL_H
 from ..entities import sprite_of
 from .. import fonts as fontlib
+
+# косметика (тряска экрана) — свой генератор, чтобы броски отрисовки не сдвигали
+# глобальный поток random, от которого зависят бой, лут и квесты
+_rng = random.Random()
 
 
 class RenderMixin:
@@ -52,12 +58,11 @@ class RenderMixin:
     def _draw_local(self):
         screen, cam, combat, z = self.screen, self.cam, self.combat, self.zoom
         shake = (0, 0)
-        import random as _r
         if self.action.active and self.action.shake_ms > 0:   # толпа вывалилась — экран дрогнул
-            shake = (_r.randint(-6, 6), _r.randint(-4, 4))
+            shake = (_rng.randint(-6, 6), _rng.randint(-4, 4))
         elif combat.shake_ms > 0:                              # крит или взрыв в пошаговом бою
             a = combat.shake_amp
-            shake = (_r.randint(-a, a), _r.randint(-a, a))
+            shake = (_rng.randint(-a, a), _rng.randint(-a, a))
         cam.x += shake[0]
         cam.y += shake[1]
         try:

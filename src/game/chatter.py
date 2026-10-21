@@ -19,6 +19,10 @@ import pygame
 from .. import ambient, settings as S, wander
 from ..combat import tile_of, rect_pos_for_tile
 from ..ui.combat_ui import speech_ms
+# косметика (сплетни и болтовня жителей) — свой генератор: броски не должны
+# сдвигать глобальный поток random, от которого зависят бой, лут и квесты
+_rng = random.Random()
+
 
 T = S.TILE
 NEAR_TILES = 7           # так близко от героя слышно
@@ -121,7 +125,7 @@ class ChatterMixin:
         folk = [n for n in self.npcs if self._chat_ok(n) and ambient.AMBIENT.get(n.npc_id, {}).get("folk")]
         hero = tile_of(self.player)
         near = [n for n in folk if 2 <= _dist(hero, tile_of(n)) <= SPOT_TILES]
-        random.shuffle(near)
+        _rng.shuffle(near)
         busy = {tile_of(o) for o in self.npcs} | {tile_of(e) for e in self.enemies if e.alive} | {hero}
         recent = set(self.chat_recent)
         for a in near[:5]:
@@ -138,9 +142,9 @@ class ChatterMixin:
                 path = _bfs_to_neighbor(self.level, tile_of(a), tile_of(b), busy - {tile_of(a)} - {tile_of(b)})
                 if path is None:
                     continue
-                lines = [[ "A", random.choice(news)], ["B", random.choice(pb["barks"] + pb["news"][:1] if all(isinstance(x, str) for x in pb["news"][:1]) else pb["barks"])]]
-                if random.random() < 0.5:
-                    lines.append(["A", random.choice(pa["barks"])])
+                lines = [[ "A", _rng.choice(news)], ["B", _rng.choice(pb["barks"] + pb["news"][:1] if all(isinstance(x, str) for x in pb["news"][:1]) else pb["barks"])]]
+                if _rng.random() < 0.5:
+                    lines.append(["A", _rng.choice(pa["barks"])])
                 self._chat_start({"id": tid, "lines": lines}, a, b, path)
                 return True
         return False
@@ -157,7 +161,7 @@ class ChatterMixin:
                 return a, b, None
             return None
         near = [n for n in self.npcs if self._chat_ok(n) and 2 <= _dist(hero, tile_of(n)) <= SPOT_TILES]
-        random.shuffle(near)
+        _rng.shuffle(near)
         busy = {tile_of(o) for o in self.npcs} | {tile_of(e) for e in self.enemies if e.alive} | {hero}
         for a in near[:5]:
             others = [n for n in self.npcs if n is not a and self._chat_ok(n) and _dist(tile_of(a), tile_of(n)) <= 9]
@@ -182,7 +186,7 @@ class ChatterMixin:
                 return
             self.chat_cd = 5000
             pool = self._chat_pool()
-            if not pool or random.random() < 0.38:
+            if not pool or _rng.random() < 0.38:
                 g = self._chat_gossip()
                 if g:
                     return
@@ -190,7 +194,7 @@ class ChatterMixin:
                 return
             weights = [4 if p.get("hint") and not self.flags.get(f"chat_heard_{p['id']}") else 1 for p in pool]
             for _ in range(4):
-                conv = random.choices(pool, weights)[0]
+                conv = _rng.choices(pool, weights)[0]
                 pick = self._chat_pick(conv)
                 if pick:
                     self._chat_start(conv, *pick)
@@ -254,11 +258,11 @@ class ChatterMixin:
             n.chatting = False
             n.home = tile_of(n)
             n.wander_path = []
-            n.wander_wait = random.randint(2500, 7000)
+            n.wander_wait = _rng.randint(2500, 7000)
             n.anim.set_action("idle")
         conv = c["conv"]
         self.chat_recent = (list(self.chat_recent) + [conv["id"]])[-14:]
-        self.chat_cd = random.randint(22000, 48000)
+        self.chat_cd = _rng.randint(22000, 48000)
         if abort:
             if self.speech and self.speech.get("chat"):
                 self.speech = None

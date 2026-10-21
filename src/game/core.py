@@ -38,6 +38,11 @@ with open("data/barks.json", "r", encoding="utf-8") as _f:
 # кто не пересказывает слухи (роботы, звери, враги-собеседники)
 NO_RUMORS = {"dog", "purity_bot", "cleaner_bot", "sphinx", "radio_bot", "robo_sentry", "robo_sgt", "robot"}
 from .mouse import MouseMixin
+
+# косметика (болтовня жителей над головой) — свой генератор: броски не должны
+# сдвигать глобальный поток random, от которого зависят бой, лут и квесты
+_rng = random.Random()
+
 from .terminals import TerminalMixin
 from .slides import SlidesMixin, SLIDES
 from .looting import LootingMixin
@@ -314,11 +319,11 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         if not near:
             self.bark_ms = 1500
             return
-        n = random.choice(near)
-        text = random.choice(self.bark_lines(n))
+        n = _rng.choice(near)
+        text = _rng.choice(self.bark_lines(n))
         from ..ui.combat_ui import speech_ms
         self.speech = {"ent": n, "text": text, "t": speech_ms(text)}
-        self.bark_ms = random.randint(9000, 16000)
+        self.bark_ms = _rng.randint(9000, 16000)
 
     def _regen(self, dt_ms):
         """Вне боя раны понемногу заживают."""

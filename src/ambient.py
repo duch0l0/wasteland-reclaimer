@@ -18,6 +18,10 @@ import zlib
 from collections import deque
 
 from . import settings as S
+# косметика (болтовня жителей, слухи, реплики зверей) — свой генератор: броски
+# не должны сдвигать глобальный поток random, от которого зависят бой, лут и квесты
+_rng = random.Random()
+
 
 T = S.TILE
 AMBIENT = {}      # npc_id -> персона {"name", "kind": human|critter, "job", "trait", "barks", ...}
@@ -222,7 +226,7 @@ def tree_for(game, npc_id):
         return None
     npc = next((n for n in game.npcs if n.npc_id == npc_id), None)
     if p["kind"] == "critter":
-        text = random.choice(p["talk"])
+        text = _rng.choice(p["talk"])
         return {"start": "t", "nodes": {"t": {"text": text, "options": [{"label": "(погладить и уйти)", "next": None}]}}}
     name = p["name"]
     if p.get("folk"):
@@ -230,7 +234,7 @@ def tree_for(game, npc_id):
     rumors = []
     if npc is not None:
         pool = rumor_pool(game, npc)
-        random.shuffle(pool)
+        _rng.shuffle(pool)
         rumors = pool[:3]
     if not rumors:
         rumors = ["Да ничего особенного. Ветер, пыль, всё как всегда."]
@@ -243,7 +247,7 @@ def tree_for(game, npc_id):
         nodes[f"r{i}"] = {"text": f"{name}: {r}",
                           "options": ([] if last else [{"label": "А ещё что слышно?", "next": f"r{i + 1}"}]) +
                                      [{"label": "Спасибо за новости.", "next": None}]}
-    about = random.choice(p["about"])
+    about = _rng.choice(p["about"])
     nodes["about"] = {"text": f"{name}: {about}", "options": [{"label": "Интересно. Что ещё слышно?", "next": "r0"},
                                                            {"label": "Бывай.", "next": None}]}
     return {"start": "greet", "nodes": nodes}
@@ -268,7 +272,7 @@ def _folk_tree(game, npc, p):
     opts += [{"label": "Что слышно в городе и вокруг?", "next": "news0"}, {"label": "А что там в мире, по-твоему?", "next": "world"}]
     echo = [t for t in (rumor_pool(game, npc) if npc else []) if t not in p["barks"]]
     if echo:
-        nodes["echo"] = {"text": Q(random.choice(echo)), "options": [{"label": "Вот как. Спасибо.", "next": "menu"}]}
+        nodes["echo"] = {"text": Q(_rng.choice(echo)), "options": [{"label": "Вот как. Спасибо.", "next": "menu"}]}
         opts.append({"label": "Какие слухи ходят о недавних событиях?", "next": "echo"})
     tip = p.get("tip")
     if tip and (len(tip) < 3 or game.check_condition(tip[2])):
@@ -276,7 +280,7 @@ def _folk_tree(game, npc, p):
         opts.append({"label": "Не знаешь чего-нибудь, что мне пригодилось бы?", "next": "tip"})
     opts.append({"label": "Бывай.", "next": None})
     nodes["greet"] = {"text": Q(p["greet"]), "options": opts}
-    nodes["menu"] = {"text": Q(random.choice(("Ну? Что ещё?", "Спрашивай, не стесняйся.", "Давай дальше. Я не тороплюсь.", "Слушаю."))),
+    nodes["menu"] = {"text": Q(_rng.choice(("Ну? Что ещё?", "Спрашивай, не стесняйся.", "Давай дальше. Я не тороплюсь.", "Слушаю."))),
                      "options": opts}
     back = {"label": "Ясно. Спрошу ещё про другое.", "next": "menu"}
     nodes["bio0"] = {"text": Q(p["bio"][0]), "options": [{"label": "А дальше что было?", "next": "bio1"}, back]}

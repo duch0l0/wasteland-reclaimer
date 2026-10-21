@@ -28,6 +28,9 @@ from . import fallout2
 
 SFX_DIR = os.path.join("assets", "sounds")
 MUSIC_DIR = os.path.join("assets", "music")
+# косметика (вариативность громкости, выбор дубля) — свой генератор, чтобы броски
+# звука не сдвигали глобальный поток random у игровой логики
+_rng = random.Random()
 DEFAULTS = {"music": 0.5, "sfx": 0.8}
 # базовая громкость (выстрел громкий — его чуть приглушаем)
 BASE = {"shot": 0.7, "shot_pipe": 0.75, "shot_enemy": 0.6, "shot_turret": 0.6, "melee": 0.9, "hit": 0.9,
@@ -185,10 +188,10 @@ class Audio:
         if delay_ms > 0:
             self.pending.append([delay_ms, name, screen_x, volume])
             return
-        v = self.volume["sfx"] * BASE.get(name, 1.0) * volume * random.uniform(0.85, 1.0)
+        v = self.volume["sfx"] * BASE.get(name, 1.0) * volume * _rng.uniform(0.85, 1.0)
         if v <= 0:
             return
-        ch = random.choice(self.sounds[name]).play()
+        ch = _rng.choice(self.sounds[name]).play()
         if ch is None:
             return
         if screen_x is None:

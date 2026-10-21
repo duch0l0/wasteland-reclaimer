@@ -11,6 +11,7 @@ Fallout 3/NV: в «дампе памяти» спрятаны слова, пос
 """
 import json
 import random
+import zlib
 
 import pygame
 
@@ -139,7 +140,10 @@ class TerminalMixin:
         e = TERMINALS[self.term["id"]]["entries"][self.term["entry"]]
         pw = e["lock"]["password"]
         pool = [w for w in HACK_WORDS.get(len(pw), []) if w != pw]
-        rnd = random.Random()
+        # дамп памяти у записи один и тот же при каждом запуске: раньше здесь стоял
+        # random.Random() без сида — порядок слов менялся от запуска к запуску, а с ним
+        # и число попыток взлома (а каждая попытка — это звук terminal_err)
+        rnd = random.Random(zlib.crc32(f"{self.term['id']}:{self.term['entry']}".encode("utf-8")))
         words = rnd.sample(pool, min(len(pool), e["lock"].get("words", 12) - 1)) + [pw]
         rnd.shuffle(words)
         rows = rnd.sample(range(DUMP_ROWS * 2), len(words))  # у каждого слова своя строка
