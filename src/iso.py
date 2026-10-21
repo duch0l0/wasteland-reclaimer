@@ -175,4 +175,32 @@ def tile_image(tid):
     return _TILE_CACHE[tid]
 
 
+# Кайма вокруг iso-карты (src/isomap.py): клетки за краем темнеют с расстоянием,
+# в пределе — в цвет фона кадра (surf.fill в src/game/render.py), чтобы шва не было.
+DARK_BG = (20, 17, 14)       # фон за краем карты (src/game/render.py:74)
+RIM_DARK = 0.85              # насколько гаснет кайма у самого края: яркость 1 − 0.85·t^RIM_EASE
+RIM_EASE = 1.0               # показатель t = min(d,K)/K: 1.0 — линейно. Ease-out 0.7 замерен
+                             # и отвергнут: скачок яркости на первом кольце 13.4 против 7.1
+RIM_LEVELS = 16              # вариантов затемнения (кэшируются, чтобы не считать каждый кадр)
+
+_DARK_CACHE = {}
+
+
+def tile_image_dark(tid, level):
+    """Тайл, погашенный к цвету фона: rgb·f + DARK_BG·(1 − f), прозрачность не трогаем.
+    level 0 — как есть, RIM_LEVELS−1 — сильнее всего. Кэш по (тайл, уровень)."""
+    key = (tid, level)
+    img = _DARK_CACHE.get(key)
+    if img is None:
+        f = 1.0 - RIM_DARK * level / max(1, RIM_LEVELS - 1)
+        img = tile_image(tid).copy()
+        k = max(0, min(255, int(255 * f + 0.5)))
+        img.fill((k, k, k, 255), special_flags=pygame.BLEND_RGB_MULT)
+        add = tuple(int(c * (1.0 - f) + 0.5) for c in DARK_BG)
+        if any(add):
+            img.fill(add + (255,), special_flags=pygame.BLEND_RGB_ADD)
+        _DARK_CACHE[key] = img
+    return img
+
+
 TILE_ANCHOR = (64, 207)   # центр ромба пола в картинке тайла 128×256

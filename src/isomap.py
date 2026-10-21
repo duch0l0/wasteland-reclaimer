@@ -12,18 +12,26 @@
 
 Порядок рисования — по «глубине» u + v (сумма координат клетки): что дальше от
 зрителя, то раньше. Персонажи встают в тот же порядок по своей точке ног.
+
+Вокруг ромба карты рисуется кайма шириной RIM_K клеток: пол ближайшей клетки карты,
+гаснущий к цвету фона кадра. Это только картинка — логика, коллизии и пути считают
+край карты так же, как раньше (за краем is_wall = True).
 """
 import json
+import math
 
 import pygame
 
 from . import settings as S
 from . import loader
-from .iso import w2i, i2w, tile_center_iso, tile_image, TILE_ANCHOR, HW, HH
+from .iso import (w2i, i2w, tile_center_iso, tile_image, tile_image_dark, TILE_ANCHOR, HW, HH,
+                  RIM_LEVELS, RIM_EASE)
 from .tilemap import MapBase
 
 T = S.TILE
 ROOF_LIFT = 132      # на сколько пикселей экрана крыша выше пола (высота стены набора)
+RIM_K = 20           # ширина каймы вокруг ромба карты, в клетках
+RIM_TILE = "ground_d1_n_dust"   # пол каймы, если у стороны карты нет ни одной клетки с полом
 
 
 # край крыши -> вариант плиты набора: A1 — парапет по стороне, A2 — угловой
@@ -127,6 +135,9 @@ class IsoMap(MapBase):
             self.roofs.append({**r, "alpha": 255.0, "img": None, "pos": None,
                                "key": r["x1"] + r["y1"] + 2.2})
 
+        self._rim_fallback = {}   # клетка каймы -> тайл, когда у края карты пола нет
+        self._rim_level = {}      # расстояние до края -> уровень затемнения
+
     # ------------------------------------------------------------ клетки
     def is_wall(self, x, y):
         if not (0 <= x < self.width and 0 <= y < self.height):
@@ -186,24 +197,71 @@ class IsoMap(MapBase):
     def _visible(self, rect, cam, size):
         return rect.colliderect(pygame.Rect(cam.x - 20, cam.y - 20, size[0] + 40, size[1] + 40))
 
+    def _rim_tile(self, u, v):
+        """Тайл клетки каймы: пол ближайшей клетки карты (u,v прижаты к краю). Если там
+        пусто — ближайший непустой тайл по той же стороне карты, иначе RIM_TILE."""
+        w, h = self.width, self.height
+        xu = 0 if u < 0 else (w - 1 if u >= w else u)
+        yv = 0 if v < 0 else (h - 1 if v >= h else v)
+        tid = self.floor[yv][xu]
+        if tid is not None:
+            return tid
+        if (u, v) in self._rim_fallback:
+            return self._rim_fallback[(u, v)]
+        found = None
+        if u < 0 or u >= w:       # запад/восток: ищем вдоль той же боковой стороны
+            col = 0 if u < 0 else w - 1
+            found = next((self.floor[y][col] for y in sorted(range(h), key=lambda y: abs(y - yv))
+                          if self.floor[y][col] is not None), None)
+        if found is None and (v < 0 or v >= h):   # север/юг (и угол, если бок пустой)
+            row = 0 if v < 0 else h - 1
+            found = next((self.floor[row][x] for x in sorted(range(w), key=lambda x: abs(x - xu))
+                          if self.floor[row][x] is not None), None)
+        found = found or RIM_TILE
+        self._rim_fallback[(u, v)] = found
+        return found
+
+    def _rim_shade(self, u, v):
+        """Уровень затемнения каймы: Чебышёв до края карты d, t = min(d,K)/K,
+        яркость 1 − 0.85·t^RIM_EASE (при RIM_EASE = 1.0 — линейно),
+        квантуется в RIM_LEVELS ступеней (0 — без затемнения)."""
+        d = max(-u, u - (self.width - 1), -v, v - (self.height - 1))
+        lvl = self._rim_level.get(d)
+        if lvl is None:
+            # доля затемнения (0..1) -> номер ступени из RIM_LEVELS
+            lvl = int((RIM_LEVELS - 1) * (min(d, RIM_K) / RIM_K) ** RIM_EASE + 0.5)
+            self._rim_level[d] = lvl
+        return lvl
+
     def draw(self, surf, cam):
-        """Пол сзади вперёд, плоские объекты (решётки, лужи крови), предметы на земле."""
+        """Кайма и пол сзади вперёд (по диагоналям u+v), плоские объекты, предметы на земле."""
         sw, sh = surf.get_size()
         view = pygame.Rect(cam.x - 130, cam.y - 260, sw + 260, sh + 520)
-        # клетки, попадающие в экран: по диагоналям u+v, внутри — по u
-        (tlx, tly), (brx, bry) = (cam.x, cam.y), (cam.x + sw, cam.y + sh)
-        smin = int((tly - 64) / HH) - 1
-        smax = int((bry + 300) / HH) + 1
-        for s in range(max(0, smin), min(self.width + self.height - 1, smax) + 1):
-            for x in range(max(0, s - self.height + 1), min(self.width - 1, s) + 1):
-                y = s - x
-                tid = self.floor[y][x]
-                if tid is None:
-                    continue
-                cx, cy = tile_center_iso(x, y)
-                if not view.collidepoint(cx, cy):
-                    continue
-                surf.blit(tile_image(tid), (cx - TILE_ANCHOR[0] - cam.x, cy - TILE_ANCHOR[1] - cam.y))
+        # какие клетки (u, v) попадают в кадр: четыре угла области -> обратно в мир, с запасом в клетку
+        us, vs = [], []
+        for px, py in ((view.left, view.top), (view.right, view.top),
+                       (view.left, view.bottom), (view.right, view.bottom)):
+            wx, wy = i2w(px, py)
+            us.append(wx / T)
+            vs.append(wy / T)
+        umin = max(-RIM_K, math.floor(min(us)) - 1)
+        umax = min(self.width - 1 + RIM_K, math.ceil(max(us)) + 1)
+        vmin = max(-RIM_K, math.floor(min(vs)) - 1)
+        vmax = min(self.height - 1 + RIM_K, math.ceil(max(vs)) + 1)
+        for s in range(umin + vmin, umax + vmax + 1):
+            for u in range(max(umin, s - vmax), min(umax, s - vmin) + 1):
+                v = s - u
+                cx, cy = tile_center_iso(u, v)
+                if cx + HW < view.left or cx - HW > view.right or cy + HH < view.top or cy - HH > view.bottom:
+                    continue        # ромб вне кадра
+                if 0 <= u < self.width and 0 <= v < self.height:
+                    tid = self.floor[v][u]
+                    if tid is None:
+                        continue
+                    img = tile_image(tid)
+                else:               # кайма: пол края карты, гаснущий к фону
+                    img = tile_image_dark(self._rim_tile(u, v), self._rim_shade(u, v))
+                surf.blit(img, (cx - TILE_ANCHOR[0] - cam.x, cy - TILE_ANCHOR[1] - cam.y))
         for o in self.objects:
             if o["floor"] and not o.get("hidden") and o["rect"].colliderect(view):
                 surf.blit(o["img"], (o["rect"].x - cam.x, o["rect"].y - cam.y))
