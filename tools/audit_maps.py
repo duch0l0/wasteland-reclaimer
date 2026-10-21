@@ -63,36 +63,25 @@ def audit(path):
                 blocked_by[c] = e[0]
     free = lambda c: not wall(*c) and c not in water
     # проёмы: клетка прохода сквозь стену (с двух сторон стена, вдоль — свободно)
+    def run(x, y, dx, dy, cap=4):
+        """Свободный пробег от клетки в направлении (dx, dy); обрезанный пробег возвращает cap+1 («длиннее»)."""
+        n = 0
+        while not wall(x + dx * (n + 1), y + dy * (n + 1)):
+            n += 1
+            if n > cap:
+                break
+        return n
+
     door = set()
     for y in range(H):
         for x in range(W):
             if wall(x, y):
                 continue
-            x0 = x
-            while not wall(x0 - 1, y):
-                x0 -= 1
-                if x - x0 > 3:
-                    break
-            x1 = x
-            while not wall(x1 + 1, y):
-                x1 += 1
-                if x1 - x > 3:
-                    break
-            hl = x1 - x0 + 1
-            y0 = y
-            while not wall(x, y0 - 1):
-                y0 -= 1
-                if y - y0 > 3:
-                    break
-            y1 = y
-            while not wall(x, y1 + 1):
-                y1 += 1
-                if y1 - y > 3:
-                    break
-            vl = y1 - y0 + 1
-            if hl <= 3 and vl > 4:                       # короткий поперёк, длинный вдоль — проём или узкий коридор
+            hl = run(x, y, -1, 0) + run(x, y, 1, 0) + 1
+            vl = run(x, y, 0, -1) + run(x, y, 0, 1) + 1
+            if hl <= 3 and 4 < vl <= 6:                  # короткий поперёк, длинный вдоль — проём; коридор/тоннель длиннее 6 — не проём
                 door.add((x, y))
-            elif vl <= 3 and hl > 4:
+            elif vl <= 3 and 4 < hl <= 6:
                 door.add((x, y))
     near_door = set(door)
     for (x, y) in door:
@@ -101,19 +90,25 @@ def audit(path):
     ports = [tuple(t) for p in d.get("portals", []) for t in p["tiles"]] + [tuple(t) for t in d.get("exits", [])]
     near_port = {(x + dx, y + dy) for x, y in [tuple(t) for p in d.get('portals', []) for t in p['tiles']] for dx in (-1, 0, 1) for dy in (-1, 0, 1)}
     out = []
-    seen = set()
+    seen = set()                                     # (имя, x, y) — один объект считается один раз, между категориями тоже
+    mounted = set()                                  # предметы, весь фут которых лежит на стенах (настенный декор, не в проёме)
     for name, x, y, cells, block, layer in items:
+        key = (name, x, y)
         if layer == "floor" or name.startswith(FLAT):
             if name.startswith(FLAT) and (x, y) in door and name.startswith(("x_vd_plaque", "x_vd_num", "x_vd_exit", "x_vd_map", "x_vd_sheet", "x_vd_tally", "x_vd_drawing")):
                 out.append(("дверь", name, (x, y), "вывеска/декор висит в проёме"))
             continue
         if all(not (0 <= c[0] < W and 0 <= c[1] < H) or g[c[1]][c[0]] in ("x", "_") for c in cells) and not name.startswith(("x_cliff", "x_vault", "x_mesa", "vwall_", "wall_")):
             out.append(("вынос", name, (x, y), "целиком на пустоте"))
+        if all(wall(*c) for c in cells):             # шкаф-встройка, вывеска, окно на стене — проёма тут нет
+            mounted.add(key)
+            continue
         if block and any(c in near_door for c in cells) and name not in ("x_door", "x_manhole", "x_ladder"):
-            if not name.startswith(("vwall_", "wall_", "x_cliff", "x_vault_door", "x_vault_gear")) and (name, x, y) not in seen:
-                seen.add((name, x, y))
+            if not name.startswith(("vwall_", "wall_", "x_cliff", "x_vault_door", "x_vault_gear")) and key not in seen:
+                seen.add(key)
                 out.append(("дверь", name, (x, y), "предмет в проёме или перед ним"))
-        if any(c in near_port for c in cells) and block and not name.startswith(("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_manhole", "x_door")):
+        if any(c in near_port for c in cells) and block and not name.startswith(("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_manhole", "x_door")) and key not in seen:
+            seen.add(key)
             out.append(("портал", name, (x, y), "вплотную к порталу"))
         if name.startswith(LAMPS_FLOOR) and not name.startswith("x_fire_barrel") and not block:
             if not any(wall(x + dx, y + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
@@ -121,11 +116,14 @@ def audit(path):
     for key in ("npcs", "enemies"):
         for it in d.get(key, []):
             c = (it[1], it[2])
-            if c in door:
+            if c in door and (it[0], c[0], c[1]) not in seen:
+                seen.add((it[0], c[0], c[1]))
                 out.append(("жилец", it[0], c, "стоит в проёме"))
     for t in d.get("containers", []) + d.get("terminals", []):
         pr = d["props"][t["prop"]]
-        if (pr[1], pr[2]) in near_door:
+        key = (pr[0], pr[1], pr[2])
+        if (pr[1], pr[2]) in near_door and key not in seen and key not in mounted:
+            seen.add(key)
             out.append(("жилец", pr[0], (pr[1], pr[2]), "ящик/терминал в проёме"))
     return mid, out
 

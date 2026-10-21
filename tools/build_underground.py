@@ -184,7 +184,7 @@ scatter(RUBBLE + JUNK_PILES[:4], 2, 18, 11, 24, 3)
 for name, x, y in [("bed_frame", 30, 11), ("sofa_frame", 38, 18), ("pile_rags", 34, 13), ("clothes_74", 41, 11),
                    ("clothes_76", 29, 18), ("pile_bags", 42, 17)]:
     put(name, x, y, check=False)
-box("crate_open", 32, 7, "кормушка крысолюдов", {"ткань": 2, "лом": 1})   # в проходе к логову
+box("crate_open", 29, 10, "кормушка крысолюдов", {"ткань": 2, "лом": 1})   # у северной стены логова, рядом с гнездом
 d.containers[-1]["on_put"] = {"item": "отравленная приманка", "effects": [
     {"type": "set_flag", "flag": "rats_poisoned"}, {"type": "kill_pack", "pack": "ratmen"}]}
 scatter(CLOTH_PILES, 28, 10, 44, 20, 4)
