@@ -72,6 +72,7 @@ class MapKit:
         self.ground = [[fill] * w for _ in range(h)]
         self.props, self.decals, self.containers, self.terminals = [], [], [], []
         self.blocked, self.soft, self.reserved = set(), set(), set()
+        self.soft_obj = set()      # клетки неблокирующих предметов слоя obj (лампа, лужа); ковры (floor) сюда не входят
         self.enemies, self.npcs, self.pickups = [], [], []
         self.exits, self.portals = [], []
         self.roofs = []     # крыши зданий: убираются, когда герой внутри
@@ -312,8 +313,8 @@ class MapKit:
         if name in PLANTS and any(self.ground[fy][fx] != "d" for fx, fy in foot):
             return False  # трава и кусты не растут на асфальте и гравии
         if inf["block"]:
-            if any(t in self.blocked for t in foot):
-                return False
+            if any(t in self.blocked or t in self.soft_obj for t in foot):
+                return False      # не встаём ни на блокирующий, ни на неблокирующий предмет (лампа, лужа); на ковёр можно
             if not allow_reserved and any(t in self.reserved for t in foot):
                 return False
             if check:
@@ -328,6 +329,8 @@ class MapKit:
             if any(t in self.soft or t in self.blocked for t in foot):
                 return False
             self.soft.update(foot)
+            if inf["layer"] != "floor":
+                self.soft_obj.update(foot)
         if name in PLANTS or name in STONES:   # живое и мелкое — не по сетке
             self.props.append([name, x, y, self.rnd.randint(-14, 14), self.rnd.randint(-10, 8)])
         else:
