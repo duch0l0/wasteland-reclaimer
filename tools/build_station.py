@@ -88,7 +88,7 @@ m.maybe("by_sign", 8, 12)
 m.put("by_billboard0", 50, 11)
 
 # ---- лагерь банды (юг): баррикады из машин, палатки по кругу у костра, бочки с огнём
-m.paint("t", 20, 24, 48, 35)
+m.paint_ragged("t", 20, 24, 48, 35, depth=2)          # лагерь банды на открытом грунте
 for x, y, n in ((18, 22, "by_wreck0"), (22, 22, "by_wreck3"), (40, 22, "by_wreck5"), (46, 23, "by_wreck7")):
     m.maybe(n, x, y)
 m.maybe("x_sandbags", 26, 22, check=False)

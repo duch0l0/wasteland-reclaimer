@@ -193,7 +193,7 @@ jt.floor_code("s", *SAND)
 jt.floor_code("g", *GRAVEL)
 jt.floor_code("k", *CRACK)
 jt.paint("s", 0, 0, W - 1, H - 1)
-jt.paint("k", 5, 5, 66, 46)                             # утоптанная земля внутри стены
+jt.paint_ragged("k", 5, 5, 66, 46, depth=2)                    # утоптанная земля внутри стены — край гуляет в песок
 jt.paint("g", 0, 24, W - 1, 28)                         # главная улица от ворот до ворот
 jt.exits = [(0, y) for y in range(24, 29)]
 jt.reserve(0, 23, W - 1, 29)

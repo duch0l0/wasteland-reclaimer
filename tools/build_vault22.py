@@ -95,7 +95,7 @@ sf.paint("s", 0, 0, W - 1, H - 1)
 FLOOR = set()
 for x0, y0, x1, y1 in ((0, 23, 24, 29), (10, 8, 38, 30)):
     FLOOR |= {(x, y) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1)}
-sf.paint("g", 10, 8, 38, 30)
+sf.paint_ragged("g", 10, 8, 38, 30, depth=2)          # двор перед убежищем — трава/земля, край рваный
 sf.paint("o", 0, 25, 24, 27)
 sf.paint("o", 22, 8, 25, 27)                           # тропа — до самой двери
 sf.exits = [(0, y) for y in range(24, 29)]
