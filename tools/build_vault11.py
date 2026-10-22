@@ -117,7 +117,7 @@ hl.reserve(38, 4, 42, 7)
 hl.paint("D", 3, 15, 10, 19)
 hl.paint("A", 13, 15, 14, 30)
 hl.put(THRONE, 5, 16)
-for x, y in ((8, 14), (18, 14), (6, 26), (22, 26)):
+for x, y in ((8, 14), (18, 14), (4, 14), (24, 14)):
     hl.put(POSTERS[(x + y) % 2], x, y)
 for row in (21, 24):
     for x in (6, 10, 16, 20):

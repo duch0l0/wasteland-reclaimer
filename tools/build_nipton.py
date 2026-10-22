@@ -243,7 +243,7 @@ hl.put(CLOCK, 12, 4)
 hl.terminal(13, 14, "nipton_ledger")
 hl.put(DESK, 21, 7)
 hl.put(CHAIR, 23, 7)
-hl.box(SAFE, 25, 4, "сейф мэра", {"список жребия": 1, "крышки": 140},
+hl.box(SAFE, 25, 18, "сейф мэра", {"список жребия": 1, "крышки": 140},
        requires={"item": "отмычка", "msg": "Сейф мэра Кэрролла. Без отмычки не открыть."}, owner="mayor_carroll")
 hl.put(BOOKS, 18, 4)
 hl.npcs += [["np_clerk", 6, 14]]
@@ -386,6 +386,9 @@ mn.erode_cave(keep=[(3, 21, 12, 29)])
 mn.scatter(["rock", "stones_12"], 1, 1, 46, 30, 14)
 # ратуша: скамьи собраний, стулья, цветы в кадках, фонари; сарай — мешки, вёдра, сено, верёвки
 hl.scatter(["bench_16", "chair_wood", "chair_1", "table_1", "pile_bags", "barrel_wood", "lantern_lit", "crate"], 3, 4, 26, 18, 14)
+for pr in hl.props:                     # стол из рассыпки мог встать в простенок — возвращаем на пол зала
+    if hl.ground[pr[2]][pr[1]] in hl.walls:
+        pr[1], pr[2] = 14, 7
 sh.scatter(["sack", "bucket", "crate", "barrel_wood", "pile_rags", "pile_bags", "r_logs"], 3, 4, 16, 12, 10)
 entry_door(city, sh, 8)
 city.save(gap_exempt=("groom_cal", "groom_a", "groom_b", "groom_c"))

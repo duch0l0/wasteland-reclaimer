@@ -353,7 +353,7 @@ ht.box("metal_chest", 41, 22, "сейф Спрингера",
 ht.put(PLANT, 32, 23)
 ht.stamp("zz_lobby_rug", "pk:lhotel/p2/10,12,2,2", 20, 21, water=False)
 ht.stamp("zz_suite_rug", "pk:lhotel/p2/10,12,2,2", 36, 20, water=False)
-ht.put(ARMCHAIR, 41, 14)
+ht.put(ARMCHAIR, 37, 16)          # кресло в покоях, у северной стены рядом с кроватью
 ht.put(LAMP, 33, 22)
 
 

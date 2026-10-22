@@ -441,7 +441,7 @@ ft.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1")
 ft.patchwork("a", ["k", "t"], 46, 1, 3, seed=51)
 for x, y in ((12, 10), (16, 36), (60, 14), (58, 38), (40, 8), (46, 46)):
     ft.maybe("x_vd_blood0", x, y, check=False)
-for x, y in ((15, 21), (15, 24), (24, 18), (24, 28), (33, 13), (47, 13), (52, 28), (44, 40), (20, 40)):
+for x, y in ((15, 21), (15, 24), (24, 16), (24, 28), (33, 13), (47, 13), (52, 28), (44, 40), (20, 40)):
     ft.maybe("x_fire_barrel", x, y, check=False)
 for x, y in ((16, 14), (22, 34), (54, 20), (58, 26), (38, 36), (62, 30), (14, 30)):
     ft.maybe("r_tent_green" if (x + y) % 2 else "r_tent_low", x, y)
