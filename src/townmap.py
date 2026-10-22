@@ -857,9 +857,10 @@ class TownMap(MapBase):
         counts = Counter(c for row in self.ground for c in row)
         outdoor = not any("_" in row for row in self.ground) and not d.get("crisp")   # crisp — мощёный город
         for code, n in counts.items():
-            if code in self.wallsets or code in "x_" or not self._tiles.get(code):
+            # 'd' — процедурная земля без своих тайлов (рисуется оттенками _dirt_shades): её кромки тоже размываем
+            if code in self.wallsets or code in "x_" or not (self._tiles.get(code) or code == "d"):
                 continue
-            avg = pygame.transform.average_color(self._tiles[code][0])
+            avg = pygame.transform.average_color((self._tiles.get(code) or self._dirt_shades[2])[0])
             if avg[2] > avg[0] + 25 and code not in d.get("not_water", ()):              # вода — свой берег (_shore), и в подземелье тоже (канал, сток)
                 self._water.add(code)
                 continue
@@ -1280,7 +1281,8 @@ class TownMap(MapBase):
                     small.set_at((px, py), (g, g, g))
             if not any(grid[c][py][px] for py in range(N) for px in range(N)):
                 continue
-            tex = self._tiles[c][h % len(self._tiles[c])].copy()
+            variants = self._tiles.get(c) or self._dirt_shades[self._shade(x, y)]
+            tex = variants[h % len(variants)].copy()
             tex.blit(pygame.transform.smoothscale(small, (T, T)), (0, 0), special_flags=pygame.BLEND_RGB_MULT)
             out.blit(tex, (0, 0), special_flags=pygame.BLEND_RGB_ADD)
         return out
