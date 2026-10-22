@@ -75,3 +75,37 @@ hit — один файл (hit_1), вариантов нет; hit_bullet — о�
 | step_sand_1…4 | rnan_sounddesign, [sand footsteps](https://freesound.org/people/rnan_sounddesign/sounds/725875/) |
 | step_metal_1…4 | sanderboah, [walking on metal](https://freesound.org/people/sanderboah/sounds/696374/) |
 | step_water_1…3 | coffeemakessounds, [step water](https://freesound.org/people/coffeemakessounds/sounds/849638/) — один шаг, варианты по высоте |
+
+## Музыка
+Файлы — assets/music/<ключ>_N.ogg (ключ → варианты, у world три трека, world_1 — главный).
+Выбор автора — incoming_audio/selection_music.json, обработка tools/prepare_music.py: срезана только тишина
+в начале и конце, −16 LUFS, стерео, ogg q5. Фон локаций −20 LUFS, эффекты −18 → музыка громче фона,
+тише эффектов. Громкости в игре: музыка 0.5, эффекты 0.8, фон 0.48 (src/audio.py → DEFAULTS).
+«Утомлённое солнце» (utomlennoe-solncedzhazovyj-orkestr-acfasmana.ogg) пока остаётся запасным треком:
+музыка для ключей title, reno, ending ещё не выбрана.
+
+| Файл | Автор | Название | Ссылка | Лицензия |
+|---|---|---|---|---|
+| world_1 | Alexandr Zhelanov | Grey Land | [Post apocalypse — more music inside](https://opengameart.org/content/post-apocalypse-more-music-inside) | CC BY 3.0 — указать автора в титрах |
+| world_2 | Kevin MacLeod | Penumbra | [incompetech: Penumbra](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Penumbra.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
+| world_3 | Alexandr Zhelanov | Road | [Post apocalypse — more music inside](https://opengameart.org/content/post-apocalypse-more-music-inside) | CC BY 3.0 — указать автора в титрах |
+| desert_1 | Alexandr Zhelanov | Myst | [Post apocalypse — more music inside](https://opengameart.org/content/post-apocalypse-more-music-inside) | CC BY 3.0 — указать автора в титрах |
+| caves_1 | Kevin MacLeod | Lightless Dawn | [incompetech: Lightless Dawn](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Lightless%20Dawn.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
+| lab_1 | Kevin MacLeod | Static Motion | [incompetech: Static Motion](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Static%20Motion.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
+| raiders_1 | Kevin MacLeod | Interloper | [incompetech: Interloper](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Interloper.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
+| hub_1 | Matthew Pablo | Desolate Part II | [Desolate](https://opengameart.org/content/desolate) | CC BY 3.0 — указать автора в титрах |
+| junktown_1 | Kevin MacLeod | Mesmerize | [incompetech: Mesmerize](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Mesmerize.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
+| vats_1 | Kevin MacLeod | Ossuary 1 - A Beginning | [incompetech: Ossuary 1](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%201%20-%20A%20Beginning.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
+| combat_1 | Alexandr Zhelanov | Alert | [Post apocalypse — more music inside](https://opengameart.org/content/post-apocalypse-more-music-inside) | CC BY 3.0 — указать автора в титрах |
+
+Строки атрибуции для титров (формат Kevin MacLeod):
+
+- world_2: "Penumbra" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, http://creativecommons.org/licenses/by/4.0/
+- caves_1: "Lightless Dawn" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, http://creativecommons.org/licenses/by/4.0/
+- lab_1: "Static Motion" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, http://creativecommons.org/licenses/by/4.0/
+- raiders_1: "Interloper" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, http://creativecommons.org/licenses/by/4.0/
+- junktown_1: "Mesmerize" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, http://creativecommons.org/licenses/by/4.0/
+- vats_1: "Ossuary 1 - A Beginning" Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License, http://creativecommons.org/licenses/by/4.0/
+
+CC BY 3.0 (world_1, world_3, desert_1, combat_1 — Alexandr Zhelanov; hub_1 — Matthew Pablo):
+указать автора в титрах (строки атрибуции свести при финальной сборке титров).

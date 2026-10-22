@@ -4,7 +4,10 @@
 Свои звуки (assets/sounds/<имя>.ogg, готовит tools/prepare_sounds.py):
   shot, melee, hit — из tools/prepare_sounds.py; интерфейсные (клики, терминал, гейгер, левел-ап,
   ящики…) синтезирует tools/make_sfx.py; у звука могут быть варианты <имя>_1.ogg, <имя>_2.ogg…
-  Музыка — assets/music/.
+  Музыка — assets/music/<ключ>_1.ogg, <ключ>_2.ogg… (готовит tools/prepare_music.py по выбору автора
+  incoming_audio/selection_music.json: −16 LUFS, стерео, ogg q5). У ключа может быть несколько
+  вариантов: при входе в ключ берётся следующий по кругу (world: 1, 2, 3, 1…), а когда трек кончился —
+  следующий вариант того же ключа (см. _music_tick). Бой: play_combat_music/end_combat_music.
 
 Если у игрока установлен Fallout 2 — берутся его музыка и звуки (src/fallout2.py:
 ищется установка, в фоне один раз перекодируется в кэш f2cache/). Тогда у каждого
@@ -21,10 +24,12 @@ amb_sewer_1/_2 — при входе берётся случайный), гор�
 Звук слева/справа от центра экрана слышен больше левым/правым ухом.
 Если звуковой карты нет (проверки без окна), всё молча работает без звука.
 """
+import glob
 import json
 import os
 import random
 import re
+import time
 
 import pygame
 
@@ -33,6 +38,10 @@ from . import fallout2
 
 SFX_DIR = os.path.join("assets", "sounds")
 MUSIC_DIR = os.path.join("assets", "music")
+# все музыкальные ключи игры (файла может не быть — тогда запасной путь: Fallout 2 у игрока или
+# старый трек из assets/music без номера варианта)
+MUSIC_KEYS = ("world", "desert", "caves", "lab", "raiders", "hub", "junktown", "reno", "vats",
+              "title", "combat", "ending")
 # косметика (вариативность громкости, выбор дубля) — свой генератор, чтобы броски
 # звука не сдвигали глобальный поток random у игровой логики
 _rng = random.Random()
@@ -72,6 +81,10 @@ class Audio:
         self.pending = []         # [(мс до звука, имя, pan, громкость)]
         self.volume = dict(DEFAULTS)
         self.music_key = None
+        self.music_path = None     # что играет сейчас (None — тишина)
+        self.music_prev = None     # ключ локации, игравший до боя (для возврата после боя)
+        self._music_pos = {}       # ключ -> сколько раз входили (какой вариант по кругу)
+        self._music_started = 0    # тики начала трека: не крутим вариант раньше, чем через 1 с
         self.ambient_key = None    # ключ играющей петли (None — тишина)
         self.ambient_level = 1.0   # множитель к volume["ambient"] (на карте мира фон тише)
         self.amb_files = {}        # ключ -> [путь, ...] вариантов amb_<ключ>[_N].ogg
@@ -227,33 +240,91 @@ class Audio:
             pass
 
     # ------------------------------------------------------------ музыка
-    def _music_file(self, key):
+    def _music_variants(self, key):
+        """Свои треки ключа: assets/music/<ключ>_1.ogg, <ключ>_2.ogg… — по номеру варианта."""
+        found = []
+        for path in glob.glob(os.path.join(MUSIC_DIR, f"{key}_*.ogg")):
+            m = re.search(r"_(\d+)\.ogg$", path)
+            if m:
+                found.append((int(m.group(1)), path))
+        return [p for _, p in sorted(found)]
+
+    def _music_fallback(self, key):
+        """Своего файла нет: музыка Fallout 2 у игрока, иначе старый трек из assets/music
+        (файл без номера варианта — сейчас «Утомлённое солнце»), пока для ключа не выбрана музыка."""
         if self.f2 is not None and self._f2_loaded and key in fallout2.MUSIC:
             path = self.f2.music_path(key)
             if os.path.isfile(path):
                 return path
-        tracks = sorted(f for f in os.listdir(MUSIC_DIR) if f.endswith(".ogg")) if os.path.isdir(MUSIC_DIR) else []
-        return os.path.join(MUSIC_DIR, tracks[0]) if tracks else None
+        legacy = sorted(p for p in glob.glob(os.path.join(MUSIC_DIR, "*.ogg"))
+                        if not re.search(r"_\d+\.ogg$", os.path.basename(p)))
+        return legacy[0] if legacy else None
 
-    def play_music(self, key):
-        """Музыка локации (ключ — из src/fallout2.MUSIC); тот же трек не перезапускается."""
+    def _music_file(self, key):
+        """Первый файл ключа (свой вариант, иначе запасной путь) — для проверок и отладки."""
+        variants = self._music_variants(key)
+        return variants[0] if variants else self._music_fallback(key)
+
+    def play_music(self, key, fadeout_ms=600):
+        """Музыка по ключу: при каждом входе — следующий вариант по кругу (world: 1, 2, 3, 1…).
+        Тот же ключ, который уже звучит, не перезапускается; трек доигрывает до конца.
+        Один музыкальный поток pygame: старое гаснет (fadeout_ms), новое входит за ~2 с."""
         if not self.ok:
             self.music_key = key
             return
-        path = self._music_file(key)
         if key == self.music_key and pygame.mixer.music.get_busy():
             return
-        old = self._music_file(self.music_key) if self.music_key else None
+        variants = self._music_variants(key)
+        path = None
+        if variants:
+            pos = self._music_pos.get(key, 0)
+            path = variants[pos % len(variants)]
+            self._music_pos[key] = pos + 1
+        else:
+            path = self._music_fallback(key)   # один файл на все входы — просто играет заново
         self.music_key = key
-        if not path or (path == old and pygame.mixer.music.get_busy()):
+        if not path:
+            self.music_path = None
             return
+        self.music_path = path
+        self._music_started = time.monotonic()
         try:
-            pygame.mixer.music.fadeout(600)
+            pygame.mixer.music.fadeout(fadeout_ms)
             pygame.mixer.music.load(path)
             pygame.mixer.music.set_volume(self.volume["music"])
-            pygame.mixer.music.play(-1, fade_ms=2000)
+            pygame.mixer.music.play(0, fade_ms=1200)
         except pygame.error:
-            pass
+            self.music_path = None
+
+    def _music_tick(self):
+        """Трек кончился, а ключ тот же — следующий вариант того же ключа (не зацикливаем один файл)."""
+        if not self.ok or not self.music_key or not self.music_path:
+            return
+        try:
+            if pygame.mixer.music.get_busy():
+                return
+        except pygame.error:
+            return
+        if time.monotonic() - self._music_started < 1.0:   # только что включили
+            return
+        key, self.music_key = self.music_key, None   # «ключ тот же» — play_music пустит дальше
+        self.play_music(key)
+
+    def play_combat_music(self):
+        """Начало боя: запомнить музыку локации и включить combat (затухание ~1 с)."""
+        if self.music_key == "combat":
+            return
+        if self.music_key:
+            self.music_prev = self.music_key
+        self.play_music("combat", fadeout_ms=1000)
+
+    def end_combat_music(self):
+        """Конец боя: вернуть музыку локации — тот ключ, что играл до боя."""
+        key = self.music_prev or "desert"
+        self.music_prev = None
+        if self.music_key != "combat":
+            return
+        self.play_music(key, fadeout_ms=1000)
 
     def start_music(self):
         """Старый вызов: просто музыка по умолчанию (пустошь)."""
@@ -289,6 +360,7 @@ class Audio:
 
     def update(self, dt_ms):
         self.poll()
+        self._music_tick()   # трек кончился — следующий вариант того же ключа
         due = [p for p in self.pending if p[0] - dt_ms <= 0]
         self.pending = [p for p in self.pending if p[0] - dt_ms > 0]
         for p in self.pending:

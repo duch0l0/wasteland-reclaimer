@@ -240,6 +240,7 @@ class Combat:
                 f.anim.set_action("idle")
         g.log("— БОЙ! —" if player_first else f"{_cap(enemies[0].name)} замечает вас. — БОЙ! —")
         g.audio.play("combat_start")
+        g.audio.play_combat_music()   # боевая музыка; после боя вернётся музыка локации
         self.target = None
         self.turn_idx = 0
         self._begin_turn()
@@ -262,6 +263,7 @@ class Combat:
         self.game.player.ap = self.game.player.max_ap
         self.game.log(reason)
         self.game.audio.play("combat_end")
+        self.game.audio.end_combat_music()   # обратно музыка локации (тот ключ, что был)
 
     def _snap_to_grid(self, ent):
         """Ставит бойца в ближайшую свободную проходимую клетку."""
@@ -862,6 +864,7 @@ class Combat:
 
         if not self.game.player.alive:
             self.active = False
+            self.game.audio.end_combat_music()   # герой погиб — боевая музыка не должна крутиться вечно
             return
         if not self.enemies_in_combat():
             self.end("Бой окончен. Пустошь снова тиха.")
