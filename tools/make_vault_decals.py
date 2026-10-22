@@ -10,6 +10,7 @@ import json
 import math
 import os
 import random
+import zlib
 
 import pygame
 
@@ -271,7 +272,7 @@ def stains():
     for n, (c, hi) in kinds.items():
         for v in range(2):
             img = new()
-            rnd = random.Random(hash(n) % 1000 + v)
+            rnd = random.Random(zlib.crc32(n.encode()) + v)   # crc32, а не hash(): hash() зависит от PYTHONHASHSEED
             blob(img, 24 + rnd.randint(-3, 3), 24 + rnd.randint(-3, 3), 13 + v * 3, 9 + rnd.randint(0, 4), c, seed=v * 7 + 1)
             blob(img, 22, 22, 5 + v, 3, hi, seed=v + 5)
             save(f"x_vd_{n}{v}", img, layer="floor")

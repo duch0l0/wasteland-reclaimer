@@ -414,12 +414,14 @@ class MapKit:
                 if self.rnd.random() > chance:
                     continue
                 used = self.__dict__.setdefault("_scene_uses", {})
-                pool = [sc for sc in scenes if sc is not getattr(self, "_last_scene", None)
-                        and used.get(id(sc), 0) < max_uses]
+                keys = [tuple(sc) for sc in scenes]      # ключ сценки — её содержимое: id() переиспользует адреса после GC
+                pool = [(k, sc) for k, sc in zip(keys, scenes)
+                        if k != self.__dict__.get("_last_scene") and used.get(k, 0) < max_uses]
                 if not pool:            # все сценки уже по max_uses раз — дальше пусть будет пусто, чем клоны
                     break
-                scene = self._last_scene = self.rnd.choice(pool)   # подряд не повторяется, всего — не больше max_uses
-                used[id(scene)] = used.get(id(scene), 0) + 1
+                k, scene = self.rnd.choice(pool)   # подряд не повторяется, всего — не больше max_uses
+                self._last_scene = k
+                used[k] = used.get(k, 0) + 1
                 ox, oy = bx + margin, by + margin
                 for name, dx, dy in scene:
                     if self.put(name, ox + dx, oy + dy):
