@@ -708,6 +708,7 @@ class TownMap(MapBase):
                 d = json.load(f)
         self.width, self.height = d["w"], d["h"]
         self.ground = d["ground"]
+        self.floor_src = dict(d.get("floors") or {})   # код → картинки: по имени решается звук шага (src/stepsound.py)
         self.style = d.get("style", "town")
         self.dark = d.get("dark", False)          # под землёй: тьма по краям экрана
         self.night = d.get("night")               # ночь: цвет темноты, свет — src/lighting.py

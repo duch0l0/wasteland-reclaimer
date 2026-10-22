@@ -30,7 +30,7 @@ from collections import deque
 import pygame
 
 from . import settings as S
-from .combat import tile_of, rect_pos_for_tile, has_los, voice_of
+from .combat import tile_of, rect_pos_for_tile, has_los, voice_of, death_voice_of
 
 T = S.TILE
 
@@ -233,7 +233,7 @@ class ActionMode:
             if random.random() < 0.35:
                 g.audio.play(f"{voice_of(e)}_hurt", fx, volume=0.6)
         else:
-            g.audio.play(f"{voice_of(e)}_death", fx, volume=0.8)
+            g.audio.play(death_voice_of(e), fx, volume=0.8)
             fly = 22 + gun.knock * 2.5              # тело отлетает по направлению выстрела
             e.death_push = (math.cos(a) * fly, math.sin(a) * fly)
             g.on_enemy_killed(e)

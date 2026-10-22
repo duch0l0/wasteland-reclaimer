@@ -79,6 +79,26 @@ def voice_of(ent):
     return VOICE.get(getattr(ent, "type_id", None), "human")
 
 
+def is_female(ent):
+    """Пол жителя — только у населения с анкетой (src/ambient.py: персонаж «gender» m/f,
+    ключ — ent.npc_id, он же остаётся у горожанина, ставшего врагом, src/game/crime.py).
+    У зверей, роботов и мутантов из data/enemies.json пола в данных нет: поля gender/sex
+    нет ни в enemies.json, ни у Enemy — только спрайт и имя, а они не признак (у рейдеров
+    и бандитов листы безликие, «Мамочка» — мутант с голосом гуля)."""
+    from . import ambient
+    p = ambient.AMBIENT.get(getattr(ent, "npc_id", "") or "")
+    return bool(p) and p.get("gender") == "f"
+
+
+def death_voice_of(ent):
+    """Ключ крика смерти: женщина-житель кричит human_death (файл human_death_female_1.ogg),
+    все прочие — своим голосом вида (<набор>_death)."""
+    v = voice_of(ent)
+    if v == "human" and is_female(ent):
+        return "human_death_female"
+    return f"{v}_death"
+
+
 def _cap(text):
     return text[:1].upper() + text[1:]
 
@@ -1021,7 +1041,8 @@ class Combat:
         kind = "death" if not ent.alive else "hurt"
         if kind == "hurt" and random.random() < 0.4:
             return
-        self.game.audio.play(f"{voice_of(ent)}_{kind}", sx, delay_ms=delay_ms, volume=0.85)
+        key = death_voice_of(ent) if kind == "death" else f"{voice_of(ent)}_hurt"
+        self.game.audio.play(key, sx, delay_ms=delay_ms, volume=0.85)
 
     def hurt(self, ent, dmg, color=(230, 120, 60), source=None):
         """Урон не от удара (взрыв, яд, огонь): число над головой, вздрагивание, смерть."""

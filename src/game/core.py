@@ -31,6 +31,7 @@ from .render import RenderMixin
 from ..ui.minimap import Minimap
 from ..gore import Gore
 from ..audio import Audio
+from ..stepsound import step_sound
 from .. import companion
 
 with open("data/barks.json", "r", encoding="utf-8") as _f:
@@ -205,7 +206,8 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
     STEP_PX = 44   # шаг героя: столько пикселей между двумя звуками шагов
 
     def update_steps(self):
-        """Шаги: звук на каждые STEP_PX пройденных пикселей; в убежищах и подземельях — бетон, снаружи — земля."""
+        """Шаги: звук на каждые STEP_PX пройденных пикселей. Чем шагаем — решает клетка под
+        ногами (src/stepsound.py): земля, гравий, песок, стальной пол, вода, бетон."""
         x, y = self.player.rect.center
         px, py = getattr(self, "_step_pos", (x, y))
         self._step_pos = (x, y)
@@ -216,7 +218,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         if self._step_dist >= self.STEP_PX:
             self._step_dist = 0
             under = LOCATION_DEFS.get(self.loc.id, {}).get("underground")
-            self.audio.play("step_concrete" if under else "step_dirt", volume=0.5)
+            self.audio.play(step_sound(self.level, (x // S.TILE, y // S.TILE), under), volume=0.5)
 
     def update(self, dt_ms):
         self.audio.update(dt_ms)

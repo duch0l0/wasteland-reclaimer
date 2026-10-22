@@ -30,6 +30,8 @@ fallout2.CACHE_DIR = fallout2.sounds_dir(USER_DIR)   # музыка и звук�
 
 def smoke():
     """Проверка сборки без участия человека (--smoke): город, кадры, сохранение, карта мира, окна."""
+    import tempfile
+    saveload.SAVE_DIR = tempfile.mkdtemp()   # быстрое сохранение и настройки игрока в saves/ не трогаем
     g = Game(intro=False)
     for _ in range(120):
         g.update(16)
