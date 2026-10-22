@@ -368,6 +368,10 @@ def goodsprings_after_cave(b):
     def go():
         if not (0 < g.stage("sq_spring") < 100):
             return
+        if not g.flags.get("gs_cave_cleared"):
+            from src.combat import tile_of
+            left = [f"{e.type_id} ({tile_of(e)[0]},{tile_of(e)[1]})" for e in g.enemies if e.alive and e.hostile]
+            raise b.Stuck("пещера не зачищена: " + (", ".join(left) if left else "флаг gs_cave_cleared не выставлен"))
         b.walk_to_map("goodsprings")
         b.chat("sunny", "Пещера чиста", "Чет", "...")
     b.side("Двор Санни", go)

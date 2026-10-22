@@ -1017,50 +1017,83 @@ class Bot:
                 self.fr(1)
 
     def clear(self, max_rounds=12, radius=None):
-        """Перебить всех враждебных в локации: подойти к ближнему (свободная клетка кольцом вокруг него),
-        начать бой, добить. Недосягаемых (за стеной, в воде) — пропустить. max_rounds — сколько заходов без
-        продвижения терпеть."""
+        """Перебить всех враждебных в локации: подойти туда, откуда врага можно достать (вплотную —
+        для ближнего боя, на дистанции по линии огня — для стрельбы), начать бой, добить.
+        Кого не вышло — записать в problems с местом и причиной, а не пропускать молча.
+        max_rounds — сколько заходов без продвижения терпеть."""
         g = self.g
-        skip = set()
+        p = g.player
+        skip = {}
         stall = 0
+        burnt = {}                            # id(враг) -> клетки, с которых уже не вышло нанести урон
         for _ in range(400):
             if g.combat.active:
                 self.fight()
             left = [e for e in g.enemies if e.alive and e.hostile and id(e) not in skip]
             if not left:
                 return
-            e = min(left, key=lambda e: chebyshev(tile_of(g.player), tile_of(e)))
+            e = min(left, key=lambda e: chebyshev(tile_of(p), tile_of(e)))
             hp0 = sum(x.hp for x in left)
             tx, ty = tile_of(e)
-            ring = [(tx + dx, ty + dy) for r in (3, 2, 1, 4, 5, 6, 7, 8) for dx in range(-r, r + 1) for dy in range(-r, r + 1)
+            prof = g.combat.profile(p)
+            reach = prof["range"] if prof["ranged"] else 1     # ближний бой — только вплотную
+            taken = {tile_of(o) for o in [p] + [x for x in g.enemies if x.alive] + list(g.npcs)}
+            ring = [(tx + dx, ty + dy) for r in (1, 2, 3, 4, 5, 6, 7, 8) for dx in range(-r, r + 1) for dy in range(-r, r + 1)
                     if max(abs(dx), abs(dy)) == r]
             free = [c for c in ring if not g.level.is_wall(*c) and not g.level.is_exit(*c)
-                    and c not in getattr(g.level, "blocked", ())]
-            spot = None
-            for c in free:                       # встать туда, откуда цель видна
-                g.player.rect.topleft = rect_pos_for_tile(g.player, c)
-                if g.combat.los(g.player, e):
-                    spot = c
-                    break
-            if spot is None and free:            # не видно ниоткуда — подойти вплотную (в дверь)
-                spot = min(free, key=lambda c: chebyshev(c, (tx, ty)))
-                g.player.rect.topleft = rect_pos_for_tile(g.player, spot)
-            if spot is None:
-                skip.add(id(e))
+                    and c not in getattr(g.level, "blocked", ()) and c not in taken]
+            # откуда реально можно ударить: вплотную — всегда, дальше — по линии огня (как can_attack);
+            # затаившийся в засаде не выдаёт себя, пока герой не подойдёт на две клетки, — иначе бой не начнётся
+            spots = []
+            for c in free:
+                d = chebyshev(c, (tx, ty))
+                if d > reach or (getattr(e, "hidden", False) and d > 2):
+                    continue
+                p.rect.topleft = rect_pos_for_tile(p, c)
+                if d > 1 and not g.combat.los(p, e):
+                    continue
+                spots.append(c)
+            bad = burnt.setdefault(id(e), set())
+            spots.sort(key=lambda c: (c in bad, chebyshev(c, tile_of(p))))
+            if not spots:
+                self._clear_skip(e, "некуда подойти" if free else "нет свободной клетки рядом", skip)
                 continue
+            spot = next((c for c in spots if c not in bad), None)
+            if spot is None:
+                self._clear_skip(e, f"с {len(bad)} позиций урон не прошёл", skip)
+                continue
+            p.rect.topleft = rect_pos_for_tile(p, spot)
             g.snap_camera()
             self.fr(2)
             if not g.combat.active:
                 g.combat.start(player_first=True)
+            if not g.combat.active:          # враг не втянулся в бой (засада, далеко) — пробуем другую клетку
+                bad.add(spot)
+                stall += 1
+                if stall > max(8, max_rounds):
+                    self._clear_skip(e, "бой не начинается", skip)
+                    stall = 0
+                continue
             self.fight()
             now = sum(x.hp for x in left if x.alive)
             if e.alive and now >= hp0:
+                bad.add(spot)
                 stall += 1
                 if stall >= 6:
-                    skip.add(id(e))
+                    self._clear_skip(e, "6 заходов без урона", skip)
                     stall = 0
             else:
                 stall = 0
+
+    def _clear_skip(self, e, why, skip):
+        """Враг, которого зачистка не взяла: не молчать, а записать место и причину в problems."""
+        g = self.g
+        tx, ty = tile_of(e)
+        skip[id(e)] = why
+        msg = f"не смог зачистить: {e.type_id} ({tx},{ty}) на {g.loc.id} ({why})"
+        if msg not in self.problems:
+            self.problems.append(msg)
+            print(f"!! {msg}", flush=True)
 
     def check_alive(self, where):
         g = self.g
