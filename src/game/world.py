@@ -39,6 +39,21 @@ class WorldMixin:
         from .. import companion
         companion.place_near_player(self)  # спутник входит в локацию вместе с героем
 
+    def ambient_now(self):
+        """(ключ, громкость) фона для текущего места: главное меню — тишина, карта мира — тихий
+        ветер (там своя музыка), локация — по её полю ambient/музыке, ночью на улице — ночь."""
+        from .. import audio
+        if (getattr(self, "menu", None) or {}).get("screen") == "main":
+            return None, 1.0
+        if self.mode == "world":
+            return "wind", 0.5
+        return audio.ambient_key(self.loc.id, self.is_night(), LOCATION_DEFS), 1.0
+
+    def refresh_ambient(self):
+        """Переключить петлю, если место или время суток сменились (сам Audio тот же ключ не трогает)."""
+        key, level = self.ambient_now()
+        self.audio.play_ambient(key, level)
+
     def enter_location(self, loc_id, at=None):
         """at — клетка появления (переход через люк/дверь), иначе вход локации."""
         d = LOCATION_DEFS[loc_id]
@@ -58,6 +73,7 @@ class WorldMixin:
         self.apply_world_changes()      # решения героя видны на карте (data/world_changes.json)
         self.sync_gates()
         self.mode = "local"
+        self.refresh_ambient()   # после mode: на карте мира фон тише, в локации — свой
         self.log(f"Вы входите: {self.loc.name}.")
         self.ally_on_enter()
         seen = f"seen_{loc_id}"
@@ -78,6 +94,7 @@ class WorldMixin:
         self.apply_view()
         self.place_player(self.level.player_spawn)
         self.mode = "local"
+        self.refresh_ambient()
         self.log(f"Случайная встреча! {text}")
 
     def go_world_map(self):
@@ -102,6 +119,7 @@ class WorldMixin:
             self.worldmap.pos = to_screen(self.loc.world_pos)
         self.mode = "world"
         self.audio.play_music("world")
+        self.refresh_ambient()   # на карте мира — тихий ветер: своя музыка там уже звучит
         self.held_letters.clear()
         self.log("Вы выходите на просторы пустоши.")
 

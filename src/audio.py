@@ -1,5 +1,5 @@
 """
-Звук: эффекты и фоновая музыка.
+Звук: эффекты, фоновая музыка и фоновые петли (ambient).
 
 Свои звуки (assets/sounds/<имя>.ogg, готовит tools/prepare_sounds.py):
   shot, melee, hit — из tools/prepare_sounds.py; интерфейсные (клики, терминал, гейгер, левел-ап,
@@ -12,7 +12,12 @@
 интерфейса — щелчки, у каждой локации — своя музыка (music в data/locations.json).
 Чего нет — подменяется своим звуком (FALLBACK) или молчит.
 
-Громкость музыки и эффектов — меню «Звук», хранится в saves/settings.json.
+Фоновые петли (assets/sounds/amb_<ключ>.ogg): ветер, ночь, пещеры, убежище, ливнёвка (варианты
+amb_sewer_1/_2 — при входе берётся случайный), город, неон, костёр, машинный зал. Ключ локации —
+поле "ambient" в data/locations.json, иначе по её музыке (MUSIC_AMBIENT); ночью на открытом воздухе
+ветер сменяется ночью. Петля живёт на своих зарезервированных каналах — эффекты их не занимают.
+
+Громкость музыки, эффектов и фона — меню «Звук», хранится в saves/settings.json.
 Звук слева/справа от центра экрана слышен больше левым/правым ухом.
 Если звуковой карты нет (проверки без окна), всё молча работает без звука.
 """
@@ -31,7 +36,27 @@ MUSIC_DIR = os.path.join("assets", "music")
 # косметика (вариативность громкости, выбор дубля) — свой генератор, чтобы броски
 # звука не сдвигали глобальный поток random у игровой логики
 _rng = random.Random()
-DEFAULTS = {"music": 0.5, "sfx": 0.8}
+DEFAULTS = {"music": 0.5, "sfx": 0.8, "ambient": 0.48}   # фон тише эффектов: 0.6 от sfx
+# фон локации по её музыке (см. ambient_key); поле "ambient" в data/locations.json важнее
+MUSIC_AMBIENT = {"desert": "wind", "world": "wind", "caves": "cave", "lab": "vault", "raiders": "campfire",
+                 "hub": "town", "junktown": "town", "reno": "neon", "vats": "cave", "title": None}
+# каналы фона: два, чтобы старый затухал, пока новый набирает громкость; эффектам они недоступны
+AMBIENT_CHANNELS = 2
+AMBIENT_FADE_MS = 1500
+
+
+def ambient_key(loc_id, night=False, defs=None):
+    """Ключ фона локации: поле "ambient" из data/locations.json, иначе — по музыке;
+    ночью на открытом воздухе (не underground) ветер сменяется ночью."""
+    if defs is None:
+        from .location import LOCATION_DEFS as defs
+    d = defs.get(loc_id) or {}
+    key = d.get("ambient") or MUSIC_AMBIENT.get(d.get("music", "desert"), "wind")
+    if night and key == "wind" and not d.get("underground"):
+        key = "night"
+    return key
+
+
 # базовая громкость (выстрел громкий — его чуть приглушаем)
 BASE = {"shot": 0.7, "shot_pipe": 0.75, "shot_enemy": 0.6, "shot_turret": 0.6, "melee": 0.9, "hit": 0.9,
         "hit_bullet": 0.8, "explosion": 1.0, "button": 0.5, "geiger": 0.6, "combat_start": 0.8, "combat_end": 0.7,
@@ -47,6 +72,13 @@ class Audio:
         self.pending = []         # [(мс до звука, имя, pan, громкость)]
         self.volume = dict(DEFAULTS)
         self.music_key = None
+        self.ambient_key = None    # ключ играющей петли (None — тишина)
+        self.ambient_level = 1.0   # множитель к volume["ambient"] (на карте мира фон тише)
+        self.amb_files = {}        # ключ -> [путь, ...] вариантов amb_<ключ>[_N].ogg
+        self._amb_snds = {}        # ключ -> [Sound] — загружаются при первой петле
+        self.amb_chs = []          # каналы фона: играют по очереди, старый затухает под новым
+        self._amb_i = 0
+        self._amb_snd = None       # держим Sound живым, пока петля звучит
         self.f2 = None
         self._f2_loaded = False
         self._load_settings()
@@ -54,6 +86,8 @@ class Audio:
             if not pygame.mixer.get_init():
                 pygame.mixer.init(44100, -16, 2, 512)
             pygame.mixer.set_num_channels(32)
+            pygame.mixer.set_reserved(AMBIENT_CHANNELS)   # 0..1 — только фон
+            self.amb_chs = [pygame.mixer.Channel(i) for i in range(AMBIENT_CHANNELS)]
             self.ok = True
         except pygame.error:
             return
@@ -64,15 +98,20 @@ class Audio:
             self.poll()
 
     def _load_own(self):
-        """assets/sounds/<ключ>.ogg и варианты <ключ>_1.ogg, <ключ>_2.ogg…"""
+        """assets/sounds/<ключ>.ogg и варианты <ключ>_1.ogg, <ключ>_2.ogg…
+        Фоновые петли amb_<ключ>[_N].ogg в звуки не грузятся (они длинные) — только путей список."""
         if not os.path.isdir(SFX_DIR):
             return
         for fn in sorted(os.listdir(SFX_DIR)):
             if not fn.endswith(".ogg"):
                 continue
+            path = os.path.join(SFX_DIR, fn)
             name = re.sub(r"_\d+$", "", fn[:-4])
+            if name.startswith("amb_"):
+                self.amb_files.setdefault(name[4:], []).append(path)
+                continue
             try:
-                self.sounds.setdefault(name, []).append(pygame.mixer.Sound(os.path.join(SFX_DIR, fn)))
+                self.sounds.setdefault(name, []).append(pygame.mixer.Sound(path))
             except pygame.error:
                 pass
 
@@ -137,7 +176,55 @@ class Audio:
         self.volume[kind] = round(max(0.0, min(1.0, value)), 2)
         if kind == "music" and self.ok:
             pygame.mixer.music.set_volume(self.volume["music"])
+        elif kind == "ambient" and self.ok:
+            self._ambient_apply_volume()
         self.save_settings()
+
+    # ------------------------------------------------------------ фоновые петли
+    def _ambient_apply_volume(self):
+        v = self.volume["ambient"] * self.ambient_level
+        for ch in self.amb_chs:
+            if ch.get_busy():
+                ch.set_volume(v)
+
+    def _ambient_sounds(self, key):
+        """Варианты петли (amb_sewer_1/_2) — грузятся один раз, при первом входе."""
+        if key not in self._amb_snds:
+            snds = []
+            for path in self.amb_files.get(key, []):
+                try:
+                    snds.append(pygame.mixer.Sound(path))
+                except pygame.error:
+                    pass
+            self._amb_snds[key] = snds
+        return self._amb_snds[key]
+
+    def play_ambient(self, key, level=1.0):
+        """Петля локации: тот же ключ не перезапускается; старый затухает за 1,5 с, новый входит
+        за 1,5 с. key=None — тишина с затуханием. Варианты ключа (amb_sewer_1/_2) — случайно."""
+        if key == self.ambient_key and abs(level - self.ambient_level) < 0.01:
+            return
+        same = key == self.ambient_key
+        self.ambient_key, self.ambient_level = key, level
+        if not self.ok or not self.amb_chs:
+            return
+        if same:   # изменилась только громкость (карта мира/локация) — без перезапуска петли
+            self._ambient_apply_volume()
+            return
+        try:
+            self.amb_chs[self._amb_i].fadeout(AMBIENT_FADE_MS)
+            if key is None:
+                return
+            snds = self._ambient_sounds(key)
+            if not snds:
+                return
+            self._amb_i = (self._amb_i + 1) % len(self.amb_chs)
+            self._amb_snd = _rng.choice(snds)   # ливнёвка 1/2 — при каждом входе другая
+            ch = self.amb_chs[self._amb_i]
+            ch.set_volume(self.volume["ambient"] * self.ambient_level)
+            ch.play(self._amb_snd, loops=-1, fade_ms=AMBIENT_FADE_MS)
+        except pygame.error:
+            pass
 
     # ------------------------------------------------------------ музыка
     def _music_file(self, key):

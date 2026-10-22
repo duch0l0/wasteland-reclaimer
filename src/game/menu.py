@@ -55,7 +55,8 @@ class MenuMixin:
                     out.append((s, lambda s=s: self._load_and_play(s), info is not None))
             return out + [("Назад", self._back, True)]
         if scr == "sound":  # ползунки: действие по Enter/клику — ничего, громкость — стрелками или мышью
-            return [("Музыка", lambda: None, True), ("Звуки", lambda: None, True), ("Назад", self._back, True)]
+            return [("Музыка", lambda: None, True), ("Звуки", lambda: None, True), ("Фон", lambda: None, True),
+                    ("Назад", self._back, True)]
         if scr == "confirm":
             return [("Да", m["confirm"]["yes"], True), ("Нет", self._back, True)]
         return []
@@ -108,8 +109,8 @@ class MenuMixin:
                 return
             self._back()
             return
-        if m["screen"] == "sound" and key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_a, pygame.K_d) and m["sel"] < 2:
-            kind = ("music", "sfx")[m["sel"]]
+        if m["screen"] == "sound" and key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_a, pygame.K_d) and m["sel"] < 3:
+            kind = ("music", "sfx", "ambient")[m["sel"]]
             step = 0.1 if key in (pygame.K_RIGHT, pygame.K_d) else -0.1
             self.audio.set_volume(kind, self.audio.volume[kind] + step)
             if kind == "sfx":

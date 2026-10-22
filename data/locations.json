@@ -44,7 +44,8 @@
     "map": "data/maps/drain.json",
     "known": false,
     "underground": true,
-    "music": "caves"
+    "music": "caves",
+    "ambient": "sewer"
   },
   "barstow": {
     "name": "Барстоу",
@@ -255,7 +256,8 @@
     "map": "data/maps/zzyzx_cistern.json",
     "known": false,
     "music": "lab",
-    "underground": true
+    "underground": true,
+    "ambient": "sewer"
   },
   "needles": {
     "name": "Нидлс: Пристань",
@@ -340,7 +342,8 @@
     "map": "data/maps/hub_tunnels.json",
     "known": false,
     "music": "caves",
-    "underground": true
+    "underground": true,
+    "ambient": "sewer"
   },
   "junktown": {
     "name": "Джанктаун",
@@ -558,7 +561,8 @@
     "map": "data/maps/vault4_lower.json",
     "known": false,
     "music": "vats",
-    "underground": true
+    "underground": true,
+    "ambient": "vault"
   },
   "primm": {
     "name": "Примм",
@@ -665,7 +669,8 @@
     "map": "data/maps/vault22_lab.json",
     "known": false,
     "music": "vats",
-    "underground": true
+    "underground": true,
+    "ambient": "vault"
   },
   "nipton": {
     "name": "Ниптон",
@@ -795,7 +800,8 @@
     "map": "data/maps/vegas_tunnels.json",
     "known": false,
     "music": "caves",
-    "underground": true
+    "underground": true,
+    "ambient": "sewer"
   },
   "vegas_tower": {
     "name": "Башня Vault-Tec",
@@ -816,7 +822,8 @@
     "map": "data/maps/vegas_vault.json",
     "known": false,
     "music": "vats",
-    "underground": true
+    "underground": true,
+    "ambient": "vault"
   },
   "poseidon7": {
     "name": "«Посейдон-7»",
@@ -829,21 +836,24 @@
     ],
     "world_name": "Ретранслятор Poseidon",
     "discover": true,
-    "clear_flag": "p7_storm_won"
+    "clear_flag": "p7_storm_won",
+    "ambient": "machine"
   },
   "poseidon7_base": {
     "name": "«Посейдон-7»: станция",
     "map": "data/maps/poseidon7_base.json",
     "known": false,
     "music": "lab",
-    "underground": true
+    "underground": true,
+    "ambient": "machine"
   },
   "poseidon7_hangar": {
     "name": "«Посейдон-7»: ангар",
     "map": "data/maps/poseidon7_hangar.json",
     "known": false,
     "music": "vats",
-    "underground": true
+    "underground": true,
+    "ambient": "machine"
   },
   "mariposa": {
     "name": "База Марипоза",
@@ -911,20 +921,23 @@
       2960,
       380
     ],
-    "world_name": "Купол «Нова»"
+    "world_name": "Купол «Нова»",
+    "ambient": "machine"
   },
   "nova_under": {
     "name": "«Нова»: Нижний ярус",
     "map": "data/maps/nova_under.json",
     "known": false,
-    "music": "reno"
+    "music": "reno",
+    "ambient": "machine"
   },
   "nova_core": {
     "name": "Ядро НОВЫ",
     "map": "data/maps/nova_core.json",
     "known": false,
     "music": "lab",
-    "underground": true
+    "underground": true,
+    "ambient": "machine"
   },
   "repconn": {
     "name": "Полигон REPCONN",
@@ -982,7 +995,8 @@
     "map": "data/maps/vault11_core.json",
     "known": false,
     "music": "vats",
-    "underground": true
+    "underground": true,
+    "ambient": "machine"
   },
   "vegas_bank": {
     "name": "Первый банк Мохаве: подвал",

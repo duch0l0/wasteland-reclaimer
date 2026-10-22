@@ -155,17 +155,18 @@ def _slider(surf, game, i, label, kind, y):
 
 def _sound(surf, game, items):
     t = _font("dejavuserif", 40, bold=True).render("ЗВУК", True, AMBER)
-    surf.blit(t, t.get_rect(center=(S.SCREEN_W // 2, 240)))
-    _slider(surf, game, 0, "Музыка", "music", 320)
-    _slider(surf, game, 1, "Звуки", "sfx", 400)
-    _item(surf, game, 2, "Назад", game._back, True, (S.SCREEN_W // 2, 520), 240)
+    surf.blit(t, t.get_rect(center=(S.SCREEN_W // 2, 200)))
+    _slider(surf, game, 0, "Музыка", "music", 300)
+    _slider(surf, game, 1, "Звуки", "sfx", 370)
+    _slider(surf, game, 2, "Фон", "ambient", 440)
+    _item(surf, game, 3, "Назад", game._back, True, (S.SCREEN_W // 2, 545), 240)
     if not game.audio.ok:
         w = _font("dejavusans", 16).render("Звуковое устройство не найдено — звука не будет.", True, AMBER_DIM)
-        surf.blit(w, w.get_rect(center=(S.SCREEN_W // 2, 580)))
+        surf.blit(w, w.get_rect(center=(S.SCREEN_W // 2, 625)))
     h = _font("dejavusans", 16).render("←→ — громкость · клик по шкале — сразу нужное значение", True, AMBER_DIM)
-    surf.blit(h, h.get_rect(center=(S.SCREEN_W // 2, 460)))
+    surf.blit(h, h.get_rect(center=(S.SCREEN_W // 2, 495)))
     f2 = _font("dejavusans", 16).render(game.audio.f2_status, True, TEXT)   # музыка и звуки Fallout 2 игрока
-    surf.blit(f2, f2.get_rect(center=(S.SCREEN_W // 2, 620)))
+    surf.blit(f2, f2.get_rect(center=(S.SCREEN_W // 2, 665)))
 
 
 def draw_menu(surf, game):

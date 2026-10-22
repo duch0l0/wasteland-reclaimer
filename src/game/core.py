@@ -142,6 +142,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         from .. import fallout2
         self.audio = Audio(os.getcwd(), fallout2.CACHE_DIR)
         self.audio.play_music(LOCATION_DEFS.get(self.loc.id, {}).get("music", "desert"))
+        self.refresh_ambient()     # фон локации (в главном меню — тишина, см. ambient_now)
         self.autowalk = None       # путь по клику мыши вне боя
         self.combat_queue = None   # путь/атака по клику мыши в бою
         self.term = None           # открытый терминал или документ
@@ -219,6 +220,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
 
     def update(self, dt_ms):
         self.audio.update(dt_ms)
+        self.refresh_ambient()   # день/ночь и место сменились — петля уходит и входит с затуханием
         if self.menu:  # пауза: мир стоит
             return
         self.play_ms += dt_ms
