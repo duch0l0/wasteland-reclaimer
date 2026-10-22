@@ -712,7 +712,7 @@
    }
   },
   "needles": {
-   "people": 13,
+   "people": 12,
    "jobs": [
     "trader",
     "scav",
@@ -767,7 +767,7 @@
    }
   },
   "junktown": {
-   "people": 13,
+   "people": 14,
    "jobs": [
     "mechanic",
     "scav",
@@ -800,7 +800,7 @@
    }
   },
   "necropolis": {
-   "people": 13,
+   "people": 12,
    "ghoul": true,
    "jobs": [
     "trader",
@@ -835,7 +835,7 @@
    }
   },
   "boneyard": {
-   "people": 9,
+   "people": 10,
    "jobs": [
     "scav",
     "trader",
@@ -909,7 +909,7 @@
    }
   },
   "searchlight": {
-   "people": 7,
+   "people": 8,
    "jobs": [
     "mechanic",
     "trader",
@@ -968,7 +968,7 @@
    }
   },
   "vegas_snakes": {
-   "people": 8,
+   "people": 9,
    "jobs": [
     "trader",
     "gambler",
