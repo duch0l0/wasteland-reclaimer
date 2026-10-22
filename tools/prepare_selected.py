@@ -47,6 +47,9 @@ SFX = {
     "human_death_female": [(os.path.join(INCOMING, "sfx/human_death/freesound_johnson_human_male_scream_5.mp3"), 0)],
     "human_death": [(os.path.join(INCOMING, f"sfx/human_death/{n}"), 0) for n in (
         "freesound_blankened_male_death.mp3", "freesound_jdbrick_male_scream_death.mp3")],
+    # melee: два удара вместо прежнего melee.ogg с zvukogram (CC0, проверено 2026-10-22)
+    "melee": [(os.path.join(INCOMING, "sfx/melee/new_524956_magnuswaker.wav"), 0),
+              (os.path.join(INCOMING, "sfx/melee/new_399183_janbezouska.wav"), 0)],
 }
 
 # шаги: ключ -> (файл, [начала шагов] или None = искать по тишине, сколько взять)
@@ -106,8 +109,10 @@ def ambient():
         print(f"{name}: {dur:.1f} с, усиление {gain_total:+.1f} дБ, {lufs(dst)[0]:.1f} LUFS")
 
 
-def sfx():
+def sfx(only=None):
     for key, items in SFX.items():
+        if only and key not in only:
+            continue
         for old in glob.glob(os.path.join(OUT, f"{key}.ogg")) + glob.glob(os.path.join(OUT, f"{key}_[0-9]*.ogg")):
             os.remove(old)
         for i, (src, maxdur) in enumerate(items, 1):
@@ -160,11 +165,12 @@ if __name__ == "__main__":
     ap.add_argument("--ambient", action="store_true")
     ap.add_argument("--sfx", action="store_true")
     ap.add_argument("--steps", action="store_true")
+    ap.add_argument("--only", nargs="*", help="только эти ключи из --sfx (иначе все)")
     a = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
     if a.ambient:
         ambient()
     if a.sfx:
-        sfx()
+        sfx(a.only)
     if a.steps:
         steps()

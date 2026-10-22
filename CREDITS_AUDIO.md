@@ -8,8 +8,8 @@
 Лицензия каждой страницы проверена 2026-10-17 (ambient и новые эффекты — 2026-10-22) по полю «License(s)»
 на самой странице.
 
-Ключи с вариантами (по строке на каждый файл — ниже): shot_*, hit_bullet_*, human_hurt_*, human_death_*,
-human_death_female_*, amb_sewer_*, step_gravel_*, step_sand_*, step_metal_*, step_water_*.
+Ключи с вариантами (по строке на каждый файл — ниже): shot_*, hit_bullet_*, melee_*, human_hurt_*,
+human_death_*, human_death_female_*, amb_sewer_*, step_gravel_*, step_sand_*, step_metal_*, step_water_*.
 
 ## Свои (синтез кодом, tools/make_sfx.py)
 Лицензия: проект Wasteland Reclaimer. Файлы: button, empty, geiger_*, terminal_key_*, terminal_ok, terminal_err,
@@ -48,6 +48,8 @@ combat_end, levelup, quest, pickup_*, putdown_*, close_*, heal_*, dialog.
 | human_death_1 | [Male Death](https://freesound.org/people/Blankened/sounds/554443/), Blankened |
 | human_death_2 | [Male Scream Death](https://freesound.org/people/JD_Brick_Productions/sounds/745726/), JD_Brick_Productions |
 | human_death_female_1 | [Human Male Scream 5](https://freesound.org/people/JohnsonBrandEditing/sounds/243382/), JohnsonBrandEditing |
+| melee_1 | [Punch Hard 2](https://freesound.org/people/magnuswaker/sounds/524956/), magnuswaker — CC0 1.0 |
+| melee_2 | [Major punch](https://freesound.org/people/janbezouska/sounds/399183/), janbezouska — CC0 1.0 |
 
 ## Ambient-петли (Freesound)
 | Файл | Автор, страница | Лицензия |
@@ -72,7 +74,7 @@ combat_end, levelup, quest, pickup_*, putdown_*, close_*, heal_*, dialog.
 | step_water_1…3 | coffeemakessounds, [step water](https://freesound.org/people/coffeemakessounds/sounds/849638/) — один шаг, варианты по высоте |
 
 ## Скачано с zvukogram.com (ПРАВА НЕЯСНЫ, заменить до релиза)
-melee, hit — исходники в sounds/ (udar-po-zaschite--priglushnno.wav, the-bullet-hit-the-human-body.wav).
+hit — исходник в sounds/ (the-bullet-hit-the-human-body.wav). melee заменён на CC0 с Freesound (см. выше).
 Сайт пишет «Бесплатно, MP3 и WAV» и «Все права защищены», лицензии на звуки не указывает (проверено 2026-10-17).
 Для релиза нужно либо письменное разрешение сайта, либо замена на CC0-файлы. Рабочие замены: shot — Free Firearm
-Library (уже стоит), melee — Kenney impactPunch, hit — Eldritch Grim «Impact N».
+Library (уже стоит), hit — Eldritch Grim «Impact N».
