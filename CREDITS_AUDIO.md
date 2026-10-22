@@ -50,6 +50,9 @@ combat_end, levelup, quest, pickup_*, putdown_*, close_*, heal_*, dialog.
 | human_death_female_1 | [Human Male Scream 5](https://freesound.org/people/JohnsonBrandEditing/sounds/243382/), JohnsonBrandEditing |
 | melee_1 | [Punch Hard 2](https://freesound.org/people/magnuswaker/sounds/524956/), magnuswaker — CC0 1.0 |
 | melee_2 | [Major punch](https://freesound.org/people/janbezouska/sounds/399183/), janbezouska — CC0 1.0 |
+| hit_1 | [thump.wav](https://freesound.org/people/Reitanna/sounds/252264/), Reitanna — CC0 1.0 |
+
+hit — один файл (hit_1), вариантов нет; hit_bullet — отдельный ключ (см. OpenGameArt).
 
 ## Ambient-петли (Freesound)
 | Файл | Автор, страница | Лицензия |
@@ -72,9 +75,3 @@ combat_end, levelup, quest, pickup_*, putdown_*, close_*, heal_*, dialog.
 | step_sand_1…4 | rnan_sounddesign, [sand footsteps](https://freesound.org/people/rnan_sounddesign/sounds/725875/) |
 | step_metal_1…4 | sanderboah, [walking on metal](https://freesound.org/people/sanderboah/sounds/696374/) |
 | step_water_1…3 | coffeemakessounds, [step water](https://freesound.org/people/coffeemakessounds/sounds/849638/) — один шаг, варианты по высоте |
-
-## Скачано с zvukogram.com (ПРАВА НЕЯСНЫ, заменить до релиза)
-hit — исходник в sounds/ (the-bullet-hit-the-human-body.wav). melee заменён на CC0 с Freesound (см. выше).
-Сайт пишет «Бесплатно, MP3 и WAV» и «Все права защищены», лицензии на звуки не указывает (проверено 2026-10-17).
-Для релиза нужно либо письменное разрешение сайта, либо замена на CC0-файлы. Рабочие замены: shot — Free Firearm
-Library (уже стоит), hit — Eldritch Grim «Impact N».

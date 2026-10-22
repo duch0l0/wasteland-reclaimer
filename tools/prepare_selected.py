@@ -41,6 +41,8 @@ SFX = {
     "shot": [(os.path.join(INCOMING, "sfx/shot/ffsl_shot_1911_03.wav"), 0),
              (os.path.join(INCOMING, "sfx/shot/ffsl_shot_1911_05.wav"), 0)],
     "hit_bullet": [(os.path.join(INCOMING, "sfx/hit_bullet/eldritchgrim_impact_4.mp3"), 0)],
+    # hit: вместо прежнего hit.ogg с zvukogram (CC0, страница проверена 2026-10-22)
+    "hit": [(os.path.join(INCOMING, "sfx/hit/v3_freesound_reitanna_thump.wav"), 0)],
     "human_hurt": [(os.path.join(INCOMING, f"sfx/human_hurt/{n}"), 0) for n in (
         "freesound_kodack_male_grunt_1.mp3", "freesound_mfgloom_grunt_pain_1.mp3", "freesound_mrfossy_paingrunt09.mp3",
         "freesound_unfa_paingrunt_a.mp3", "freesound_unfa_paingrunt_b.mp3")],

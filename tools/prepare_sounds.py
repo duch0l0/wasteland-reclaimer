@@ -24,7 +24,6 @@ OUT_MUSIC = os.path.join(ROOT, "assets", "music")
 SOUNDS = {
     "gun-shot.wav": "shot",                          # выстрел
     "udar-po-zaschite--priglushnno.wav": "melee",    # удар ломом
-    "the-bullet-hit-the-human-body.wav": "hit",      # попадание по телу
 }
 
 # обрезка тишины с обеих сторон: развернуть, срезать, развернуть обратно
