@@ -475,6 +475,52 @@ def baker(b):
 
 
 # ================================================================ Акт III
+def primm_case(b):
+    """«Шериф умер дважды» — сюжет расследования: улики → признание вдовы → фишка → брат Иов.
+
+    Раньше бот полагался на то, что лагерь у горок считается зачищенным «сам собой» (в нём нет
+    врагов — только жители культа). С тех пор как `clear_flag` ставится, лишь когда в локации
+    были враги и все легли, пустой лагерь зачищенным не считается: Тоби не отдать. Честный путь
+    такой же, как у игрока: две улики из четырёх (револьвер Ривза — гробовщик Хэнк, шаль у
+    чёрного хода — бармен Слим, без крышек, только Красноречие 40) → вдова признаётся и отдаёт
+    фишку мужа → брат Иов берёт фишку и отдаёт мальчика. Не вышло с фишкой (вдова уже ушла из
+    города) — бот берёт Иова на испуг: Красноречие 65. Драка с лагерем — последнее средство,
+    её бот не берёт: Тоби в общей свалке могут убить.
+    """
+    g = b.g
+    if g.stage("sq_primm") >= 100:
+        return
+    b.visit("primm", clear=False)
+    b.pursue("deputy_baxter", "primm_job", required=False)
+    b.pursue("mae_reeves", "know_tobi_missing", required=False)
+    # улики: считаются любые две из четырёх (src/game/quests.py), берём те, что не стоят навыка и денег
+    if not g.flags.get("clue_gun"):
+        b.chat("pr_undertaker", "Интересно")
+    if not g.flags.get("clue_shawl"):
+        b.visit("primm_vikki", clear=False)
+        b.chat("barkeep_slim", "Шериф был хорошим человеком", "Спасибо")
+    if not g.flags.get("mae_suspect"):
+        raise b.Stuck(f"вдову не в чем обвинить: револьвер {bool(g.flags.get('clue_gun'))}, "
+                      f"шаль {bool(g.flags.get('clue_shawl'))}, письмо {bool(g.flags.get('clue_letter'))}, "
+                      f"журнал {bool(g.flags.get('clue_log'))} — нужно две улики")
+    if not g.inventory.has("фишка Ривза"):
+        b.chat("mae_reeves", "чёрного хода", "Отдайте мне код", "Я успею")
+    b.visit("primm_camp")
+    if not g.flags.get("tobi_home"):
+        if g.inventory.has("фишка Ривза"):
+            b.chat("brother_job", "Мальчик Ривзов", "Вот фишка", "...")
+        else:                                     # фишки нет — Иов сдаёт мальчика под угрозой, Красноречие 65
+            b.chat("brother_job", "Мальчик Ривзов", "Ты отдашь его просто так", "Надеюсь")
+        if not g.flags.get("tobi_home"):
+            raise b.Stuck(f"брат Иов не отдал Тоби (фишка {g.inventory.count('фишка Ривза')}, "
+                          f"Красноречие {skill(b, 'speech')}/65, лагерь зачищен "
+                          f"{bool(g.flags.get('primm_camp_cleared'))}, стадия {g.stage('sq_primm')})")
+    if g.stage("sq_primm") < 100:
+        raise b.Stuck(f"«Шериф умер дважды» не закрылся: Тоби дома {bool(g.flags.get('tobi_home'))}, "
+                      f"стадия {g.stage('sq_primm')}")
+    b.walk_to_map("primm")
+
+
 def primm(b):
     g = b.g
 
@@ -895,6 +941,211 @@ def harold_finish(b):
     b.terminal("mariposa_1977", "Купели")
     if g.stage("sq_harold") < 100:
         raise b.Stuck("журнал «Купели» не прочитан")
+
+
+# ================================================================ Цена воды (sq_water_war)
+def water_war(b):
+    """«Цена воды»: Сэл в Джанктауне → артель Веги в Хабе → сейф Декера → мэр Дарквотер.
+
+    Два честных пути, бот берёт тот, что у него есть. Сборка с Наукой 50 и гаечным ключом
+    чинит старый насос на свалке — Джанктаун больше никому не платит за воду. Без Науки бот
+    идёт по деньгам: клерк артели называет посредника «Д.», гроссбух Декера лежит в его сейфе
+    (отмычка — своя, бот покупает её в Пятнадцатой или на Стрипе, если нет), а мэр Дарквотер
+    после тетради говорит с Вегой напрямую. В долю с Декером бот не идёт: 600 крышек — это
+    чужие деньги за чужую воду (ветка есть в диалоге, в отчёте её не будет).
+    Не вышло ни того, ни другого — в side_fails остаётся, чего именно не хватило.
+    """
+    g = b.g
+    if g.stage("sq_water_war") >= 100:
+        return
+    if not g.flags.get("ww_job"):
+        b.visit("junktown", clear=False)
+        b.chat("water_seller", "подорожала", "Разберусь")
+    if not g.flags.get("ww_job"):
+        raise b.Stuck("водовоз Сэл не рассказал, почему подорожала вода")
+
+    # 1. свой насос — только пока квест на стадии 10: в разговоре с клерком он уже не появится
+    if skill(b, "science") >= 50 and has(b, "гаечный ключ"):
+        b.visit("junktown", clear=False)
+        b.chat("water_seller", "старый насос", "Пейте")
+        if not g.flags.get("junktown_pump"):
+            raise b.Stuck("насос на свалке не запустился")
+        return
+
+    # 2. гроссбух Декера: артель называет посредника, сейф в Старом городе, мэр в ратуше
+    b.visit("hub", clear=False)
+    if not g.flags.get("clue_middleman"):
+        b.chat("water_clerk", ("подняли цену", "вдвое"), "Кто берёт", "Спасибо")
+    if not g.flags.get("clue_middleman"):
+        raise b.Stuck("артель Веги не сказала, кто берёт разницу")
+    if not has(b, "гроссбух Декера"):
+        for city, trader in (("ruins", "gena"), ("vegas_strip", "strip_trader")):
+            if has(b, "отмычка"):
+                break
+            try:
+                buy_in_city(b, city, trader, "отмычка")
+            except b.Stuck:
+                continue
+        if has(b, "отмычка"):
+            b.steal("hub_old", "сейф Декера")        # тетрадь лежит рядом со статуэткой
+    if not has(b, "гроссбух Декера"):
+        raise b.Stuck(f"гроссбуха Декера нет: отмычки {g.inventory.count('отмычка')}, "
+                      f"Науки {skill(b, 'science')}/50, гаечного ключа {has(b, 'гаечный ключ')}")
+    b.read_books()
+    b.visit("junktown_hall", clear=False)
+    b.chat("mayor_darkwater", "гроссбух Декера", "...")
+    if not g.flags.get("water_direct"):
+        raise b.Stuck(f"мэр гроссбух не взял (стадия {g.stage('sq_water_war')})")
+
+
+# ================================================================ Кровь Убежища 11 (sq_vault11)
+def vault11(b):
+    """«Кровь Убежища 11»: устав Ярмарки в ратуше Ниптона → зал выборов → центр → мэр.
+
+    Бот читает в городской книге «Устав (2098)» — подпись «Э. Кэрролл, выжившая из Убежища 11»
+    открывает убежище на карте мира. Там: дневник смотрителя Кэтрин Стоун в шкафчике зала и
+    служебный терминал вычислительного центра — закрытая запись «Протокол эксперимента»
+    открывается взломом (подсказки «Совпадение=N», как у игрока). Мэру бот предъявляет правду:
+    с Красноречием 60 Кэрролл сам выходит на площадь, без него — бот говорит площадь сам.
+    Если мэр уже ушёл из города по исходу лотереи (nipton_mayor_drawn / nipton_mayor_exposed),
+    протокол принимает вдова Грейс — тот же исход, другие реплики.
+    Шантаж на 500 крышек бот не берёт. Закрытый терминал не поддался — причина в отчёте.
+    """
+    g = b.g
+    if g.stage("sq_vault11") >= 100:
+        return
+    b.terminal("nipton_ledger", "Устав")        # b.terminal сам доведёт до ратуши Ниптона
+    if not g.flags.get("know_vault11"):
+        raise b.Stuck("«Устав (2098)» в ратуше Ниптона не прочитан — про Убежище 11 герой не знает")
+    b.visit("vault11_hall")
+    b.take_from("шкафчик Кэтрин Стоун")
+    b.read_books()                              # дневник смотрителя: «меня выбрали, чтобы избавиться от Натана»
+    b.walk_to_map("vault11_hall")
+    b.goto_portal("vault11_core")
+    b.terminal("v11_core", "Протокол", "Список выживших")
+    if not g.flags.get("know_v11_truth"):
+        raise b.Stuck(f"протокол не открылся: запись закрыта, взлом не вышел "
+                      f"(терминал заблокирован: {bool(g.flags.get('term_v11_core_v11core_lockout'))})")
+    g.go_world_map()
+    b.go("nipton")
+    # Мэр уходит из Ниптона по исходу лотереи (npc_leave в узлах «swapped» и «list»: nipton_mayor_drawn /
+    # nipton_mayor_exposed). Протокол тогда принимает вдова Грейс — она теперь отвечает за город; исход
+    # квеста тот же, текст другой.
+    mayor = b.find_npc("mayor_carroll")
+    if mayor is None:
+        b.chat("grace_widow", "Протокол Убежища 11",
+               ("Прочитайте это на площади", "скажу им я"), "...")
+    elif skill(b, "speech") >= 60:
+        b.chat("mayor_carroll", "Убежище 11", "Выйди на площадь", "...")
+    else:
+        b.chat("mayor_carroll", "Убежище 11", "скажу им я", "...")
+    if g.stage("sq_vault11") < 100:
+        who = "вдова Грейс" if mayor is None else "мэр Кэрролл"
+        raise b.Stuck(f"{who} не дошёл до площади (стадия {g.stage('sq_vault11')})")
+
+
+# ================================================================ Беглый субъект (sq_subject)
+def subject(b):
+    """«Беглый субъект»: Тед в Ниптоне → нижний ярус Убежища 4 → клетка № 12 → Ниптон.
+
+    Бот узнаёт имя Марты у пьяницы Теда, спускается в Убежище 4 — на нижний ярус его пускает
+    Тихоня («Не скажу»), потому что лифт заперт на «персонал уровня 3». Клетку бот открывает
+    тем, что есть: если с Сим уже договорено (v4_deal_off) — просит её отпустить двенадцатую,
+    иначе взламывает лабораторный терминал (запись «Открыть клетку субъекта № 12»). Марта уходит
+    в Ниптон сама; Тед встаёт рядом с ней (с Красноречием 50 — говорит городу первым).
+    """
+    g = b.g
+    if g.stage("sq_subject") >= 100:
+        return
+    b.visit("nipton", clear=False)
+    if not g.flags.get("know_ted_marta"):
+        b.chat("np_drunk", "Как её звали", "Я поищу")
+    if not g.flags.get("know_ted_marta"):
+        raise b.Stuck("Тед не рассказал про Марту")
+    if not g.flags.get("v4_open"):              # дверь-шестерня: интерком, как в акте II
+        b.visit("vault4", clear=False)
+        b.terminal("v4_intercom", "[Приложить ключ-карту директора]",
+                   "[Представиться курьером брата Т.]", "[Рассказать про погоду]")
+    if not g.flags.get("v4_open"):
+        raise b.Stuck("дверь-шестерня Убежища 4 закрыта")
+    b.visit("vault4_upper", clear=False)
+    if not g.flags.get("v4_lower_ok"):
+        b.chat("v4_mutant", "Не скажу")          # Тихоня: я родился внизу
+    if not g.flags.get("v4_lower_ok"):
+        raise b.Stuck("Тихоня не открыл лифт на нижний ярус")
+    b.visit("vault4_lower")
+    if not g.flags.get("know_marta"):
+        b.chat("marta_subject", "Тед из Ниптона", "вытащу", "Жди")   # клетку открывает терминал у восточной стены
+    if not g.flags.get("marta_cage_open"):
+        if g.flags.get("v4_deal_off"):            # Сим уже отпустила субъектов — просто попросить
+            b.walk_to_map("vault4_upper")
+            b.pursue("overseer_sim", "marta_cage_open", required=False)
+            b.walk_to_map("vault4_lower")
+        if not g.flags.get("marta_cage_open"):
+            b.terminal("v4_lab", "клетку субъекта")
+    if not g.flags.get("marta_cage_open"):
+        raise b.Stuck(f"клетка № 12 не открылась (запись v4_lab: взлом не вышел, "
+                      f"с Сим не договорено: {bool(g.flags.get('v4_deal_off'))})")
+    b.chat("marta_subject", "Клетка открыта", "Дойди")
+    if not g.flags.get("marta_free"):
+        raise b.Stuck("Марта не вышла из клетки")
+    g.go_world_map()
+    b.go("nipton")
+    if skill(b, "speech") >= 50:
+        b.chat("np_drunk", "Марта жива", "Это Марта", "...")
+    else:
+        b.chat("np_drunk", "Марта жива", "встать рядом", "...")
+    if not g.flags.get("marta_home"):
+        raise b.Stuck(f"Ниптон не принял Марту (стадия {g.stage('sq_subject')})")
+
+
+# ================================================================ Последний банк Вегаса (sq_heist)
+def heist(b):
+    """«Последний банк Вегаса»: крупье Змей → Джин и Ред в команду → пульт охраны → хранилище.
+
+    Бот узнаёт про люк в подвал у крупье (know_bank), нанимает Джин за двести крышек (продав
+    хлам, если их нет) и Реда за идею, спускается по люку на Стрипе и снимает охрану командой —
+    без взлома и без динамита. В хранилище бот запечатывает ригели: четыреста мешков крышек
+    обесценили бы деньги всей пустоши, а воды бы не прибавили (ветки «набить рюкзак» и «отдать
+    Змеям» бот не берёт — они есть в test_questweb). Охрану снять не вышло — причина в отчёте.
+    """
+    g = b.g
+    if g.stage("sq_heist") >= 100:
+        return
+    if not g.flags.get("know_bank"):
+        b.visit("vegas_den", clear=False)
+        b.chat("den_dealer", "новенькие крышки", "Спасибо")
+    if not g.flags.get("know_bank"):
+        raise b.Stuck("крупье Змей не проговорился про люк в подвал Первого банка")
+    if not g.flags.get("crew_jin"):
+        if caps(b) < 200:                        # двести вперёд: продать хлам в Джанктауне
+            g.go_world_map()
+            b.go("junktown")
+            b.shop_here()
+        b.visit("junktown_dump", clear=False)
+        if caps(b) < 200:
+            raise b.Stuck(f"Джин просит двести крышек вперёд, а в кармане {caps(b)}")
+        b.chat("scrapper_girl", "сейф довоенного банка", "Двести вперёд")
+    if not g.flags.get("crew_red"):
+        b.visit("vegas_boots", clear=False)
+        b.chat("boots_rider_b", "прикрытие", "в деле")
+    if not (g.flags.get("crew_jin") and g.flags.get("crew_red")):
+        raise b.Stuck(f"команда не собралась: Джин {bool(g.flags.get('crew_jin'))}, "
+                      f"Ред {bool(g.flags.get('crew_red'))}")
+    g.go_world_map()
+    b.go("vegas_strip")
+    b.goto_portal("vegas_bank")                  # люк открыт наводкой крупье
+    if not g.flags.get("bank_vault_open"):
+        if g.flags.get("crew_jin") and g.flags.get("crew_red"):
+            b.terminal("bank_security", "Джин — сейф, Ред")
+        if not g.flags.get("bank_vault_open"):
+            b.terminal("bank_security", "Отключить охрану")     # взлом — если команда не сработала
+    if not g.flags.get("bank_vault_open"):
+        raise b.Stuck("охрана банка не снята: ни команда, ни взлом пульта")
+    b.terminal("bank_vault", "Запечатать")
+    if g.stage("sq_heist") < 100:
+        raise b.Stuck(f"решение по хранилищу не принято (стадия {g.stage('sq_heist')})")
+
 
 
 def vegas(b):

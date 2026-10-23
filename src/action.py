@@ -53,6 +53,16 @@ def set_action_hp(e):
     hp = ACTION_HP.get(e.type_id)
     if hp:
         e.hp = e.max_hp = hp
+
+
+def _nudge(v):
+    """Сдвиг для расталкивания гулей: хотя бы пиксель. В _move стоит round(), и полпикселя
+    (а расталкивание двух тел в 29 px — ровно 0.5) округлялось в ноль: пара стояла на месте."""
+    if abs(v) < 0.5:
+        return 1 if v > 0 else (-1 if v < 0 else 0)
+    return int(v + 0.5) if v > 0 else -int(0.5 - v)
+
+
 ORDER = ["ar", "sg"]
 
 # скорость гулей, пикс. мира в секунду (Дэкс бежит 180) и урон вблизи
@@ -475,16 +485,29 @@ class ActionMode:
                 e.anim.face(v.x, v.y)
                 if not e.anim.busy:
                     e.anim.set_action("run" if e.type_id == "ghoul_runner" else "walk")
-        # не слипаться в одну точку
+        # не слипаться в одну точку. Сдвиг — не меньше пикселя: round(0.5) в _move округлял
+        # расталкивание в ноль, и две твари, стоящие в 29 px друг от друга, стояли так всегда
+        # (два гуля в одной клетке на дворе Барстоу — живы до конца экшена).
         for i, a in enumerate(foes):
             for b in foes[i + 1:]:
                 d = pygame.Vector2(b.rect.center) - pygame.Vector2(a.rect.center)
-                if 0 < d.length() < 30:
-                    push = d.normalize() * (30 - d.length()) / 2
-                    self._move(a, -push.x, -push.y)
-                    self._move(b, push.x, push.y)
+                if d.length() < 30:
+                    push = d.normalize() * (30 - d.length()) / 2 if d.length() else pygame.Vector2(1, 0)
+                    self._move(a, -_nudge(push.x), -_nudge(push.y))
+                    self._move(b, _nudge(push.x), _nudge(push.y))
 
     # ------------------------------------------------------------ толпы из домов
+    def _mouth(self, door):
+        """Клетки, откуда вываливается толпа: сам проём и его свободные соседи. Толпа выходит
+        из двери волной, а не из одной точки — иначе тела появляются друг в друге и застревают."""
+        lv = self.g.level
+        spots = [tuple(door)]
+        for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+            t = (door[0] + dx, door[1] + dy)
+            if not lv.is_wall(*t) and not lv.is_exit(*t):
+                spots.append(t)
+        return spots
+
     def _hordes(self, dt_ms):
         g = self.g
         lv = g.level
@@ -495,8 +518,9 @@ class ActionMode:
             x0, y0, x1, y1 = h["trigger"]
             if x0 <= me[0] <= x1 and y0 <= me[1] <= y1:
                 h["done"] = True
+                mouth = self._mouth(h["door"])
                 for i in range(h["count"]):
-                    self.spawn_queue.append([300 + i * 110, random.choice(h["kinds"]), tuple(h["door"])])
+                    self.spawn_queue.append([300 + i * 110, random.choice(h["kinds"]), mouth[i % len(mouth)]])
                 g.log(h.get("msg", "Из двери вываливается толпа гулей!"))
                 g.audio.play("ghoul_death", volume=1.0)
                 g.audio.play("ghoul_hurt", delay_ms=200, volume=1.0)

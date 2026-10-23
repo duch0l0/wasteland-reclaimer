@@ -211,6 +211,10 @@ class Bot:
                 g.slides_next()
                 continue
             self.choose_levelup()
+        if g.perk_choices:      # окно повышения уровня так и не закрылось — молча стоять на портале нельзя
+            raise Stuck("окно выбора не закрывается: "
+                        + ", ".join(str(o.get("name")) for o in g.perk_choices)
+                        + f"; непринятых навыков {g.player.pending_skills}, перков {g.player.pending_perks}")
         if g.loot:
             g.handle_key(pygame.K_r)
             if g.loot:
@@ -231,14 +235,15 @@ class Bot:
                 pick = next((i for i, o in enumerate(opts) if o.get("id") == pid), None)
                 if pick is not None:
                     break
-        g.handle_key(pygame.K_1 + (pick or 0))
+        pick_idx = pick if pick is not None else 0
+        g.handle_key(pygame.K_1 + pick_idx if pick_idx < 9 else pygame.K_0)   # десятый пункт — клавиша «0»
 
     # ------------------------------------------------------------ перемещение
     def go(self, loc_id):
         g = self.g
         if g.combat.active:
             self.fight()
-        g.dialogue.active_node = None
+        g.dialogue.close()
         g.enter_location(loc_id)
         self.fr(3)
         self.check_alive(f"вход в {loc_id}")
@@ -272,7 +277,7 @@ class Bot:
             if g.term:                 # забытый терминал или ящик держат окно — порог не сработает
                 g.close_terminal()
             g.loot = None
-            g.dialogue.active_node = None
+            g.dialogue.close()
             g.player.rect.topleft = rect_pos_for_tile(g.player, tuple(sorted(p["tiles"])[0]))
             self.fr(4)
             if g.loc.id == to:
@@ -436,13 +441,18 @@ class Bot:
     # ------------------------------------------------------------ разговоры и терминалы
     def talk(self, npc_id):
         g = self.g
-        g.dialogue.active_node = None
+        g.dialogue.close()
         npc = self.find_npc(npc_id)
         if npc is None:
             raise Stuck(f"{g.loc.id}: нет жителя {npc_id}")
         for attempt in range(4):
             if g.combat.active:
                 self.fight()
+                # бой может увести героя за порог (шаг на клетку перехода — и он уже в соседней локации):
+                # собеседник остался на прежней карте, и координаты его клетки в новой ничего не значат
+                npc = self.find_npc(npc_id)
+                if npc is None:
+                    raise Stuck(f"{g.loc.id}: нет жителя {npc_id}")
             tx, ty = tile_of(npc)
             order = [(0, 1), (1, 0), (-1, 0), (0, -1)]
             dx, dy = order[attempt]
@@ -453,7 +463,7 @@ class Bot:
                 self.fr(2)
             else:
                 self.stand_near([tile_of(npc)])
-            g.dialogue.active_node = None
+            g.dialogue.close()
             g.handle_key(pygame.K_e)
             if g.dialogue.is_active():
                 return
@@ -551,7 +561,7 @@ class Bot:
         return bool(g.flags.get(goal))
 
     def end_talk(self):
-        self.g.dialogue.active_node = None
+        self.g.dialogue.close()
 
     def chat(self, npc_id, *parts):
         """Разговор по готовой цепочке реплик (как в тестах квестов). Часть — строка или кортеж вариантов:
@@ -577,7 +587,7 @@ class Bot:
         except Stuck as ex:
             self.side_fails.append(f"{name}: {ex}")
             print(f"   ~ побочка «{name}» не вышла: {ex}", flush=True)
-            g.dialogue.active_node = None
+            g.dialogue.close()
             if g.term:
                 g.close_terminal()
             g.loot = None
@@ -1599,7 +1609,7 @@ def act1(b):
 
     def station():
         b.go("station")
-        g.dialogue.active_node = None
+        g.dialogue.close()
         for e in g.enemies:
             e.talked = True
         b.search("тайник Панка")
@@ -1826,6 +1836,7 @@ def act2(b):
             SQ.junktown(b)
             SQ.mail(b, "mayor_darkwater", "письмо: Дарквотеру, Джанктаун", "mail_done_darkwater", "Джанктаун")
             SQ.mail(b, "anna_shaw", "письмо: доктору Шоу, Бейкерсфилд", "mail_done_shaw", "Джанктаун")
+            b.side("Цена воды", lambda: SQ.water_war(b))    # Сэл → артель Веги → сейф Декера → мэр
     b.step("Джанктаун: Анна Шоу и Рурк", junktown)
 
     def necropolis():
@@ -1963,9 +1974,7 @@ def act3(b):
             b.walk_to_map("primm")
             b.take_from("камень с крестом")
             b.gear_up()
-        b.visit("primm_camp")
-        b.pursue("tobi", "tobi_home", required=False)
-        b.walk_to_map("primm")
+        SQ.primm_case(b)             # улики → вдова → фишка → брат Иов: Тоби дома
         if b.sides:
             SQ.primm(b)
     b.step("Примм: пропавший Тоби", primm)
@@ -2014,6 +2023,8 @@ def act3(b):
         b.walk_to_map("nipton")
         b.pursue("mayor_carroll", "nipton_decided", required=False, avoid=("take",))
         if b.sides:
+            b.side("Кровь Убежища 11", lambda: SQ.vault11(b))    # устав → протокол → мэр Кэрролл
+            b.side("Беглый субъект", lambda: SQ.subject(b))      # Тед → клетка № 12 → Ниптон
             SQ.nipton(b)
             SQ.luis_home(b)
     b.step("Ниптон: жребий и брат Т.", nipton)
@@ -2081,6 +2092,7 @@ def act3(b):
 
     def vegas_sides():                 # побочки Вегаса — после «Ноля»: разговоры с Матерью-Змеёй не мешают пропуску в ходы
         if b.sides:
+            b.side("Последний банк Вегаса", lambda: SQ.heist(b))   # крупье → команда → пульт → хранилище
             SQ.vegas(b)
     b.step("Вегас: побочки", vegas_sides)
 
