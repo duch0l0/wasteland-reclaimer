@@ -180,14 +180,12 @@ for x, y in ((4, 3), (9, 4), (58, 4), (61, 12), (6, 15)):
 
 
 # ================================================================ здание школы
+# Расстановка поштучная (docs/furnish/fifteen.md §8): автообстановка выключена, каждый предмет — по смыслу
+# комнаты. Правило взгляда (logic.md §2а): ученик сидит южнее своей парты (стул спинкой к камере) — лицом
+# к доске на северной стене; учитель за столом у доски лицом в класс; посетитель перед столом хозяина.
 W, H = 46, 30
 sin = CityMap(city, "fifteen_school_in", "Школа «Солнечная долина»", W, H, start=(43, 15), seed=58,
-              interior=True, music="caves",
-              # школа, а не кладовка: у стен — книжные шкафы и шкафчики, в углах — урны и цветы,
-              # на свободном полу — сдвинутые парты; ни бочек, ни мешков, ни платяных шкафов
-              furnish={"scenes": [[(DESK, 0, 0), (DESK, 2, 0)], [(DESK_PILE, 0, 0)], [(DESK_B, 0, 0), (DESK, 2, 1)],
-                                  [(PLANT, 0, 0)]],
-                       "along": ([SHELF, SHELF_B, LOCKER, LOCKER_B], [PLANT, TRASH])})
+              interior=True, music="caves", furnish=False)
 sin.floor_code("F", *TILE)
 sin.floor_code("G", *WOOD)
 sin.wall_code("W", "pk:nbunk/nbunk_w3_13")      # школьная стена: кремовая с бирюзовой полосой
@@ -209,60 +207,301 @@ sin.opening(45, 14, 45, 15, "F")
 sin.portal([(45, 14), (45, 15)], "fifteen_school", (30, 20), "Школьный двор")
 sin.reserve(42, 14, 44, 16)
 
-sin.npcs += [["miss_lane", 23, 24], ["ghoul_kid_a", 20, 25], ["ghoul_kid_b", 26, 25], ["ghoul_kid_c", 23, 26]]
+sin.npcs += [["miss_lane", 23, 23], ["ghoul_kid_a", 21, 25], ["ghoul_kid_b", 25, 25], ["ghoul_kid_c", 23, 25]]
 sin.enemies += [["radroach", 37, 6], ["radroach", 41, 8], ["radroach", 43, 5], ["rat", 37, 24], ["rat", 42, 26]]
+for _, x, y in sin.npcs + sin.enemies:      # места жителей и врагов — не для мебели
+    sin.reserve(x, y, x, y)
 
-# класс А — как в последний день: доска, парты рядами
-sin.put(BOARD, 4, 3, check=False)
-sin.put(TEACHER, 9, 4)
-for y in (6, 8):
-    for x in (3, 5, 7):
-        sin.put(DESK, x, y)
-# класс Б — разгромлен
-sin.put(WINDOW, 14, 3, check=False)
-sin.put(WINDOW, 20, 3, check=False)
-sin.put(DESK_PILE, 14, 6)
-sin.put(DESK_PILE_B, 18, 8)
-sin.put(DESK_B, 20, 5)
-# класс В — рисунки детей на пробковой доске
-sin.put(CORK, 26, 3, check=False)
+
+# ------------------------------------------------------------ мебель и мелочь школы (набор wschool)
+# У столов и шкафов картинка выше клетки: пятно задаётся явно, иначе спрайт налезает на соседа.
+CHAIR = P("ws_chair", "pk:wschool/wschool_3_062")                     # стул спинкой к камере: сидящий смотрит на доску
+CHAIR_F = P("ws_chair_f", "pk:wschool/wschool_2_089")                 # стул лицом к камере: посетитель перед столом
+CHAIR_L = P("ws_chair_l", "pk:wschool/wschool_2_088")                 # стул в профиль, лицом влево
+CHAIR_R = P("ws_chair_r", "pk:wschool/wschool_2_086")                 # стул в профиль, лицом вправо
+DESK2 = P("ws_school_desk", "pk:wschool/wschool_2_094")               # ученическая парта
+TEACHER2 = P("ws_teacher_desk2", "pk:wschool/wschool_2_083", foot=[2, 2])   # стол учителя: кресло позади, лицом к классу
+TABLE = P("ws_table", "pk:wschool/wschool_3_011", foot=[2, 1])        # деревянный стол 2×1
+BENCH = P("ws_bench", "pk:wschool/wschool_2_064", foot=[2, 1])        # скамья со спинкой 2×1
+CLOCK = P("ws_clock", "pk:wschool/wschool_3_043", foot=[1, 1], block=False)
+MAP_W = P("ws_wallmap", "pk:wschool/wschool_3_065", block=False)       # карта страны на стене
+POSTER = P("ws_poster", "pk:wschool/wschool_3_067", block=False)       # старая афиша
+PIC = P("ws_pic", "pk:wschool/wschool_3_119", block=False)             # картина в раме
+CORK_BIG = P("ws_cork_big", "pk:wschool/wschool_3_025", foot=[2, 1], block=False, sight=True)
+WINDOW_BROKEN = P("ws_window_broken", "pk:wschool/wschool_3_027", foot=[2, 1], block=False, sight=True)  # выбитая рама
+CAB2 = P("ws_cabinet_open", "pk:wschool/wschool_3_033", foot=[2, 2], sight=True)   # шкаф с открытыми ящиками
+FILE2 = P("ws_filecab2", "pk:wschool/wschool_3_072", sight=True)      # картотека
+BIN = P("ws_bin", "pk:wschool/wschool_3_107")                         # урна
+BROOM = P("ws_broom", "pk:wschool/wschool_2_072")                     # швабра
+BALL = P("ws_ball", "pk:wschool/wschool_4_021")                       # мяч
+PACK = P("ws_backpack", "pk:wschool/wschool_3_048")                   # рюкзак
+BOOK_OPEN = P("ws_book_open", "pk:wschool/wschool_3_102", block=False)      # открытая тетрадь
+BOOKS = P("ws_books", "pk:wschool/wschool_3_018")                     # стопка книг
+FOLDERS = P("ws_folders", "pk:wschool/wschool_3_014", block=False)    # папки
+PAPERS = P("ws_papers", "pk:wschool/wschool_2_092", block=False, layer="floor")
+GLASS = P("ws_glass", "pk:wschool/wschool_2_045", block=False, layer="floor")
+CHAIR_DOWN = P("ws_chair_down", "pk:wschool/wschool_3_127")
+DESK_TILT = P("ws_desk_tilt", "pk:wschool/wschool_2_014")
+DESK_TOP = P("ws_desk_top", "pk:wschool/wschool_2_015", block=False, layer="floor")
+PILE = P("ws_desk_pile2", "pk:wschool/wschool_2_143", foot=[2, 2])
+PILE_B = P("ws_desk_pile2_b", "pk:wschool/wschool_2_144", foot=[2, 2])
+DEBRIS = P("ws_debris", "pk:wschool/wschool_2_124")
+CRAYONS = P("ws_crayons", "pk:wschool/wschool_2_050", block=False)
+PENCIL = P("ws_pencil", "pk:wschool/wschool_2_061", block=False)
+CHALK = P("ws_chalk", "pk:wschool/wschool_3_108", block=False)
+FERN = P("ws_fern", "pk:wschool/wschool_3_031")
+EASEL = "x_easel"
+KIDS_DRAWINGS = "x_kids_drawings"     # детский рисунок на стене — свой проп из data/props.json
+
+
+def swhy(name, x, y):
+    """Почему предмет не встал — как why_not() в build_town.py."""
+    foot = sin.footprint(name, x, y)
+    why = []
+    if any(t in sin.blocked for t in foot):
+        why.append("блок: " + str([t for t in foot if t in sin.blocked]))
+    if any(t in sin.soft_obj for t in foot):
+        why.append("мягкий предмет: " + str([t for t in foot if t in sin.soft_obj]))
+    if any(t in sin.reserved for t in foot):
+        why.append("резерв")
+    h = sin.hides(name, x, y)
+    if h:
+        why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
+    why.append("земля: " + "".join(sin.ground[yy][xx] for xx, yy in foot))
+    return f"«{name}» не встал в ({x}, {y}): " + "; ".join(why)
+
+
+def splace(name, x, y, **kw):
+    """Явная расстановка: предмет обязан встать — молча потерянная мебель и была дефектом (logic.md §2).
+    Встал, но не туда (citykit сдвигает выросшую декорацию) — тоже дефект: место выбрано по смыслу."""
+    try:
+        ok = sin.put(name, x, y, **kw)
+    except AssertionError:
+        raise AssertionError(swhy(name, x, y)) from None
+    if ok and sin.props[-1][1:3] == [x, y]:
+        return True
+    raise AssertionError(swhy(name, x, y) + f"; встал в ({sin.props[-1][1]}, {sin.props[-1][2]})")
+
+
+def sbox(name, x, y, *a, **kw):
+    """Ящик с добычей — как splace(): не встал — объяснить почему."""
+    try:
+        return sin.box(name, x, y, *a, **kw)
+    except AssertionError:
+        raise AssertionError(swhy(name, x, y)) from None
+
+
+def swall(name, x, y, dx=0, dy=-26):
+    """Настенное (доска, карта, часы, портрет): ставится на клетки стены-кода и поднимается так, чтобы низ
+    картинки был на стене. Выше — только если под ним высокая мебель (иначе аудит «стена»)."""
+    fw, fh = props_info(name)["foot"]
+    cells = [(x + i, y + j) for i in range(fw) for j in range(fh)]
+    assert all(sin.ground[cy][cx] in sin.walls for cx, cy in cells), \
+        f"«{name}» в ({x}, {y}): там нет стены — {' '.join(sin.ground[cy][cx] for cx, cy in cells)}"
+    sin.props.append([name, x, y, dx, dy])
+    sin.blocked.update(cells)              # клетка стены занята: автосвет не повесит плафон на доску
+    sin._reach = None
+
+
+def s_piece(name, x, y):
+    """Кусок страницы набора (доска, окно, шкафчики, плакат): спрайт уже включает полосу стены, поэтому
+    ставится на клетки стены без сдвига — как ставил put(check=False) до ручной расстановки."""
+    fw, fh = props_info(name)["foot"]
+    cells = [(x + i, y + j) for i in range(fw) for j in range(fh)]
+    assert all(sin.ground[cy][cx] in sin.walls for cx, cy in cells), \
+        f"«{name}» в ({x}, {y}): там нет стены — {' '.join(sin.ground[cy][cx] for cx, cy in cells)}"
+    sin.props.append([name, x, y])
+    sin.blocked.update(cells)              # клетка стены занята: автосвет не повесит плафон на доску
+    sin._reach = None
+
+
+def s_table(name, x, y, dx=0, dy=-20):
+    """Мелочь на столешнице: на клетке стола, поднята на его высоту, рисуется сразу после стола
+    (6-й элемент — поправка порядка отрисовки, src/townmap.py)."""
+    assert (x, y) in sin.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
+    sin.props.append([name, x, y, dx, dy, 1 - dy])
+
+
+from src import props as _school_props  # noqa: E402
+
+
+def props_info(name):
+    return _school_props.info(name)
+
+
+# ------------------------------------------------------------ класс А — «как в последний день»
+# 2-й класс, урок шёл до сирены. Порядок: доска и карта на северной стене, стол учителя под доской лицом
+# к классу, два ряда парт лицом к доске (стул каждой — южнее парты), у стен — полка с учебниками и шкаф.
+s_piece(BOARD, 4, 3)                   # доска на 4 клетки стены
+swall(MAP_W, 9, 3)                     # карта страны справа от доски
+swall(CLOCK, 3, 3)                     # часы у входа, рядом с доской
+splace(TEACHER2, 5, 4)                 # стол учителя 2×2: кресло севернее, лицом к партам
+s_table(FOLDERS, 5, 5, dy=-26)         # раскрытый классный журнал
+s_table(CHALK, 6, 5, dx=10, dy=-26)    # мел на столе
+splace(FILE2, 2, 4)                    # шкаф с наглядными пособиями у западной стены
+splace(SHELF, 11, 4)                   # полка с учебниками у восточной
+for y in (6, 8):                       # парты рядами лицом к доске: два блока по две парты, между ними проход
+    for x in (2, 4, 8, 10):
+        splace(DESK2, x, y)
+        splace(CHAIR, x, y + 1)
+s_table(BOOK_OPEN, 2, 6)               # открытая тетрадь — урок прервался
+s_table(BOOK_OPEN, 8, 8, dx=-8)
+s_table(PENCIL, 4, 6, dy=-20)
+s_table(PACK, 10, 8, dy=-26)           # ранец на парте: за ним никто не вернулся
+splace(FERN, 2, 10)                    # растение в юго-западном углу
+splace(BIN, 8, 10)                     # урна у двери
+
+# ------------------------------------------------------------ класс Б — разгромлен
+# Здесь пытались закрыться: парты и шкафчик сворочены к стенам, у двери — баррикада из парт,
+# под выбитым окном стекло, по полу рассыпаны тетради.
+s_piece(WINDOW, 14, 3)                 # целое окно
+s_piece(BOARD, 16, 3)                  # доска между окнами
+swall(WINDOW_BROKEN, 20, 3)            # выбитая рама
+splace(GLASS, 14, 4)                   # стекло под окном
+splace(GLASS, 15, 4)
+splace(PAPERS, 16, 4)                  # бумаги с доски
+splace(DESK2, 13, 5)                   # парты, сдвинутые к западной стене
+splace(CHAIR_R, 13, 6)
+splace(DESK2, 13, 8)
+splace(CHAIR_R, 13, 9)
+splace(DESK_TOP, 17, 5)                # перевёрнутая столешница
+splace(PAPERS, 19, 6)
+splace(LOCKER_B, 21, 6)                # шкафчик сворочён к восточной стене
+splace(PILE, 16, 7)                    # баррикада: куча парт у двери
+splace(PILE_B, 19, 8)
+splace(DESK_TILT, 15, 9)
+splace(CHAIR_DOWN, 21, 9)
+splace(CHAIR_DOWN, 15, 10)
+
+# ------------------------------------------------------------ класс В — «Моё будущее»
+# Младшие рисовали 22.10 «своё будущее»: рисунки на пробковой доске (сюжетный терминал) и рядом на стене,
+# стол учителя под доской лицом к партам (кресло севернее — как в классе А), поделки — на этом столе,
+# парты рядами лицом к доске.
+swall(KIDS_DRAWINGS, 24, 3, dy=-36)    # детский рисунок на стене, выше микроскопа
+s_piece(CORK, 26, 3)                   # пробковая доска с рисунками
 sin.terminals.append({"prop": len(sin.props) - 1, "id": "doc:doc_kids_drawings"})
+swall(KIDS_DRAWINGS, 32, 3, dx=8)       # второй рисунок — со сдвигом, чтобы не читался копией
+splace(TEACHER2, 27, 4)                # стол учителя под доской (2×2): кресло севернее, лицом к классу
+s_table(FOLDERS, 27, 5, dy=-26)        # папка с рисунками учителя
+s_table(CRAYONS, 28, 5, dx=10, dy=-26)  # детские поделки — на столе учителя
+splace(MICRO, 24, 4)                   # микроскоп в «уголке природы»
+splace(SHELF, 33, 4)                   # полка с красками и пластилином
 for y in (6, 8):
-    for x in (25, 28, 31):
-        sin.put(DESK, x, y)
-sin.put(MICRO, 32, 4)
-# библиотека
-for x in (35, 37, 42):
-    sin.put(SHELF if x != 37 else SHELF_B, x, 4)
-sin.put(SOFA, 38, 8)
-sin.put(PLANT, 43, 9)
-sin.box(CABINET, 40, 4, "библиотечный шкаф", {"консервы": 1, "батарейки": 1, "спички": 1})
-# коридор
-for x in (9, 14, 20, 25, 33, 36):
-    sin.put(LOCKER if x % 2 else LOCKER_B, x, 14)
-sin.put(HOPE, 30, 13, check=False)           # на стене коридора (фасад — ряды 12–13)
-sin.put(EXIT_SIGN, 41, 13, check=False)      # у выхода: дверь EXIT и доска SCHOOL
-sin.put(TRASH, 4, 16)               # баки — у южной стены коридора, но не у западного проёма (аудит)
-# кабинет директора
+    for x in (25, 27, 30, 32):
+        splace(DESK2, x, y)
+        splace(CHAIR, x, y + 1)
+s_table(PACK, 32, 8, dy=-26)           # ранец на парте
+s_table(CRAYONS, 27, 6, dy=-20)        # мелки на парте — урок прервался
+splace(BIN, 33, 10)
+
+# ------------------------------------------------------------ библиотека
+# Стеллажи вдоль северной стены, стол для чтения посередине, диван в углу; под стеллажами — радтараканы.
+swall(MAP_W, 36, 3, dy=-48)            # карта над стеллажами — выше полок
+swall(PIC, 43, 3, dy=-48)              # картина в раме
+splace(SHELF, 35, 4)
+splace(SHELF, 36, 4)
+splace(SHELF_B, 37, 4)                 # 2 клетки: 37..38
+sbox(CABINET, 40, 4, "библиотечный шкаф", {"консервы": 1, "батарейки": 1, "спички": 1})
+splace(SHELF_B, 42, 4)                 # 42..43
+splace(SHELF, 44, 4)
+splace(TABLE, 37, 8)                   # стол для чтения
+splace(CHAIR_F, 37, 7)                 # читатели лицом к столу
+splace(CHAIR_F, 38, 7)
+splace(CHAIR, 37, 9)                   # с другой стороны — спиной к камере
+splace(CHAIR, 38, 9)
+s_table(BOOK_OPEN, 37, 8, dy=-24)      # открытая книга на столе
+s_table(PENCIL, 38, 8, dx=8, dy=-24)
+splace(BOOKS, 36, 6)                   # книги на полу под стеллажом
+splace(DEBRIS, 41, 6)                  # гнездо радтараканов
+splace(SOFA, 43, 9)                    # диван в углу
+splace(FERN, 35, 10)
+
+# ------------------------------------------------------------ коридор
+# Перемена 23.10.2077: шкафчики вдоль северной стены между дверями, объявления и часы на стене,
+# скамьи у южной стены — здесь ждали автобус.
+for x, kind in ((9, LOCKER), (14, LOCKER_B), (22, LOCKER), (24, LOCKER_B), (26, LOCKER),
+                (33, LOCKER_B), (35, LOCKER), (37, LOCKER_B)):
+    splace(kind, x, 14)
+swall(CORK_BIG, 11, 13)                # доска объявлений — над промежутком между шкафчиками
+swall(CLOCK, 19, 13)                   # часы
+s_piece(HOPE, 30, 13)                  # «HOPE?» — плакат у спортзала
+s_piece(EXIT_SIGN, 41, 13)             # «EXIT / SCHOOL» у выхода на двор
+splace(TRASH, 4, 16)                   # баки (обыскиваются)
+splace(FERN, 19, 16)                   # растение у южной стены коридора (западный закуток — проём по аудиту)
+splace(BENCH, 12, 16)                  # скамья у южной стены
+splace(BENCH, 26, 16)
+
+# ------------------------------------------------------------ кабинет директора
+# Х. Лейн, и. о. директора: терминал и картотеки — вдоль северной стены, портрет и часы на стене.
+# Стол директора придвинут к северу: хозяйка за ним (кресло севернее стола, лицом в комнату — logic.md §2а),
+# перед столом коврик, дальше стул посетителя лицом к директору. Дверь (6..7 по северной стене) — сбоку,
+# не за спиной. Проход к терминалу и к картотеке с ключ-картой свободен.
+swall(PIC, 4, 19)                      # портрет над терминалом
+swall(CLOCK, 9, 19)                    # часы
 sin.terminal(3, 20, "school_office")
-sin.box(FILECAB, 9, 20, "картотека директора", {"крышки": 25, "ключ-карта школы": 1})
-sin.put(TEACHER, 6, 22)             # стол директора — лицом к двери
-sin.put(PLANT, 10, 26)
-# спортзал: разметка, маты, трибуны
-sin.stamp("gym_court", GYM_COURT, 22, 21, water=False)
-sin.put(BLEACH, 13, 20)
-sin.put(BLEACH_B, 28, 20)
-sin.put(MAT, 15, 25)
-sin.put(MAT, 30, 25)
-# кладовка
-# кладовка: стеллажи и ящики вдоль стен, проход от двери свободен
-sin.put(SHELF_B, 35, 20)
-sin.box("crate", 37, 20, "ящик со списанными учебниками", {"ткань": 2, "спички": 1})
-sin.box("metal_box_open", 43, 20, "ящик завхоза", {"изолента": 2, "гаечный ключ": 1, "фонарик": 1},
-        requires={"item": "ключ-карта школы", "msg": "Железный ящик с табличкой «ЗАВХОЗ». Замок с прорезью для карты."})
-sin.put("barrel_wood", 35, 26)
-sin.put("crate_b", 36, 26)
-sin.put("barrel_wood", 43, 26)
+splace(FILECAB, 2, 20)                 # картотека у терминала
+splace(FILE2, 5, 20)                   # картотека с делами (второй ящик — в библиотеке)
+sbox(FILECAB, 9, 20, "картотека директора", {"крышки": 25, "ключ-карта школы": 1})
+splace(SHELF, 10, 20)                  # шкаф с папками
+splace(CHAIR_F, 8, 21)                 # кресло директора за столом, лицом в комнату
+splace(TABLE, 8, 22)                   # стол директора 2×1, ближе к северу
+s_table(PENCIL, 8, 22, dx=-8, dy=-24)
+s_table(FOLDERS, 9, 22, dx=8, dy=-24)  # папки с делами — справа, чтобы не заслонять кресло
+splace("x_carpet", 8, 23)              # коврик перед столом — сюда подходят посетители
+splace(CHAIR, 8, 24)                   # стул посетителя лицом к директору, через коврик
+splace(SHELF, 2, 27)                   # шкаф с папками у южной стены
+splace(FERN, 10, 26)
+splace(BIN, 11, 27)
+
+# ------------------------------------------------------------ спортзал
+# Мисс Лейн заперла здесь детей: разметка площадки, трибуны вдоль южной стены, шведская стенка и канат
+# на стене. В середине — её «класс»: доска на подставке, она лицом к детям, три парты и трое детей.
+# Северо-запад пустой: перед шведской стенкой нужно место. Скамьи запасных — вдоль южной стены лицом
+# в зал, по краям трибун.
+swall("x_wallbars", 15, 19, dy=0)      # шведская стенка от пола
+swall("x_wallbars", 16, 19, dy=0)
+swall("x_climb_rope", 31, 19, dy=0)    # канат
+splace(CAB2, 24, 20)                   # инвентарный шкаф справа от двери
+splace(MAT, 15, 24)                    # маты у стены
+splace(MAT, 30, 24)
+splace("x_easel", 23, 22)              # доска на подставке — «урок» мисс Лейн
+splace(DESK2, 21, 24)                  # три парты её класса
+splace(DESK2, 23, 24)
+splace(DESK2, 25, 24)
+splace(PACK, 19, 26)                   # рюкзаки у трибуны — их так и не забрали
+splace(PACK, 20, 26)
+splace(BALL, 18, 27)
+splace(BALL, 27, 26)
+splace(BLEACH, 14, 27)                 # трибуны вдоль южной стены
+splace(BLEACH_B, 28, 27)
+splace(BENCH, 19, 27)                  # скамьи запасных — у трибун, лицом в зал
+splace(BENCH, 32, 27)
+
+# ------------------------------------------------------------ кладовка
+# Школьный инвентарь: стеллажи (след 2×1) вдоль северной и восточной стен, штабели ящиков в юго-западном
+# углу, бочки — в юго-восточном, сломанные парты — стопкой у западной стены, швабра с ведром у двери.
+# Ящик завхоза под ключ-карту — у северной стены в северо-восточном углу; проход от двери к нему свободен.
+splace(SHELF_B, 35, 20)                # северная стена: стеллажи 35..38
+splace(SHELF_B, 37, 20)
+sbox("crate", 35, 21, "ящик со списанными учебниками", {"ткань": 2, "спички": 1})
+splace("crate_b", 35, 22)              # штабель ящиков под стеллажами
+splace("crate", 36, 22)
+splace(PILE, 35, 24)                   # сломанные парты стопкой у западной стены (35..36, 24..25)
+splace("crate", 35, 26)                # штабель ящиков в юго-западном углу
+splace("crate_b", 35, 27)
+splace("bucket", 41, 21)               # ведро и швабра — сразу у двери
+splace(BROOM, 42, 21)
+splace(SHELF_B, 43, 22)                # восточная стена: стеллажи 43..44
+splace(SHELF_B, 43, 24)
+splace(SHELF, 44, 20)                  # стеллаж в северо-восточном углу
+sbox("metal_box_open", 43, 20, "ящик завхоза", {"изолента": 2, "гаечный ключ": 1, "фонарик": 1},
+     requires={"item": "ключ-карта школы", "msg": "Железный ящик с табличкой «ЗАВХОЗ». Замок с прорезью для карты."})
+splace("barrel_wood", 43, 26)          # бочки и ящики в юго-восточном углу
+splace("barrel_wood", 44, 26)
+splace("crate_b", 44, 27)
+splace(TRASH, 37, 27)                  # баки у южной стены
+
+
 
 
 # ================================================================ подвал деда
@@ -300,13 +539,3 @@ sal.box("cabinet_small", 13, 8, "тайник Мо", {"самогон": 3, "кр
 sal.box("crate", 2, 8, "ящик с бутылками", {"самогон": 2, "спички": 1})
 
 city.save(gap_exempt=("walt",))
-
-# аудит: автобстановка поставила бочку в западный закуток коридора школы (2,14) — аудит читает его
-# как проём. Сдвигаем бочку к северной стене, рядом со стеллажом у (5,14); закуток остаётся пустым.
-# Обстановка делается внутри city.save(), поэтому карту пересохраняем с тем же extra().
-for p in sin.props:
-    if p[0] == "barrel_wood" and (p[1], p[2]) == (2, 14):
-        p[1], p[2] = 4, 14
-        print("fifteen_school_in: бочка из западного закутка коридора → (4, 14)")
-        break
-sin.save(f"data/maps/{sin.id}.json", **sin.extra())

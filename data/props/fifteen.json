@@ -363,15 +363,219 @@
 ],
 "layer": "floor"
 },
-"gym_court": {
-"img": "pk:wschool/p5/0,3,3,5",
+"ws_chair": {
+"img": "pk:wschool/wschool_3_062",
+"block": true,
+"sight": false
+},
+"ws_chair_f": {
+"img": "pk:wschool/wschool_2_089",
+"block": true,
+"sight": false
+},
+"ws_chair_l": {
+"img": "pk:wschool/wschool_2_088",
+"block": true,
+"sight": false
+},
+"ws_chair_r": {
+"img": "pk:wschool/wschool_2_086",
+"block": true,
+"sight": false
+},
+"ws_school_desk": {
+"img": "pk:wschool/wschool_2_094",
+"block": true,
+"sight": false
+},
+"ws_teacher_desk2": {
+"img": "pk:wschool/wschool_2_083",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ws_table": {
+"img": "pk:wschool/wschool_3_011",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ws_bench": {
+"img": "pk:wschool/wschool_2_064",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ws_clock": {
+"img": "pk:wschool/wschool_3_043",
 "block": false,
 "sight": false,
 "foot": [
-3,
-5
-],
+1,
+1
+]
+},
+"ws_wallmap": {
+"img": "pk:wschool/wschool_3_065",
+"block": false,
+"sight": false
+},
+"ws_poster": {
+"img": "pk:wschool/wschool_3_067",
+"block": false,
+"sight": false
+},
+"ws_pic": {
+"img": "pk:wschool/wschool_3_119",
+"block": false,
+"sight": false
+},
+"ws_cork_big": {
+"img": "pk:wschool/wschool_3_025",
+"block": false,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ws_window_broken": {
+"img": "pk:wschool/wschool_3_027",
+"block": false,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ws_cabinet_open": {
+"img": "pk:wschool/wschool_3_033",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ws_filecab2": {
+"img": "pk:wschool/wschool_3_072",
+"block": true,
+"sight": true
+},
+"ws_bin": {
+"img": "pk:wschool/wschool_3_107",
+"block": true,
+"sight": false
+},
+"ws_broom": {
+"img": "pk:wschool/wschool_2_072",
+"block": true,
+"sight": false
+},
+"ws_ball": {
+"img": "pk:wschool/wschool_4_021",
+"block": true,
+"sight": false
+},
+"ws_backpack": {
+"img": "pk:wschool/wschool_3_048",
+"block": true,
+"sight": false
+},
+"ws_book_open": {
+"img": "pk:wschool/wschool_3_102",
+"block": false,
+"sight": false
+},
+"ws_books": {
+"img": "pk:wschool/wschool_3_018",
+"block": true,
+"sight": false
+},
+"ws_folders": {
+"img": "pk:wschool/wschool_3_014",
+"block": false,
+"sight": false
+},
+"ws_papers": {
+"img": "pk:wschool/wschool_2_092",
+"block": false,
+"sight": false,
 "layer": "floor"
+},
+"ws_glass": {
+"img": "pk:wschool/wschool_2_045",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"ws_chair_down": {
+"img": "pk:wschool/wschool_3_127",
+"block": true,
+"sight": false
+},
+"ws_desk_tilt": {
+"img": "pk:wschool/wschool_2_014",
+"block": true,
+"sight": false
+},
+"ws_desk_top": {
+"img": "pk:wschool/wschool_2_015",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"ws_desk_pile2": {
+"img": "pk:wschool/wschool_2_143",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ws_desk_pile2_b": {
+"img": "pk:wschool/wschool_2_144",
+"block": true,
+"sight": false,
+"foot": [
+2,
+2
+]
+},
+"ws_debris": {
+"img": "pk:wschool/wschool_2_124",
+"block": true,
+"sight": false
+},
+"ws_crayons": {
+"img": "pk:wschool/wschool_2_050",
+"block": false,
+"sight": false
+},
+"ws_pencil": {
+"img": "pk:wschool/wschool_2_061",
+"block": false,
+"sight": false
+},
+"ws_chalk": {
+"img": "pk:wschool/wschool_3_108",
+"block": false,
+"sight": false
+},
+"ws_fern": {
+"img": "pk:wschool/wschool_3_031",
+"block": true,
+"sight": false
 },
 "fifteen_f_home_rug": {
 "img": "pk:west/west_2_060",
