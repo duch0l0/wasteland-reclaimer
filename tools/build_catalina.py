@@ -135,7 +135,7 @@ av.maybe(ANCHOR, 31, 38)
 # карантинный барак у причала — сюда ведут всех «с Большой земли»
 av.building(42, 32, 10, 8, "planks", north=(4,), worn=False)
 av.reserve(46, 29, 47, 32)
-av.put(LANTERN, 45, 31)
+av.put(LANTERN, 45, 30)
 # пляж: зонтики, шезлонги, замки из песка, бар-хижина
 for i, x in enumerate((6, 12, 18, 56, 62)):
     av.put(UMBRELLAS[i % 4], x, 34)

@@ -16,6 +16,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 
+import pygame  # noqa: E402
+
 from src import props as P  # noqa: E402
 
 T = 48
@@ -63,6 +65,43 @@ WALLS_WORN = {
     "metal": {2: ["wall_metal", "wall_metal2", "wall_corrugated", "wall_corrugated2", "wall_corrugated_rust"]},
     "planks": {2: ["wall_planks", "wall_planks_blue", "wall_planks_dark", "wall_corrugated_small"]},
 }
+
+# заслон: высокая картинка (шкаф, дом, башня) не должна прятать соседний предмет за собой —
+# предмет спрятан, если спереди закрыто больше этой доли его видимых пикселей
+HIDDEN_SHARE = 0.5
+# пропы-стены сами по себе фон: мебель у стены перед ней — норма
+WALL_PROPS = ("wall_", "vwall_", "x_cliff", "roof_")
+_MASKS = {}
+
+
+def sprite_rect(name, x, y, ox=0, oy=0):
+    """Прямоугольник картинки объекта в мире — как его ставит игра (src/townmap.py)."""
+    inf = P.info(name)
+    fw, fh = inf["foot"]
+    r = pygame.Rect(0, 0, *inf["size"])
+    r.midbottom = ((x + fw / 2) * T + ox, (y + fh) * T + oy)
+    return r
+
+
+def _mask(name):
+    if name not in _MASKS:
+        if pygame.display.get_surface() is None:
+            os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
+            pygame.init()
+            pygame.display.set_mode((1, 1))
+        _MASKS[name] = pygame.mask.from_surface(P.image(name), 60)
+    return _MASKS[name]
+
+
+def hidden_share(front, back):
+    """Какая доля видимых пикселей back закрыта картинкой front; объекты — (имя, прямоугольник).
+    0, если front рисуется не спереди (его низ не ниже) или back — стена."""
+    (fn, fr), (bn, br) = front, back
+    if fr.bottom <= br.bottom or bn.startswith(WALL_PROPS) or not fr.colliderect(br):
+        return 0.0
+    mb = _mask(bn)
+    area = mb.count()
+    return mb.overlap_area(_mask(fn), (fr.x - br.x, fr.y - br.y)) / area if area else 0.0
 
 
 class MapKit:
@@ -212,7 +251,7 @@ class MapKit:
                         self.ground[ty][tx] = "x"
                         self.blocked.add((tx, ty))
                 if decor and rnd.random() < decor_chance:
-                    self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
+                    self._cliff_decor(rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1))
             return
 
         def ring(x, y):          # сколько 2×2-шагов до дна (1 — у самого края)
@@ -244,7 +283,7 @@ class MapKit:
                             self.props.append([rnd.choice(("rock", "stones_12", "stones_19")), tx, ty,
                                                rnd.randint(-10, 10), rnd.randint(-6, 6)])   # северная кромка — камни
             elif decor and rnd.random() < decor_chance:
-                self.props.append([rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1)])
+                self._cliff_decor(rnd.choice(decor), x + rnd.randint(0, 1), y + rnd.randint(0, 1))
 
         # куски обрыва в наборе: левый край, середина, правый край — ряд собирается без щелей
         plat = {(tx, ty) for cy in range(0, self.H, 2) for cx in range(0, self.W, 2)   # и пропущенные (дверь в скале)
@@ -266,6 +305,12 @@ class MapKit:
                         self.ground[ty][edge_x] = fc
 
 
+    def _cliff_decor(self, name, x, y):
+        """Камни и кусты на гребне обрыва — только если картинка не торчит за край карты."""
+        r = sprite_rect(name, x, y)
+        if 0 <= r.left and r.right <= self.W * T:
+            self.props.append([name, x, y])
+
     def reserve(self, x0, y0, x1, y1):
         for y in range(y0, y1 + 1):
             for x in range(x0, x1 + 1):
@@ -273,6 +318,26 @@ class MapKit:
 
     def solid(self, x, y):
         return (x, y) in self.blocked or self.ground[y][x] == "x"
+
+    def hides(self, name, x, y, skip=None):
+        """Блокирующий предмет, с которым картинки name в (x, y) заслоняют друг друга (см. HIDDEN_SHARE), или None.
+        skip — запись самого переезжающего предмета (не сравнивать его с собой)."""
+        me = (name, sprite_rect(name, x, y))
+        for e in self.props:
+            if e is skip or (e[1], e[2]) == (x, y):
+                continue
+            try:
+                inf = P.info(e[0])
+            except KeyError:
+                continue
+            if not inf["block"] or inf["layer"] == "floor":
+                continue
+            other = (e[0], sprite_rect(*e[:3], *(e[3:5] if len(e) >= 5 else ())))
+            if not me[1].colliderect(other[1]):
+                continue
+            if hidden_share(me, other) > HIDDEN_SHARE or hidden_share(other, me) > HIDDEN_SHARE:
+                return e
+        return None
 
     def footprint(self, name, x, y):
         fw, fh = P.info(name)["foot"]
@@ -317,6 +382,8 @@ class MapKit:
                 return False      # не встаём ни на блокирующий, ни на неблокирующий предмет (лампа, лужа); на ковёр можно
             if not allow_reserved and any(t in self.reserved for t in foot):
                 return False
+            if self.hides(name, x, y):
+                return False      # спрятал бы соседа за собой или сам спрятался бы за ним
             if check:
                 if self._reach is None:
                     self._reach = len(self.reachable())

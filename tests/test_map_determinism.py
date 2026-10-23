@@ -56,25 +56,14 @@ def snap(base):
 
 
 def make_sandbox(tmp):
-    """Копия проекта без assets/ (741 МБ): генераторам нужны только index.json наборов."""
+    """Копия tools/src/data; assets/ (741 МБ) и iso/ — ссылками."""
     box = os.path.join(tmp, "proj")
     os.makedirs(box)
     for d in ("tools", "src", "data"):
         shutil.copytree(d, os.path.join(box, d), ignore=shutil.ignore_patterns("__pycache__"))
-    for sub in (("town",), ("ruins",)):
-        dst = os.path.join(box, "assets", *sub)
-        os.makedirs(dst, exist_ok=True)
-        src = os.path.join("assets", *sub, "index.json")
-        if os.path.isfile(src):
-            shutil.copy2(src, dst)                  # src/props._source_sizes()
-    packs = os.path.join("assets", "packs")
-    if os.path.isdir(packs):
-        for name in sorted(os.listdir(packs)):
-            src = os.path.join(packs, name, "index.json")
-            if os.path.isfile(src):                 # src/props.pack_size() для картинок «pk:<набор>/…»
-                dst = os.path.join(box, "assets", "packs", name)
-                os.makedirs(dst, exist_ok=True)
-                shutil.copy2(src, dst)
+    # картинки нужны: mapkit.put не ставит предмет, который картинкой прячет соседа (маски пикселей);
+    # генераторы в assets/ не пишут, поэтому — ссылка, а не копия
+    os.symlink(os.path.abspath("assets"), os.path.join(box, "assets"))
     if os.path.isdir("iso"):                        # build_barstow.py читает изометрические тайлы (208 МБ)
         os.symlink(os.path.abspath("iso"), os.path.join(box, "iso"))
     return box

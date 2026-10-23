@@ -8,6 +8,7 @@
   лампа     — лампа стоит на клетке блокирующего пропа (наложение); лампы без стены в 8 соседях — счётчик «косметика»
   жилец     — житель/враг/ящик/терминал стоит в проёме
   вынос     — предмет стоит на клетке пустоты/стены
+  заслон    — картинка предмета прячет за собой соседний (как в mapkit.put); край — спрайт за краем карты
 Геометрия стен: тайлы ground/стен + пропы-стены (wall_*, vwall_*, x_cliff*, roof_*); для «стены в 8 соседях»
 и BFS дополнительно считаются футы блокирующих пропов.
 Запуск из папки game_project:  .venv/bin/python tools/audit_maps.py [карта …]
@@ -25,6 +26,7 @@ import pygame  # noqa: E402
 pygame.init()
 pygame.display.set_mode((1, 1))
 from src import props as P  # noqa: E402
+from mapkit import HIDDEN_SHARE, hidden_share, sprite_rect  # noqa: E402
 
 LAMPS_FLOOR = ("x_vd_stand_", "lantern_lit", "ct_torch", "x_fire_barrel", "x_vd_sparks")
 FLAT = ("x_vd_wl_", "x_vd_plaque", "x_vd_num", "x_vd_fr_", "x_vd_exit", "x_vd_map", "x_vd_sheet", "x_vd_tally", "x_vd_drawing",
@@ -348,14 +350,15 @@ def audit(path):
 
 
 def overlaps(path):
-    """Предметы, спрайты которых заметно налезают друг на друга (стопка из двух), и спрайты, торчащие за край карты."""
+    """Заслон: картинка предмета прячет за собой соседний (закрыто больше HIDDEN_SHARE его пикселей,
+    та же проверка, что в mapkit.put), и спрайты, торчащие за край карты."""
     d = load(path)
     if d is None:
         return None
     mid = os.path.basename(path)[:-5]
     T = 48
-    W, H = d["w"], d["h"]
-    rects = []
+    W = d["w"]
+    objs = []
     for e in d["props"]:
         try:
             inf = P.info(e[0])
@@ -363,26 +366,18 @@ def overlaps(path):
             continue
         if inf.get("layer") == "floor" or e[0].startswith(FLAT) or not inf["block"]:
             continue
-        w, h = inf["size"]
-        fw, fh = inf["foot"]
-        x = e[1] * T + (e[3] if len(e) > 3 else 0)
-        y = (e[2] + fh) * T - h + (e[4] if len(e) > 4 else 0)
-        rects.append((e[0], pygame.Rect(x, y, w, h), (e[1], e[2])))
+        objs.append((e[0], sprite_rect(*e[:3], *(e[3:5] if len(e) >= 5 else ())), (e[1], e[2])))
     out = []
-    for i in range(len(rects)):
-        n1, r1, p1 = rects[i]
+    for i, (n1, r1, p1) in enumerate(objs):
         if r1.right > W * T + 12 or r1.left < -12:
             out.append(("край", n1, p1, "спрайт выходит за край карты"))
-        for j in range(i + 1, len(rects)):
-            n2, r2, p2 = rects[j]
-            if p1 == p2:
+        for n2, r2, p2 in objs[i + 1:]:
+            if p1 == p2 or not r1.colliderect(r2):
                 continue
-            ov = r1.clip(r2)
-            if ov.w <= 0 or ov.h <= 0:
-                continue
-            small = min(r1.w * r1.h, r2.w * r2.h)
-            if small and ov.w * ov.h / small > 0.55 and not n1.startswith(("x_cliff", "vwall_", "wall_")) and not n2.startswith(("x_cliff", "vwall_", "wall_")):
-                out.append(("стопка", f"{n1} + {n2}", p1, f"спрайты накладываются на {int(100 * ov.w * ov.h / small)}%"))
+            for (fn, fr, fp), (bn, br, bp) in (((n1, r1, p1), (n2, r2, p2)), ((n2, r2, p2), (n1, r1, p1))):
+                share = hidden_share((fn, fr), (bn, br))
+                if share > HIDDEN_SHARE:
+                    out.append(("заслон", f"{fn} прячет {bn}", bp, f"закрыто {int(100 * share)}% картинки"))
     return mid, out
 
 
@@ -397,7 +392,7 @@ def run_overlaps(files):
         print(f"\n== {mid}: {len(out)}")
         for kind, name, pos, why in out[:25]:
             print(f"   {kind:7s} {name:44s} {pos}  {why}")
-    print(f"\nвсего наложений: {total}")
+    print(f"\nвсего: {total}")
 
 
 if __name__ == "__main__":
@@ -415,6 +410,7 @@ if __name__ == "__main__":
         if r is None:
             continue
         mid, out, cos = r
+        out += overlaps(f)[1]
         cos_total += cos
         shown += 1
         if not out:

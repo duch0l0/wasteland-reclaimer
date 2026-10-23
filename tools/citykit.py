@@ -131,6 +131,10 @@ class CityMap(MapKit):
             print(f"   {self.id}: «{name}» после увеличения не влезает у ({x}, {y}) — пропущен")
             return True
         if not ok and not self._loose:
+            h = self.hides(name, x, y) if P.info(name)["block"] else None
+            if h:
+                raise AssertionError(f"{self.id}: «{name}» в ({x}, {y}) и «{h[0]}» в ({h[1]}, {h[2]}) "
+                                     f"заслоняют друг друга картинками — передвиньте один из них")
             raise AssertionError(f"{self.id}: «{name}» не встаёт в ({x}, {y}) — занято, проход или перекрыл бы путь")
         return ok
 

@@ -232,7 +232,8 @@ def exit_glow(m):
     return n
 
 
-KEEP = ("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_manhole", "x_door", "x_vd_", "bk_sign", "x_pipe")
+KEEP = ("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_manhole", "x_door", "x_vd_", "bk_sign", "x_pipe",
+        "nc_subway")      # вход в метро — само здание портала, стоит над ним
 
 
 def clear_exits(m, radius=2):
@@ -279,7 +280,8 @@ def clear_exits(m, radius=2):
                     nx, ny = e[1] + dx, e[2] + dy
                     nc = [(nx + a, ny + b) for a in range(fw) for b in range(fh)]
                     if all(not _solid(m, *c) and c not in zone and c not in occupied and c not in doors for c in nc) and \
-                            (not inf["block"] or any(_solid(m, c[0], c[1] - 1) or _solid(m, c[0] - 1, c[1]) or _solid(m, c[0] + 1, c[1]) for c in nc)):
+                            (not inf["block"] or any(_solid(m, c[0], c[1] - 1) or _solid(m, c[0] - 1, c[1]) or _solid(m, c[0] + 1, c[1]) for c in nc)) and \
+                            not (inf["block"] and hasattr(m, "hides") and m.hides(name, nx, ny, skip=e)):
                         found = (nx, ny)
                         break
                 if found:

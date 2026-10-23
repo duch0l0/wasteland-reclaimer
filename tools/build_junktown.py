@@ -239,8 +239,8 @@ jt.building(8, 31, 14, 11, "metal", north=(6,))          # клиника Анн
 jt.building(28, 31, 16, 12, "planks", north=(6,))        # «Скам-Питт»
 for door in (14, 34):
     jt.reserve(door, 29, door + 1, 33)
-jt.put(OXYGEN, 10, 30)                                     # у клиники — баллоны и урна для отходов
-jt.put(BIOHAZ, 19, 30)
+jt.put(OXYGEN, 10, 29, allow_reserved=True)                # у клиники — баллоны и урна для отходов
+jt.put(BIOHAZ, 19, 29, allow_reserved=True)
 jt.put(WATER_TOWER, 24, 36)                                # общая цистерна между клиникой и баром
 jt.put(BARREL, 23, 42)
 jt.put(STALL, 45, 31)                                      # прилавок водовоза у перекрёстка
