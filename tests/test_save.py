@@ -169,7 +169,8 @@ if a.f2 is not None and (a.f2.install or a.f2.status == "done"):   # есть п
         _t.sleep(0.1)
     a.poll()
     ok({"ghoul_hurt", "human_death", "levelup", "combat_start"} <= set(a.sounds), "звуки Fallout 2 подключены")
-    ok(a._music_file("desert").endswith("07desert.ogg"), "музыка Пятнадцатой — «Desert» из Fallout 2")
+    ok(a._music_file("desert").endswith("desert_1.ogg"), "музыка Пятнадцатой — свой трек, а не Fallout 2")
+    ok(a._music_fallback("desert").endswith("07desert.ogg"), "без своего трека — «Desert» из Fallout 2")
 else:
     print("     (папки fallout2_sounds нет — играют свои звуки)")
 g.menu = None
