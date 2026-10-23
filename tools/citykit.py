@@ -45,12 +45,17 @@ class CityMap(MapKit):
         "along": ([у стены], [в углах])}; False — не обставлять вовсе."""
         super().__init__(w, h, start, seed, fill="_" if interior else fill)
         self.furnish = furnish
+        self.music_zones = []      # [x0, y0, x1, y1, ключ]: в салуне — граммофон, в казино — джаз
         self.city, self.id, self.name = city, mid, name
         self.floors, self.walls = {}, {}
         self.night, self.music, self.interior = night, music, interior
         self.known, self.world_pos = known, world_pos
         self.tint = None
         city.maps.append(self)
+
+    def music_zone(self, x0, y0, x1, y1, key):
+        """Своя музыка внутри здания на городской карте (src/game/world.py: update_music_zone)."""
+        self.music_zones.append([x0, y0, x1, y1, key])
 
     # -------------------------------------------------------- коды земли из наборов
     def floor_code(self, code, *imgs):
@@ -448,6 +453,8 @@ class City:
             reach = m.check(gap_exempt=gap_exempt, npc_enemy_gap=0 if m.interior else 6, passable=m.gate_tiles())
             m.save(os.path.join("data", "maps", f"{m.id}.json"), **m.extra())
             entry = {"name": m.name, "map": f"data/maps/{m.id}.json", "known": m.known, "music": m.music}
+            if m.music_zones:
+                entry["music_zones"] = m.music_zones
             if m.world_pos:
                 entry["world_pos"] = list(m.world_pos)
             if m.interior:

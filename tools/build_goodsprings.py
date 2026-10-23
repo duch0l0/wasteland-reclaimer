@@ -256,7 +256,7 @@ gs.scatter(GRASS + ["r_rocks"], 1, 1, W - 2, H - 2, 30)
 
 # ================================================================ салун «Старатель»
 sl = CityMap(city, "goodsprings_saloon", "Салун «Старатель»", 30, 22, start=(13, 20), seed=182, interior=True,
-             music="desert")
+             music="saloon")
 sl.floor_code("F", *PLANK)
 sl.wall_code("W", "pk:bazaar/bazaar_w2_12")
 sl.room(1, 1, 20, 21, "W", "F")                       # зал
@@ -287,7 +287,7 @@ sl.npcs += [["ezekiel", 25, 13]]
 
 
 # ================================================================ дом дока
-dc = CityMap(city, "goodsprings_doc", "Дом дока Митчелла", 22, 16, start=(10, 14), seed=183, interior=True, music="desert")
+dc = CityMap(city, "goodsprings_doc", "Дом дока Митчелла", 22, 16, start=(10, 14), seed=183, interior=True, music="home")
 dc.floor_code("F", *PLANK)
 dc.wall_code("W", "pk:bazaar/bazaar_w2_12")
 dc.room(1, 1, 21, 15, "W", "F")

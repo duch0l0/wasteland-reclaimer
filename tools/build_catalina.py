@@ -229,7 +229,7 @@ for x, y in ((11, 3), (18, 20), (3, 14)):
 
 
 # ================================================================ Казино — Совет
-cs = CityMap(city, "catalina_casino", "Казино Авалона", 40, 26, start=(19, 24), seed=252, interior=True, music="hub")
+cs = CityMap(city, "catalina_casino", "Казино Авалона", 40, 26, start=(19, 24), seed=252, interior=True, music="reno")
 cs.floor_code("F", *WOOD)
 cs.floor_code("M", *MARBLE)
 cs.wall_code("W", "pk:lhotel/lhotel_w2_23")

@@ -130,7 +130,7 @@ cr.enemies += [["radroach", 32, 8], ["radroach", 37, 7]]
 # ================================================================ Мотель: второй этаж
 W, H = 40, 22
 mo = CityMap(city, "baker_motel_2f", "Мотель: второй этаж", W, H, start=(37, 15), seed=72, interior=True,
-             music="junktown")
+             music="home")
 mo.floor_code("C", *DARK_WOOD)
 mo.floor_code("R", *GREY_WOOD)
 mo.wall_code("Y", "pk:motel/motel_w1_09")      # жёлтые обои

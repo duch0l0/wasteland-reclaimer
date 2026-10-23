@@ -214,7 +214,7 @@
     "name": "Мотель: второй этаж",
     "map": "data/maps/baker_motel_2f.json",
     "known": false,
-    "music": "junktown",
+    "music": "home",
     "underground": true
   },
   "barstow_base": {
@@ -248,7 +248,7 @@
     "name": "«Замок» Спрингера",
     "map": "data/maps/zzyzx_hotel.json",
     "known": false,
-    "music": "hub",
+    "music": "hotel",
     "underground": true
   },
   "zzyzx_cistern": {
@@ -281,7 +281,7 @@
     "name": "Салун «Последний паром»",
     "map": "data/maps/needles_saloon.json",
     "known": false,
-    "music": "junktown",
+    "music": "saloon",
     "underground": true
   },
   "needles_depot": {
@@ -327,7 +327,7 @@
     "name": "Бар «Мальтийский сокол»",
     "map": "data/maps/hub_falcon.json",
     "known": false,
-    "music": "junktown",
+    "music": "saloon",
     "underground": true
   },
   "hub_water": {
@@ -402,7 +402,7 @@
     "name": "Бар «Скам-Питт»",
     "map": "data/maps/junktown_skum.json",
     "known": false,
-    "music": "junktown",
+    "music": "saloon",
     "underground": true
   },
   "necropolis": {
@@ -428,7 +428,7 @@
     "name": "Квартира Коббса",
     "map": "data/maps/necropolis_cobbs.json",
     "known": false,
-    "music": "vats",
+    "music": "home",
     "underground": true
   },
   "necropolis_under": {
@@ -580,7 +580,7 @@
     "name": "Отель «Бизон Стив»",
     "map": "data/maps/primm_bison.json",
     "known": false,
-    "music": "hub",
+    "music": "hotel",
     "underground": true
   },
   "primm_vikki": {
@@ -620,14 +620,14 @@
     "name": "Салун «Старатель»",
     "map": "data/maps/goodsprings_saloon.json",
     "known": false,
-    "music": "desert",
+    "music": "saloon",
     "underground": true
   },
   "goodsprings_doc": {
     "name": "Дом дока Митчелла",
     "map": "data/maps/goodsprings_doc.json",
     "known": false,
-    "music": "desert",
+    "music": "home",
     "underground": true
   },
   "goodsprings_cave": {
@@ -896,7 +896,7 @@
     "name": "Казино Авалона",
     "map": "data/maps/catalina_casino.json",
     "known": false,
-    "music": "hub",
+    "music": "reno",
     "underground": true
   },
   "catalina_light": {

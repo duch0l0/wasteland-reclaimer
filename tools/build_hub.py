@@ -343,7 +343,7 @@ od.portal([(30, 38)], "hub_tunnels", (4, 5), "Старый акведук")
 
 # ================================================================ «Мальтийский сокол»
 fc = CityMap(city, "hub_falcon", "Бар «Мальтийский сокол»", 28, 22, start=(13, 19), seed=103, interior=True,
-             music="junktown")
+             music="saloon")
 fc.floor_code("F", *PLANK)
 fc.wall_code("W", "pk:bazaar/bazaar_w2_12")
 fc.room(1, 6, 18, 21, "W", "F")                    # зал

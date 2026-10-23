@@ -572,7 +572,7 @@ for x in (5, 9, 13, 17):
 
 # ================================================================ бар «Скам-Питт» и ночлежка
 sk = CityMap(city, "junktown_skum", "Бар «Скам-Питт»", 30, 20, start=(10, 18), seed=118, interior=True,
-             music="junktown")
+             music="saloon")
 sk.floor_code("F", *PLANK)
 sk.wall_code("W", "pk:jtown/jtown_w1_20")
 sk.room(1, 1, 20, 19, "W", "F")                     # зал

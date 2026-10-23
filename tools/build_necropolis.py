@@ -357,7 +357,7 @@ hl.box(CRATES, 34, 16, "ящик стражи", {"патроны": 20, "гран
 
 
 # ================================================================ квартира Коббса
-cb = CityMap(city, "necropolis_cobbs", "Квартира Коббса", 22, 16, start=(10, 14), seed=123, interior=True, music="vats")
+cb = CityMap(city, "necropolis_cobbs", "Квартира Коббса", 22, 16, start=(10, 14), seed=123, interior=True, music="home")
 cb.floor_code("F", *WOOD)
 cb.wall_code("W", "pk:zcity/zcity_w2_13")
 cb.room(1, 1, 21, 15, "W", "F")

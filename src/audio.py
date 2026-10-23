@@ -41,14 +41,16 @@ MUSIC_DIR = os.path.join("assets", "music")
 # все музыкальные ключи игры (файла может не быть — тогда запасной путь: Fallout 2 у игрока или
 # старый трек из assets/music без номера варианта)
 MUSIC_KEYS = ("world", "desert", "caves", "lab", "raiders", "hub", "junktown", "reno", "vats",
-              "title", "combat", "ending")
+              "title", "combat", "ending",
+              "saloon", "hotel", "home")   # заведения: граммофон в салуне, Карузо в отеле, пластинка дома
 # косметика (вариативность громкости, выбор дубля) — свой генератор, чтобы броски
 # звука не сдвигали глобальный поток random у игровой логики
 _rng = random.Random()
 DEFAULTS = {"music": 0.5, "sfx": 0.8, "ambient": 0.48}   # фон тише эффектов: 0.6 от sfx
 # фон локации по её музыке (см. ambient_key); поле "ambient" в data/locations.json важнее
 MUSIC_AMBIENT = {"desert": "wind", "world": "wind", "caves": "cave", "lab": "vault", "raiders": "campfire",
-                 "hub": "town", "junktown": "town", "reno": "neon", "vats": "cave", "title": None}
+                 "hub": "town", "junktown": "town", "reno": "neon", "vats": "cave", "title": None,
+                 "saloon": "town", "hotel": "town", "home": "town"}
 # каналы фона: два, чтобы старый затухал, пока новый набирает громкость; эффектам они недоступны
 AMBIENT_CHANNELS = 2
 AMBIENT_FADE_MS = 1500

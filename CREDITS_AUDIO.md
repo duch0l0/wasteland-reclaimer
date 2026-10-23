@@ -72,7 +72,7 @@ hit — один файл (hit_1), вариантов нет; hit_bullet — о�
 | Файлы | Автор, страница |
 |---|---|
 | step_gravel_1…4 | fission9, [hiking boot footsteps on gravel](https://freesound.org/people/fission9/sounds/521588/) |
-| step_sand_1…4 | rnan_sounddesign, [sand footsteps](https://freesound.org/people/rnan_sounddesign/sounds/725875/) |
+| step_sand_1…6 | rnan_sounddesign, [sand footsteps](https://freesound.org/people/rnan_sounddesign/sounds/725875/) — нарезано по одному шагу |
 | step_metal_1…4 | sanderboah, [walking on metal](https://freesound.org/people/sanderboah/sounds/696374/) |
 | step_water_1…3 | coffeemakessounds, [step water](https://freesound.org/people/coffeemakessounds/sounds/849638/) — один шаг, варианты по высоте |
 
@@ -81,8 +81,9 @@ hit — один файл (hit_1), вариантов нет; hit_bullet — о�
 Выбор автора — incoming_audio/selection_music.json, обработка tools/prepare_music.py: срезана только тишина
 в начале и конце, −16 LUFS, стерео, ogg q5. Фон локаций −20 LUFS, эффекты −18 → музыка громче фона,
 тише эффектов. Громкости в игре: музыка 0.5, эффекты 0.8, фон 0.48 (src/audio.py → DEFAULTS).
-«Утомлённое солнце» (utomlennoe-solncedzhazovyj-orkestr-acfasmana.ogg) пока остаётся запасным треком:
-музыка для ключей title, reno, ending ещё не выбрана.
+Ретро-записи 1907–1922 (заставка title, казино reno, заведения saloon / hotel / home, концовка ending) —
+реставрации с Wikimedia Commons, общественное достояние (кроме «Лебедя» — CC BY-SA 3.0). Заведения играют
+внутри городов: ключ интерьера или музыкальная зона на городской карте (music_zones в data/locations.json).
 
 | Файл | Автор | Название | Ссылка | Лицензия |
 |---|---|---|---|---|
@@ -97,6 +98,42 @@ hit — один файл (hit_1), вариантов нет; hit_bullet — о�
 | junktown_1 | Kevin MacLeod | Mesmerize | [incompetech: Mesmerize](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Mesmerize.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
 | vats_1 | Kevin MacLeod | Ossuary 1 - A Beginning | [incompetech: Ossuary 1](https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%201%20-%20A%20Beginning.mp3) | CC BY 4.0 — строка атрибуции (ниже) |
 | combat_1 | Alexandr Zhelanov | Alert | [Post apocalypse — more music inside](https://opengameart.org/content/post-apocalypse-more-music-inside) | CC BY 3.0 — указать автора в титрах |
+| title_1 | Mischa Elman, Josef Bonime (1919) | Massenet — Méditation (Thaïs) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AElman_74341_NR.ogg) | общественное достояние |
+| title_2 | Enrico Caruso (1920) | Handel — Ombra mai fu | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEnrico_Caruso%2C_George_Frideric_Handel%2C_Ombra_mai_fu_%28Serse%29.ogg) | общественное достояние |
+| title_3 | John Michel, cello | Saint-Saëns — The Swan | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AJOHN_MICHEL_CELLO-SAINT_SAENS_CARNIVAL_OF_ANIMALS_THE_SWAN.ogg) | CC BY-SA 3.0 — указать автора в титрах, файл под той же лицензией |
+| title_4 | Paul Whiteman and His Orchestra (1922) | Three O'Clock in the Morning | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AThree_O%27clock_In_The_Morning.ogg) | общественное достояние |
+| reno_1 | Billy Jones (1921), restored by Adam Cuerden | Ain't We Got Fun | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AAin%27t_we_got_fun_-_Billy_Jones.ogg) | общественное достояние |
+| reno_2 | Zez Confrey (1921) | Kitten on the Keys | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AZez_Confrey_-_Kitten_on_the_Keys.ogg) | общественное достояние |
+| reno_3 | Eubie Blake (1922) | I'm Just Wild About Harry | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEubie_Blake_-_Just_Wild_about_Harry.ogg) | общественное достояние |
+| reno_4 | Al Jolson (1920) | Gershwin — Swanee | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AAl_Jolson%2C_George_Gershwin%2C_Irving_Caesar%2C_Swanee_1920.ogg) | общественное достояние |
+| reno_5 | Imperial Marimba Band | Twelfth Street Rag | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3ATwelfth_Street_Rag.ogg) | общественное достояние |
+| reno_6 | Original Dixieland Jass Band (1917) | Livery Stable Blues | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AOriginal_Dixieland_Jass_Band_-_Livery_Stable_Blues_%281917%29_alternate_edit.ogg) | общественное достояние |
+| reno_7 | Warren Trachtman, piano | Bowman — 12th Street Rag | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEuday_Louis_Bowman%27s_%2212th_Street_Rag%22%2C_performed_by_Warren_Trachtman.ogg) | общественное достояние |
+| saloon_1 | Scott Joplin, piano roll (1916) | Maple Leaf Rag | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AMaple_Leaf_Rag_-_played_by_Scott_Joplin_1916_sample.ogg) | общественное достояние |
+| saloon_2 | Scott Joplin, piano roll (1916) | Pleasant Moments | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3APleasant_Moments_Piano_Roll.ogg) | общественное достояние |
+| saloon_3 | Victor Military Band (1914) | Handy — Memphis Blues | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AVictor_Military_Band-The_Memphis_Blues.ogg) | общественное достояние |
+| saloon_4 | Mamie Smith (1920) | Crazy Blues | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AMamie_Smith%2C_Crazy_Blues.ogg) | общественное достояние |
+| saloon_5 | (1922) | Save a Little Dram for Me | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3ASave_a_Little_Dram_for_Me.ogg) | общественное достояние |
+| saloon_6 | (1908) | Florodora — Tell Me, Pretty Maiden | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AFlorodora_-_Tell_me_pretty_maiden.ogg) | общественное достояние |
+| saloon_7 | Lillian Russell (1912) | Come Down Ma Evenin' Star | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3ALillian_Russell_-_Come_Down_Ma_Evenin%27_Star.ogg) | общественное достояние |
+| saloon_8 | Pietro Frosini, accordion (1916) | New York Blues | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3APietro_Frosini_-_New_York_Blues_%281916%29_-_hiss_reduced.ogg) | общественное достояние |
+| saloon_9 | (1914) | Berlin — I Want to Go Back to Michigan | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AI_Want_to_Go_Back_to_Michigan.ogg) | общественное достояние |
+| saloon_10 | Arthur Fields (1918) | Berlin — Oh! How I Hate to Get Up in the Morning | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AIrving_Berlin_-_Arthur_Fields_-_Oh%21_How_I_Hate_To_Get_Up_In_The_Morning.ogg) | общественное достояние |
+| saloon_11 | Edward Meeker (1908) | Take Me Out to the Ball Game | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AMeekerBallGame.ogg) | общественное достояние |
+| hotel_1 | Enrico Caruso, Nellie Melba (1907) | Puccini — O soave fanciulla | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEnrico_Caruso_-_Nellie_Melba_-_La_boh%C3%A8me_-_O_soave_fanciulla_%28restored%29.ogg) | общественное достояние |
+| hotel_2 | Enrico Caruso, Geraldine Farrar (1912) | Massenet — Manon | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEnrico_Caruso_-_Geraldine_Farrar_-_Jules_Massenet_-_Manon_-_On_L%27appelle_Manon.ogg) | общественное достояние |
+| hotel_3 | Enrico Caruso, Marcel Journet (1910) | Gounod — Faust: O merveille! | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3ACaruso%2C_Journet%2C_Charles_Gounod%27s_Faust%2C_%27O_merveille%21_..._A_moi_les_plaisirs%27.ogg) | общественное достояние |
+| hotel_4 | Enrico Caruso (1916) | Massenet — Le Cid: O Souverain | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AJules_Massenet%2C_Enrico_Caruso%2C_O_Souverain%2C_O_Juge%2C_O_Pere.ogg) | общественное достояние |
+| hotel_5 | Marguerita Sylva (1910) | Massenet — Le Cid: Pleurez, mes yeux | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AMassenet_-_Le_Cid_-_Pleurez%2C_pleurez%2C_mes_yeux.ogg) | общественное достояние |
+| hotel_6 | (1910) | Wagner — Preislied (Die Meistersinger) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3ARichard_Wagner_-_Preisleid_from_Die_Meistersinger_von_N%C3%BCrnberg_sung_by_Leo_Slezak_3.ogg) | общественное достояние |
+| hotel_7 | Hurtado Brothers Royal Marimba Band (1916) | Villoldo — El Choclo | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEl_Choclo_%281916%29.mp3) | общественное достояние |
+| home_1 | Frank C. Stanley (1910) | Auld Lang Syne | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AAuld_Lang_Syne.ogg) | общественное достояние |
+| home_2 | Ada Jones, Billy Murray (1909) | Shine On, Harvest Moon | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AAda_Jones_and_Billy_Murray_-_Shine_On%2C_Harvest_Moon.ogg) | общественное достояние |
+| home_3 | Edward M. Favor (1910) | How Can They Tell That I'm Irish? | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AHow_Can_They_Tell_That_I%27m_Irish.ogg) | общественное достояние |
+| home_4 | Frank C. Stanley, Elise Stevenson (1908) | Battle Hymn of the Republic | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3ABattle_Hymn_of_the_Republic%2C_Frank_C._Stanley%2C_Elise_Stevenson.ogg) | общественное достояние |
+| ending_1 | Frederick Wheeler (1914) | Keep the Home Fires Burning | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AKeep_the_Home_Fires_Burning_-_Frederick_Wheeler.ogg) | общественное достояние |
+| ending_2 | Enrico Caruso, Giuseppe de Luca (1918) | Verdi — La forza del destino | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AEnrico_Caruso%2C_Giuseppe_de_Luca%2C_Giuseppe_Verdi%2C_N%C3%A8_gustare_m%27%C3%A8_dato_un%27ora_%28La_forza_del_destino%29.ogg) | общественное достояние |
+| ending_3 | Reed Miller (1913) | Sullivan — The Lost Chord | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File%3AArthur_Sullivan%2C_The_Lost_Chord%2C_Reed_Miller_1913_%28restored_1%29.ogg) | общественное достояние |
 
 Строки атрибуции для титров (формат Kevin MacLeod):
 

@@ -250,6 +250,7 @@ class Game(ControlsMixin, MouseMixin, WorldMixin, InteractionMixin, QuestMixin, 
         self.action.update(dt_ms)
         if hasattr(self.level, "update_roofs") and self.mode == "local":
             self.level.update_roofs(tile_of(self.player), dt_ms)
+        self.update_music_zone()
         if self.speech:
             self.speech["t"] -= dt_ms
             if self.speech["t"] <= 0:

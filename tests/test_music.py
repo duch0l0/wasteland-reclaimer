@@ -44,22 +44,18 @@ def own(key):
         key=lambda p: int(p[len(key) + 1:-4]))]
 
 
-a = A.Audio()                    # без Fallout 2: запасной путь — старый трек из assets/music
+a = A.Audio()                    # без Fallout 2: у каждого ключа свои треки, запасной путь не нужен
 if not a.ok:
     print("  БЕДА звук не поднялся (SDL dummy)"); sys.exit(1)
 
-# 1. ключ -> файл (свой) или запасной путь (Fallout 2 / старый трек)
+# 1. ключ -> свой файл; старого трека без номера («Утомлённое солнце», лицензии нет) быть не должно
 legacy = [f for f in os.listdir(MUSIC) if f.endswith(".ogg") and not any(
-    f == f"{k}_{i}.ogg" for k in A.MUSIC_KEYS for i in range(1, 10))]
-check(bool(legacy), f"старый трек на месте: {legacy}")
+    f == f"{k}_{i}.ogg" for k in A.MUSIC_KEYS for i in range(1, 20))]
+check(not legacy, f"посторонних треков нет: {legacy}")
 for key in A.MUSIC_KEYS:
     path = a._music_file(key) or ""
-    has_path = bool(path) and os.path.isfile(path)
     name = os.path.basename(path) if path else "—"
-    if own(key):
-        check(has_path and name == f"{key}_1.ogg", f"{key}: свой файл ({name})")
-    else:
-        check(has_path and name in legacy, f"{key}: запасной путь ({name})")
+    check(bool(own(key)) and name == f"{key}_1.ogg" and os.path.isfile(path), f"{key}: свой файл ({name})")
 for key in ("combat", "ending"):
     p_ = a._music_file(key) or ""
     check(bool(p_) and os.path.isfile(p_), f"{key}: разрешается в файл")

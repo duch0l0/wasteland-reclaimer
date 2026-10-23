@@ -303,7 +303,7 @@ bt.npcs += [["bath_pilgrim", 6, 10], ["bath_pilgrim_b", 25, 10], ["nurse_ava", 1
 
 
 # ================================================================ «Замок» Спрингера
-ht = CityMap(city, "zzyzx_hotel", "«Замок» Спрингера", 44, 26, start=(21, 23), seed=83, interior=True, music="hub")
+ht = CityMap(city, "zzyzx_hotel", "«Замок» Спрингера", 44, 26, start=(21, 23), seed=83, interior=True, music="hotel")
 ht.floor_code("C", "pk:hotel/hotel_f1_23")           # холл и покои — бежевый мрамор вместо шахматки
 ht.floor_code("D", "pk:zcity/zcity_f1_00")          # столовая и номера — доски
 ht.floor_code("R", "pk:aoffice/p3/3,1,1,1")         # ковровое покрытие номеров

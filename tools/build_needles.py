@@ -391,7 +391,7 @@ for x, y in ((18, 13), (28, 16), (42, 15)):
 
 # ================================================================ салун
 sl = CityMap(city, "needles_saloon", "Салун «Последний паром»", 28, 24, start=(13, 21), seed=93, interior=True,
-             music="junktown")
+             music="saloon")
 sl.floor_code("F", *SALOON_FLOOR)
 sl.wall_code("W", "pk:west/west_w1_04")
 sl.room(1, 1, 26, 23, "W", "F")

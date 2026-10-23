@@ -3,6 +3,7 @@ import pygame
 
 from .. import settings as S
 from ..entities import _hitbox_in_tile
+from ..combat import tile_of
 from ..location import Location, LOCATION_DEFS
 from ..encounters import make_encounter
 from ..worldmap import to_screen
@@ -53,6 +54,20 @@ class WorldMixin:
         """Переключить петлю, если место или время суток сменились (сам Audio тот же ключ не трогает)."""
         key, level = self.ambient_now()
         self.audio.play_ambient(key, level)
+
+    def update_music_zone(self):
+        """Музыка внутри городской карты: в салуне — граммофон, в казино — джаз (music_zones в
+        data/locations.json: [x0, y0, x1, y1, ключ]); вышел — снова музыка локации. В бою не трогаем."""
+        if self.mode != "local" or self.combat.active or self.loc is None:
+            return
+        d = LOCATION_DEFS.get(self.loc.id, {})
+        zones = d.get("music_zones")
+        if not zones:
+            return
+        x, y = tile_of(self.player)
+        key = next((z[4] for z in zones if z[0] <= x <= z[2] and z[1] <= y <= z[3]), d.get("music", "desert"))
+        if key != self.audio.music_key:
+            self.audio.play_music(key, fadeout_ms=1200)
 
     def enter_location(self, loc_id, at=None):
         """at — клетка появления (переход через люк/дверь), иначе вход локации."""

@@ -311,7 +311,7 @@ pm.put("x_cross", 24, 49)
 
 
 # ================================================================ отель «Бизон Стив»
-bs = CityMap(city, "primm_bison", "Отель «Бизон Стив»", 40, 28, start=(19, 26), seed=172, interior=True, music="hub")
+bs = CityMap(city, "primm_bison", "Отель «Бизон Стив»", 40, 28, start=(19, 26), seed=172, interior=True, music="hotel")
 bs.floor_code("F", *HOTEL_FL)
 bs.floor_code("C", *CARPET)
 bs.wall_code("W", "pk:lhotel/lhotel_w2_23")
