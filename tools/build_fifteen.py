@@ -356,7 +356,8 @@ splace(BIN, 8, 10)                     # урна у двери
 # под выбитым окном стекло, по полу рассыпаны тетради.
 s_piece(WINDOW, 14, 3)                 # целое окно
 s_piece(BOARD, 16, 3)                  # доска между окнами
-swall(WINDOW_BROKEN, 20, 3)            # выбитая рама
+s_piece(WINDOW, 20, 3)                 # второе окно в стене
+splace(WINDOW_BROKEN, 20, 4)           # выбитая рама — упала на пол под окном
 splace(GLASS, 14, 4)                   # стекло под окном
 splace(GLASS, 15, 4)
 splace(PAPERS, 16, 4)                  # бумаги с доски
