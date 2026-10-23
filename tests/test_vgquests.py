@@ -123,6 +123,36 @@ talk(g, "hank_spur"); say(g, "Кто поведёт"); say(g, "Бетт"); say(g
 go(g, "vegas_boots")
 ok(g.flags.get("hank_heir_bett") and not any(n.npc_id == "hank_spur" for n in g.npcs), "Хэнк умер, шпоры у Бетт")
 
+# ---- «Лёгкие Шпоры»: второй путь без фракции — две бутыли у Абдула (60 крышек)
+g = fresh()
+g.player.skills["speech"] = 20
+talk(g, "boots_rider_c"); say(g, "Что с Хэнком"); say(g, "вылечить"); say(g, "Схожу")
+go(g, "vegas_palms")
+talk(g, "palms_doctor"); say(g, "лёгкими"); say(g, "Спасибо")
+ok(g.flags.get("know_hank_zz"), "Ирен: хелатор в воде Зайзикса, две бутыли")
+go(g, "zzyzx")
+g.inventory.add("крышки", 100)
+c0 = g.inventory.count("крышки")
+g.open_trade("merchant_zz")
+while not g.inventory.has("вода Зайзикса", 2):
+    row = next(r for r in g.trade_rows() if r[0] == "вода Зайзикса")
+    g._buy(*row[:3])
+g.trade = None
+ok(g.inventory.has("вода Зайзикса", 2) and c0 - g.inventory.count("крышки") >= 60,
+   "Абдул: две бутыли — шестьдесят (дороже без Красноречия)")
+go(g, "vegas_boots")
+talk(g, "hank_spur"); say(g, "Выпей"); say(g, "Бесплодие"); say(g, "...")
+ok(g.flags.get("hank_cured") and g.stage("sq_hank") == 100, "лекарство вместо Короны — «Лёгкие Шпоры» закрыты")
+
+# ---- «Лёгкие Шпоры»: наследника можно назвать по подкове, без вступления в Корону
+g = fresh()
+talk(g, "boots_rider_c"); say(g, "Что с Хэнком"); say(g, "вылечить"); say(g, "Схожу")
+g.inventory.add("подкова Шпоры", 1)
+talk(g, "hank_spur"); say(g, "Вот твоя подкова"); say(g, "Слушаю"); say(g, "Принесу")
+ok(g.flags.get("boots_job1") and not g.flags.get("boots_member"), "Хэнк принял подкову — герой не Сапог")
+talk(g, "hank_spur"); say(g, "Кто поведёт"); say(g, "Ред"); say(g, "...")
+ok(g.flags.get("hank_heir_red") and g.stage("sq_hank") == 100, "наследник назван по подкове — квест закрыт без фракции")
+
 # ===================================================== Монета судьи
 g = fresh("vegas_strip")
 talk(g, "strip_kid"); say(g, "главный"); say(g, "всегда прав"); say(g, "Проверю")
@@ -145,6 +175,24 @@ talk(g, "judge_sol"); say(g, "монету"); say(g, "кости Гизмо"); s
 go(g, "vegas_den")
 talk(g, "mother_snake"); say(g, "Судья знает"); say(g, "По рукам")
 ok(g.flags.get("coin_sold") and g.karma < 0, "опыт с костями Гизмо помог — но тайну продал Змеям")
+
+# ---- «Монета судьи»: второй путь без денег и без Красноречия — услуга Матери-Змее
+g = fresh("vegas_strip")
+g.player.skills["speech"] = 20
+talk(g, "strip_kid"); say(g, "главный"); say(g, "всегда прав"); say(g, "Проверю")
+talk(g, "judge_sol"); say(g, "монету"); say(g, "десять раз"); say(g, "..."); say(g, "Верну")
+go(g, "vegas_den")
+talk(g, "mother_snake"); say(g, "Монета у твоего крупье"); say(g, "Проведу")
+ok(g.inventory.has("монета судьи Сола") and g.flags.get("coin_from_mother") and g.flags.get("snakes_job1_taken")
+   and not g.inventory.has("фальшивая монета"), "монета вернулась за услугу — долг Змеям, не двести крышек")
+g.dialogue.active_node = None
+talk(g, "mother_snake")
+ok(not any("Судья знает" in g.dialogue.option_label(o) for o in g.dialogue.visible_options()),
+   "фальшивки нет — и продать её Матери больше нельзя")
+g.dialogue.active_node = None
+go(g, "vegas_strip")
+talk(g, "judge_sol"); say(g, "Настоящая"); say(g, "...")
+ok(g.stage("sq_coin") == 100 and g.flags.get("coin_returned"), "второй путь закрыл «Монету» без навыка и без крышек")
 
 # ===================================================== Мило
 g = fresh("vegas_snakes")

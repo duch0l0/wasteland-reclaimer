@@ -163,6 +163,63 @@ talk(g, "baker_kid"); say(g, "на самом деле"); say(g, "Наука"); 
 talk(g, "nick"); say(g, "работает"); say(g, "...")
 ok(g.stage("sq_thermo") == 100 and g.flags.get("thermo_done"), "сорок девять градусов — Термометр снова не врёт")
 
+# ---- «Термометр»: второй путь без Науки — изолента и батарейки из хлама на окраине
+g = fresh("baker")
+g.player.skills["science"] = 20
+talk(g, "nick"); say(g, "Термометр"); say(g, "Посмотрю")
+talk(g, "baker_kid"); say(g, "дверца"); say(g, "Спасибо")
+ok(g.flags.get("thermo_lead"), "мальчишка: дверца у колонны и «запас» на окраине")
+go(g, "baker_outskirts")
+take(g, "гора хлама")
+ok(g.inventory.has("изолента") and g.inventory.count("батарейки") >= 1, "в горе хлама — лента и батарейки, бесплатно")
+go(g, "baker")
+talk(g, "baker_kid"); say(g, "на самом деле"); say(g, "Изолента"); say(g, "жара")
+ok(g.flags.get("thermo_fixed") and not g.inventory.has("изолента"), "табло завелось из ленты и батареек — Наука не нужна")
+talk(g, "nick"); say(g, "работает"); say(g, "...")
+ok(g.stage("sq_thermo") == 100, "предметный путь закрывает «Термометр» без Науки")
+
+# ---- «Термометр»: второй путь — Искра чинит колонну перед уходом из культа
+g = fresh("baker")
+g.player.skills["science"] = 20
+g.flags["route_loner"] = True
+talk(g, "nick"); say(g, "Термометр"); say(g, "Посмотрю")
+go(g, "baker_mission")
+talk(g, "iskra"); say(g, "Как тебя зовут"); say(g, "Панк")
+say(g, "почини колонну"); say(g, "можешь уходить")
+ok(g.flags.get("thermo_fixed") and g.flags.get("iskra_fixed_column"), "Искра сама находит оторванный провод у клеммы")
+g.dialogue.active_node = None
+go(g, "baker")
+talk(g, "nick"); say(g, "работает"); say(g, "...")
+ok(g.stage("sq_thermo") == 100, "путь через Искру закрывает «Термометр» без Науки")
+
+# ---- «Улыбка папы»: второй путь без кражи — Тобиас «теряет» ключ от крипты за две бутыли
+g = fresh("baker_motel_2f")
+talk(g, "motel_mom"); say(g, "муж"); say(g, "Узнаю")
+go(g, "baker")
+g.inventory.add("крышки", 20)
+c0 = g.inventory.count("крышки")
+for _ in range(2):
+    talk(g, "nick"); say(g, "Самогон")
+g.dialogue.active_node = None
+ok(g.inventory.count("самогон") == 2 and c0 - g.inventory.count("крышки") == 16, "две бутыли у Ника — шестнадцать крышек")
+talk(g, "tobias"); say(g, "Ты ключник"); say(g, "Две бутыли"); say(g, "Понял")
+ok(g.inventory.has("ключ от крипты") and g.flags.get("tobias_crypt_key") and not g.inventory.has("самогон"),
+   "Тобиас отдал ключ от крипты — Ансельму не сказал")
+take(g, "колонка с водой")
+go(g, "baker_mission")
+take(g, "ящик с припасами")
+ok(g.inventory.has("чистая вода", 3), "три фляги чистой воды — колонка на площади и ящик в миссии")
+go(g, "baker_crypt")
+ok(g.inventory.has("ключ от крипты"), "крипта открыта ключом Тобиаса, без отмычки")
+talk(g, "oskar"); say(g, "вернулся"); say(g, "Спасибо")
+ok(g.flags.get("smile_how"), "Оскар: три дня чистой воды — и никакой святой")
+go(g, "baker_motel_2f")
+talk(g, "motel_mom"); say(g, "Три дня"); say(g, "Вернусь")
+g.advance_time(DAY + 60)
+talk(g, "motel_mom"); say(g, "Держитесь"); say(g, "Не открывайте")
+g.advance_time(2 * DAY + 60)
+ok(g.flags.get("smile_back") and g.stage("sq_smile") == 100, "муж хмурится и зовёт её Мэгги — второй путь закрыл квест")
+
 print()
 print("ИТОГ:", "всё прошло" if not failed else f"провалов: {len(failed)}")
 sys.exit(1 if failed else 0)

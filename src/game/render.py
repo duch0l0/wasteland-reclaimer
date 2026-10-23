@@ -127,8 +127,8 @@ class RenderMixin:
             self.level.draw_arrows(surf, cam)
 
         # под курсором — то, с чем можно взаимодействовать, обведено контуром
-        for img, r in self.hover_highlight():
-            combat_ui.draw_outline(surf, img, r, (245, 215, 110))
+        for img, r, *color in self.hover_highlight():
+            combat_ui.draw_outline(surf, img, r, color[0] if color else (245, 215, 110))
             surf.blit(img, r)
         combat_ui.draw_tracers(surf, combat.tracers, cam)
         combat_ui.draw_throws(surf, combat, cam)

@@ -33,6 +33,11 @@ def threat_name(enemy, player):
 
 T = S.TILE
 NEIGHBORS = ((1, 0), (-1, 0), (0, 1), (0, -1))
+# квестодатель — неброско, по-фоллаутовски: тёплый контур и строка у курсора, над головой ничего
+QUEST_MARKS = {"new": "есть дело", "turn_in": "ждёт ответа"}
+QUEST_HINT_COLOR = (250, 205, 90)
+QUEST_OUTLINE = (245, 190, 70)
+TALK_OUTLINE = (225, 222, 210)
 
 
 class MouseMixin:
@@ -351,7 +356,8 @@ class MouseMixin:
         target = self.entity_at_screen(pos)
         if target is not None and (target in self.npcs or (target.talk and not target.hostile)):
             frame, r = sprite_of(target, self.cam)
-            return [(frame, r)]
+            quest = target in self.npcs and self.quest_mark(target.npc_id)
+            return [(frame, r, QUEST_OUTLINE if quest else TALK_OUTLINE)]
         obj = self.object_at_screen(pos)
         if not obj:
             return []
@@ -412,6 +418,9 @@ class MouseMixin:
         if target in self.npcs and pygame.key.get_mods() & pygame.KMOD_SHIFT:
             return (f"Напасть: {target.name}", (235, 120, 100), None, None)
         if target in self.npcs:
+            mark = QUEST_MARKS.get(self.quest_mark(target.npc_id))
+            if mark:
+                return (f"Говорить: {target.name} · ◆ {mark}", QUEST_HINT_COLOR, None, None)
             return (f"Говорить: {target.name} · ПКМ — действия", (230, 220, 190), None, None)
         if target is not None and target.talk and not target.hostile:
             return (f"Говорить: {target.name}", (230, 220, 190), None, None)

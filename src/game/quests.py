@@ -78,7 +78,49 @@ STORY_STEPS = [
 ]
 
 
+# флаг -> [(квест, стадия)]: какие стадии двигает этот флаг (для отметки квестодателя)
+FLAG_STAGES = {}
+for _qid, _steps in STORY_STEPS:
+    for _stage, _cond in _steps:
+        for _fl in (_cond if isinstance(_cond, list) else [_cond]):
+            if not _fl.startswith("loc:"):
+                FLAG_STAGES.setdefault(_fl, []).append((_qid, _stage))
+
+
 class QuestMixin:
+    def quest_mark(self, npc_id):
+        """Отметка у курсора над NPC: "new" — у него есть дело (квест ещё не начат), "turn_in" — ждёт
+        ответа (реплика двинет начатый квест), None — просто поговорить. Смотрит реплики, доступные
+        сейчас, на несколько узлов вглубь."""
+        tree = self.dialogue.trees.get(npc_id)
+        if not tree:
+            return None
+        start = tree["start"] if isinstance(tree["start"], list) else [{"node": tree["start"]}]
+        first = next((e["node"] for e in start if self.check_condition(e.get("if", {}))), None)
+        nodes, seen, queue, mark = tree["nodes"], set(), [first], None
+        while queue and len(seen) < 24:
+            nid = queue.pop(0)
+            if nid is None or nid in seen or nid not in nodes:
+                continue
+            seen.add(nid)
+            node = nodes[nid]
+            opts = [o for o in node.get("options", []) if self.check_condition(o.get("if", {}))]
+            for eff in [e for o in opts for e in o.get("effects", [])] + node.get("effects", []):
+                if eff.get("type") == "quest":
+                    moves = [(eff["id"], eff["stage"])]
+                elif eff.get("type") == "set_flag" and not self.flags.get(eff["flag"]):
+                    moves = FLAG_STAGES.get(eff["flag"], [])
+                else:
+                    continue
+                for qid, stage in moves:
+                    now = self.stage(qid)
+                    if qid in QUESTS and stage > now:
+                        if now > 0:
+                            return "turn_in"
+                        mark = "new"
+            queue += [o.get("next") for o in opts]
+        return mark
+
     def _story_cond(self, cond):
         if isinstance(cond, list):
             return any(self.flags.get(c) for c in cond)

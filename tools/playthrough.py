@@ -26,7 +26,11 @@ os.chdir(ROOT)
 
 import pygame  # noqa: E402
 
-pygame.mouse.get_pos = lambda: (-50, -50)
+# Мышь для бота: обычно курсор вне окна (−50, −50). В экшене за Дэкса бот целится и жмёт гашетку
+# сам, поэтому позиция и кнопка лежат в изменяемом словаре (src/action.py читает их каждый кадр).
+MOUSE = {"pos": (-50, -50), "fire": False}
+pygame.mouse.get_pos = lambda: MOUSE["pos"]
+pygame.mouse.get_pressed = lambda num_buttons=3: (MOUSE["fire"], False, False)
 pygame.mouse.get_focused = lambda: True
 
 from src.game import Game, saveload  # noqa: E402
@@ -1095,6 +1099,157 @@ class Bot:
             self.problems.append(msg)
             print(f"!! {msg}", flush=True)
 
+    # ------------------------------------------------------------ встреча в пустоши
+    def encounter(self, enc_id):
+        """Найти в пустоши нужную встречу (src/encounters.ENCOUNTERS): бот не бросает кости —
+        шаг между городами у него телепорт, поэтому встречу он «высматривает» сам, как игрок,
+        который прошёл по трассе и остановился. Нужен почтовый робот, и только он."""
+        from src import encounters
+        g = self.g
+        entry = next((e for e in encounters.ENCOUNTERS if e[1] == enc_id), None)
+        if entry is None:
+            raise Stuck(f"встречи «{enc_id}» нет в таблице пустоши")
+        if g.mode != "world":
+            g.go_world_map()
+            self.fr(2)
+        real = encounters.roll
+        encounters.roll = lambda *a, **k: entry
+        try:
+            g.start_encounter()
+        finally:
+            encounters.roll = real
+        self.fr(2)
+        if not g.loc.id.endswith(":" + enc_id):
+            raise Stuck(f"встреча «{enc_id}» не началась ({g.loc.id})")
+        self.check_alive(f"встреча {enc_id}")
+
+    # ------------------------------------------------------------ экшен за Дэкса (Барстоу)
+    def action_aim(self, ent):
+        g = self.g
+        cx, cy = g.cam.p(ent.rect.centerx, ent.rect.centery)
+        MOUSE["pos"] = (int(round(cx * g.zoom)), int(round(cy * g.zoom)))
+
+    def action_fire(self, on=True):
+        MOUSE["fire"] = bool(on)
+
+    def action_stop(self):
+        MOUSE["fire"] = False
+        MOUSE["pos"] = (-50, -50)
+
+    def action_on_screen(self, ent):
+        """Гуль не под панелью и в кадре: по нему можно целиться, не задевая интерфейс."""
+        g = self.g
+        cx, cy = g.cam.p(ent.rect.centerx, ent.rect.centery)
+        return 0 <= cx * g.zoom <= S.SCREEN_W and 0 <= cy * g.zoom <= S.SCREEN_H - 130
+
+    def action_stand(self, tile):
+        """Встать в клетку (или рядом) — бот ходит телепортом, как игрок, который кликнул."""
+        g = self.g
+        p = g.player
+        for dx, dy in ((0, 0), (0, 1), (1, 0), (-1, 0), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)):
+            t = (tile[0] + dx, tile[1] + dy)
+            if g.level.is_wall(*t) or g.level.is_exit(*t) or t in getattr(g.level, "blocked", ()):
+                continue
+            p.rect.topleft = rect_pos_for_tile(p, t)
+            g.snap_camera()
+            self.fr(1)
+            return True
+        return False
+
+    def action_spot(self, foe, lo=4, hi=8):
+        """Клетка в 4–8 шагах от гуля, откуда он по линии огня и выше центра экрана
+        (в изометрии «выше» — меньшая сумма x+y, иначе прицел уходит под панель)."""
+        g = self.g
+        p = g.player
+        fx, fy = tile_of(foe)
+        iso = bool(getattr(g.cam, "iso", False))
+        best = None
+        for r in range(lo, hi + 1):
+            for dx in range(-r, r + 1):
+                for dy in range(-r, r + 1):
+                    if max(abs(dx), abs(dy)) != r:
+                        continue
+                    t = (fx + dx, fy + dy)
+                    if g.level.is_wall(*t) or g.level.is_exit(*t) or t in getattr(g.level, "blocked", ()):
+                        continue
+                    if any(chebyshev(t, tile_of(x)) <= 1 for x in g.enemies if x.alive and x.hostile and x is not foe):
+                        continue
+                    above = (t[0] + t[1] > fx + fy + 2) if iso else (t[1] > fy + 2)
+                    if not above:
+                        continue
+                    here = p.rect.copy()
+                    p.rect.topleft = rect_pos_for_tile(p, t)
+                    seen = g.combat.los(p, foe)
+                    p.rect = here
+                    if not seen:
+                        continue
+                    score = (abs(r - 6), chebyshev(t, tile_of(p)))
+                    if best is None or score < best[0]:
+                        best = (score, t)
+        return best[1] if best else None
+
+    def action_clear(self, where="", max_ticks=6000, dt=100):
+        """Зачистить район Барстоу в экшене за Дэкса: целится в ближайшего гуля, держит гашетку,
+        перезаряжается (движок сам), отходит, когда гуль подошёл вплотную, и ждёт толпы из домов.
+        Не вышло — честная причина с тем, кто остался жив."""
+        g, a = self.g, self.g.action
+        if not a.active:
+            raise Stuck(f"{g.loc.id}: экшен-режим не включился (играем не за Дэкса?)")
+        kills0 = a.kills
+        ticks = 0
+        quiet = 0
+        while ticks < max_ticks:
+            ticks += 1
+            foes = [e for e in g.enemies if e.alive and e.hostile]
+            if not foes and not a.hordes_left():
+                break
+            if not foes:                                   # толпы ещё сидят в домах — подойти к триггеру
+                h = next((h for h in getattr(g.level, "hordes", []) if not h["done"]), None)
+                if h is not None:
+                    x0, y0, x1, y1 = h["trigger"]
+                    self.action_stop()
+                    self.action_stand(((x0 + x1) // 2, (y0 + y1) // 2))
+                elif a.hordes_left():
+                    self.action_stop()                     # толпа уже валит из двери — дать ей выйти
+                else:
+                    break
+                g.update(dt)
+                continue
+            me = tile_of(g.player)
+            near = min(foes, key=lambda e: chebyshev(me, tile_of(e)))
+            gap = chebyshev(me, tile_of(near))
+            if gap <= 2 or not self.action_on_screen(near):
+                self.action_stop()                         # вплотную бьют больно, под панелью не выстрелить
+                spot = self.action_spot(near)
+                if spot:
+                    self.action_stand(spot)
+                else:
+                    quiet += 5
+            self.action_aim(near)
+            self.action_fire(True)
+            if g.player.hp < g.player.hp_cap * 0.45:
+                self.heal_if_needed(0.45)
+            before = sum(e.hp for e in foes)
+            g.update(dt)
+            if ticks % 4 == 0:
+                g.draw()
+                self.handle_popups()
+            quiet = quiet + 1 if sum(e.hp for e in foes if e.alive) >= before else 0
+            if quiet >= 40:                                # гули стоят, а урона нет: сменить позицию
+                self.action_stop()
+                spot = self.action_spot(near, lo=3, hi=10)
+                if spot:
+                    self.action_stand(spot)
+                quiet = 0
+            self.check_alive(where or g.loc.id)
+        self.action_stop()
+        left = [f"{e.type_id}@{tile_of(e)}" for e in g.enemies if e.alive and e.hostile]
+        if left or a.hordes_left():
+            raise Stuck(f"{where or g.loc.id}: не зачищено за {ticks} кадров — живы {left[:6]}, "
+                        f"толпы {'ещё выходят' if a.hordes_left() else 'вышли'}, HP {g.player.hp}")
+        return a.kills - kills0
+
+
     def check_alive(self, where):
         g = self.g
         if not g.player.alive or g.game_over:
@@ -1187,6 +1342,8 @@ class Bot:
         for name in list(g.inventory.nonzero()):    # письма, жетоны, голозаписи — игрок их читает
             doc = ITEMS.ITEMS.get(name, {}).get("read")
             if doc and name not in self.read_docs and not g.combat.active:
+                if name.startswith("письмо: "):     # чужую почту 2077 года не вскрываем: её доставляют
+                    continue
                 self.read_docs.add(name)
                 g.open_document(doc)
                 g.close_terminal()
@@ -1545,8 +1702,20 @@ def act1b(b):
     """Зайзикс и Нидлс — хвост первого акта, дорога к Хабу."""
     g = b.g
 
+    def postman():
+        """На трассе — почтовый робот: мешок писем 2077 года (квест «Письма почтальона»).
+        Письма бот разносит по адресатам дальше по маршруту — в каждом городе своё."""
+        if not b.sides:
+            return
+        b.side("Письма почтальона: мешок", lambda: SQ.mail_sack(b))
+    b.step("Пустошь: Почтальон-3000", postman)
+
     def zzyzx():
         g.go_world_map()
+        if b.sides:
+            b.go("ruins")                              # Дэкс ждёт у въезда в Пятнадцатую
+            b.side("Контракт на Барстоу", lambda: SQ.merc_contract(b))
+            g.go_world_map()
         b.go("barstow")                    # по дороге — Барстоу: Роза, караванщица
         b.shop_here()
         if b.sides:
@@ -1570,6 +1739,7 @@ def act1b(b):
         b.goto_portal("zzyzx")
         b.pursue("springer", "springer_confessed", required=False)
         if b.sides:
+            SQ.mail(b, "springer", "письмо: Спрингеру, Зайзикс", "mail_done_springer", "Зайзикс")
             b.take_item("zzyzx_hotel", "обрывок карты (север)")
             b.walk_to_map("zzyzx")
         for t in ("abdul",):
@@ -1628,6 +1798,9 @@ def act2(b):
             b.pursue("hub_kid", "runaway_job", required=False)
             b.pursue("crimson_boss", "runaway_done", required=False)
             SQ.hub_start(b)
+            SQ.caravans_take(b)                       # Маргарет: неделя на правду, а не Ханы
+            SQ.mail(b, "harold", "письмо: Р. Грею, Хаб", "mail_done_grey", "Хаб")
+            SQ.harold_story(b)                        # Гарольд: Грей и грузовой въезд Марипозы
     b.step("Хаб: шлюз и Долорес Вега", hub)
 
     def junktown():
@@ -1651,6 +1824,8 @@ def act2(b):
             b.pursue("scrapper", "truck_job", required=False)
             b.take_item("junktown_dump", "обрывок карты (юг)")
             SQ.junktown(b)
+            SQ.mail(b, "mayor_darkwater", "письмо: Дарквотеру, Джанктаун", "mail_done_darkwater", "Джанктаун")
+            SQ.mail(b, "anna_shaw", "письмо: доктору Шоу, Бейкерсфилд", "mail_done_shaw", "Джанктаун")
     b.step("Джанктаун: Анна Шоу и Рурк", junktown)
 
     def necropolis():
@@ -1683,8 +1858,12 @@ def act2(b):
         b.go("aradesh")
         b.shop_here()
         b.pursue("aradesh", "aradesh_job", required=False)
-        b.visit("aradesh_cave")
-        b.pursue("aradesh", "aradesh_free_water", required=False)
+        if b.sides:
+            # пещера (бой) или насос Вика из каньона; провал — в side_fails с причиной, а не тишиной
+            b.side("Вода для Арадеша", lambda: SQ.aradesh(b))
+        else:
+            b.visit("aradesh_cave")
+            b.pursue("aradesh", "aradesh_free_water", required=False)
         b.pursue("aradesh", "know_vault15", required=False)
         b.visit("aradesh_canyon")
         b.terminal("convoy_wreck", "Груз", "Последняя запись")
@@ -1727,6 +1906,8 @@ def act2(b):
         b.visit("vault15_lower")
         b.terminal("v15_generator", "Состояние", "[Заменить предохранитель F-3 и запустить]")
         b.terminal("v15_mainframe", "Сеть убежищ округа")
+        if b.sides:
+            SQ.mail(b, "beatrice", "письмо: смотрителю Убежища 15", "mail_done_vault15", "Убежище 15")
     b.step("Убежище 15: Мира и генератор", vault15)
 
     def vault4():
@@ -1750,6 +1931,16 @@ def act2(b):
         SQ.needles_finish(b)
     b.step("Обход: Хаб, Некрополь, Нидлс", rounds)
 
+    def rounds_tour():
+        """Хвост акта: улики караванов разбросаны по трассе (застава I-15, мост в Нидлсе) — это
+        обход, а не отдельный круг: бот всё равно возвращается в Хаб сдать дела. Там же письмо
+        Убежища 15 отыгрывается в Арадеше — Лейла мирится с Беатрис."""
+        if not b.sides:
+            return
+        SQ.caravans_rounds(b)
+        b.side("Письма: сёстры Арадеша", lambda: SQ.mail_sisters(b))
+    b.step("Обход: караваны и сёстры", rounds_tour)
+
 
 def act3(b):
     """Акт III «Мохаве»: шесть городов, «Ноль» под Вегасом, финал в Марипозе."""
@@ -1764,6 +1955,8 @@ def act3(b):
         city("primm")
         b.pursue("deputy_baxter", "primm_job", required=False)
         b.pursue("mae_reeves", "know_tobi_missing", required=False)
+        if b.sides:
+            SQ.mail(b, "mae_reeves", "письмо: Ривзам, Примм", "mail_done_reeves", "Примм")
         b.terminal("reeves_archive", "Марипоза, «Ноль»", "Письмо 2077 года")
         if b.sides and g.inventory.has("карта клада"):
             b.read_books()
@@ -1846,6 +2039,7 @@ def act3(b):
         city("vegas_strip")
         b.pursue("judge_sol", "know_crowns", required=False)
         if b.sides:
+            b.side("Письма: Лаки 38", lambda: SQ.mail_house(b))     # письмо Хаусу — в щель терминала
             b.pursue("boots_rider", "bike_job", required=False)
             b.pursue("snake_trader", "bike_done", required=False)
         b.terminal("agatha_salon", "[Зашифрованное]")      # тайна Ладоней: Агата — из Ордена
@@ -1980,6 +2174,8 @@ def final(b):
         b.pursue("tobi_mp", "tobi_home", required=False)
         b.pursue("brother_t_mp", "mariposa_code", required=False)
         b.visit("mariposa_vats")
+        if b.sides:
+            b.side("Экспедиция Гарольда: журнал «Купели»", lambda: SQ.harold_finish(b))
         b.terminal("mariposa_core", "[Код от Тобиаса", "[Ввести код взвода охраны]",
                    "[«Пепел»", "[«Сталь»", "[«Чужие руки»")
         b.fr(5)

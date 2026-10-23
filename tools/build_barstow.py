@@ -152,7 +152,9 @@ def build_depot():
     k.road_y(19, 21, 17, H - 1)
     k.portal([(x, H - 1) for x in (19, 20, 21)], "barstow", (32, 2), "Трасса")
     k.road_x(15, 17, x0=22)                        # на восток — к базе морпехов
-    k.portal([(W - 1, y) for y in (15, 16, 17)], "barstow_base", (2, 17), "База морпехов")
+    k.portal([(W - 1, y) for y in (15, 16, 17)], "barstow_base", (2, 17), "База морпехов",
+             requires={"flag": "barstow_base_gate",
+                       "msg": "Ворота восточного проезда заперты с пульта конторы депо."})
 
     # грузы на платформах и у путей
     k.scatter(["Object25_N", "Object26_N", "Object17_E", "Object24_N", "Object23_N"], 1, 8, W - 2, 8, 10)

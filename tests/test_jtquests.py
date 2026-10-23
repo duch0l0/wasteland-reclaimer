@@ -205,6 +205,26 @@ go(g, "junktown_hall")
 talk(g, "mayor_darkwater"); say(g, "со свинцом"); say(g, "...")
 ok(g.flags.get("dice_exposed") and g.stage("sq_fred") == 100, "мэр списал долги по костям")
 
+# ---- «Последняя стена»: второй путь без Красноречия — Изо «теряет» кости за три бутыли
+g = fresh()
+g.player.skills["speech"] = 20
+talk(g, "gambler_jt_b"); say(g, "Сколько ты должен"); say(g, "разберусь")
+talk(g, "croupier"); say(g, "Кости"); say(g, "Понял")
+ok(g.flags.get("fred_vera") and not g.inventory.has("кости Гизмо"), "Вера: кости днём носит Изо, на ночь — она")
+go(g, "junktown_skum")
+g.inventory.add("крышки", 30)
+for _ in range(3):
+    talk(g, "neal"); say(g, "Самогон")
+g.dialogue.active_node = None
+ok(g.inventory.count("самогон") == 3, "три бутыли у Нила — по восемь крышек")
+go(g, "junktown_casino")
+talk(g, "gizmo_thug"); say(g, "Изо"); say(g, "Держи бутыли")
+ok(g.inventory.has("кости Гизмо") and g.flags.get("izo_lost_dice") and g.stage("sq_fred") == 50,
+   "Изо «потерял» кости босса до утра — карма −5")
+talk(g, "gizmo"); say(g, "Твои кости"); say(g, "Купчая"); say(g, "...")
+talk(g, "gambler_jt_b"); say(g, "Купчая"); say(g, "Удачи")
+ok(g.stage("sq_fred") == 100 and g.flags.get("fred_home"), "второй путь закрыл «Последнюю стену» без Красноречия")
+
 print()
 print("ИТОГ:", "всё прошло" if not failed else f"провалов: {len(failed)}")
 sys.exit(1 if failed else 0)
