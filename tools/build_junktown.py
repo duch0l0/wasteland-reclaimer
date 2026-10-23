@@ -434,7 +434,7 @@ jt.portal([(34, 19), (35, 19)], "junktown_casino", (12, 21), "Казино «Г�
 cs.portal([(12, 23), (13, 23)], "junktown", (34, 21), "На улицу")
 cs.opening(24, 11, 24, 12, "O")
 # неон над северной стеной, автоматы рядом вдоль неё
-cs.put(JACKPOT, 4, 8)
+cs.put(JACKPOT, 16, 8)                             # над проходом к кассе, не над автоматами — не заслоняются
 cs.put(NEON_CASH, 14, 8)
 for i, x in enumerate(range(2, 12)):
     cs.put((SLOTS + SLOTS_OLD)[i], x, 9)

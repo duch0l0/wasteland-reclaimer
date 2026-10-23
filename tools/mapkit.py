@@ -69,6 +69,9 @@ WALLS_WORN = {
 # заслон: высокая картинка (шкаф, дом, башня) не должна прятать соседний предмет за собой —
 # предмет спрятан, если спереди закрыто больше этой доли его видимых пикселей
 HIDDEN_SHARE = 0.5
+# то, что висит на стене (доска, окно, плакат, граффити), автообстановка не закрывает и краем
+# (MapKit.wall_strict); ручную расстановку проверяет аудит: tools/audit_maps.py, «заслон стены»
+WALL_DECOR_SHARE = 0.08
 # пропы-стены сами по себе фон: мебель у стены перед ней — норма
 WALL_PROPS = ("wall_", "vwall_", "x_cliff", "roof_")
 _MASKS = {}
@@ -330,12 +333,17 @@ class MapKit:
                 inf = P.info(e[0])
             except KeyError:
                 continue
-            if not inf["block"] or inf["layer"] == "floor":
+            on_wall_tile = self.ground[e[2]][e[1]] in getattr(self, "walls", {})
+            if (not inf["block"] and not on_wall_tile) or inf["layer"] == "floor":
                 continue
             other = (e[0], sprite_rect(*e[:3], *(e[3:5] if len(e) >= 5 else ())))
             if not me[1].colliderect(other[1]):
                 continue
-            if hidden_share(me, other) > HIDDEN_SHARE or hidden_share(other, me) > HIDDEN_SHARE:
+            # доска, окно, плакат на стене: мебель перед ними не встаёт, даже если закрывает лишь край
+            on_wall = getattr(self, "wall_strict", False) and on_wall_tile and \
+                self.ground[y][x] not in getattr(self, "walls", {})
+            if hidden_share(me, other) > (WALL_DECOR_SHARE if on_wall else HIDDEN_SHARE) or \
+                    hidden_share(other, me) > HIDDEN_SHARE:
                 return e
         return None
 

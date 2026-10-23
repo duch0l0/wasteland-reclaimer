@@ -40,8 +40,11 @@ T = 48
 
 class CityMap(MapKit):
     def __init__(self, city, mid, name, w, h, start, seed=1, fill="d", night=None, music="desert",
-                 interior=False, known=False, world_pos=None):
+                 interior=False, known=False, world_pos=None, furnish=None):
+        """furnish — своя обстановка для голого интерьера вместо стиля по id: {"scenes": [...],
+        "along": ([у стены], [в углах])}; False — не обставлять вовсе."""
         super().__init__(w, h, start, seed, fill="_" if interior else fill)
+        self.furnish = furnish
         self.city, self.id, self.name = city, mid, name
         self.floors, self.walls = {}, {}
         self.night, self.music, self.interior = night, music, interior
@@ -395,23 +398,30 @@ class City:
             if not walk:
                 continue                                   # dress_empty занимает только пустые блоки 6×6 — большие голые залы
                                                            # получают обстановку и в густо заставленных картах
-            style = ("tech" if m.id.startswith(TECH) else "sewer" if m.id.startswith(SEWER)
+            if m.furnish is False:
+                continue
+            style = ("own" if m.furnish else "tech" if m.id.startswith(TECH) else "sewer" if m.id.startswith(SEWER)
                      else "cave" if m.id.startswith(CAVE) else "home")
             cave = [[("rock", 0, 0), ("stones_12", 2, 1)], [("bones_a" if "bones_a" in P.CATALOG else "r_bones", 0, 0), ("rock", 2, 0)],
                     [("stones_19", 0, 0), ("x_puddle", 1, 1)], [("crate_b", 0, 0), ("pickaxe", 1, 0), ("sack", 0, 1)]]
-            scenes = {"tech": lambda: tech_scenes(self, f"{self.id}_f"), "sewer": lambda: sewer, "cave": lambda: cave,
+            scenes = {"own": lambda: m.furnish["scenes"],
+                      "tech": lambda: tech_scenes(self, f"{self.id}_f"), "sewer": lambda: sewer, "cave": lambda: cave,
                       "home": lambda: home_scenes(self, f"{self.id}_f") + home}[style]()
             fl = "".join(m.floors) or m.ground[m.H // 2][m.W // 2]
+            m.wall_strict = True            # автообстановка не встаёт перед доской, окном, плакатом
             n = m.dress_empty(scenes, ground=fl, block=6, margin=1, chance=0.75, max_uses=3)
-            if style in ("home", "tech") and 100 * len(m.props) / walk < 8:   # вдоль стен — как в настоящей комнате
-                along = {"home": (["shelf_wood", "wardrobe", "cabinet_small", "shelf_stuff_1", "glass_cabinet", "filecab_1"],
+            if style in ("home", "tech", "own") and 100 * len(m.props) / walk < 8:   # вдоль стен — как в настоящей комнате
+                along = {"own": m.furnish and m.furnish.get("along"),
+                         "home": (["shelf_wood", "wardrobe", "cabinet_small", "shelf_stuff_1", "glass_cabinet", "filecab_1"],
                                   ["barrel_wood", "crate", "sack", "crate_b"]),
                          "tech": (["locker_1", "locker_2", "locker_double", "metal_shelf", "filecab_2", "shelf_metal_tall"],
                                   ["crate", "barrel_wood", "toolbox_red", "canister"])}[style]
-                n += m._loosely(m.furnish_walls, along[0], along[1], fl)
+                if along:
+                    n += m._loosely(m.furnish_walls, along[0], along[1], fl)
             small = [sc[:2] for sc in scenes]                 # участки поменьше — между жителями и у проходов
             n += m.dress_empty(small, ground=fl, block=4, margin=0, chance=0.6 if 100 * len(m.props) / walk < 4 else 0.35,
                                max_uses=4)
+            m.wall_strict = False
             print(f"   {m.id}: обставлено ({style}) +{n}")
 
     def save(self, gap_exempt=()):

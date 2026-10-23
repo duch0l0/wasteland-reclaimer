@@ -182,7 +182,12 @@ for x, y in ((4, 3), (9, 4), (58, 4), (61, 12), (6, 15)):
 # ================================================================ здание школы
 W, H = 46, 30
 sin = CityMap(city, "fifteen_school_in", "Школа «Солнечная долина»", W, H, start=(43, 15), seed=58,
-              interior=True, music="caves")
+              interior=True, music="caves",
+              # школа, а не кладовка: у стен — книжные шкафы и шкафчики, в углах — урны и цветы,
+              # на свободном полу — сдвинутые парты; ни бочек, ни мешков, ни платяных шкафов
+              furnish={"scenes": [[(DESK, 0, 0), (DESK, 2, 0)], [(DESK_PILE, 0, 0)], [(DESK_B, 0, 0), (DESK, 2, 1)],
+                                  [(PLANT, 0, 0)]],
+                       "along": ([SHELF, SHELF_B, LOCKER, LOCKER_B], [PLANT, TRASH])})
 sin.floor_code("F", *TILE)
 sin.floor_code("G", *WOOD)
 sin.wall_code("W", "pk:nbunk/nbunk_w3_13")      # школьная стена: кремовая с бирюзовой полосой

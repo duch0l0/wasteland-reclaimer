@@ -9,6 +9,7 @@
   жилец     — житель/враг/ящик/терминал стоит в проёме
   вынос     — предмет стоит на клетке пустоты/стены
   заслон    — картинка предмета прячет за собой соседний (как в mapkit.put); край — спрайт за краем карты
+  стена     — мебель перед доской, окном, плакатом на стене (закрыто больше WALL_DECOR_SHARE)
 Геометрия стен: тайлы ground/стен + пропы-стены (wall_*, vwall_*, x_cliff*, roof_*); для «стены в 8 соседях»
 и BFS дополнительно считаются футы блокирующих пропов.
 Запуск из папки game_project:  .venv/bin/python tools/audit_maps.py [карта …]
@@ -26,7 +27,7 @@ import pygame  # noqa: E402
 pygame.init()
 pygame.display.set_mode((1, 1))
 from src import props as P  # noqa: E402
-from mapkit import HIDDEN_SHARE, hidden_share, sprite_rect  # noqa: E402
+from mapkit import HIDDEN_SHARE, WALL_DECOR_SHARE, hidden_share, sprite_rect  # noqa: E402
 
 LAMPS_FLOOR = ("x_vd_stand_", "lantern_lit", "ct_torch", "x_fire_barrel", "x_vd_sparks")
 FLAT = ("x_vd_wl_", "x_vd_plaque", "x_vd_num", "x_vd_fr_", "x_vd_exit", "x_vd_map", "x_vd_sheet", "x_vd_tally", "x_vd_drawing",
@@ -358,13 +359,17 @@ def overlaps(path):
     mid = os.path.basename(path)[:-5]
     T = 48
     W = d["w"]
+    walls = set(d.get("walls") or {})
+    ground = d.get("ground") or []
+    on_wall = lambda x, y: bool(walls) and 0 <= y < len(ground) and 0 <= x < len(ground[y]) and ground[y][x] in walls
     objs = []
     for e in d["props"]:
         try:
             inf = P.info(e[0])
         except Exception:
             continue
-        if inf.get("layer") == "floor" or e[0].startswith(FLAT) or not inf["block"]:
+        wall = on_wall(e[1], e[2])
+        if inf.get("layer") == "floor" or e[0].startswith(FLAT) or (not inf["block"] and not wall):
             continue
         objs.append((e[0], sprite_rect(*e[:3], *(e[3:5] if len(e) >= 5 else ())), (e[1], e[2])))
     out = []
@@ -378,6 +383,8 @@ def overlaps(path):
                 share = hidden_share((fn, fr), (bn, br))
                 if share > HIDDEN_SHARE:
                     out.append(("заслон", f"{fn} прячет {bn}", bp, f"закрыто {int(100 * share)}% картинки"))
+                elif share > WALL_DECOR_SHARE and on_wall(*bp) and not on_wall(*fp):
+                    out.append(("стена", f"{fn} закрывает {bn} на стене", bp, f"закрыто {int(100 * share)}%"))
     return mid, out
 
 
