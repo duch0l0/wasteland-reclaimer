@@ -42,6 +42,8 @@ venues = {"needles_saloon": "saloon", "hub_falcon": "saloon", "junktown_skum": "
           "goodsprings_doc": "home", "necropolis_cobbs": "home", "baker_motel_2f": "home"}
 for lid, key in venues.items():
     ok(LOCATION_DEFS[lid].get("music") == key, f"{lid}: музыка {LOCATION_DEFS[lid].get('music')} (ждём {key})")
+ok(any(z[4] == "saloon" and z[0] <= 25 <= z[2] and z[1] <= 19 <= z[3] for z in LOCATION_DEFS["ruins"].get("music_zones", [])),
+   "салун Пятнадцатой: граммофон (25, 19) в зоне saloon")
 for key in ("saloon", "hotel", "home", "reno", "title", "ending"):
     ok(os.path.isfile(f"assets/music/{key}_1.ogg"), f"{key}: есть свои треки")
 

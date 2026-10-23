@@ -5435,5 +5435,77 @@
    48
   ],
   "made_by": "tools/make_vault_decals.py"
+ },
+ "x_flag": {
+  "page": null,
+  "rect": null,
+  "size": [
+   40,
+   52
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_flag_vt": {
+  "page": null,
+  "rect": null,
+  "size": [
+   40,
+   52
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_sign_fuel": {
+  "page": null,
+  "rect": null,
+  "size": [
+   120,
+   76
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_outhouse": {
+  "page": null,
+  "rect": null,
+  "size": [
+   56,
+   72
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_wallbars": {
+  "page": null,
+  "rect": null,
+  "size": [
+   40,
+   80
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_climb_rope": {
+  "page": null,
+  "rect": null,
+  "size": [
+   24,
+   80
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_globe": {
+  "page": null,
+  "rect": null,
+  "size": [
+   40,
+   48
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_kids_drawings": {
+  "page": null,
+  "rect": null,
+  "size": [
+   44,
+   40
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

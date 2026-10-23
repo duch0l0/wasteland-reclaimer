@@ -26,6 +26,7 @@ import json
 import math
 import os
 import random
+import sys
 
 import pygame
 
@@ -33,6 +34,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "town", "props")
 INDEX = os.path.join(ROOT, "assets", "town", "index.json")
 CATALOG = os.path.join(ROOT, "data", "props.json")
+sys.path.insert(0, ROOT)          # vault_door_cliff берёт куски наборов через src.props
 
 INK = (20, 16, 14)
 rnd = random.Random(57)
@@ -466,6 +468,397 @@ def planks():
     return s
 
 
+# ------------------------------------------------ Пятнадцатая: что не нашлось в наборах
+# Сначала искали готовое в бандле SCKR (483 набора, сводки _catalog/*.png). Всё, что нашлось,
+# взято оттуда — таблица REPLACED, своих картинок у этих предметов больше нет (docs/furnish/fifteen.md §2.2).
+# Здесь рисуем только то, чего в наборах нет.
+#
+# Рисуем в полном размере (1 px = 1 px картинки), как предметы наборов: контур в 1 px с полупрозрачной
+# кромкой (soft_outline), десятки оттенков, блики и тени по граням, дизеринг на переходах.
+# Прежние версии рисовались вдвое мельче и растягивались вдвое — отсюда и был пиксель вчетверо крупнее.
+
+WOOD_D, WOOD, WOOD_L = (86, 60, 36), (120, 86, 52), (150, 112, 70)
+METAL_D, METAL, METAL_L = (78, 82, 86), (120, 124, 128), (162, 166, 170)
+BRASS, BRASS_L = (170, 134, 62), (212, 178, 96)
+PAPER, PAPER_D = (232, 226, 204), (176, 168, 142)
+SHADOW = (66, 52, 38)
+
+# было -> (картинка из набора, поля для P(...) на шаге 4.2)
+REPLACED = {
+    "x_piano": ("pk:west/west_2_012", {"foot": [2, 1]}),
+    "x_screen": ("pk:west/west_2_016", {"foot": [2, 1], "sight": True}),
+    "x_garden": ("pk:wfarm/wfarm_5_057", {"foot": [2, 1]}),
+    "x_scales": ("pk:bazaar/bazaar_1_022", {"foot": [2, 1]}),
+    "x_radio": ("pk:jtown/jtown_5_019", {"foot": [1, 1]}),
+    "x_portrait": ("pk:west/west_8_018", {"foot": [1, 1], "block": False}),
+    "x_clock": ("pk:west/west_2_011", {"foot": [1, 1], "block": False}),
+    "x_carpet": ("pk:bazaar/bazaar_1_089", {"foot": [2, 1], "block": False, "layer": "floor"}),
+    "x_register": ("pk:town50/town50_2_104", {"foot": [2, 1], "search": "drawer", "title": "касса"}),
+    "x_fireext": ("pk:fstation/fstation_1_047", {"foot": [1, 1]}),
+    "x_cart": ("pk:bazaar/bazaar_1_023", {"foot": [2, 1], "search": "junk", "title": "тележка"}),
+    "x_cauldron": ("pk:west/west_5_031", {"foot": [1, 1], "search": "junk", "title": "котелок",
+                                          "light": {"r": 110, "color": [255, 150, 70], "at": [0.5, 0.85],
+                                                    "flicker": 1}}),
+    # не верёвка, а моток проволоки (решение автора): место — гараж и свалка, не спортзал
+    "x_wire_coil": ("pk:west/west_4_076", {"foot": [1, 1], "block": False, "layer": "floor", "scale": 0.75,
+                                           "title": "моток проволоки", "search": "junk"}),
+    "x_safe": ("pk:west/west_3_132", {"foot": [1, 1], "search": "military", "title": "сейф"}),
+    "x_microscope": ("pk:wschool/wschool_3_038", {"foot": [1, 1]}),
+    "x_easel": ("pk:aoffice/aoffice_3_037", {"foot": [1, 1]}),
+    "x_curtain": ("pk:lhotel/lhotel_5_035", {"foot": [2, 1], "sight": True}),
+}
+
+
+def soft_outline(s, color=INK):
+    """Контур в 1 px и полупрозрачная кромка снаружи — так выглядят вырезанные предметы наборов."""
+    w, h = s.get_size()
+    solid = {(x, y) for y in range(h) for x in range(w) if s.get_at((x, y)).a > 96}
+    ring = set()
+    for x, y in solid:
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in solid:
+                ring.add((nx, ny))
+    for p in ring:
+        s.set_at(p, color)
+    for x, y in list(ring):
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in solid and (nx, ny) not in ring:
+                s.set_at((nx, ny), (color[0], color[1], color[2], 96))
+    return s
+
+
+def dither(s, x, y, w, h, c1, c2, step=2):
+    """Шахматка двух оттенков — переход вместо плашки."""
+    for py in range(y, y + h):
+        for px_ in range(x, x + w):
+            if (px_ + py) % step == 0:
+                px(s, px_, py, c2)
+            elif (px_ + py) % step == 1:
+                px(s, px_, py, c1)
+
+
+def _shadow(s, x, y, w, h):
+    pygame.draw.ellipse(s, SHADOW, (x, y, w, h))
+
+
+def _star(s, cx, cy, r, color, inner=0.45):
+    pts = []
+    for i in range(10):
+        a = -math.pi / 2 + i * math.pi / 5
+        rr = r if i % 2 == 0 else r * inner
+        pts.append((cx + math.cos(a) * rr, cy + math.sin(a) * rr))
+    pygame.draw.polygon(s, color, pts)
+
+
+# ------------------------------------------------------------ флаги (в наборах флагов на древке нет)
+def _flag(cloth, emblem, star=True):
+    s = canvas(40, 52)
+    _shadow(s, 3, 45, 10, 4)
+    # древко: волокна, блик слева, тень справа
+    rect(s, 4, 6, 4, 44, WOOD)
+    rect(s, 4, 6, 1, 44, (156, 118, 74))
+    rect(s, 7, 6, 1, 44, (72, 48, 30))
+    for y in range(9, 47, 4):
+        px(s, 5, y, (102, 72, 44))
+        px(s, 6, y + 2, (134, 98, 60))
+    px(s, 6, 22, (86, 60, 38))
+    px(s, 5, 34, (86, 60, 38))
+    pygame.draw.circle(s, (146, 112, 52), (6, 4), 2)              # навершие
+    pygame.draw.circle(s, (206, 172, 92), (6, 4), 1)
+    px(s, 5, 3, (238, 214, 150))
+    # полотнище: полосы с волной, складки через одну
+    for i in range(10):
+        x = 8 + i * 3
+        top = 7 + (1 if i % 3 == 0 else 0)
+        bot = 38 + (1 if i % 4 == 1 else 0) - (1 if i % 5 == 3 else 0)
+        k = (0, 4, -10, -14, 8, 6, -6, -12, 10, 2)[i]
+        c = tuple(max(0, min(255, v + k)) for v in cloth)
+        rect(s, x, top, 3, bot - top, c)
+        if i in (2, 6):                                            # глубокая складка
+            rect(s, x + 1, top + 1, 1, bot - top - 2, tuple(max(0, v - 26) for v in c))
+        if i in (4, 8):                                            # гребень складки
+            rect(s, x, top + 1, 1, bot - top - 2, tuple(min(255, v + 26) for v in c))
+    rect(s, 8, 6, 32, 2, tuple(min(255, v + 14) for v in cloth))   # верхняя кромка
+    # герб
+    if star:
+        _star(s, 23, 18, 8, tuple(max(0, v - 40) for v in emblem), 0.5)
+        _star(s, 23, 18, 7, emblem, 0.45)
+        px(s, 23, 15, (250, 232, 168))
+    else:                                                          # герб Vault-Tec: шестерня-дверь
+        pygame.draw.circle(s, (32, 34, 44), (23, 18), 9)
+        pygame.draw.circle(s, emblem, (23, 18), 8)
+        for i in range(8):
+            a = i * math.pi / 4
+            x0, y0 = 23 + math.cos(a) * 3, 18 + math.sin(a) * 3
+            x1, y1 = 23 + math.cos(a) * 7, 18 + math.sin(a) * 7
+            pygame.draw.line(s, (78, 74, 62), (x0, y0), (x1, y1), 1)
+        pygame.draw.circle(s, (52, 50, 44), (23, 18), 3)
+        pygame.draw.circle(s, (120, 132, 158), (23, 18), 2)
+    # тень полотнища на древке
+    rect(s, 8, 8, 1, 27, (54, 36, 24))
+    return soft_outline(s)
+
+
+def flag():
+    """Флаг города на древке — ратуша."""
+    return _flag((136, 52, 42), (228, 198, 96), star=True)
+
+
+def flag_vt():
+    """Флаг Vault-Tec: синее полотнище, шестерня-дверь убежища."""
+    return _flag((58, 82, 138), (214, 176, 92), star=False)
+
+
+# ------------------------------------------------------------ табличка «НЕТ БЕНЗИНА»
+def sign_fuel():
+    """Щит на двух столбах у навеса заправки. Надпись — DejaVuSans-Bold без сглаживания."""
+    s = canvas(120, 76)
+    for x in (18, 96):
+        _shadow(s, x - 3, 70, 14, 5)
+        rect(s, x, 32, 8, 40, (112, 78, 46))
+        rect(s, x, 32, 1, 40, (150, 112, 70))
+        rect(s, x + 7, 32, 1, 40, (74, 50, 32))
+        for y in range(36, 70, 5):
+            px(s, x + 2, y, (94, 66, 40))
+            px(s, x + 5, y + 2, (134, 98, 60))
+        pygame.draw.circle(s, (56, 54, 52), (x + 4, 38), 1)        # гвоздь
+        pygame.draw.circle(s, (56, 54, 52), (x + 4, 62), 1)
+    # щит: жесть с потёками ржавчины
+    rect(s, 2, 2, 116, 40, (228, 220, 198))
+    dither(s, 6, 6, 108, 32, (228, 220, 198), (218, 210, 188), 2)
+    rect(s, 2, 2, 116, 2, (244, 238, 218))
+    rect(s, 2, 40, 116, 2, (188, 176, 150))
+    pygame.draw.rect(s, (138, 50, 40), (2, 2, 116, 40), 1)
+    pygame.draw.rect(s, (176, 82, 62), (4, 4, 112, 36), 1)
+    for x0, y0, w0, h0 in ((92, 6, 3, 12), (96, 20, 2, 9), (10, 26, 3, 10), (104, 30, 3, 6)):
+        rect(s, x0, y0, w0, h0, (146, 92, 58))                     # ржавые потёки
+        px(s, x0 + 1, y0 + h0, (116, 70, 44))
+    pygame.draw.circle(s, (92, 84, 72), (100, 36), 3)              # пулевая пробоина в углу
+    pygame.draw.circle(s, (44, 40, 36), (100, 36), 2)
+    px(s, 101, 35, (30, 28, 26))
+    pygame.draw.line(s, (172, 160, 134), (6, 6), (12, 12), 1)      # царапины у края
+    pygame.draw.line(s, (172, 160, 134), (110, 8), (114, 14), 1)
+    for x, y in ((5, 5), (114, 5), (5, 38), (114, 38)):            # заклёпки
+        pygame.draw.circle(s, (112, 106, 96), (x, y), 1)
+        px(s, x, y - 1, (168, 162, 150))
+    font = pygame.font.Font(os.path.join(ROOT, "assets", "fonts", "DejaVuSans-Bold.ttf"), 16)
+    for size, line, cy in ((13, "НЕТ БЕНЗИНА", 14), (9, "ПРИВОЗ В ПЯТНИЦУ", 26)):
+        font = pygame.font.Font(os.path.join(ROOT, "assets", "fonts", "DejaVuSans-Bold.ttf"), size)
+        t = font.render(line, False, (156, 42, 32))
+        r = t.get_rect(center=(60, cy))
+        s.blit(t, (r.x, r.y))
+    return soft_outline(s)
+
+
+# ------------------------------------------------------------ сортир-кабинка
+def outhouse():
+    """Кабинка во дворе: доски в четверть, дранка внахлёст, месяц в двери, трава у порога."""
+    s = canvas(56, 72)
+    _shadow(s, 4, 64, 48, 8)
+    tones = [(122, 88, 54), (132, 96, 60), (114, 82, 50), (126, 92, 56)]
+    for i, x in enumerate(range(7, 49, 5)):
+        rect(s, x, 17, 5, 51, tones[i % 4])
+        rect(s, x, 17, 1, 51, (92, 64, 40))
+        rect(s, x + 1, 17, 1, 51, (146, 108, 70))
+        px(s, x + 3, 26, (74, 52, 32))
+        px(s, x + 3, 48, (74, 52, 32))
+    rect(s, 6, 17, 1, 51, (158, 118, 76))
+    rect(s, 50, 17, 1, 51, (72, 48, 30))
+    rect(s, 6, 17, 45, 3, (54, 40, 28))                          # тень под свесом
+    # крыша: два ската, дранка рядами внахлёст
+    pygame.draw.polygon(s, (66, 46, 30), [(0, 19), (28, 1), (56, 19)])
+    for row, y in enumerate(range(4, 19, 3)):
+        half = int((y - 1) * 1.5)
+        for x in range(28 - half, 28 + half, 4):
+            off = 2 if row % 2 else 0
+            col = (106, 76, 46) if (x // 4 + row) % 3 else (88, 62, 38)
+            rect(s, x + off, y, 3, 3, col)
+            px(s, x + off, y, (132, 98, 62))
+            px(s, x + off + 2, y + 2, (58, 42, 28))
+    pygame.draw.line(s, (54, 38, 26), (0, 19), (28, 1), 1)        # конёк
+    pygame.draw.line(s, (54, 38, 26), (28, 1), (56, 19), 1)
+    rect(s, 25, 0, 6, 3, (86, 62, 38))
+    rect(s, 25, 0, 6, 1, (118, 86, 54))
+    pygame.draw.line(s, (46, 34, 24), (0, 19), (56, 19), 1)       # свес крыши
+    # дверь: рама, доски, петли
+    rect(s, 13, 21, 30, 48, (146, 108, 70))                       # наличник
+    rect(s, 13, 21, 30, 1, (172, 132, 88))
+    rect(s, 13, 68, 30, 1, (96, 68, 44))
+    rect(s, 15, 23, 26, 44, (124, 90, 56))                        # полотно
+    for x in (20, 25, 30, 35):
+        rect(s, x, 23, 1, 44, (106, 76, 46))
+        px(s, x + 1, 24, (140, 102, 64))
+    rect(s, 15, 23, 26, 1, (152, 114, 74))
+    # месяц-прорезь: тёмный кружок, из него вырезан светлый — серп открыт вправо
+    pygame.draw.circle(s, (36, 28, 22), (26, 31), 7)
+    pygame.draw.circle(s, (124, 90, 56), (23, 29), 7)
+    # вентиляционные щели у пола
+    for y in (54, 57):
+        rect(s, 19, y, 16, 1, (88, 62, 40))
+        rect(s, 19, y + 1, 16, 1, (142, 104, 66))
+    # петли, щеколда
+    for y in (27, 58):
+        rect(s, 13, y, 8, 2, METAL_D)
+        px(s, 14, y, METAL)
+        px(s, 19, y, METAL_L)
+    rect(s, 36, 46, 5, 2, METAL_D)
+    px(s, 40, 46, METAL_L)
+    # порог и трава
+    rect(s, 11, 67, 34, 4, (98, 70, 46))
+    rect(s, 11, 67, 34, 1, (138, 100, 64))
+    rect(s, 11, 70, 34, 1, (74, 52, 32))
+    for x, y in ((6, 65), (8, 68), (48, 64), (50, 67), (44, 69), (3, 68)):
+        px(s, x, y, (92, 116, 62))
+        px(s, x + 1, y - 1, (118, 142, 80))
+        px(s, x, y - 2, (104, 128, 70))
+    noise(s, [(104, 74, 48), (140, 102, 64), (92, 66, 42)], 34, (7, 20, 43, 45))
+    return soft_outline(s)
+
+
+# ------------------------------------------------------------ спортзал
+def wallbars():
+    """Шведская стенка у стены спортзала: две стойки, десять перекладин, крепления."""
+    s = canvas(40, 80)
+    for x0 in (3, 33):
+        rect(s, x0, 2, 4, 78, (150, 112, 70))
+        rect(s, x0, 2, 1, 78, (178, 138, 90))
+        rect(s, x0 + 3, 2, 1, 78, (102, 72, 44))
+        for y in range(6, 78, 7):
+            px(s, x0 + 2, y + 2, (120, 86, 52))
+    for y in range(8, 78, 7):                                      # перекладины
+        rect(s, 3, y, 34, 3, (166, 126, 80))
+        rect(s, 3, y, 34, 1, (198, 158, 102))
+        rect(s, 3, y + 2, 34, 1, (116, 82, 48))
+        px(s, 8, y + 3, (96, 68, 40))                              # тень от перекладины
+        px(s, 20, y + 3, (96, 68, 40))
+        px(s, 32, y + 3, (96, 68, 40))
+    for y in (4, 40, 76):                                          # крепления к стене
+        rect(s, 0, y, 3, 4, METAL_D)
+        rect(s, 37, y, 3, 4, METAL_D)
+        px(s, 1, y + 1, METAL)
+        px(s, 38, y + 1, METAL)
+    noise(s, [(136, 100, 62), (108, 78, 46)], 40, (3, 2, 34, 78))
+    return soft_outline(s)
+
+
+def climb_rope():
+    """Канат с крюка в спортзале: витая верёвка в пять пикселей, узел с двумя хвостами."""
+    s = canvas(24, 80)
+    rect(s, 7, 0, 10, 3, METAL_D)                                 # пластина на потолке
+    rect(s, 7, 0, 10, 1, METAL_L)
+    px(s, 9, 1, (56, 58, 60))
+    px(s, 15, 1, (56, 58, 60))
+    pygame.draw.circle(s, METAL, (12, 5), 3, 1)
+    px(s, 11, 4, METAL_L)
+    for y in range(8, 66):
+        i = y - 8
+        x = 9 + (1 if (i // 4) % 2 else 0)
+        rect(s, x, y, 5, 1, (124, 96, 60))                        # тело каната
+        k = i % 4                                                # косая прядь, шаг 4 px
+        px(s, x + k, y, (180, 148, 98))
+        px(s, x + (k + 1) % 5, y, (162, 130, 84))
+        px(s, x + (k + 3) % 5, y, (96, 72, 44))
+        if i % 7 == 0:
+            px(s, x + 2, y, (196, 164, 110))
+    pygame.draw.ellipse(s, (142, 112, 70), (5, 63, 14, 10))       # узел
+    pygame.draw.ellipse(s, (172, 140, 90), (6, 64, 12, 6))
+    pygame.draw.line(s, (110, 84, 52), (6, 70), (18, 68), 1)
+    px(s, 8, 66, (198, 166, 112))
+    rect(s, 9, 72, 2, 7, (132, 104, 66))                          # хвосты
+    rect(s, 13, 71, 2, 8, (150, 120, 78))
+    px(s, 10, 78, (108, 84, 52))
+    px(s, 14, 78, (122, 96, 60))
+    px(s, 12, 73, (176, 144, 96))
+    return soft_outline(s)
+
+
+# ------------------------------------------------------------ класс
+def globe():
+    """Глобус у стола учителя: латунный меридиан, шар с материками, деревянная стойка."""
+    s = canvas(40, 48)
+    _shadow(s, 8, 40, 24, 6)
+    rect(s, 9, 38, 22, 5, WOOD)                                    # основание
+    rect(s, 9, 38, 22, 1, (168, 128, 82))
+    rect(s, 9, 42, 22, 1, (74, 50, 32))
+    rect(s, 18, 30, 4, 8, BRASS)                                   # стойка
+    rect(s, 18, 30, 1, 8, BRASS_L)
+    pygame.draw.circle(s, BRASS, (20, 20), 15, 1)                  # меридиан
+    pygame.draw.circle(s, BRASS_L, (20, 20), 13, 0)                # латунная подложка
+    pygame.draw.circle(s, (48, 84, 124), (20, 20), 12)              # океан
+    dither(s, 9, 9, 22, 22, (48, 84, 124), (56, 94, 136), 2)
+    pygame.draw.circle(s, (40, 72, 108), (20, 20), 12, 1)
+    for pts in ([(12, 13), (17, 11), (20, 14), (18, 19), (13, 20), (11, 16)],       # материк
+                [(24, 12), (30, 14), (31, 19), (26, 21), (23, 17)],
+                [(17, 24), (22, 23), (24, 27), (19, 29)]):
+        pygame.draw.polygon(s, (104, 146, 84), pts)
+        pygame.draw.polygon(s, (128, 166, 96), pts[:3])
+    for x, y in ((11, 21), (27, 24), (29, 10)):                    # мелкие острова
+        px(s, x, y, (110, 150, 88))
+    rect(s, 14, 12, 3, 1, (188, 214, 236))                          # блик
+    px(s, 13, 13, (206, 226, 244))
+    pygame.draw.arc(s, (86, 62, 38), pygame.Rect(4, 16, 8, 8), math.pi * 0.5, math.pi * 1.5, 1)  # рожки оси
+    pygame.draw.arc(s, (86, 62, 38), pygame.Rect(28, 16, 8, 8), -math.pi * 0.5, math.pi * 0.5, 1)
+    px(s, 6, 19, BRASS_L)
+    px(s, 33, 19, BRASS_L)
+    return soft_outline(s)
+
+
+def kids_drawings():
+    """Детский рисунок на стене класса: лист со скотчем, солнце, дом, две фигурки; второй — позади."""
+    s = canvas(44, 40)
+    rect(s, 26, 4, 15, 18, (222, 214, 190))                         # второй лист
+    pygame.draw.rect(s, (196, 186, 160), (26, 4, 15, 18), 1)
+    pygame.draw.circle(s, (226, 182, 58), (34, 11), 3)              # солнце
+    for dx, dy in ((0, -5), (5, 0), (0, 5), (-5, 0), (4, -4), (-4, 4)):
+        px(s, 34 + dx, 11 + dy, (230, 190, 70))
+    rect(s, 28, 16, 11, 4, (110, 150, 90))                          # трава
+    px(s, 31, 18, (188, 72, 60)); px(s, 35, 17, (188, 72, 60))      # цветы
+    # основной лист
+    rect(s, 3, 3, 32, 33, PAPER)
+    rect(s, 3, 3, 32, 1, (246, 240, 220))
+    rect(s, 3, 35, 32, 1, (198, 190, 164))
+    pygame.draw.rect(s, (188, 178, 152), (3, 3, 32, 33), 1)
+    rect(s, 5, 5, 28, 12, (206, 220, 232))                          # небо
+    dither(s, 5, 5, 28, 12, (206, 220, 232), (216, 228, 238), 2)
+    pygame.draw.circle(s, (232, 186, 52), (11, 11), 4)              # солнце с лучами
+    for i in range(8):
+        a = i * math.pi / 4
+        px(s, 11 + math.cos(a) * 6, 11 + math.sin(a) * 6, (230, 190, 64))
+    rect(s, 18, 8, 3, 1, (86, 88, 96))                              # облако
+    rect(s, 20, 7, 3, 1, (96, 98, 106))
+    # дом
+    rect(s, 22, 15, 10, 9, (196, 88, 64))
+    pygame.draw.polygon(s, (132, 84, 58), [(21, 15), (27, 10), (33, 15)])
+    rect(s, 25, 19, 4, 5, (92, 70, 52))
+    rect(s, 29, 16, 2, 2, (238, 220, 140))                          # окно
+    px(s, 27, 8, (200, 200, 190))                                    # дым
+    px(s, 28, 7, (210, 210, 200))
+    # фигурки и трава
+    for x, c in ((9, (60, 70, 140)), (15, (70, 130, 80))):
+        pygame.draw.circle(s, c, (x, 23), 2)
+        rect(s, x - 1, 25, 3, 4, c)
+        pygame.draw.line(s, c, (x - 2, 26), (x + 2, 26), 1)
+        pygame.draw.line(s, c, (x - 1, 29), (x - 2, 32), 1)
+        pygame.draw.line(s, c, (x + 1, 29), (x + 2, 32), 1)
+    pygame.draw.line(s, (110, 150, 88), (6, 32), (32, 32), 1)
+    for x in range(7, 31, 3):
+        px(s, x, 31, (128, 168, 96))
+    rect(s, 4, 4, 5, 2, (222, 218, 208))                            # скотч
+    px(s, 4, 3, (198, 194, 184))
+    rect(s, 30, 33, 4, 2, (210, 206, 196))                          # отогнутый угол
+    return soft_outline(s, (78, 70, 60))
+
+
+def _mark_full(*fns):
+    for f in fns:
+        f.full_size = True
+    return fns
+
+
+_mark_full(flag, flag_vt, sign_fuel, outhouse, wallbars, climb_rope, globe, kids_drawings)
+
 # имя -> (рисунок, описание в каталоге)
 PROPS = {
     "x_grave": (grave, {"foot": [1, 1], "search": "grave", "title": "могила"}),
@@ -502,6 +895,16 @@ PROPS = {
     "x_vault_door11": (lambda: vault_door_cliff("11"), {"foot": [4, 2], "sight": True}),
     "x_vault_gear11": (lambda: vault_gear("11"), {"foot": [2, 1], "sight": True}),
     "x_vault_sign11": (lambda: vault_sign("11"), {"foot": [1, 1]}),
+    # Пятнадцатая, шаг 4 (docs/furnish/fifteen.md §2.2): своих картинок осталось восемь — того,
+    # чего в бандле SCKR нет. Остальные 17 предметов берутся из наборов (REPLACED выше).
+    "x_flag": (flag, {"foot": [1, 1]}),                                    # флаг ратуши
+    "x_flag_vt": (flag_vt, {"foot": [1, 1]}),                               # флаг Vault-Tec
+    "x_sign_fuel": (sign_fuel, {"foot": [2, 1]}),                           # «НЕТ БЕНЗИНА»
+    "x_outhouse": (outhouse, {"foot": [1, 1], "sight": True, "search": "junk", "title": "сортир"}),
+    "x_wallbars": (wallbars, {"foot": [1, 1]}),                             # шведская стенка
+    "x_climb_rope": (climb_rope, {"foot": [1, 1], "block": False}),          # канат в спортзале
+    "x_globe": (globe, {"foot": [1, 1]}),                                   # глобус у стола учителя
+    "x_kids_drawings": (kids_drawings, {"foot": [1, 1]}),                   # детский рисунок на стене
 }
 
 
@@ -570,37 +973,43 @@ RUINS = {
 }
 
 
-def dump_catalog(cat):
-    """Тот же вид, что у data/props.json: одна запись — одна строка."""
-    line = lambda v: json.dumps(v, ensure_ascii=False, separators=(", ", ": "))
-    out = ["{"]
-    for k, v in cat.items():
-        if isinstance(v, dict):
-            out.append(f"  {json.dumps(k, ensure_ascii=False)}: {{")
-            items = list(v.items())
-            for i, (kk, vv) in enumerate(items):
-                out.append(f"    {json.dumps(kk, ensure_ascii=False)}: {line(vv)}" + ("," if i < len(items) - 1 else ""))
-            out.append("  }")
-        else:
-            out.append(f"  {json.dumps(k, ensure_ascii=False)}: {line(v)}")
-        out[-1] += ","
-    out[-1] = out[-1].rstrip(",")
-    return "\n".join(out) + "\n}\n"
+def register_pack_props(catalog):
+    """Предметы, взятые из наборов SCKR (REPLACED выше): картинка «pk:…» уже есть, рисовать нечего —
+    в каталог пишутся только поля. Поля не перетираются: правка в data/props.json остаётся главной."""
+    added = 0
+    for name, (img, fields) in REPLACED.items():
+        entry = catalog["props"].setdefault(name, {})
+        if not entry:
+            added += 1
+        entry.setdefault("img", img)
+        for k, v in fields.items():
+            entry.setdefault(k, v)
+    return added
 
 
 def main():
+    catalog_only = "--catalog-only" in sys.argv      # только регистрация наборных предметов
     pygame.init()
     pygame.display.set_mode((1, 1))
     with open(INDEX, "r", encoding="utf-8") as f:
         index = json.load(f)
     with open(CATALOG, "r", encoding="utf-8") as f:
         catalog = json.load(f)
+    if catalog_only:
+        print(f"зарегистрировано наборных предметов: {register_pack_props(catalog)} -> {CATALOG}")
+        with open(CATALOG, "w", encoding="utf-8") as f:
+            json.dump(catalog, f, ensure_ascii=False, indent=1)
+        return
+    register_pack_props(catalog)
     for name, (draw, desc) in PROPS.items():
         img = draw()
         if not getattr(draw, "full_size", False) and "vault_door_cliff" not in getattr(draw, "__code__", draw.__call__).co_names:
             img = pygame.transform.scale(img, (img.get_width() * 2, img.get_height() * 2))
         pygame.image.save(img, os.path.join(OUT, name + ".png"))
-        index[name] = {"page": None, "rect": None, "size": list(img.get_size()), "made_by": "tools/make_props.py"}
+        # made_by у уже нарисованных не переписываем: у дверей убежищ там пометка про vault_door_cliff
+        old = index.get(name, {}).get("made_by", "")
+        index[name] = {"page": None, "rect": None, "size": list(img.get_size()),
+                       "made_by": old if old.startswith("tools/make_props.py ") else "tools/make_props.py"}
         entry = catalog["props"].setdefault(name, {})
         entry.setdefault("img", name)
         for k, v in desc.items():
@@ -622,7 +1031,9 @@ def main():
     with open(INDEX, "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, indent=1)
     with open(CATALOG, "w", encoding="utf-8") as f:
-        f.write(dump_catalog(catalog))
+        # формат — как у закоммиченного data/props.json (indent=1): одна правка не должна
+        # переформатировать весь каталог на четыре тысячи строк
+        json.dump(catalog, f, ensure_ascii=False, indent=1)
     print(f"нарисовано объектов: {len(PROPS)} -> {OUT}")
 
 

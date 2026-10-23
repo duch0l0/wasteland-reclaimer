@@ -8,7 +8,16 @@
     ],
     "known": true,
     "terminals": [],
-    "music": "desert"
+    "music": "desert",
+    "music_zones": [
+      [
+        16,
+        17,
+        27,
+        25,
+        "saloon"
+      ]
+    ]
   },
   "station": {
     "name": "Заправка «Последний шанс»",

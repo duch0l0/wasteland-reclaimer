@@ -4404,6 +4404,225 @@
    "block": false,
    "sight": false,
    "layer": "floor"
+  },
+  "x_flag": {
+   "img": "x_flag",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_flag_vt": {
+   "img": "x_flag_vt",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_sign_fuel": {
+   "img": "x_sign_fuel",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "x_outhouse": {
+   "img": "x_outhouse",
+   "foot": [
+    1,
+    1
+   ],
+   "sight": true,
+   "search": "junk",
+   "title": "сортир"
+  },
+  "x_wallbars": {
+   "img": "x_wallbars",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_climb_rope": {
+   "img": "x_climb_rope",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false
+  },
+  "x_globe": {
+   "img": "x_globe",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_gramophone": {
+   "img": "pk:speak/speak_2_052",
+   "foot": [
+    1,
+    1
+   ],
+   "title": "граммофон"
+  },
+  "x_kids_drawings": {
+   "img": "x_kids_drawings",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_piano": {
+   "img": "pk:west/west_2_012",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "x_screen": {
+   "img": "pk:west/west_2_016",
+   "foot": [
+    2,
+    1
+   ],
+   "sight": true
+  },
+  "x_garden": {
+   "img": "pk:wfarm/wfarm_5_057",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "x_scales": {
+   "img": "pk:bazaar/bazaar_1_022",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "x_radio": {
+   "img": "pk:jtown/jtown_5_019",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_portrait": {
+   "img": "pk:west/west_8_018",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false
+  },
+  "x_clock": {
+   "img": "pk:west/west_2_011",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false
+  },
+  "x_carpet": {
+   "img": "pk:bazaar/bazaar_1_089",
+   "foot": [
+    2,
+    1
+   ],
+   "block": false,
+   "layer": "floor"
+  },
+  "x_register": {
+   "img": "pk:town50/town50_2_104",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "drawer",
+   "title": "касса"
+  },
+  "x_fireext": {
+   "img": "pk:fstation/fstation_1_047",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_cart": {
+   "img": "pk:bazaar/bazaar_1_023",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "junk",
+   "title": "тележка"
+  },
+  "x_cauldron": {
+   "img": "pk:west/west_5_031",
+   "foot": [
+    1,
+    1
+   ],
+   "search": "junk",
+   "title": "котелок",
+   "light": {
+    "r": 110,
+    "color": [
+     255,
+     150,
+     70
+    ],
+    "at": [
+     0.5,
+     0.85
+    ],
+    "flicker": 1
+   }
+  },
+  "x_wire_coil": {
+   "img": "pk:west/west_4_076",
+   "foot": [
+    1,
+    1
+   ],
+   "block": false,
+   "layer": "floor",
+   "scale": 0.75,
+   "title": "моток проволоки",
+   "search": "junk"
+  },
+  "x_safe": {
+   "img": "pk:west/west_3_132",
+   "foot": [
+    1,
+    1
+   ],
+   "search": "military",
+   "title": "сейф"
+  },
+  "x_microscope": {
+   "img": "pk:wschool/wschool_3_038",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_easel": {
+   "img": "pk:aoffice/aoffice_3_037",
+   "foot": [
+    1,
+    1
+   ]
+  },
+  "x_curtain": {
+   "img": "pk:lhotel/lhotel_5_035",
+   "foot": [
+    2,
+    1
+   ],
+   "sight": true
   }
  }
 }
