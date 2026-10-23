@@ -137,10 +137,11 @@ g.close_terminal()
 
 # крыши: снаружи дом накрыт, внутри крыша тает
 saloon = next(r for r in g.level.roofs if r.get("sign") == "САЛУН")
-g.player.rect.topleft = rect_pos_for_tile(g.player, (22, 30))
+cx = (saloon["x0"] + saloon["x1"]) // 2
+g.player.rect.topleft = rect_pos_for_tile(g.player, (cx, saloon["y1"] + 3))
 fr(g, 30)
 ok(saloon["alpha"] == 255, "снаружи у салуна крыша")
-g.player.rect.topleft = rect_pos_for_tile(g.player, (22, 23))
+g.player.rect.topleft = rect_pos_for_tile(g.player, (cx, saloon["y1"] - 2))
 fr(g, 30)
 ok(saloon["alpha"] == 0, "внутри салуна крыша исчезла")
 ok(not any(r.get("sign") is None and r["x0"] == 2 and r["y0"] == 37 for r in g.level.roofs), "у дома Черепана крыши нет")

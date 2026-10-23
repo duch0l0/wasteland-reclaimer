@@ -401,7 +401,13 @@ class MapKit:
             self.blocked.update(foot)
             self._reach = None
         else:
-            if any(t in self.soft or t in self.blocked for t in foot):
+            if getattr(self, "rugs_under", False):
+                # ковёр — под мебелью: стул и лампа встают на ковёр, ковёр на ковёр и предмет на предмет — нет
+                rug = lambda t: t in self.soft and t not in self.soft_obj
+                if any(t in self.blocked for t in foot) or any(
+                        (rug(t) if inf["layer"] == "floor" else t in self.soft_obj) for t in foot):
+                    return False
+            elif any(t in self.soft or t in self.blocked for t in foot):
                 return False
             self.soft.update(foot)
             if inf["layer"] != "floor":

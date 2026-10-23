@@ -43,7 +43,12 @@ def _pick_path(ent, level, blocked, avoid=()):
             prev[n] = c
             q.append((n, d + 1))
     home, r = ent.home, ent.wander_radius
-    goals = [t for t in prev if t != start and max(abs(t[0] - home[0]), abs(t[1] - home[1])) <= r
+    zone = getattr(level, "walk_zones", {}).get(getattr(ent, "npc_id", None))
+    if zone:      # работает на месте: шериф ходит между столом и шкафами, хозяин — вдоль стойки
+        near = lambda t: zone[0] <= t[0] <= zone[2] and zone[1] <= t[1] <= zone[3]
+    else:
+        near = lambda t: max(abs(t[0] - home[0]), abs(t[1] - home[1])) <= r
+    goals = [t for t in prev if t != start and near(t)
              and all(max(abs(t[0] - a[0]), abs(t[1] - a[1])) > NPC_KEEP_AWAY for a in avoid)]
     if not goals:
         return []

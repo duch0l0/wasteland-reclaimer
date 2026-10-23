@@ -203,7 +203,7 @@ for _pass in range(3):                    # раненый враг мог от�
         break
 ok(all(not e.alive for e in g.enemies), f"все враги побеждены, уровень {g.player.level_sys.level}")
 
-g.player.rect.topleft = rect_pos_for_tile(g.player, (45, 61))
+g.player.rect.topleft = rect_pos_for_tile(g.player, (85, g.level.height - 3))   # улица на юг
 g.held_letters.add(pygame.K_s)
 for _ in range(300):
     fr(1)

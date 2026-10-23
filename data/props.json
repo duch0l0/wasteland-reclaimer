@@ -4623,6 +4623,771 @@
     1
    ],
    "sight": true
+  },
+  "w_desk": {
+   "img": "pk:west/west_2_000",
+   "foot": [
+    2,
+    1
+   ],
+   "title": "письменный стол"
+  },
+  "w_chair": {
+   "img": "pk:west/west_2_001",
+   "block": false
+  },
+  "w_chair_b": {
+   "img": "pk:west/west_2_002",
+   "block": false
+  },
+  "w_sofa": {
+   "img": "pk:west/west_2_003",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_rocker": {
+   "img": "pk:west/west_2_004"
+  },
+  "w_bed": {
+   "img": "pk:west/west_2_005",
+   "foot": [
+    2,
+    1
+   ],
+   "title": "кровать"
+  },
+  "w_wardrobe": {
+   "img": "pk:west/west_2_006",
+   "search": "cloth",
+   "title": "платяной шкаф"
+  },
+  "w_dresser": {
+   "img": "pk:west/west_2_007",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "drawer",
+   "title": "комод"
+  },
+  "w_nightstand": {
+   "img": "pk:west/west_2_008"
+  },
+  "w_fireplace": {
+   "img": "pk:west/west_2_010",
+   "foot": [
+    2,
+    1
+   ],
+   "light": {
+    "r": 140,
+    "color": [
+     255,
+     150,
+     70
+    ],
+    "at": [
+     0.5,
+     0.75
+    ],
+    "flicker": 0.4
+   }
+  },
+  "w_wall_clock": {
+   "img": "pk:west/west_2_011",
+   "block": false
+  },
+  "w_armchair": {
+   "img": "pk:west/west_2_013"
+  },
+  "w_bench": {
+   "img": "pk:west/west_2_015",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_stove": {
+   "img": "pk:west/west_2_018",
+   "title": "печка"
+  },
+  "w_grand_clock": {
+   "img": "pk:west/west_2_019"
+  },
+  "w_poker": {
+   "img": "pk:west/west_2_021",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_bathtub": {
+   "img": "pk:west/west_2_023",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_curtains": {
+   "img": "pk:west/west_2_026",
+   "foot": [
+    2,
+    1
+   ],
+   "block": false
+  },
+  "w_window": {
+   "img": "pk:west/west_2_027",
+   "foot": [
+    2,
+    1
+   ],
+   "block": false
+  },
+  "w_mirror": {
+   "img": "pk:west/west_2_028",
+   "block": false
+  },
+  "w_painting": {
+   "img": "pk:west/west_2_030",
+   "foot": [
+    2,
+    1
+   ],
+   "block": false
+  },
+  "w_plant": {
+   "img": "pk:west/west_2_031"
+  },
+  "w_plant_b": {
+   "img": "pk:west/west_2_042"
+  },
+  "w_hay": {
+   "img": "pk:west/west_2_045"
+  },
+  "w_lamp": {
+   "img": "pk:west/west_2_050",
+   "block": false,
+   "light": {
+    "r": 90,
+    "color": [
+     255,
+     190,
+     110
+    ],
+    "at": [
+     0.5,
+     0.3
+    ],
+    "flicker": 0.3
+   }
+  },
+  "w_rug_red": {
+   "img": "pk:west/west_2_060",
+   "foot": [
+    2,
+    2
+   ],
+   "block": false,
+   "layer": "floor"
+  },
+  "w_rug_green": {
+   "img": "pk:west/west_2_061",
+   "foot": [
+    2,
+    2
+   ],
+   "block": false,
+   "layer": "floor"
+  },
+  "w_rug_quilt": {
+   "img": "pk:west/west_2_062",
+   "foot": [
+    2,
+    2
+   ],
+   "block": false,
+   "layer": "floor"
+  },
+  "w_shelf": {
+   "img": "pk:west/west_2_106",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "shelf",
+   "title": "полки"
+  },
+  "w_wine_rack": {
+   "img": "pk:west/west_2_107",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_bar_stools": {
+   "img": "pk:west/west_2_108",
+   "foot": [
+    3,
+    1
+   ],
+   "title": "стойка"
+  },
+  "w_sideboard": {
+   "img": "pk:west/west_2_109",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "drawer",
+   "title": "буфет"
+  },
+  "w_liquor": {
+   "img": "pk:west/west_2_110",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "shelf",
+   "title": "шкаф с бутылками"
+  },
+  "w_bookcase": {
+   "img": "pk:west/west_2_116",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "shelf",
+   "title": "книжный шкаф"
+  },
+  "w_bookcase_b": {
+   "img": "pk:west/west_2_117",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "shelf",
+   "title": "книжный шкаф"
+  },
+  "w_newspaper": {
+   "img": "pk:west/west_2_111",
+   "block": false,
+   "layer": "floor"
+  },
+  "w_mailbox": {
+   "img": "pk:west/west_2_114"
+  },
+  "w_backbar": {
+   "img": "pk:west/west_8_019",
+   "foot": [
+    4,
+    1
+   ],
+   "title": "полки с бутылками"
+  },
+  "w_bar": {
+   "img": "pk:west/west_8_046",
+   "foot": [
+    4,
+    1
+   ],
+   "title": "стойка"
+  },
+  "w_bar_b": {
+   "img": "pk:west/west_8_049",
+   "foot": [
+    4,
+    1
+   ],
+   "title": "стойка"
+  },
+  "w_jukebox": {
+   "img": "pk:west/west_8_054",
+   "title": "музыкальный автомат"
+  },
+  "w_wanted": {
+   "img": "pk:west/west_8_040",
+   "block": false
+  },
+  "w_saloon_sign": {
+   "img": "pk:west/west_8_015",
+   "foot": [
+    2,
+    1
+   ],
+   "block": false
+  },
+  "w_table_set": {
+   "img": "pk:west/west_8_025",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_round_table": {
+   "img": "pk:west/west_8_037",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_poker_big": {
+   "img": "pk:west/west_8_043",
+   "foot": [
+    3,
+    1
+   ]
+  },
+  "w_pool": {
+   "img": "pk:west/west_8_048",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_stool_red": {
+   "img": "pk:west/west_8_073",
+   "block": false
+  },
+  "w_stool_grey": {
+   "img": "pk:west/west_8_075",
+   "block": false
+  },
+  "w_portrait": {
+   "img": "pk:west/west_8_018",
+   "foot": [
+    2,
+    1
+   ],
+   "block": false
+  },
+  "w_wine_tall": {
+   "img": "pk:west/west_8_058"
+  },
+  "w_oil_lamp": {
+   "img": "pk:west/west_8_072",
+   "block": false,
+   "light": {
+    "r": 90,
+    "color": [
+     255,
+     190,
+     110
+    ],
+    "at": [
+     0.5,
+     0.35
+    ],
+    "flicker": 0.3
+   }
+  },
+  "w_candelabra": {
+   "img": "pk:west/west_8_055",
+   "light": {
+    "r": 110,
+    "color": [
+     255,
+     180,
+     90
+    ],
+    "at": [
+     0.5,
+     0.15
+    ],
+    "flicker": 0.5
+   }
+  },
+  "w_stairs": {
+   "img": "pk:west/west_8_068",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_jail": {
+   "img": "pk:west/west_7_020",
+   "foot": [
+    2,
+    2
+   ],
+   "title": "камера"
+  },
+  "w_well": {
+   "img": "pk:west/west_7_024",
+   "title": "колодец"
+  },
+  "w_pump": {
+   "img": "pk:west/west_7_025",
+   "title": "колонка"
+  },
+  "w_hitch": {
+   "img": "pk:west/west_7_017",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_hitch_b": {
+   "img": "pk:west/west_7_018",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_wagon": {
+   "img": "pk:west/west_7_040",
+   "foot": [
+    3,
+    1
+   ],
+   "search": "junk",
+   "title": "фургон"
+  },
+  "w_forge": {
+   "img": "pk:west/west_7_043",
+   "light": {
+    "r": 120,
+    "color": [
+     255,
+     130,
+     60
+    ],
+    "at": [
+     0.5,
+     0.6
+    ],
+    "flicker": 0.6
+   }
+  },
+  "w_outhouse": {
+   "img": "pk:west/west_7_019",
+   "title": "сортир"
+  },
+  "w_fence": {
+   "img": "pk:west/west_7_046",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_fence_b": {
+   "img": "pk:west/west_7_054",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_fence_stakes": {
+   "img": "pk:west/west_7_055",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_fence_post": {
+   "img": "pk:west/west_7_047"
+  },
+  "w_street_lamp": {
+   "img": "pk:west/west_7_053",
+   "light": {
+    "r": 170,
+    "color": [
+     255,
+     175,
+     95
+    ],
+    "at": [
+     0.6,
+     0.15
+    ]
+   }
+  },
+  "w_crates": {
+   "img": "pk:west/west_7_030",
+   "search": "crate",
+   "title": "ящики"
+  },
+  "w_barrels": {
+   "img": "pk:west/west_7_014",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_gun_rack": {
+   "img": "pk:west/west_5_014",
+   "foot": [
+    2,
+    1
+   ],
+   "title": "оружейная стойка"
+  },
+  "w_desk_b": {
+   "img": "pk:west/west_5_017",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_desk_c": {
+   "img": "pk:west/west_5_018",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "drawer",
+   "title": "стол"
+  },
+  "w_cabinet": {
+   "img": "pk:west/west_5_000",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "drawer",
+   "title": "шкаф"
+  },
+  "w_glass_cabinet": {
+   "img": "pk:west/west_5_003",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "shelf",
+   "title": "шкаф со стеклом"
+  },
+  "w_cupboard": {
+   "img": "pk:west/west_5_004",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "drawer",
+   "title": "кухонный шкаф"
+  },
+  "w_locker": {
+   "img": "pk:west/west_5_007",
+   "search": "locker",
+   "title": "шкафчик"
+  },
+  "w_cookstove": {
+   "img": "pk:west/west_5_026",
+   "foot": [
+    2,
+    1
+   ],
+   "title": "плита"
+  },
+  "w_oil_drum": {
+   "img": "pk:west/west_5_012"
+  },
+  "w_lantern": {
+   "img": "pk:west/west_5_046",
+   "block": false,
+   "light": {
+    "r": 90,
+    "color": [
+     255,
+     190,
+     110
+    ],
+    "at": [
+     0.5,
+     0.4
+    ],
+    "flicker": 0.3
+   }
+  },
+  "w_sacks": {
+   "img": "pk:west/west_5_043"
+  },
+  "w_crate_sacks": {
+   "img": "pk:west/west_5_041",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "crate",
+   "title": "ящик"
+  },
+  "w_junk_pile": {
+   "img": "pk:west/west_5_036",
+   "foot": [
+    2,
+    1
+   ],
+   "search": "junk",
+   "title": "куча хлама"
+  },
+  "x_jail_cell": {
+   "img": "x_jail_cell",
+   "foot": [
+    2,
+    1
+   ],
+   "sight": true,
+   "title": "камера"
+  },
+  "w_table_long": {
+   "img": "pk:west/west_5_006",
+   "foot": [
+    2,
+    1
+   ],
+   "title": "стол"
+  },
+  "w_table_plain": {
+   "img": "pk:west/west_5_001",
+   "foot": [
+    2,
+    1
+   ],
+   "title": "стол"
+  },
+  "w_chair_r": {
+   "img": "pk:west/west_8_024",
+   "block": false
+  },
+  "w_chair_l": {
+   "img": "pk:west/west_8_050",
+   "block": false
+  },
+  "rack_goods": {
+   "img": "p2_006",
+   "scale": 0.75,
+   "sight": true,
+   "search": "shelf",
+   "title": "стеллаж",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_stuff": {
+   "img": "p2_051",
+   "scale": 0.75,
+   "sight": true,
+   "search": "shelf",
+   "title": "стеллаж с барахлом",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_tools": {
+   "img": "p2_052",
+   "scale": 0.75,
+   "sight": true,
+   "search": "shelf",
+   "title": "стеллаж с барахлом",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_parts": {
+   "img": "p2_053",
+   "scale": 0.75,
+   "sight": true,
+   "search": "shelf",
+   "title": "стеллаж с барахлом",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_metal": {
+   "img": "p2_021",
+   "scale": 0.75,
+   "search": "shelf",
+   "title": "железный стеллаж",
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_tall": {
+   "img": "p2_038",
+   "scale": 0.75,
+   "sight": true,
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_empty": {
+   "img": "p2_005",
+   "scale": 0.75,
+   "sight": true,
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "rack_rust": {
+   "img": "p2_039",
+   "scale": 0.75,
+   "sight": true,
+   "foot": [
+    2,
+    1
+   ]
+  },
+  "w_table_lamp": {
+   "img": "pk:west/west_8_072",
+   "block": false,
+   "scale": 0.6,
+   "light": {
+    "r": 80,
+    "color": [
+     255,
+     190,
+     110
+    ],
+    "at": [
+     0.5,
+     0.35
+    ],
+    "flicker": 0.3
+   }
+  },
+  "w_table_lantern": {
+   "img": "pk:west/west_5_046",
+   "block": false,
+   "scale": 0.6,
+   "light": {
+    "r": 80,
+    "color": [
+     255,
+     190,
+     110
+    ],
+    "at": [
+     0.5,
+     0.4
+    ],
+    "flicker": 0.3
+   }
+  },
+  "table_lantern": {
+   "img": "p2_088",
+   "block": false,
+   "scale": 0.45,
+   "light": {
+    "r": 80,
+    "color": [
+     255,
+     180,
+     90
+    ],
+    "at": [
+     0.5,
+     0.4
+    ],
+    "flicker": 0.4
+   }
   }
  }
 }

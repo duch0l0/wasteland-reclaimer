@@ -115,7 +115,7 @@ out.paint("g", 0, y_road + 4, W - 1, y_road + 4)
 out.paint("g", 29, 20, 32, y_road - 2)            # дорожка от ворот к дверям
 out.reserve(0, y_road - 1, W - 1, y_road + 4)
 out.reserve(29, 19, 32, y_road - 1)
-out.portal([(0, y) for y in range(y_road, y_road + 4)], "ruins", (93, 31), "Пятнадцатая")
+out.portal([(0, y) for y in range(y_road, y_road + 4)], "ruins", (147, 49), "Пятнадцатая")
 
 # здание школы: стены и крыша; внутри — отдельная карта
 out.building(14, 6, 36, 14, "brick", south=(16,))
@@ -271,7 +271,7 @@ cel.floor_code("M", *METAL)
 cel.wall_code("K", "pk:nbunk/nbunk_w1_12")
 cel.room(1, 1, 14, 10, "K", "M")
 cel.props.append(["x_ladder", 3, 4])
-cel.portal([(3, 4)], "ruins", (8, 18), "Наверх, в дом")          # люк — (9, 19), выход рядом
+cel.portal([(3, 4)], "ruins", (7, 32), "Наверх, в дом")          # люк — (7, 33), выход рядом
 cel.terminal(6, 4, "amos_cellar")
 cel.put(CANS, 8, 4, check=False)
 cel.put(BUNK, 11, 4, check=False)
@@ -289,7 +289,7 @@ sal.floor_code("G", *WOOD)
 sal.wall_code("D", "pk:nbunk/nbunk_w1_00")
 sal.room(1, 1, 14, 10, "D", "G")
 sal.props.append(["x_ladder", 3, 4])
-sal.portal([(3, 4)], "ruins", (21, 18), "Наверх, в салун")       # люк — (20, 18)
+sal.portal([(3, 4)], "ruins", (53, 27), "Наверх, в салун")       # люк — (52, 27), за стойкой
 sal.npcs += [["tess", 11, 8]]
 for x in (6, 7, 8):
     sal.put("barrel_wood", x, 4)

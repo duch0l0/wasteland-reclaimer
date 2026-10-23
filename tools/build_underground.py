@@ -72,7 +72,7 @@ room(v, "m", 24, 24, 37, 32)          # архив и кабинет Кросс�
 room(v, "m", 18, 24, 21, 28)          # тупик с турелью
 
 put("x_vault_gear", 19, 1, force=True)                              # дверь-шестерня изнутри
-v.portal([(19, 2), (20, 2)], "ruins", (55, 53), "Пятнадцатая")
+v.portal([(19, 2), (20, 2)], "ruins", (104, 77), "Пятнадцатая")
 v.reserve(17, 3, 22, 9)
 put("x_vault_sign", 16, 3, check=False)
 put("x_sandbags", 22, 5, check=False)
@@ -169,7 +169,7 @@ room(d, "w", 2, 18, 11, 24)           # затопленная камера
 room(d, "w", 10, 17, 11, 17)
 
 put("x_ladder", 3, 2, check=False)
-d.portal([(3, 2)], "ruins", (9, 52), "Пятнадцатая")
+d.portal([(3, 2)], "ruins", (13, 78), "Пятнадцатая")
 d.reserve(2, 3, 5, 6)
 for x, y in ((9, 4), (17, 5), (23, 9), (15, 15), (26, 16), (35, 5), (5, 21), (8, 23)):
     put("x_puddle", x, y, check=False)

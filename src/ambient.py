@@ -69,7 +69,7 @@ def _walkable(level, t):
     return not level.is_wall(*t) and not level.is_exit(*t) and not (hasattr(level, "portal_at") and level.portal_at(*t))
 
 
-def _reach(level, start, limit=6000):
+def _reach(level, start, limit=40000):
     seen = {start}
     q = deque([start])
     while q and len(seen) < limit:
@@ -157,15 +157,28 @@ def populate(loc, loc_id=None):
                 return t
         return None
 
+    spots = getattr(lv, "folk_spots", {}) or {}
+
+    def spot(key):
+        """Своё место жителя (генератор карты знает, где огород Нюры и где пианино Глаши)."""
+        t = spots.get(key)
+        if t and tuple(t) in reach:
+            taken.append(tuple(t))
+            return tuple(t)
+        return None
+
     made = []
     cast = list(folks().get(loc_id, []))
     for i in range(spec["people"]):
-        t = pick(4)
+        t = spot(cast[i]["key"]) if i < len(cast) else None
+        t = t or pick(4)
         if t is None:
             break
         if i < len(cast):
             nid, p = _folk_persona(rnd, loc_id, i, cast[i])
             KEY2ID[p["key"]] = nid
+            if tuple(spots.get(cast[i]["key"], ())) == t:
+                p["stroll"] = 4                          # гуляет у своего места: огород, прилавок, пианино
         else:
             nid, p = _persona(rnd, loc_id, i, spec)
         made.append((nid, p, t))
@@ -178,6 +191,11 @@ def populate(loc, loc_id=None):
                 near = [c for c in cand if 1 <= max(abs(c[0] - anchor[0]), abs(c[1] - anchor[1])) <= 3]
                 if near:
                     t = rnd.choice(near)
+                    taken.append(t)
+            if t is None:
+                own = [tuple(c) for c in spots.get(f"critter:{species}", []) if tuple(c) in reach and tuple(c) not in taken]
+                if own:
+                    t = own[0]
                     taken.append(t)
             if t is None:
                 t = pick(3)

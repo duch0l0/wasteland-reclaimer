@@ -11,10 +11,10 @@
     "music": "desert",
     "music_zones": [
       [
-        16,
-        17,
-        27,
+        49,
         25,
+        68,
+        37,
         "saloon"
       ]
     ]

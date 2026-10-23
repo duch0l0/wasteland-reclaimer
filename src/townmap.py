@@ -20,6 +20,8 @@ import json
 import os
 import random
 
+import math
+
 import pygame
 
 from . import settings as S
@@ -740,6 +742,10 @@ class TownMap(MapBase):
         self.player_spawn = (d["player"][0] * T, d["player"][1] * T)
         self.enemy_spawns = [((e[1] * T, e[2] * T), e[0], e[3] if len(e) > 3 else None) for e in d.get("enemies", [])]
         self.npc_spawns = [((x * T, y * T), nid) for nid, x, y in d.get("npcs", [])]
+        # места жителей массовки по ролям (src/ambient.py): ключ анкеты -> [x, y], «critter:<вид>» -> [[x, y], …]
+        self.folk_spots = d.get("folk_spots", {})
+        # рабочие зоны: житель ходит только по своему месту (шериф — между столом и шкафами) — src/wander.py
+        self.walk_zones = d.get("walk_zones", {})
         for item, count, x, y in d.get("pickups", []):
             self.add_pickup((x * T, y * T), item, count)
 
@@ -762,7 +768,9 @@ class TownMap(MapBase):
             bottom = (y + fh) * T
             rect = pygame.Rect(0, 0, *inf["size"])
             rect.midbottom = ((x + fw / 2) * T + ox, bottom + oy)
-            self.objects.append({"name": name, "rect": rect, "sort_y": bottom + oy, "foot": foot,
+            # 6-й элемент — поправка порядка: вещь на столе поднята (oy < 0), но рисуется после стола
+            z = entry[5] if len(entry) >= 6 else 0
+            self.objects.append({"name": name, "rect": rect, "sort_y": bottom + oy + z, "foot": foot,
                                  "container": None, "floor": inf["layer"] == "floor"})
 
         self.containers = []
@@ -1546,6 +1554,36 @@ class TownMap(MapBase):
             for (x, y) in p["tiles"]:
                 if (x in (0, self.width - 1) or y in (0, self.height - 1)) and x0 <= x < x1 and y0 <= y < y1:
                     surf.blit(self._exit_arrow(x, y, green=True), (x * T - cam_x, y * T - cam_y))
+        # вход посреди карты (убежище, шахта, двор здания) — те же зелёные стрелки, что у переходов на краю:
+        # по одной на каждую клетку прохода, на клетке перед ним, смотрят внутрь. Люки и лестницы — без стрелок.
+        for p in self.portals:
+            if p.get("_door") is None:
+                p["_door"] = self._door_arrow_spots(p)
+            for (ax, ay), key in p["_door"]:
+                if x0 <= ax < x1 and y0 <= ay < y1:
+                    surf.blit(self._door_arrow(key), (ax * T - cam_x, ay * T - cam_y))
+
+    def _door_arrow_spots(self, p):
+        """[(клетка перед входом, направление внутрь)]; пусто — люк, лестница или край карты."""
+        tiles = {tuple(t) for t in p["tiles"]}
+        if any(x in (0, self.width - 1) or y in (0, self.height - 1) for x, y in tiles):
+            return []
+        hatch = {tuple(t) for o in self.objects if o["name"] in ("x_manhole", "x_ladder") for t in o["foot"]}
+        if tiles & hatch:
+            return []
+        for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):        # сторона, откуда подходят
+            spots = [((x + dx, y + dy), (-dx, -dy)) for x, y in sorted(tiles)
+                     if (x + dx, y + dy) not in tiles and not self.is_wall(x + dx, y + dy)]
+            if len(spots) == len(tiles):
+                return spots
+        return []
+
+    def _door_arrow(self, key):
+        """Зелёная стрелка перехода (как на краю карты), повёрнутая внутрь входа."""
+        if TownMap._GREEN is None:
+            self._exit_arrow(0, 1, green=True)
+        angle = {(1, 0): 0, (-1, 0): 180, (0, -1): 90, (0, 1): -90}[key]
+        return pygame.transform.rotate(TownMap._GREEN, angle)
 
     def _exit_arrow(self, x, y, green=False):
         """Стрелки выхода смотрят наружу, к краю карты. Жёлтые — на карту мира,

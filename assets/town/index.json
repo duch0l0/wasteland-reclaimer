@@ -5507,5 +5507,14 @@
    40
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_jail_cell": {
+  "page": null,
+  "rect": null,
+  "size": [
+   96,
+   95
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

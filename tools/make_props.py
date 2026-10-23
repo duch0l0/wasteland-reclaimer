@@ -851,13 +851,21 @@ def kids_drawings():
     return soft_outline(s, (78, 70, 60))
 
 
+def jail_cell():
+    """Камера за решёткой для участка шерифа: уличный спрайт west_7_020 без кактуса и перекати-поля
+    на крыше (верхние 56 px) — внутри здания на камере ничего не растёт."""
+    img = pygame.image.load(os.path.join("assets", "packs", "west", "props", "west_7_020.png")).convert_alpha()
+    w, h = img.get_size()
+    return img.subsurface((0, 56, w, h - 56)).copy()
+
+
 def _mark_full(*fns):
     for f in fns:
         f.full_size = True
     return fns
 
 
-_mark_full(flag, flag_vt, sign_fuel, outhouse, wallbars, climb_rope, globe, kids_drawings)
+_mark_full(flag, flag_vt, sign_fuel, outhouse, wallbars, climb_rope, globe, kids_drawings, jail_cell)
 
 # имя -> (рисунок, описание в каталоге)
 PROPS = {
@@ -897,6 +905,7 @@ PROPS = {
     "x_vault_sign11": (lambda: vault_sign("11"), {"foot": [1, 1]}),
     # Пятнадцатая, шаг 4 (docs/furnish/fifteen.md §2.2): своих картинок осталось восемь — того,
     # чего в бандле SCKR нет. Остальные 17 предметов берутся из наборов (REPLACED выше).
+    "x_jail_cell": (jail_cell, {"foot": [2, 1], "sight": True, "title": "камера"}),   # участок шерифа
     "x_flag": (flag, {"foot": [1, 1]}),                                    # флаг ратуши
     "x_flag_vt": (flag_vt, {"foot": [1, 1]}),                               # флаг Vault-Tec
     "x_sign_fuel": (sign_fuel, {"foot": [2, 1]}),                           # «НЕТ БЕНЗИНА»
@@ -971,6 +980,120 @@ RUINS = {
     "r_army_truck": ("r24_005", V, [5, 1], {"sight": True, "search": "military", "title": "армейский грузовик"}),
     "r_tanker": ("r24_006", V, [5, 1], {"sight": True}), "r_van": ("r24_012", V, [5, 1], {"sight": True}),
 }
+
+
+# Набор «west» (Wild West, SCKR) — мебель и улица для ручной расстановки городов (docs/furnish/logic.md).
+# Имена w_*; след — по ширине спрайта (48 px — клетка); настенное — block False (вешается на стену).
+W = "pk:west/west_"
+WEST = {
+    # дом и контора
+    "w_desk": (W + "2_000", {"foot": [2, 1], "title": "письменный стол"}),
+    "w_chair": (W + "2_001", {"block": False}),
+    "w_chair_b": (W + "2_002", {"block": False}),
+    "w_sofa": (W + "2_003", {"foot": [2, 1]}),
+    "w_rocker": (W + "2_004", {}),
+    "w_bed": (W + "2_005", {"foot": [2, 1], "title": "кровать"}),
+    "w_wardrobe": (W + "2_006", {"search": "cloth", "title": "платяной шкаф"}),
+    "w_dresser": (W + "2_007", {"foot": [2, 1], "search": "drawer", "title": "комод"}),
+    "w_nightstand": (W + "2_008", {}),
+    "w_fireplace": (W + "2_010", {"foot": [2, 1], "light": {"r": 140, "color": [255, 150, 70], "at": [0.5, 0.75], "flicker": 0.4}}),
+    "w_wall_clock": (W + "2_011", {"block": False}),
+    "w_armchair": (W + "2_013", {}),
+    "w_bench": (W + "2_015", {"foot": [2, 1]}),
+    "w_stove": (W + "2_018", {"title": "печка"}),
+    "w_grand_clock": (W + "2_019", {}),
+    "w_poker": (W + "2_021", {"foot": [2, 1]}),
+    "w_bathtub": (W + "2_023", {"foot": [2, 1]}),
+    "w_curtains": (W + "2_026", {"foot": [2, 1], "block": False}),
+    "w_window": (W + "2_027", {"foot": [2, 1], "block": False}),
+    "w_mirror": (W + "2_028", {"block": False}),
+    "w_painting": (W + "2_030", {"foot": [2, 1], "block": False}),
+    "w_plant": (W + "2_031", {}),
+    "w_plant_b": (W + "2_042", {}),
+    "w_hay": (W + "2_045", {}),
+    "w_lamp": (W + "2_050", {"block": False, "light": {"r": 90, "color": [255, 190, 110], "at": [0.5, 0.3], "flicker": 0.3}}),
+    "w_rug_red": (W + "2_060", {"foot": [2, 2], "block": False, "layer": "floor"}),
+    "w_rug_green": (W + "2_061", {"foot": [2, 2], "block": False, "layer": "floor"}),
+    "w_rug_quilt": (W + "2_062", {"foot": [2, 2], "block": False, "layer": "floor"}),
+    "w_shelf": (W + "2_106", {"foot": [2, 1], "search": "shelf", "title": "полки"}),
+    "w_wine_rack": (W + "2_107", {"foot": [2, 1]}),
+    "w_bar_stools": (W + "2_108", {"foot": [3, 1], "title": "стойка"}),
+    "w_sideboard": (W + "2_109", {"foot": [2, 1], "search": "drawer", "title": "буфет"}),
+    "w_liquor": (W + "2_110", {"foot": [2, 1], "search": "shelf", "title": "шкаф с бутылками"}),
+    "w_bookcase": (W + "2_116", {"foot": [2, 1], "search": "shelf", "title": "книжный шкаф"}),
+    "w_bookcase_b": (W + "2_117", {"foot": [2, 1], "search": "shelf", "title": "книжный шкаф"}),
+    "w_newspaper": (W + "2_111", {"block": False, "layer": "floor"}),
+    "w_mailbox": (W + "2_114", {}),
+    # салун
+    "w_backbar": (W + "8_019", {"foot": [4, 1], "title": "полки с бутылками"}),
+    "w_bar": (W + "8_046", {"foot": [4, 1], "title": "стойка"}),
+    "w_bar_b": (W + "8_049", {"foot": [4, 1], "title": "стойка"}),
+    "w_jukebox": (W + "8_054", {"title": "музыкальный автомат"}),
+    "w_wanted": (W + "8_040", {"block": False}),
+    "w_saloon_sign": (W + "8_015", {"foot": [2, 1], "block": False}),
+    "w_table_set": (W + "8_025", {"foot": [2, 1]}),
+    "w_round_table": (W + "8_037", {"foot": [2, 1]}),
+    "w_poker_big": (W + "8_043", {"foot": [3, 1]}),
+    "w_pool": (W + "8_048", {"foot": [2, 1]}),
+    "w_stool_red": (W + "8_073", {"block": False}),
+    "w_stool_grey": (W + "8_075", {"block": False}),
+    "w_portrait": (W + "8_018", {"foot": [2, 1], "block": False}),
+    "w_wine_tall": (W + "8_058", {}),
+    "w_oil_lamp": (W + "8_072", {"block": False, "light": {"r": 90, "color": [255, 190, 110], "at": [0.5, 0.35], "flicker": 0.3}}),
+    "w_candelabra": (W + "8_055", {"light": {"r": 110, "color": [255, 180, 90], "at": [0.5, 0.15], "flicker": 0.5}}),
+    "w_stairs": (W + "8_068", {"foot": [2, 1]}),
+    # улица и двор
+    "w_jail": (W + "7_020", {"foot": [2, 2], "title": "камера"}),
+    "w_well": (W + "7_024", {"title": "колодец"}),
+    "w_pump": (W + "7_025", {"title": "колонка"}),
+    "w_hitch": (W + "7_017", {"foot": [2, 1]}),
+    "w_hitch_b": (W + "7_018", {"foot": [2, 1]}),
+    "w_wagon": (W + "7_040", {"foot": [3, 1], "search": "junk", "title": "фургон"}),
+    "w_forge": (W + "7_043", {"light": {"r": 120, "color": [255, 130, 60], "at": [0.5, 0.6], "flicker": 0.6}}),
+    "w_outhouse": (W + "7_019", {"title": "сортир"}),
+    "w_fence": (W + "7_046", {"foot": [2, 1]}),
+    "w_fence_b": (W + "7_054", {"foot": [2, 1]}),
+    "w_fence_stakes": (W + "7_055", {"foot": [2, 1]}),
+    "w_fence_post": (W + "7_047", {}),
+    "w_street_lamp": (W + "7_053", {"light": {"r": 170, "color": [255, 175, 95], "at": [0.6, 0.15]}}),
+    "w_crates": (W + "7_030", {"search": "crate", "title": "ящики"}),
+    "w_barrels": (W + "7_014", {"foot": [2, 1]}),
+    # участок шерифа, кухня, кладовая
+    "w_gun_rack": (W + "5_014", {"foot": [2, 1], "title": "оружейная стойка"}),
+    "w_desk_b": (W + "5_017", {"foot": [2, 1]}),
+    "w_desk_c": (W + "5_018", {"foot": [2, 1], "search": "drawer", "title": "стол"}),
+    "w_cabinet": (W + "5_000", {"foot": [2, 1], "search": "drawer", "title": "шкаф"}),
+    "w_glass_cabinet": (W + "5_003", {"foot": [2, 1], "search": "shelf", "title": "шкаф со стеклом"}),
+    "w_cupboard": (W + "5_004", {"foot": [2, 1], "search": "drawer", "title": "кухонный шкаф"}),
+    "w_locker": (W + "5_007", {"search": "locker", "title": "шкафчик"}),
+    "w_cookstove": (W + "5_026", {"foot": [2, 1], "title": "плита"}),
+    "w_oil_drum": (W + "5_012", {}),
+    "w_lantern": (W + "5_046", {"block": False, "light": {"r": 90, "color": [255, 190, 110], "at": [0.5, 0.4], "flicker": 0.3}}),
+    "w_sacks": (W + "5_043", {}),
+    "w_table_long": (W + "5_006", {"foot": [2, 1], "title": "стол"}),        # прямой стол — для рядов
+    "w_table_plain": (W + "5_001", {"foot": [2, 1], "title": "стол"}),
+    "w_chair_r": (W + "8_024", {"block": False}),                           # стул в профиль: сидят лицом вправо
+    "w_chair_l": (W + "8_050", {"block": False}),                           # стул в профиль: лицом влево
+    "w_crate_sacks": (W + "5_041", {"foot": [2, 1], "search": "crate", "title": "ящик"}),
+    "w_junk_pile": (W + "5_036", {"foot": [2, 1], "search": "junk", "title": "куча хлама"}),
+}
+# стеллажи старого каталога с картинкой в две клетки и следом в одну — двойники со следом [2, 1]:
+# ставить вплотную рядами, не проходить сквозь край картинки (docs/furnish/logic.md)
+WEST.update({
+    # настольные лампы — мельче напольных: на столе лампа не может быть размером со стул
+    "w_table_lamp": (W + "8_072", {"block": False, "scale": 0.6, "light": {"r": 80, "color": [255, 190, 110], "at": [0.5, 0.35], "flicker": 0.3}}),
+    "w_table_lantern": (W + "5_046", {"block": False, "scale": 0.6, "light": {"r": 80, "color": [255, 190, 110], "at": [0.5, 0.4], "flicker": 0.3}}),
+    "table_lantern": ("p2_088", {"block": False, "scale": 0.45, "light": {"r": 80, "color": [255, 180, 90], "at": [0.5, 0.4], "flicker": 0.4}}),
+    "rack_goods": ("p2_006", {"scale": 0.75, "sight": True, "search": "shelf", "title": "стеллаж", "foot": [2, 1]}),   # shelf_goods со следом по ширине картинки
+    "rack_stuff": ("p2_051", {"scale": 0.75, "sight": True, "search": "shelf", "title": "стеллаж с барахлом", "foot": [2, 1]}),   # shelf_stuff_3 со следом по ширине картинки
+    "rack_tools": ("p2_052", {"scale": 0.75, "sight": True, "search": "shelf", "title": "стеллаж с барахлом", "foot": [2, 1]}),   # shelf_stuff_4 со следом по ширине картинки
+    "rack_parts": ("p2_053", {"scale": 0.75, "sight": True, "search": "shelf", "title": "стеллаж с барахлом", "foot": [2, 1]}),   # shelf_stuff_5 со следом по ширине картинки
+    "rack_metal": ("p2_021", {"scale": 0.75, "search": "shelf", "title": "железный стеллаж", "foot": [2, 1]}),   # metal_shelf со следом по ширине картинки
+    "rack_tall": ("p2_038", {"scale": 0.75, "sight": True, "foot": [2, 1]}),   # shelf_metal_tall со следом по ширине картинки
+    "rack_empty": ("p2_005", {"scale": 0.75, "sight": True, "foot": [2, 1]}),   # shelf_empty со следом по ширине картинки
+    "rack_rust": ("p2_039", {"scale": 0.75, "sight": True, "foot": [2, 1]}),   # shelf_rust со следом по ширине картинки
+})
+REPLACED.update(WEST)
 
 
 def register_pack_props(catalog):

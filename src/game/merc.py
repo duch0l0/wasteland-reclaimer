@@ -94,7 +94,7 @@ class MercMixin:
         self.restore_profile(hero)
         self.flags["dex_back"] = True
         self.flags["caravan_arrived"] = True
-        self._spawn_npc("ruins", "dex", (12, 25))
+        self._spawn_npc("ruins", "dex", (20, 43))
         self._spawn_npc("ruins", "rose", (48, 24))
         self.set_stage("sq_merc", 90)
         if self.flags.get("barstow_base_cleared"):   # Дэкс зачистил и базу морпехов — склад гарнизона в караван
