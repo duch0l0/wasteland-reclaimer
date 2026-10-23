@@ -111,6 +111,13 @@ def _drain_floor():
     return [_pixel_tile([(62, 66, 60), (58, 62, 56), (66, 70, 62), (54, 60, 54)], s, wet) for s in range(4)]
 
 
+# кромка массивов стиля: (затемнение вглубь, бордюр, блик, тень под бордюром) — в цвет фасадов _wall_faces
+SLAB_RIM = {
+    "drain": ((88, 88, 80), (112, 112, 102), (150, 150, 136), (40, 40, 37)),
+    "vault": ((78, 86, 100), (96, 106, 122), (134, 146, 164), (34, 36, 42)),
+}
+
+
 def _rock_tiles():
     """Толща скалы/стены — почти чёрная, чтобы коридоры читались сверху."""
     return [_pixel_tile([(18, 16, 16), (22, 20, 19), (16, 14, 14), (26, 23, 21)], s) for s in range(3)]
@@ -1366,6 +1373,8 @@ class TownMap(MapBase):
                 return self._rock_rim(x, y, h)
             if below != "x":
                 return self._face[h % len(self._face)]   # стена, обращённая к нам
+            if self.style in SLAB_RIM:
+                return self._slab_rim(x, y, h)
             return self._rock[h % len(self._rock)]
         if code in self._tiles and self._tiles[code]:
             variants = self._tiles[code]
@@ -1396,6 +1405,45 @@ class TownMap(MapBase):
                 t.fill(lip, (0, 0, 10, T)); t.fill(hi, (0, 0, 3, T))
             else:
                 t.fill(lip, (T - 10, 0, 10, T)); t.fill(hi, (T - 3, 0, 3, T))
+        self._edge_cache[key] = t
+        return t
+
+    def _slab_rim(self, x, y, h, depth=3):
+        """Толща стены (бетон коллектора, сталь убежища): у прохода — бордюр-кромка, дальше вглубь плавно
+        темнеет до черноты, чтобы массив между коридорами читался как стена, а не как дыра в карте."""
+        def gap(dx, dy):           # через сколько клеток в эту сторону пол (0 — дальше depth)
+            for k in range(1, depth + 1):
+                nx, ny = x + dx * k, y + dy * k
+                if not (0 <= nx < self.width and 0 <= ny < self.height):
+                    return 0
+                if self.ground[ny][nx] not in "x_" and self.ground[ny][nx] not in self.wallsets:
+                    return k
+            return 0
+        sides = (gap(0, -1), gap(-1, 0), gap(1, 0))
+        base = self._rock[h % len(self._rock)]
+        if not any(sides):
+            return base
+        key = ("slab", h % len(self._rock), sides)
+        if key in self._edge_cache:
+            return self._edge_cache[key]
+        t = base.copy()
+        fade, lip, hi, gap_c = SLAB_RIM[self.style]
+        reach = depth * T * 0.8
+        shade = pygame.Surface((T, T), pygame.SRCALPHA)
+        for py in range(T):
+            for px in range(T):
+                d = min([(k - 1) * T + off for k, off in zip(sides, (py, px, T - 1 - px)) if k] or [reach])
+                a = max(0.0, 1 - d / reach) ** 1.6
+                if a > 0:
+                    shade.set_at((px, py), (*fade, int(250 * a)))
+        t.blit(shade, (0, 0))
+        kn, kw, ke = sides
+        if kn == 1:
+            t.fill(lip, (0, 0, T, 10)); t.fill(hi, (0, 0, T, 3)); t.fill(gap_c, (0, 10, T, 2))
+        if kw == 1:
+            t.fill(lip, (0, 0, 7, T)); t.fill(hi, (0, 0, 2, T))
+        if ke == 1:
+            t.fill(lip, (T - 7, 0, 7, T)); t.fill(hi, (T - 2, 0, 2, T))
         self._edge_cache[key] = t
         return t
 
