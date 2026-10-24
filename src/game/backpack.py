@@ -180,6 +180,8 @@ class BackpackMixin:
             p.skills[sid] = min(skills.CAP, was + use.get("amount", 5))
             self.inventory.remove(name)
             self.log(f"Прочитано: {name}. {skills.SKILL_BY_ID[sid]['name']}: {was} → {p.skills[sid]}.")
+            for eff in use.get("on_read", []):   # сюжетная книга: прочитал — и мир это заметил
+                self.apply_effect(eff)
             if not self.inventory.has(name):
                 visible = self.inventory_items()
                 self.inv_sel = visible[0] if visible else None

@@ -5516,5 +5516,14 @@
    95
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_ladder_wall": {
+  "page": null,
+  "rect": null,
+  "size": [
+   48,
+   128
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

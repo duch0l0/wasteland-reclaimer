@@ -595,6 +595,159 @@
 "block": true,
 "sight": false
 },
+"cl_bed": {
+"img": "pk:nbunk/nbunk_3_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_nightstand": {
+"img": "pk:nbunk/nbunk_3_005",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"cl_workbench": {
+"img": "pk:nbunk/nbunk_3_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_toolboard": {
+"img": "pk:nbunk/nbunk_2_007",
+"block": false,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_locker": {
+"img": "pk:nbunk/nbunk_3_008",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"search": "locker",
+"title": "шкаф деда"
+},
+"cl_shelf_cans": {
+"img": "pk:nbunk/nbunk_3_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_rack": {
+"img": "pk:nbunk/nbunk_3_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_generator": {
+"img": "pk:nbunk/nbunk_3_026",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+190,
+110
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.25
+}
+},
+"cl_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"cl_jerrycan": {
+"img": "pk:nbunk/nbunk_3_041",
+"block": true,
+"sight": false
+},
+"cl_crates": {
+"img": "pk:nbunk/nbunk_3_029",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"cl_milbox": {
+"img": "pk:nbunk/nbunk_3_030",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "армейский ящик"
+},
+"cl_map": {
+"img": "x_vd_map",
+"block": false,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_lockers": {
+"img": "pk:nbunk/nbunk_3_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_supply_pile": {
+"img": "pk:nbunk/nbunk_3_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cl_medbox": {
+"img": "pk:nbunk/nbunk_3_017",
+"block": true,
+"sight": false
+},
 "fifteen_f_home_rug": {
 "img": "pk:west/west_2_060",
 "block": false,

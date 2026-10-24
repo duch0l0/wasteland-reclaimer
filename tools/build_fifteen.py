@@ -652,7 +652,8 @@ swall(PIC, 43, 3, dy=-48)              # картина в раме
 splace(SHELF, 35, 4)
 splace(SHELF, 36, 4)
 splace(SHELF_B, 37, 4)                 # 2 клетки: 37..38
-sbox(CABINET, 40, 4, "библиотечный шкаф", {"консервы": 1, "батарейки": 1, "спички": 1})
+sbox(CABINET, 40, 4, "библиотечный шкаф",
+     {"консервы": 1, "батарейки": 1, "спички": 1, "Наша Америка, 5 класс": 1})   # «Последний урок»: учебник 5-Б
 splace(SHELF_B, 42, 4)                 # 42..43
 splace(SHELF, 44, 4)
 splace(TABLE, 37, 8)                   # стол для чтения
@@ -745,7 +746,8 @@ splace(BROOM, 42, 21)
 splace(SHELF_B, 43, 22)                # восточная стена: стеллажи 43..44
 splace(SHELF_B, 43, 24)
 splace(SHELF, 44, 20)                  # стеллаж в северо-восточном углу
-sbox("metal_box_open", 43, 20, "ящик завхоза", {"изолента": 2, "гаечный ключ": 1, "фонарик": 1},
+sbox("metal_box_open", 43, 20, "ящик завхоза",
+     {"изолента": 2, "гаечный ключ": 1, "фонарик": 1, "вяленое мясо": 2},   # мясо — детям мисс Лейн
      requires={"item": "ключ-карта школы", "msg": "Железный ящик с табличкой «ЗАВХОЗ». Замок с прорезью для карты."})
 splace("barrel_wood", 43, 26)          # бочки и ящики в юго-восточном углу
 splace("barrel_wood", 44, 26)
@@ -756,20 +758,169 @@ splace(TRASH, 37, 27)                  # баки у южной стены
 
 
 # ================================================================ подвал деда
-cel = CityMap(city, "fifteen_cellar", "Подвал деда", 16, 12, start=(3, 5), seed=59, interior=True, music="lab")
+# Тайник ветерана под домом Эймоса (сюжет «Тайна деда», docs/furnish/fifteen.md §10). Планировка по
+# назначению (logic.md §1): мебель набора nbunk нарисована в две клетки, поэтому пол расширен с 12×6 до
+# 18×11 — иначе на северную стену влезают четыре предмета из двенадцати. Расстановка поштучная,
+# автообстановка выключена. С севера на юг:
+#   СЗ люк-лестница → С верстак с доской инструмента → С терминал со стулом → С шкаф → С полка с
+#   консервами → С стеллаж → СВ койка с тумбочкой и ковриком → ЮЗ генератор, канистра, огнетушитель →
+#   Ю баки с водой и армейские ящики → ЮВ сундук деда.
+CW, CH = 22, 14
+cel = CityMap(city, "fifteen_cellar", "Подвал деда", CW, CH, start=(2, 5), seed=59, interior=True,
+              music="lab", furnish=False)
 cel.floor_code("M", *METAL)
 cel.wall_code("K", "pk:nbunk/nbunk_w1_12")
-cel.room(1, 1, 14, 10, "K", "M")
-cel.props.append(["x_ladder", 3, 4])
-cel.portal([(3, 4)], "ruins", (7, 32), "Наверх, в дом")          # люк — (7, 33), выход рядом
-cel.terminal(6, 4, "amos_cellar")
-cel.put(CANS, 8, 4, check=False)
-cel.put(BUNK, 11, 4, check=False)
-cel.put(BENCH_W, 2, 8)
-cel.put(GEN, 6, 8)
-cel.put(TANKS, 11, 8)
-cel.box("metal_chest", 13, 6, "армейский сундук деда",
-        {"армейский бронежилет": 1, "патроны": 20, "стимулятор": 2, "фотография": 1})
+cel.room(1, 1, CW - 2, CH - 2, "K", "M")
+
+# Мебель подвала — набор nbunk (тот же, что стены), пятно задаётся явно: картинка у большинства
+# предметов 1.9×1.9 клетки, и с пятном 1×1 они налезают друг на друга (logic.md §2а, «двойники стеллажей»).
+C_BED = P("cl_bed", "pk:nbunk/nbunk_3_000", foot=[2, 1], sight=True)          # койка с шинелью
+C_STAND = P("cl_nightstand", "pk:nbunk/nbunk_3_005", foot=[1, 1], sight=True)  # тумбочка
+C_BENCH = P("cl_workbench", "pk:nbunk/nbunk_3_006", foot=[2, 1], sight=True)  # верстак с тисками
+C_TOOLS = P("cl_toolboard", "pk:nbunk/nbunk_2_007", foot=[2, 1], block=False, sight=True)   # доска с инструментом
+C_LOCKER = P("cl_locker", "pk:nbunk/nbunk_3_008", foot=[1, 1], sight=True, search="locker",
+             title="шкаф деда")
+C_SHELF = P("cl_shelf_cans", "pk:nbunk/nbunk_3_002", foot=[2, 1], sight=True)  # полка с консервами
+C_RACK = P("cl_rack", "pk:nbunk/nbunk_3_004", foot=[2, 1], sight=True)       # пустой стеллаж
+C_GEN = P("cl_generator", "pk:nbunk/nbunk_3_026", foot=[2, 1], sight=True,
+          light={"r": 110, "color": [255, 190, 110], "at": [0.5, 0.4], "flicker": 0.25})
+C_TANKS = P("cl_tanks", "pk:nbunk/nbunk_2_021", foot=[3, 1], sight=True)     # два бака с водой
+C_CAN = P("cl_jerrycan", "pk:nbunk/nbunk_3_041")                             # канистра
+C_CRATES = P("cl_crates", "pk:nbunk/nbunk_3_029", foot=[2, 1])               # штабель ящиков
+C_MILBOX = P("cl_milbox", "pk:nbunk/nbunk_3_030", foot=[2, 1], search="military", title="армейский ящик")
+C_MAP = P("cl_map", "x_vd_map", foot=[2, 1], block=False, sight=True)        # карта на стене
+C_LOCKERS = P("cl_lockers", "pk:nbunk/nbunk_3_003", foot=[2, 1], sight=True)  # ряд шкафчиков с формой
+C_PILE = P("cl_supply_pile", "pk:nbunk/nbunk_3_020", foot=[2, 1], sight=True)  # штабель ящиков с консервами
+C_MEDS = P("cl_medbox", "pk:nbunk/nbunk_3_017")                              # аптечка на тумбочке
+
+
+def cwhy(name, x, y):
+    """Почему предмет не встал — как why_not() в build_town.py."""
+    foot = cel.footprint(name, x, y)
+    why = []
+    if any(t in cel.blocked for t in foot):
+        why.append("блок: " + str([t for t in foot if t in cel.blocked]))
+    if any(t in cel.soft_obj for t in foot):
+        why.append("мягкий предмет: " + str([t for t in foot if t in cel.soft_obj]))
+    if any(t in cel.reserved for t in foot):
+        why.append("резерв")
+    h = cel.hides(name, x, y)
+    if h:
+        why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
+    why.append("земля: " + "".join(cel.ground[yy][xx] for xx, yy in foot))
+    return f"«{name}» не встал в ({x}, {y}): " + "; ".join(why)
+
+
+def cplace(name, x, y, **kw):
+    """Явная расстановка: мебель — только на полу комнаты, встать обязана ровно туда, куда ставили."""
+    foot = cel.footprint(name, x, y)
+    assert all(cel.ground[yy][xx] in cel.floors for xx, yy in foot), \
+        f"«{name}» в ({x}, {y}): не на полу — " + " ".join(cel.ground[yy][xx] for xx, yy in foot)
+    try:
+        ok = cel.put(name, x, y, **kw)
+    except AssertionError:
+        raise AssertionError(cwhy(name, x, y)) from None
+    if ok and cel.props[-1][1:3] == [x, y]:
+        return True
+    raise AssertionError(cwhy(name, x, y) + f"; встал в ({cel.props[-1][1]}, {cel.props[-1][2]})")
+
+
+def cbox(name, x, y, title, loot, **kw):
+    """Сюжетный ящик/сундук — как cplace(): не встал, так с причиной."""
+    foot = cel.footprint(name, x, y)
+    assert all(cel.ground[yy][xx] in cel.floors for xx, yy in foot), \
+        f"«{name}» в ({x}, {y}): не на полу — " + " ".join(cel.ground[yy][xx] for xx, yy in foot)
+    try:
+        return cel.box(name, x, y, title, loot, **kw)
+    except AssertionError:
+        raise AssertionError(cwhy(name, x, y)) from None
+
+
+def cwall(name, x, y, dx=0, dy=-26):
+    """Настенное (доска с инструментом, карта): ставится на клетки стены-кода и поднимается на стену.
+    Выше пола — на столько, чтобы высокая мебель под ним не заслоняла картинку (аудит «стена»)."""
+    fw, fh = props_info(name)["foot"]
+    cells = [(x + i, y + j) for i in range(fw) for j in range(fh)]
+    assert all(cel.ground[cy][cx] in cel.walls for cx, cy in cells), \
+        f"«{name}» в ({x}, {y}): там нет стены — " + " ".join(cel.ground[cy][cx] for cx, cy in cells)
+    cel.props.append([name, x, y, dx, dy])
+    cel.blocked.update(cells)              # клетка стены занята: автосвет не повесит плафон на карту
+    cel._reach = None
+
+
+def ctable(name, x, y, dx=0, dy=-20):
+    """Мелочь на столешнице: на клетке мебели, поднята на её высоту, рисуется сразу после неё
+    (6-й элемент — поправка порядка отрисовки, src/townmap.py)."""
+    assert (x, y) in cel.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
+    cel.props.append([name, x, y, dx, dy, 1 - dy])
+
+
+# ------------------------------------------------------------ люк и лестница (СЗ)
+# Люк деда сверху, лестница по стене; площадка под ней пустая — выходишь и сразу видно весь подвал
+# (logic.md §2: вход не за спинами и не в заставленном углу).
+cel.props.append(["x_ladder_wall", 2, 4, 0, -18])       # в упор к стене, во всю её высоту — до люка под потолком
+cel.portal([(2, 4)], "ruins", (7, 32), "Наверх, в дом")          # люк — (7, 33), выход рядом
+
+# ------------------------------------------------------------ рабочий угол (С, запад)
+# Верстак с тисками у северной стены, доска с инструментом на стене выше верстака, ящик под рукой.
+cwall(C_TOOLS, 5, 3, dy=-44)                          # доска с инструментом — выше верстака
+cplace(C_BENCH, 5, 4)
+cplace("toolbox_red", 6, 5)                           # ящик с инструментом под верстаком
+
+# ------------------------------------------------------------ терминал (С, центр)
+# Стол с монитором у северной стены, карта над ним, стул перед столом (дед сидит лицом к экрану),
+# газета брошена на пол.
+cwall(C_MAP, 7, 3, dy=-40)                            # карта над терминалом
+cel.terminal(8, 4, "amos_cellar")
+cplace("stool_1", 8, 5)                               # табурет перед терминалом: дед сидит лицом к экрану
+cplace("w_newspaper", 7, 5)                           # газета брошена у стола
+
+# ------------------------------------------------------------ склад (С, восток)
+# Шкаф с формой, полка с консервами (контейнер), пустой стеллаж; у полки — мешки с крупой.
+cplace(C_LOCKER, 10, 4)                               # шкаф деда
+cbox(C_SHELF, 12, 4, "полка с консервами",
+     {"консервы": 4, "крышки": 15, "химикаты": 1, "патроны": 1})
+cplace(C_LOCKERS, 15, 4)                              # ряд шкафчиков: форма, снаряжение
+cplace("w_sacks", 2, 9)                               # мешки с крупой у западной стены
+cplace("w_sacks", 3, 9)
+cplace(C_PILE, 2, 7)                                  # штабель ящиков с консервами у западной стены
+
+# ------------------------------------------------------------ стол деда (середина, западнее центра)
+# Письменный стол деда в пустой середине подвала: радио и настольная лампа на столешнице, табурет лицом
+# к столу, под столешницей — коробка с патронами. Вокруг стола проход: ряды 6, 9 и 10 свободны, как и
+# колонки 8 и 11; путь от люка (2,4) к сундуку (18,11) остаётся сквозным по y=6 и y=9.
+C_DESK = "fifteen_f_home_table"                       # письменный стол с ящиками (набор fifteen_f_home)
+cplace(C_DESK, 9, 7)                                  # стол 2 клетки: (9..10, 7)
+ctable("x_radio", 9, 7, dx=2, dy=-26)                 # рация деда — посередине западной половины
+ctable("w_table_lamp", 10, 7, dx=-16, dy=-26)         # лампа — посередине восточной, не у края (logic.md §2)
+cplace("stool_1", 10, 8)                              # табурет перед столом: дед сидит лицом к рации
+cplace("ammo_box", 9, 8)                              # коробка с патронами под столешницей
+
+# ------------------------------------------------------------ койка (СВ)
+# Койка в северо-восточном углу, тумбочка с фонарём в изголовье, лоскутный коврик перед койкой.
+cplace(C_BED, 18, 4)
+cplace(C_STAND, 17, 4)
+ctable(C_MEDS, 17, 4, dy=-32)                         # аптечка на тумбочке
+cel.ceiling(18, 5, r=150, color=(255, 190, 110), flick=0.03)   # лампочка под потолком над койкой
+cplace("w_rug_quilt", 18, 5)                          # коврик 2×2 перед койкой
+
+# ------------------------------------------------------------ генератор (ЮЗ)
+# Генератор у южной стены (сам светит, чуть мерцает), канистра рядом, огнетушитель у стены.
+cplace(C_GEN, 3, 11)
+cplace(C_CAN, 5, 11)
+cplace("x_fireext", 6, 11)
+
+# ------------------------------------------------------------ вода и ящики (Ю)
+# Два бака с водой, два армейских ящика, штабель ящиков; к сундуку — ведро.
+cplace(C_TANKS, 8, 11)                                # баки с водой 3 клетки
+cplace(C_MILBOX, 12, 11)                              # армейский ящик
+cplace(C_CRATES, 15, 11)                              # штабель ящиков
+cplace("bucket", 14, 11)                              # ведро под рукой у ящиков
+
+# ------------------------------------------------------------ сундук (ЮВ)
+# Армейский сундук деда — то, за чем сюда лезут: бронежилет, патроны, стимуляторы, фотография.
+cbox("metal_chest", 18, 11, "армейский сундук деда",
+     {"армейский бронежилет": 1, "патроны": 20, "стимулятор": 2, "фотография": 1})
 
 
 # ================================================================ подвал салуна

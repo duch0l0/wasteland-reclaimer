@@ -1650,6 +1650,19 @@ def act1(b):
             b.pursue("gena", "quest:sq_gang", required=False)
     b.step("Пятнадцатая: сдать побочки", sides_done)
 
+    def lane_lesson():
+        """Школа: учебник из библиотеки — и последний урок мисс Лейн (sq_lane)."""
+        if not b.sides or g.stage("sq_lane") >= 100:
+            return
+        b.fetch("fifteen_school_in", "библиотечный шкаф")     # дойти, зачистить радтаканов, взять учебник
+        if not g.inventory.has("Наша Америка, 5 класс"):
+            b.critic.say("учебник в шкафу не нашёлся")
+            return
+        b.pursue("miss_lane", "lane_task", required=False)        # взять просьбу у доски
+        b.pursue("miss_lane", "quest:sq_lane", required=False)    # отдать учебник — последний урок
+        b.walk_to_map("ruins")
+    b.step("Пятнадцатая: последний урок мисс Лейн", lane_lesson)
+
     def baker():
         g.go_world_map()
         b.go("baker")

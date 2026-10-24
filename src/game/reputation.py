@@ -65,6 +65,7 @@ KARMA_FLAGS = {
     # акт I
     "clean_slate_off": 60, "springer_confessed": 20, "water_fixed": 20, "marla_home": 25, "loner_share": 15,
     "gang_paid": -10, "gena_robbed": -20, "ferry_done": 10,
+    "lane_lesson": 15, "lane_meat": 5, "lane_book_read": -15,
     # акт II
     "sluice_restored": 40, "anna_debt_cleared": 25, "set_refuses": 30, "watershed_fixed": 30, "aradesh_free_water": 40,
     "adytum_truce": 40, "mira_free": 40, "v4_deal_off": 30, "runaway_done": 15, "tag_done": 10,
@@ -82,6 +83,7 @@ KARMA_FLAGS = {
 # поступки: флаг → (город, репутация)
 REP_FLAGS = {
     "clean_slate_off": ("zzyzx", 20), "springer_safe": ("zzyzx", -30), "gena_robbed": ("fifteen", -30),
+    "lane_lesson": ("fifteen", 25),
     "know_cult_convoys": ("needles", 10), "ferry_done": ("needles", 15),
     "sluice_restored": ("hub", 30), "rourke_paid": ("junktown", 20), "gizmo_exposed": ("junktown", 30),
     "set_refuses": ("necropolis", 30), "aradesh_free_water": ("aradesh", 30), "adytum_truce": ("boneyard", 40),
@@ -128,6 +130,7 @@ TITLES = [
     ("tactician", "Тактик", "Взял Форт, не дав турелям и роботам сделать ни выстрела.", {"flags_all": ["fort_turrets_off", "fort_robots_away", "recruits_free"]}),
     ("sleuth", "Сыщик трассы 15", "Нашёл, кто продавал караваны, — не тронув невиновных.", {"flag": "caravans_truth"}),
     ("postman", "Почтальон пустоши", "Доставил все письма 2077 года, которые ещё можно было доставить.", {"flag": "mail_all"}),
+    ("teacher", "Учитель «Солнечной долины»", "Довёл до звонка урок, который длился сорок четыре года.", {"flag": "lane_lesson"}),
     ("courier", "Курьер поневоле", "Нашёл чип, который так и не доехал до Убежища 13.", {"flag": "know_vault13_chip"}),
     ("whale", "Свидетель кита", "Видел кита, упавшего с неба. И петунию.", {"flag": "enc_whale"}),
     ("tourist", "Пассажир синей будки", "Нашёл в пустыне синюю будку. Она нашла тебя.", {"flag": "enc_police_box"}),

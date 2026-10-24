@@ -767,7 +767,7 @@ def hatch(cands, to, at, label, requires):
     raise AssertionError(f"негде поставить люк в {to}")
 
 
-print("люк деда:", hatch([(7, 33), (8, 34), (6, 34)], "fifteen_cellar", (3, 5), "Подвал деда",
+print("люк деда:", hatch([(7, 33), (8, 34), (6, 34)], "fifteen_cellar", (2, 5), "Подвал деда",
       {"flag": "cellar_found",
        "msg": "Половицы здесь звучат гулко. Под ними люк — без ручки и без замка. Как открыть — знает только дед."}))
 print("люк салуна:", hatch([(52, 27), (53, 27), (56, 26)], "fifteen_saloon_cellar", (3, 5), "Подвал салуна",

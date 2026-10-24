@@ -5388,6 +5388,11 @@
     ],
     "flicker": 0.4
    }
+  },
+  "x_ladder_wall": {
+   "img": "x_ladder_wall",
+   "block": false,
+   "layer": "floor"
   }
  }
 }

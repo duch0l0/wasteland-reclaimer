@@ -62,6 +62,8 @@ STORY_STEPS = [
     ("sq_smile", [(10, "smile_job"), (50, "smile_started"), (100, ["smile_back", "smile_lost"])]),
     ("sq_thermo", [(10, "thermo_job"), (100, "thermo_done")]),
     ("sq_fred", [(10, "fred_job"), (50, ["fred_vera", "know_dice"]), (100, "fred_done")]),
+    # «Последний урок»: 10 — Лейн попросила, 30 — учебник в руках, 100 — отдал, прочёл сам или признался
+    ("sq_lane", [(10, "lane_task"), (30, "lane_book"), (100, "lane_book_read")]),
     ("sq_tag", [(10, "tag_job"), (100, "tag_done")]),
     ("sq_bike", [(10, "bike_job"), (100, "bike_done")]),
     ("sq_treasure", [(10, "treasure_piece"), (50, "treasure_map"), (100, "treasure_dug")]),
@@ -256,6 +258,10 @@ class QuestMixin:
             self.set_stage("sq_vault", 50)
         if self.inventory.has("святая вода") and 10 <= st("sq_holywater") < 30:
             self.set_stage("sq_holywater", 30)
+        # «Последний урок»: учебник из школьной библиотеки у героя — журнал это видит.
+        # Флаг «книга была в руках» нужен и до знакомства с Лейн: прочитанную книгу уже не вернуть.
+        if not f.get("lane_book") and self.inventory.has("Наша Америка, 5 класс"):
+            f["lane_book"] = True
         # Барстоу: зачистка районов
         cleared = sum(bool(f.get(k)) for k in ("barstow_depot_cleared", "barstow_center_cleared"))
         if cleared and st("sq_barstow") < 10:

@@ -190,15 +190,29 @@ def manhole():
     return outline(s)
 
 
-def ladder():
-    s = canvas(24, 40)
-    light = canvas(24, 40)
-    pygame.draw.polygon(light, (255, 240, 180, 60), [(4, 0), (20, 0), (24, 40), (0, 40)])
-    s.blit(light, (0, 0))
-    rect(s, 6, 0, 2, 40, (120, 110, 96))
-    rect(s, 16, 0, 2, 40, (120, 110, 96))
-    for y in range(3, 40, 6):
-        rect(s, 6, y, 12, 2, (150, 140, 120))
+def ladder(h=40):
+    """Лестница к люку. Свет из люка — не плашка, а конус: ярче всего наверху, к полу и к краям
+    сходит на нет (иначе лестница выглядит наклеенной — замечание автора 24.10)."""
+    s = canvas(24, h)
+    for y in range(h):
+        t = y / (h - 1)                         # 0 — у люка, 1 — у пола
+        half = 8 + 4 * t                        # конус расширяется книзу
+        for x in range(24):
+            d = abs(x + 0.5 - 12) / half
+            if d < 1:
+                a = 70 * (1 - t) ** 1.5 * (1 - d * d)
+                if a >= 1:
+                    px(s, x, y, (255, 240, 180, int(a)))
+    for y in range(h):                          # стойки: внизу темнее — свет до пола не доходит
+        k = 1 - 0.25 * y / (h - 1)
+        c = tuple(int(v * k) for v in (120, 110, 96))
+        rect(s, 6, y, 2, 1, c)
+        rect(s, 16, y, 2, 1, c)
+    for y in range(3, h, 6):
+        k = 1 - 0.25 * y / (h - 1)
+        rect(s, 6, y, 12, 2, tuple(int(v * k) for v in (150, 140, 120)))
+    for x in range(4, 20):                      # тень у пола, где лестница упирается
+        px(s, x, h - 1, (0, 0, 0, 60))
     return s
 
 
@@ -877,6 +891,7 @@ PROPS = {
     "x_vault_gear12": (lambda: vault_gear("12"), {"foot": [2, 1], "sight": True}),   # Убежище 12 (Некрополь)
     "x_manhole": (manhole, {"block": False, "layer": "floor"}),
     "x_ladder": (ladder, {"block": False, "layer": "floor"}),
+    "x_ladder_wall": (lambda: ladder(64), {"block": False, "layer": "floor"}),   # во всю стену подвала, до люка
     "x_board": (board, {"foot": [2, 1]}),
     "x_sandbags": (sandbags, {"foot": [2, 1]}),
     "x_cliff": (cliff, {"foot": [2, 1], "sight": True}),
