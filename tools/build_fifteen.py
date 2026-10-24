@@ -794,65 +794,86 @@ C_PILE = P("cl_supply_pile", "pk:nbunk/nbunk_3_020", foot=[2, 1], sight=True)  #
 C_MEDS = P("cl_medbox", "pk:nbunk/nbunk_3_017")                              # аптечка на тумбочке
 
 
-def cwhy(name, x, y):
-    """Почему предмет не встал — как why_not() в build_town.py."""
-    foot = cel.footprint(name, x, y)
+# Помощники ручной расстановки — общие для обоих подвалов (подвал деда, подвал салуна): почему предмет
+# не встал (как why_not() в build_town.py), явная постановка, сюжетный ящик, настенное, мелочь на столе.
+def _why(m, name, x, y):
+    foot = m.footprint(name, x, y)
     why = []
-    if any(t in cel.blocked for t in foot):
-        why.append("блок: " + str([t for t in foot if t in cel.blocked]))
-    if any(t in cel.soft_obj for t in foot):
-        why.append("мягкий предмет: " + str([t for t in foot if t in cel.soft_obj]))
-    if any(t in cel.reserved for t in foot):
+    if any(t in m.blocked for t in foot):
+        why.append("блок: " + str([t for t in foot if t in m.blocked]))
+    if any(t in m.soft_obj for t in foot):
+        why.append("мягкий предмет: " + str([t for t in foot if t in m.soft_obj]))
+    if any(t in m.reserved for t in foot):
         why.append("резерв")
-    h = cel.hides(name, x, y)
+    h = m.hides(name, x, y)
     if h:
         why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
-    why.append("земля: " + "".join(cel.ground[yy][xx] for xx, yy in foot))
+    why.append("земля: " + "".join(m.ground[yy][xx] for xx, yy in foot))
     return f"«{name}» не встал в ({x}, {y}): " + "; ".join(why)
 
 
-def cplace(name, x, y, **kw):
+def _place(m, name, x, y, **kw):
     """Явная расстановка: мебель — только на полу комнаты, встать обязана ровно туда, куда ставили."""
-    foot = cel.footprint(name, x, y)
-    assert all(cel.ground[yy][xx] in cel.floors for xx, yy in foot), \
-        f"«{name}» в ({x}, {y}): не на полу — " + " ".join(cel.ground[yy][xx] for xx, yy in foot)
+    foot = m.footprint(name, x, y)
+    assert all(m.ground[yy][xx] in m.floors for xx, yy in foot), \
+        f"«{name}» в ({x}, {y}): не на полу — " + " ".join(m.ground[yy][xx] for xx, yy in foot)
     try:
-        ok = cel.put(name, x, y, **kw)
+        ok = m.put(name, x, y, **kw)
     except AssertionError:
-        raise AssertionError(cwhy(name, x, y)) from None
-    if ok and cel.props[-1][1:3] == [x, y]:
+        raise AssertionError(_why(m, name, x, y)) from None
+    if ok and m.props[-1][1:3] == [x, y]:
         return True
-    raise AssertionError(cwhy(name, x, y) + f"; встал в ({cel.props[-1][1]}, {cel.props[-1][2]})")
+    raise AssertionError(_why(m, name, x, y) + f"; встал в ({m.props[-1][1]}, {m.props[-1][2]})")
 
 
-def cbox(name, x, y, title, loot, **kw):
-    """Сюжетный ящик/сундук — как cplace(): не встал, так с причиной."""
-    foot = cel.footprint(name, x, y)
-    assert all(cel.ground[yy][xx] in cel.floors for xx, yy in foot), \
-        f"«{name}» в ({x}, {y}): не на полу — " + " ".join(cel.ground[yy][xx] for xx, yy in foot)
+def _box(m, name, x, y, title, loot, **kw):
+    """Сюжетный ящик/сундук — как _place(): не встал, так с причиной."""
+    foot = m.footprint(name, x, y)
+    assert all(m.ground[yy][xx] in m.floors for xx, yy in foot), \
+        f"«{name}» в ({x}, {y}): не на полу — " + " ".join(m.ground[yy][xx] for xx, yy in foot)
     try:
-        return cel.box(name, x, y, title, loot, **kw)
+        return m.box(name, x, y, title, loot, **kw)
     except AssertionError:
-        raise AssertionError(cwhy(name, x, y)) from None
+        raise AssertionError(_why(m, name, x, y)) from None
 
 
-def cwall(name, x, y, dx=0, dy=-26):
+def _wall(m, name, x, y, dx=0, dy=-26):
     """Настенное (доска с инструментом, карта): ставится на клетки стены-кода и поднимается на стену.
     Выше пола — на столько, чтобы высокая мебель под ним не заслоняла картинку (аудит «стена»)."""
     fw, fh = props_info(name)["foot"]
     cells = [(x + i, y + j) for i in range(fw) for j in range(fh)]
-    assert all(cel.ground[cy][cx] in cel.walls for cx, cy in cells), \
-        f"«{name}» в ({x}, {y}): там нет стены — " + " ".join(cel.ground[cy][cx] for cx, cy in cells)
-    cel.props.append([name, x, y, dx, dy])
-    cel.blocked.update(cells)              # клетка стены занята: автосвет не повесит плафон на карту
-    cel._reach = None
+    assert all(m.ground[cy][cx] in m.walls for cx, cy in cells), \
+        f"«{name}» в ({x}, {y}): там нет стены — " + " ".join(m.ground[cy][cx] for cx, cy in cells)
+    m.props.append([name, x, y, dx, dy])
+    m.blocked.update(cells)              # клетка стены занята: автосвет не повесит плафон на карту
+    m._reach = None
+
+
+def _table(m, name, x, y, dx=0, dy=-20):
+    """Мелочь на столешнице: на клетке мебели, поднята на её высоту, рисуется сразу после неё
+    (6-й элемент — поправка порядка отрисовки, src/townmap.py)."""
+    assert (x, y) in m.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
+    m.props.append([name, x, y, dx, dy, 1 - dy])
+
+
+def cwhy(name, x, y):
+    return _why(cel, name, x, y)
+
+
+def cplace(name, x, y, **kw):
+    return _place(cel, name, x, y, **kw)
+
+
+def cbox(name, x, y, title, loot, **kw):
+    return _box(cel, name, x, y, title, loot, **kw)
+
+
+def cwall(name, x, y, dx=0, dy=-26):
+    return _wall(cel, name, x, y, dx=dx, dy=dy)
 
 
 def ctable(name, x, y, dx=0, dy=-20):
-    """Мелочь на столешнице: на клетке мебели, поднята на её высоту, рисуется сразу после неё
-    (6-й элемент — поправка порядка отрисовки, src/townmap.py)."""
-    assert (x, y) in cel.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
-    cel.props.append([name, x, y, dx, dy, 1 - dy])
+    return _table(cel, name, x, y, dx=dx, dy=dy)
 
 
 # ------------------------------------------------------------ люк и лестница (СЗ)
@@ -890,9 +911,12 @@ cplace(C_PILE, 2, 7)                                  # штабель ящик�
 # к столу, под столешницей — коробка с патронами. Вокруг стола проход: ряды 6, 9 и 10 свободны, как и
 # колонки 8 и 11; путь от люка (2,4) к сундуку (18,11) остаётся сквозным по y=6 и y=9.
 C_DESK = "fifteen_f_home_table"                       # письменный стол с ящиками (набор fifteen_f_home)
+# Стол взят из автообстановки «жилой комнаты» (citykit.home_scenes). В подвалах автообстановка выключена,
+# поэтому предмет регистрируется явно — теми же полями, что у home_scenes.
+city.prop("fifteen_f_home_table", "pk:west/west_2_000", foot=[2, 1])
 cplace(C_DESK, 9, 7)                                  # стол 2 клетки: (9..10, 7)
-ctable("x_radio", 9, 7, dx=2, dy=-26)                 # рация деда — посередине западной половины
-ctable("w_table_lamp", 10, 7, dx=-16, dy=-26)         # лампа — посередине восточной, не у края (logic.md §2)
+ctable("x_radio", 9, 7, dx=2, dy=-40)                 # рация деда — на западной половине, в глубине столешницы
+ctable("w_table_lamp", 10, 7, dx=-16, dy=-40)         # лампа — на восточной, отступив от переднего края (logic.md §2)
 cplace("stool_1", 10, 8)                              # табурет перед столом: дед сидит лицом к рации
 cplace("ammo_box", 9, 8)                              # коробка с патронами под столешницей
 
@@ -924,20 +948,92 @@ cbox("metal_chest", 18, 11, "армейский сундук деда",
 
 
 # ================================================================ подвал салуна
-sal = CityMap(city, "fifteen_saloon_cellar", "Подвал салуна", 16, 12, start=(3, 5), seed=60, interior=True,
-              music="caves")
+# Подвал под стойкой Мо (docs/furnish/fifteen.md §3.5): самогонный аппарат, склад зерна и угол Тесс,
+# шестнадцатилетней беглянки. Пол 12×6 оказался мал для трёх зон сразу (26 предметов на 72 клетки —
+# свалка), поэтому подвал расширен до 22×14, как у деда: пол 18×8, 144 клетки. Люк и точка прибытия
+# прежние (tools/build_town.py: hatch → (3,5)), лестница — тоже (3,4). Расстановка поштучная, авто-
+# обстановка выключена (свет — auto_ambient в citykit.save). С севера на юг и с запада на восток:
+#   СЗ люк-лестница во всю стену → С пустые бутылки и стол Мо с лампой → СВ шкаф с бутылками →
+#   З зерно, тайник и ящик с бутылками, ведро со шваброй → ЮЗ огонь, котёл, змеевик, бочка браги,
+#   бутыли и лужа → В ширма-занавеска, койка Тесс с тумбочкой, её стол со стулом → В ящик с пробками.
+sal = CityMap(city, "fifteen_saloon_cellar", "Подвал салуна", 22, 14, start=(3, 5), seed=60, interior=True,
+              music="caves", furnish=False)
 sal.floor_code("G", *WOOD)
 sal.wall_code("D", "pk:nbunk/nbunk_w1_00")
-sal.room(1, 1, 14, 10, "D", "G")
-sal.props.append(["x_ladder", 3, 4])
+sal.room(1, 1, 20, 12, "D", "G")
+
+
+def salwhy(name, x, y):
+    return _why(sal, name, x, y)
+
+
+def salplace(name, x, y, **kw):
+    return _place(sal, name, x, y, **kw)
+
+
+def salbox(name, x, y, title, loot, **kw):
+    return _box(sal, name, x, y, title, loot, **kw)
+
+
+def saltable(name, x, y, dx=0, dy=-20):
+    return _table(sal, name, x, y, dx=dx, dy=dy)
+
+
+# ------------------------------------------------------------ люк и лестница (СЗ)
+# Лестница во всю стену — до люка под потолком, мягкий конус света из люка вниз (x_ladder_wall, как в
+# подвале деда). Площадка под ней пустая: выходишь и сразу видишь аппарат и угол Тесс.
+sal.props.append(["x_ladder_wall", 3, 4, 0, -18])
 sal.portal([(3, 4)], "ruins", (53, 27), "Наверх, в салун")       # люк — (52, 27), за стойкой
-sal.npcs += [["tess", 11, 8]]
-for x in (6, 7, 8):
-    sal.put("barrel_wood", x, 4)
-sal.put(GEN, 5, 8)                  # «аппарат» — котёл и змеевик
-sal.put("bed", 12, 5)
-sal.put("candles", 10, 6)
-sal.box("cabinet_small", 13, 8, "тайник Мо", {"самогон": 3, "крышки": 60, "сигареты": 2})
-sal.box("crate", 2, 8, "ящик с бутылками", {"самогон": 2, "спички": 1})
+
+# ------------------------------------------------------------ северная стена
+# Пустые бутылки рядком у стены, стол, за которым Мо считает бутыли (лампа и пробки делят столешницу
+# пополам, logic.md §2), и бочки под следующую партию. Высокого у стены с лестницей нет — люк читается.
+salplace("pile_bottles", 5, 4)         # пустые бутылки у северной стены (2 клетки)
+salplace("w_table_plain", 9, 4)        # стол Мо (2 клетки)
+saltable("w_table_lantern", 9, 4, dy=-40)   # лампа — западная половина, в глубине столешницы
+saltable("junk_small_1", 10, 4, dy=-36)     # пробки и мелочь — восточная половина, не у края
+salplace("w_barrels", 12, 4)           # две бочки под новую партию (2 клетки)
+
+# ------------------------------------------------------------ склад (запад)
+# Зерно для браги, тайник Мо за ящиками, ящик с бутылками у лестницы; ведро со шваброй — тут же:
+# «Мо заметает следы» — всё, что не должно попасться на глаза покупателю.
+salplace("sack", 2, 6)                 # развязанный мешок на полу
+salplace("w_crate_sacks", 2, 7)        # ящик с мешками зерна (2 клетки)
+salbox("cabinet_small", 2, 8, "тайник Мо", {"самогон": 3, "крышки": 60, "сигареты": 2})
+salbox("crate", 2, 9, "ящик с бутылками", {"самогон": 2, "спички": 1})     # сюжетный, обыскивается
+salplace("bucket", 3, 9)               # ведро
+salplace("pile_rags", 2, 10)           # тряпки у западной стены (2 клетки)
+
+# ------------------------------------------------------------ самогонный аппарат (ЮЗ)
+# Котёл на огне (огонь и свет — в самом спрайте котла, отдельный костёр над ним висел бы в воздухе),
+# лужа у котла, бочка с брагой и готовый товар — бутыли в ряд. Одинокую трубу не ставим: без змеевика
+# она читается как столб посреди подвала.
+# Фонарь стоит на бочке, а не на полу (logic.md §2).
+salplace("x_cauldron", 5, 10)          # котёл (сам светит: огонь просвечивает)
+salplace("x_puddle", 6, 10)            # лужа у котла
+salplace("barrel_wood", 7, 10)         # бочка с брагой
+saltable("w_lantern", 7, 10, dy=-46)   # фонарь на бочке — свет над аппаратом
+salplace("pile_bottles_b", 8, 10)      # бутыли в ряд — готовый товар (2 клетки)
+salplace(BROOM, 7, 4)                  # швабра прислонена к северной стене, не посреди пола
+
+# ------------------------------------------------------------ угол Тесс (В)
+# Она живёт здесь не первый месяц: ширма-занавеска отгораживает угол от остального подвала, койка
+# вдоль восточной стены, тумбочка со свечами, сумка у койки; за столом — миска и её книга (стол делят
+# пополам), стул с торца в профиль к столу (logic.md §2а). Тесс сидит за столом — не в проходе.
+sal.npcs += [["tess", 16, 8]]
+salplace("x_curtain", 14, 8)           # занавеска на верёвке (2 клетки, до полу — как ширма)
+salplace("w_bed", 18, 8)               # койка вдоль восточной стены (2 клетки)
+salplace("w_nightstand", 17, 8)        # тумбочка в изголовье
+saltable("candles", 17, 8, dy=-30)     # свечи на тумбочке
+salplace("bag", 17, 9)                 # её сумка у койки
+salplace("w_table_long", 15, 9)        # её стол (2 клетки)
+saltable("canteen", 15, 9, dy=-36)     # миска-котелок — западная половина, отступив от края
+saltable(BOOK_OPEN, 16, 9, dy=-34)     # открытая книга — восточная половина, отступив от края
+salplace("w_chair_r", 14, 9)           # стул с торца стола, лицом к нему
+
+# ------------------------------------------------------------ стены (СВ и В)
+# Шкаф с бутылками в северо-восточном углу, ящик с пробками — у восточной стены.
+salplace("w_liquor", 18, 4)            # шкаф с бутылками (2 клетки, СВ угол)
+salplace("crate_small", 19, 5)         # ящик с пробками
 
 city.save(gap_exempt=("walt",))

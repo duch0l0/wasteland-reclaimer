@@ -10,6 +10,7 @@
 
   .venv/bin/python tools/playthrough.py            — пройти всё, что умеет
   .venv/bin/python tools/playthrough.py act1       — только первый акт
+  .venv/bin/python tools/playthrough.py lesson     — один шаг: последний урок мисс Лейн (смоук квеста)
   .venv/bin/python tools/playthrough.py --build energy --seed 3 --nosides   — другая сборка, бросок, без побочек
 """
 import os
@@ -1486,6 +1487,28 @@ class Bot:
 
 
 # ================================================================ маршруты
+def lane_lesson(b):
+    """Школа: учебник из библиотеки — и последний урок мисс Лейн (sq_lane).
+
+    Отдельный шаг и отдельный акт (`playthrough.py lesson`): его можно прогнать, не гоняя весь
+    сюжет, — так проверяют квест после правок школы, детей и награды за урок.
+    """
+    g = b.g
+    if not b.sides or g.stage("sq_lane") >= 100:
+        return
+    b.fetch("fifteen_school_in", "библиотечный шкаф")     # дойти, зачистить радтаканов, взять учебник
+    if not g.inventory.has("Наша Америка, 5 класс"):
+        raise Stuck("учебник в библиотечном шкафу не нашёлся")
+    b.pursue("miss_lane", "lane_task")                        # взять просьбу у доски
+    b.pursue("miss_lane", "quest:sq_lane")                    # отдать учебник — последний урок
+    if g.stage("sq_lane") < 100:
+        raise Stuck(f"«Последний урок» не закрылся: стадия {g.stage('sq_lane')}, "
+                    f"учебник в рюкзаке {g.inventory.has('Наша Америка, 5 класс')}")
+    print(f"   sq_lane: стадия {g.stage('sq_lane')}, «Наука» {g.player.skill('science')}, "
+          f"крышек {g.inventory.count('крышки')}, флаг урока {bool(g.flags.get('lane_lesson'))}", flush=True)
+    b.walk_to_map("ruins")
+
+
 def act1(b):
     g = b.g
     b.go("ruins")
@@ -1650,18 +1673,7 @@ def act1(b):
             b.pursue("gena", "quest:sq_gang", required=False)
     b.step("Пятнадцатая: сдать побочки", sides_done)
 
-    def lane_lesson():
-        """Школа: учебник из библиотеки — и последний урок мисс Лейн (sq_lane)."""
-        if not b.sides or g.stage("sq_lane") >= 100:
-            return
-        b.fetch("fifteen_school_in", "библиотечный шкаф")     # дойти, зачистить радтаканов, взять учебник
-        if not g.inventory.has("Наша Америка, 5 класс"):
-            b.critic.say("учебник в шкафу не нашёлся")
-            return
-        b.pursue("miss_lane", "lane_task", required=False)        # взять просьбу у доски
-        b.pursue("miss_lane", "quest:sq_lane", required=False)    # отдать учебник — последний урок
-        b.walk_to_map("ruins")
-    b.step("Пятнадцатая: последний урок мисс Лейн", lane_lesson)
+    b.step("Пятнадцатая: последний урок мисс Лейн", lambda: lane_lesson(b))
 
     def baker():
         g.go_world_map()
@@ -2214,7 +2226,9 @@ def final(b):
     b.step("Марипоза: финал", mariposa)
 
 
-ACTS = {"act1": act1, "act1b": act1b, "act2": act2, "act3": act3, "secrets": secrets, "final": final}
+ACTS = {"act1": act1, "act1b": act1b, "act2": act2, "act3": act3, "secrets": secrets, "final": final,
+        # один шаг, без всего сюжета: смоук квеста мисс Лейн после правок школы
+        "lesson": lambda b: b.step("Пятнадцатая: последний урок мисс Лейн", lambda: lane_lesson(b))}
 
 
 def main():
