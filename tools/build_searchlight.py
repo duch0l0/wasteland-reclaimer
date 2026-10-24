@@ -91,7 +91,7 @@ MISSILE = P("sl_missile", "pk:mbase/mbase_2_017", foot=[2, 2], sight=True)
 TANK = P("sl_tank", "pk:mbase/mbase_2_002", foot=[4, 1], sight=True)
 HUMVEE = [P("sl_humvee", "pk:mbase/mbase_2_003", foot=[2, 1], sight=True), P("sl_humvee_b", "pk:mbase/mbase_2_007", foot=[3, 1], sight=True)]
 AMMO = [P("sl_ammo", "pk:mbase/mbase_2_001", foot=[2, 1], search="military", title="армейский ящик"),
-        P("sl_ammo_b", "pk:mbase/mbase_2_009", foot=[2, 1], search="military", title="ящик с патронами")]
+        P("sl_ammo_b", "pk:mbase/mbase_2_008", foot=[1, 1], search="military", title="ящик с патронами")]   # 2_009 — это хаммер, не ящик
 BARBED = P("sl_barbed", "pk:mbase/p1/8,2,2,2", foot=[2, 1], keybg=True)            # проволока без песчаной подложки
 BARBED_B = P("sl_barbed_b", "pk:mbase/p1/10,2,2,2", foot=[2, 1], keybg=True)
 SANDBAG_WALL = P("sl_sandbag_wall", "pk:mbase/p1/10,0,2,1", foot=[2, 1], keybg=True)

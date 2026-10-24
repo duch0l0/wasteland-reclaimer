@@ -615,11 +615,11 @@
 "title": "армейский ящик"
 },
 "sl_ammo_b": {
-"img": "pk:mbase/mbase_2_009",
+"img": "pk:mbase/mbase_2_008",
 "block": true,
 "sight": false,
 "foot": [
-2,
+1,
 1
 ],
 "search": "military",

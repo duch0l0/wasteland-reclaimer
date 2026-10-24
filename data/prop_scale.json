@@ -621,5 +621,78 @@
     "names": [
       "ct_shipwreck"
     ]
-  }
+  },
+  "small_real_0.35": {
+    "scale": 0.35,
+    "keep_foot": true,
+    "names": [
+      "x_fireext",
+      "sl_extinguisher",
+      "w_lantern",
+      "vg_lantern",
+      "np_lantern",
+      "hb_lantern",
+      "sl_lantern",
+      "sl_lantern_b",
+      "ct_lantern",
+      "gs_cave_lantern",
+      "ws_book_open"
+    ]
+  },
+  "small_real_0.4": {
+    "scale": 0.4,
+    "keep_foot": true,
+    "names": [
+      "x_radio",
+      "jt_radio",
+      "sl_medkit",
+      "ws_books"
+    ]
+  },
+  "small_real_0.45": {
+    "scale": 0.45,
+    "keep_foot": true,
+    "names": [
+      "x_cauldron",
+      "vb_jerrycan",
+      "cl_jerrycan",
+      "cl_medbox"
+    ]
+  },
+  "small_real_0.5": {
+    "scale": 0.5,
+    "keep_foot": true,
+    "names": [
+      "zz_lantern",
+      "ws_backpack"
+    ]
+  },
+  "small_real_0.55": {
+    "scale": 0.55,
+    "keep_foot": true,
+    "names": [
+      "w_stool_grey",
+      "w_stool_red",
+      "x_gramophone"
+    ]
+  },
+  "small_real_0.65": {
+    "scale": 0.65,
+    "keep_foot": true,
+    "names": [
+      "pr_stool",
+      "jt_stool",
+      "vg_sw_lantern",
+      "sl_radio"
+    ]
+  },
+  "small_real_0.665": {
+    "scale": 0.665,
+    "keep_foot": true,
+    "names": [
+      "stool_round_41",
+      "backpack"
+    ]
+  },
+  "_small_real": "мелочь в реальный рост рядом с героем (замечание автора 24.10: огнетушитель с человека): множитель уже включает прежний групповой; пятно на полу прежнее"
 }
