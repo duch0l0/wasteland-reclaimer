@@ -16,6 +16,7 @@
 тот ближе к камере), поэтому за высоким шкафом или палаткой можно спрятаться.
 Пятна непроходимы, «высокие» объекты (sight) ещё и закрывают обзор в бою.
 """
+import hashlib
 import json
 import os
 import random
@@ -714,7 +715,10 @@ class TownMap(MapBase):
             d = path
         else:
             with open(path, "r", encoding="utf-8") as f:
-                d = json.load(f)
+                raw = f.read()
+            d = json.loads(raw)
+        # отпечаток карты: сейв, сделанный до пересборки, не должен расставлять жителей по старым клеткам
+        self.map_sig = None if isinstance(path, dict) else hashlib.md5(raw.encode("utf-8")).hexdigest()[:12]
         self.width, self.height = d["w"], d["h"]
         self.ground = d["ground"]
         self.floor_src = dict(d.get("floors") or {})   # код → картинки: по имени решается звук шага (src/stepsound.py)

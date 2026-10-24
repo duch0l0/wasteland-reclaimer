@@ -136,6 +136,7 @@ class SaveMixin:
         base = [c for c in lv.containers if not c.get("corpse")]
         return {
             "hero": getattr(loc, "hero", False),
+            "map": getattr(lv, "map_sig", None),
             "enemies": [{"alive": e.alive, "hp": e.hp, "pos": list(e.rect.topleft), "hostile": e.hostile,
                          "talked": e.talked, "present": e in loc.enemies} for e in loc.enemies_all],
             "npcs": [{"id": n.npc_id, "pos": list(n.rect.topleft)} for n in loc.npcs],
@@ -261,11 +262,19 @@ class SaveMixin:
     @staticmethod
     def _restore_loc(loc, ls):
         lv = loc.level
+        # карту пересобрали после сохранения: клетки, ящики и индексы предметов в сейве — от старой карты.
+        # Жители и враги встают по новой карте, ящики и находки — как в новой; сюжет (кто жив, кто пришёл) — из сейва.
+        stale = ls.get("map") != getattr(lv, "map_sig", None)
+        if stale and len(ls["enemies"]) != len(loc.enemies_all):
+            ls = {**ls, "enemies": []}
         for e, es in zip(loc.enemies_all, ls["enemies"]):
             e.alive, e.hp, e.hostile, e.talked = es["alive"], es["hp"], es["hostile"], es["talked"]
-            e.rect.topleft = tuple(es["pos"])
+            if not stale:
+                e.rect.topleft = tuple(es["pos"])
             e.anim.set_action("idle")
-        loc.enemies[:] = [e for e, es in zip(loc.enemies_all, ls["enemies"]) if es.get("present", True)]
+        if ls["enemies"]:
+            loc.enemies[:] = [e for e, es in zip(loc.enemies_all, ls["enemies"]) if es.get("present", True)]
+        spawned = {n.npc_id for n in loc.npcs}
         keep = {n["id"]: n["pos"] for n in ls["npcs"]}
         loc.npcs[:] = [n for n in loc.npcs if n.npc_id in keep]
         from ..entities import NPC
@@ -275,7 +284,11 @@ class SaveMixin:
             if nid not in have:
                 loc.npcs.append(NPC((0, 0), npc_animations(nid), npc_id=nid, name=NPC_NAMES.get(nid, nid)))
         for n in loc.npcs:
-            n.rect.topleft = tuple(keep[n.npc_id])
+            if not stale or n.npc_id not in spawned:
+                n.rect.topleft = tuple(keep[n.npc_id])
+        lv.met = set(ls["met"])
+        if stale:
+            return
         base = [c for c in lv.containers if not c.get("corpse")]
         for c, cs in zip(base, ls["containers"]):
             c["loot"], c["opened"] = dict(cs["loot"]), cs["opened"]
@@ -295,7 +308,6 @@ class SaveMixin:
         for d in [d for d in lv.doors if list(d) not in ls["doors"]]:
             lv.open_door(d)
         lv.explored = {tuple(t) for t in ls["explored"]}
-        lv.met = set(ls["met"])
         lv._mm_fog = None
         lv._last_reveal = None
         lv.stains = [tuple(s) for s in ls["stains"]]

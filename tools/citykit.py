@@ -46,6 +46,8 @@ class CityMap(MapKit):
         super().__init__(w, h, start, seed, fill="_" if interior else fill)
         self.furnish = furnish
         self.music_zones = []      # [x0, y0, x1, y1, ключ]: в салуне — граммофон, в казино — джаз
+        self.walk_zones = {}       # npc_id -> [x0, y0, x1, y1]: житель ходит у своего дела (src/wander.py)
+        self.folk_spots = {}       # ключ анкеты жителя -> клетка, «critter:<вид>» -> [клетки] (src/ambient.py)
         self.city, self.id, self.name = city, mid, name
         self.floors, self.walls = {}, {}
         self.night, self.music, self.interior = night, music, interior
@@ -265,6 +267,11 @@ class CityMap(MapKit):
             out["gates"] = self.gates
         if self.night:
             out["night"] = self.night
+        if self.walk_zones:
+            out["walk_zones"] = {k: list(v) for k, v in self.walk_zones.items()}
+        if self.folk_spots:
+            out["folk_spots"] = {k: ([list(t) for t in v] if k.startswith("critter:") else list(v))
+                                 for k, v in self.folk_spots.items()}
         if getattr(self, "lights", None):
             out["lights"] = self.lights               # потолочные светильники без картинки: [x, y, радиус, [r,g,b], мерцание] в пикселях
         if self.tint:

@@ -92,91 +92,341 @@ METAL = cells("nbunk/p2", [(4, 8), (5, 9), (6, 10), (4, 10)])
 
 
 # ================================================================ двор школы
-W, H = 64, 44
-y_road = 29
-out = CityMap(city, "fifteen_school", "Пятнадцатая: старая школа", W, H, start=(2, 30), seed=57, music="desert")
-out.npcs += [["walt", 33, 25]]
-out.enemies += [["radroach", 55, 22], ["radroach", 58, 24], ["radroach", 56, 26], ["radroach", 60, 21],
-                ["rat", 10, 38], ["rat", 14, 40], ["mutant", 52, 39]]
-for _, x, y in out.enemies + out.npcs:
-    out.reserve(x, y, x, y)
+# «Солнечная долина», школьный двор. Уличная карта — значит ×1.56 по каждой стороне от прежних 64×44
+# (docs/furnish_guide.md «Масштаб»): 100×70. Автообстановка выключена, всё поставлено поштучно.
+# Планировка (logic.md §1: сначала планировка, потом мебель), с юга на север:
+#   трасса с переходом в Пятнадцатую (x=0) → ограда с калиткой → двор;
+#   запад двора — огород с дорожкой, грядками и пересохшим колодцем, центр — баскетбольная площадка
+#   у корпуса и детская площадка восточнее оси, восток — спортивный угол и футбольное поле;
+#   за корпусом — задворки: ржавый школьный автобус, хлам, баки, сарай.
+# Корпус под целой крышей; вход в школу — дверь на южном фасаде, она ведёт в fifteen_school_in
+# (портал, logic.md §6).
+P("ws_gate", "pk:wschool/wschool_4_041", foot=[2, 1])                  # створка школьной калитки
+P("ws_entrance", "pk:wschool/p3/12,4,4,2", foot=[4, 1], block=False, sight=True)   # дверь с вывеской
+
+W, H = 100, 70
+y_road = 45                             # трасса: асфальт 45..48, обочины-трава 44 и 49
+AXIS = (46, 47, 48, 49)                 # ось двора: от двери корпуса к калитке и на переход
+GATE = (47, 48)                         # проход в калитке — против двери школы
+DOOR = (48, 49)                         # дверь корпуса: две клетки южного фасада (y=20)
+out = CityMap(city, "fifteen_school", "Пятнадцатая: старая школа", W, H, start=(2, 46), seed=57,
+              music="desert", furnish=False)
+
+
+def owhy(name, x, y, blocked=None, soft=None, reserved=None):
+    """Почему предмет не встал — как why_not() в build_town.py."""
+    foot = out.footprint(name, x, y)
+    blocked = out.blocked if blocked is None else blocked
+    soft = out.soft_obj if soft is None else soft
+    reserved = out.reserved if reserved is None else reserved
+    why = []
+    if any(t in blocked for t in foot):
+        why.append("блок: " + str([t for t in foot if t in blocked]))
+    if any(t in soft for t in foot):
+        why.append("мягкий предмет: " + str([t for t in foot if t in soft]))
+    if any(t in reserved for t in foot):
+        why.append("резерв")
+    h = out.hides(name, x, y)
+    if h:
+        why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
+    why.append("земля: " + "".join(out.ground[yy][xx] for xx, yy in foot))
+    return f"«{name}» не встал в ({x}, {y}): " + "; ".join(why)
+
+
+def _undo(n_props, n_conts, blocked, soft_obj, reserved):
+    """Неудачная попытка не оставляет следов: предмет, его клетки и контейнер убираются."""
+    del out.props[n_props:], out.containers[n_conts:]
+    out.blocked, out.soft_obj, out.reserved = blocked, soft_obj, reserved
+    out._reach = None
+
+
+def place(name, x, y, **kw):
+    """Явная расстановка: предмет обязан встать и остаться там, куда его поставили (logic.md §2)."""
+    snap = (len(out.props), len(out.containers), set(out.blocked), set(out.soft_obj), set(out.reserved))
+    ok = out.put(name, x, y, **kw)
+    if ok and out.props[-1][1:3] == [x, y]:
+        return True
+    why = owhy(name, x, y, blocked=snap[2], soft=snap[3], reserved=snap[4])
+    _undo(*snap)
+    raise AssertionError(why + ("" if not ok else f"; встал в ({out.props and 0 or 0})"))
+
+
+def oskin(name, x, y):
+    """Мелочь на полу (бумаги, стекло, щепки): не блокирует, но и в стену не лезет."""
+    if not out.put(name, x, y, check=False) or out.props[-1][1:3] != [x, y]:
+        raise AssertionError(owhy(name, x, y))
+
+
+def obox(name, x, y, *a, **kw):
+    """Ящик с добычей — как place(): не встал — объяснить почему."""
+    try:
+        return out.box(name, x, y, *a, **kw)
+    except AssertionError:
+        raise AssertionError(owhy(name, x, y)) from None
+
+
+# ------------------------------------------------------------ земля, трасса, дорожки
 out.floors = getattr(out, "floors", {})
 out.floor_code("t", "pk:desnat/p1/4,4,1,1", "pk:desnat/p1/5,4,1,1", "pk:desnat/p1/6,4,1,1")
 out.floor_code("q", "pk:desnat/p1/10,4,1,1")
 out.floor_code("s", "pk:desnat/p1/0,0,1,1", "pk:desnat/p1/1,0,1,1", "pk:desnat/p1/0,1,1,1")
-out.paint("s", 0, 0, W - 1, H - 1)
+out.paint("s", 0, 0, W - 1, H - 1)                      # пустошь вокруг
 out.patchwork("s", ["t"], 70, 2, 5, seed=21)
 out.patchwork("s", ["q"], 30, 1, 3, seed=22)
-out.paint("a", 0, y_road, W - 1, y_road + 3)
-for x in range(0, W, 4):
+out.paint("g", 0, 0, W - 1, 43)                         # двор и задворки — трава
+out.paint("a", 0, y_road, W - 1, y_road + 3)            # трасса
+for x in range(0, W, 4):                                # прерывистая разметка
     out.ground[y_road + 1][x] = out.ground[y_road + 1][x + 1] = "h"
-out.paint("g", 0, y_road - 1, W - 1, y_road - 1)
+out.paint("g", 0, y_road - 1, W - 1, y_road - 1)        # обочины
 out.paint("g", 0, y_road + 4, W - 1, y_road + 4)
-out.paint("g", 29, 20, 32, y_road - 2)            # дорожка от ворот к дверям
-out.reserve(0, y_road - 1, W - 1, y_road + 4)
-out.reserve(29, 19, 32, y_road - 1)
+out.paint("c", AXIS[0], 21, AXIS[3], 44)                # ось: крыльцо → калитка → обочина
+out.paint("c", AXIS[0], 45, AXIS[3], y_road + 3)        # переход через трассу
+out.paint("c", 3, 22, 96, 23)                           # аллея вдоль фасада
+out.paint("c", 3, 39, 96, 40)                           # аллея вдоль ограды
+out.paint("c", 3, 7, 4, 40)                             # западный обход корпуса
+out.paint("c", 95, 7, 96, 40)                           # восточный обход
+out.paint("c", 5, 6, 94, 6)                             # проход за корпусом — в задворки
+out.patchwork("g", ["t"], 16, 2, 4, seed=23)            # протоптанная земля на газоне задворок…
+for y in range(21, 45):                                 # …а не во дворе: там пятна выглядят кляксами
+    for x in range(W):
+        if out.ground[y][x] == "t":
+            out.ground[y][x] = "g"
+out.reserve(0, y_road, W - 1, y_road + 3)               # по трассе ничего не ставим
 out.portal([(0, y) for y in range(y_road, y_road + 4)], "ruins", (147, 49), "Пятнадцатая")
 
-# здание школы: стены и крыша; внутри — отдельная карта
-out.building(14, 6, 36, 14, "brick", south=(16,))
-out.portal([(30, 19), (31, 19)], "fifteen_school_in", (43, 15), "Школа «Солнечная долина»")
-for x in (20, 25, 36, 41):
-    out.put(WINDOW, x, 19, force=True)        # окна — поверх кирпичного фасада
+# ------------------------------------------------------------ ограда с калиткой
+# Сетка вдоль трассы: сплошная от западного края до калитки и от калитки до восточного;
+# створка откинута в сторону, проход — против двери школы (logic.md §2: вход должен читаться).
+out.hwall([FENCE], 1, 44, 42)
+out.hwall([FENCE], 49, 96, 42)
+place("ws_gate", 45, 42, force=True)                    # створка калитки откинута к западу
+out.reserve(*GATE, *GATE)
 
-# двор: забор с воротами, площадка, беговая дорожка, трибуны, автобус
-out.hwall([FENCE], 12, 52, 27, gaps=(29, 30, 31, 32))
-out.stamp("court", COURT, 16, 21, water=False)
-out.put(HOOP, 15, 22)
-out.put(HOOP_B, 19, 22)
-# футбольное поле на утоптанной земле: ворота друг напротив друга, рядом — турники и «качалка» физрука
-out.put(GOAL, 40, 22)
-out.put(GOAL_BROKEN, 47, 24)
-out.put(PULLUP, 3, 25)
-out.put(WEIGHTS, 47, 20)
-out.put(BARBELL, 49, 21)
-out.put(SWINGS, 5, 21)
-out.put(MONKEY, 8, 21)
-out.put(BLEACH, 24, 22)
-out.put(BLEACH_B, 35, 24)
-for x in (21, 25, 34, 38):              # клумбы вдоль фасада, по обе стороны от дорожки к дверям
-    out.put(FLOWERS, x, 20)
-out.put(BUS, 52, 21)
-out.put(JUNK, 57, 26)
-out.put(TRASH, 12, 21)
+# ------------------------------------------------------------ корпус школы
+# Корпус под целой крышей (решение автора 24.10): зал внутри — отдельная карта fifteen_school_in,
+# сюда ведёт дверь на южном фасаде, над ней вывеска «EXIT / SCHOOL». Под окнами ничего не ставим:
+# высокий спрайт у фасада залезает на стену (замечание автора, logic.md §2а).
+out.building(28, 8, 44, 13, "brick", south=(20,), worn=False)   # под целой крышей — без проломов
+out.portal([(48, 20), (49, 20)], "fifteen_school_in", (43, 15), "Школа «Солнечная долина»")
+for x in (32, 38, 54, 60, 66):                          # окна — поверх кирпичного фасада
+    out.put(WINDOW, x, 20, force=True)
+out.put("ws_entrance", 47, 20, force=True)              # дверь-портал с вывеской, поверх фасада
 
-# через дорогу — разбитая закусочная, машины пятидесятых, телефонная будка
-out.put("r_shanty_big", 24, 36)
-out.put(DINER_SIGN, 33, 34)
-out.put(PUMP, 40, 35)
-out.put(PUMP, 43, 35)
-out.put(PHONE, 18, 34)
-out.put(HYDRANT, 14, 34)
-out.put(MAILBOX, 47, 34)
-out.put(BENCH, 8, 27)
-for i, (x, y) in enumerate(((6, 33), (50, 33), (56, 28), (20, 28), (38, 28))):
-    out.put(CARS[i % len(CARS)], x, y, allow_reserved=True)
-for x in range(4, W - 2, 10):             # фонари по обочинам, в шахматном порядке
-    out.put(LAMP, x, y_road - 1, allow_reserved=True)
-    out.put(LAMP, x + 5, y_road + 4, allow_reserved=True)
-out.box("crate", 30, 38, "ящик за закусочной", {"консервы": 2, "энергетический батончик": 1, "крышки": 12})
-out.box("r_dumpster", 22, 41, "мусорный бак", {"пружина": 1, "изолента": 1})
-for name, x, y in (("r_shack", 4, 38), ("r_cabin", 48, 40), ("r_shed_tin", 56, 38)):
-    out.put(name, x, y)
-out.grow(1, 1, W - 2, 5, 16, GRASS + BUSHES)
-out.grow(1, 20, 12, 27, 4, GRASS)
-out.grow(1, 34, W - 2, H - 2, 14, GRASS + BUSHES)
-out.scatter(STONES + ["r_rocks", "r_trash"], 1, 1, W - 2, H - 2, 14)
-print("обжито out:", out.dress_empty([
-    [("r_tent_beige", 0, 0), ("campfire", 3, 2), ("r_logs", 2, 3), ("barrel_wood", 0, 3)],
-    [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3)],
-    [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3)],
-    [("r_dumpster", 0, 0), ("pile_cans", 2, 0), ("r_trash", 0, 2), ("crate_broken", 3, 2)],
-    [("x_cross", 0, 0), ("x_grave", 0, 1), ("x_cross", 2, 0), ("r_dtree_a", 4, 1)],
-    [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
-    [("r_shack", 0, 0), ("pile_junk", 5, 1), ("x_fire_barrel", 3, 3)],
-], ground=("s", "t", "q"), block=7, margin=1, chance=0.9, max_uses=2))
-for x, y in ((4, 3), (9, 4), (58, 4), (61, 12), (6, 15)):
-    out.put("dead_tree", x, y)
+
+# ------------------------------------------------------------ огород (запад двора)
+# Огород на земле, а не на стене: грядки в два ряда с дорожкой посередине, штакетник с калиткой,
+# за грядками — пересохший школьный колодец (Макар проверяет его каждый день), вёдра, бочки, тележка;
+# у южного штакетника — сарай с инвентарём (logic.md §3, «двор: огород — грядки рядом, вёдра и лопата»).
+out.paint("t", 6, 25, 26, 38)                           # земля огорода
+out.paint("c", 14, 24, 15, 38)                          # дорожка между грядками
+out.hwall(["gs_fence"], 6, 26, 24, gaps=(14, 15))       # штакетник со стороны двора, с калиткой
+out.hwall(["gs_fence"], 6, 26, 38, gaps=(14, 15))       # и со стороны аллеи у ограды
+for y in range(25, 38):                                 # боковины — короткие секции столбиком
+    place("gs_fence_b", 6, y)
+    place("gs_fence_b", 26, y)
+GARDEN = {                                              # грядки: капуста, помидоры, вскопанная земля
+    (8, 27): "x_garden", (11, 27): "v22_cabbage", (18, 27): "x_garden", (21, 27): "v22_tomato",
+    (24, 27): "x_garden",
+    (8, 30): "v22_cabbage_b", (11, 30): "x_garden", (18, 30): "v22_tomato_b", (21, 30): "x_garden",
+    (24, 30): "v22_cabbage",
+    (8, 33): "x_garden", (11, 33): "v22_tomato", (18, 33): "x_garden", (21, 33): "v22_cabbage_b",
+    (24, 33): "x_garden",
+    (8, 36): "v22_tomato_b", (11, 36): "x_garden", (18, 36): "x_garden", (21, 36): "v22_cabbage",
+}
+for (x, y), bed in sorted(GARDEN.items()):
+    place(bed, x, y)
+place("w_well", 16, 36)                                 # пересохший колодец у южной калитки
+place("bucket", 17, 36)
+place("bucket", 16, 37)
+place("barrel_wood", 17, 37)                            # бочка под дождь
+place("x_cart", 12, 35)                                 # тележка с мешками — между грядок
+place("crate", 9, 37)
+place("sack", 10, 37)
+oskin("shovel", 12, 37)                                 # лопата брошена в земле
+oskin("pickaxe", 13, 37)
+place("r_shed_tin", 23, 36)                             # сарай с инвентарём у южного штакетника
+
+# ------------------------------------------------------------ баскетбольная площадка (центр у корпуса)
+# Разметка, щиты с двух сторон, трибуны вдоль северного края лицом к площадке, мячи забыты за линией.
+# Доска объявлений и урна — у входа во двор, лицом к аллее.
+out.stamp("court", COURT, 30, 26, water=False)
+out.stamp("court", COURT, 33, 26, water=False)
+place("ws_hoop", 29, 27)
+place("ws_hoop_b", 36, 27)
+place("ws_bleachers", 30, 24)
+place("ws_bleachers_b", 34, 24)
+place("ws_ball", 33, 29)
+place("ws_ball", 39, 23)
+place("t50_bench", 39, 25)
+place("ws_bin", 44, 25)
+place("x_board", 42, 21)                                # доска объявлений у входа во двор
+
+# ------------------------------------------------------------ детская площадка (восточнее оси)
+# Песок, качели, «рукоход», скамьи нянек у северного края; мяч, урна, забытый рюкзак.
+out.paint("q", 52, 25, 70, 32)                          # песок — только под снарядами и скамьями
+place("ws_swings", 54, 27)
+place("ws_monkey_bars", 58, 27)
+place("ws_swings", 64, 27)
+place("ws_ball", 67, 30)
+place("bench_7", 60, 25)
+place("bench_7", 66, 25)
+place("ws_trash", 52, 24)                               # баки у входа на площадку (обыскиваются)
+place("ws_bin", 69, 31)
+place("ws_ball", 62, 28)                                # мяч в песке
+place("ws_backpack", 56, 30)                            # чей-то рюкзак в песке
+
+# ------------------------------------------------------------ спортивный угол и футбольное поле (восток)
+# Турники и «качалка» у восточной ограды, маты под ними; южнее — утоптанное поле с воротами,
+# ворота на концах поля в один ряд, лицом друг к другу: целые на востоке, выбитые лежат на западе. Здесь же стоит тот, кто был когда-то физруком.
+place("ws_pullup", 74, 25)
+place("ws_weights", 79, 25)
+place("ws_barbell", 82, 25)
+place("barrel_wood", 86, 25)
+place("bucket", 87, 25)
+place("t50_bench", 89, 25)
+place("ws_mat", 74, 27)
+place("ws_mat", 79, 27)
+out.paint("t", 72, 31, 94, 38)                          # утоптанное поле
+place("ws_goal_broken", 73, 35)
+place("ws_goal", 90, 35)
+place("ws_ball", 82, 34)
+place("ws_bin", 93, 31)
+
+# ------------------------------------------------------------ задворки (за корпусом)
+# Тот самый автобус, что ушёл за детьми и вернулся пустым: стоит за школой, двери открыты, у колёс
+# брошены детские рюкзаки. Кругом хлам, шины, баки, сарай и сгоревшая бочка — сюда не заходят.
+place("ws_bus", 8, 4)
+place("ws_junk", 18, 4)
+place("pile_tires", 24, 4)
+place("r_dumpster", 28, 4)
+place("crate", 32, 4)
+place("crate_b", 33, 4)
+place("pile_scrap", 36, 4)
+place("x_fire_barrel", 40, 4)
+place("r_shed_tin", 44, 3)
+place("pile_junk", 50, 4)
+place("r_barrels", 54, 4)
+place("metal_sheets", 57, 4)
+place("ws_backpack", 10, 5)                             # рюкзаки у открытой двери автобуса
+place("ws_backpack", 11, 5)
+place("sack", 13, 5)
+place("ws_trash", 62, 4)
+place("barrel_wood", 65, 4)
+place("pile_scrap", 72, 4)
+place("r_barrels", 75, 4)
+place("crate", 78, 4)
+place("ws_junk", 82, 4)
+place("pile_tires", 88, 4)
+place("x_cart", 91, 4)
+for x, y in ((3, 4), (59, 4), (68, 4), (86, 4)):         # сухие деревья по задворкам
+    place("dead_tree", x, y)
+for x, y in ((11, 11), (20, 15), (74, 12), (88, 15)):    # и вдоль боковых обходов корпуса
+    place("dead_tree", x, y)
+place("pile_junk", 22, 13)
+place("r_barrels", 24, 16)
+place("pile_scrap", 76, 16)
+place("crate_broken", 90, 11)
+
+# ------------------------------------------------------------ через трассу: закусочная, машины, стан
+# Разбитая закусочная «DINER / GAS» с колонками, машины пятидесятых у обочины и на стоянке,
+# телефонная будка и почтовый ящик на северной обочине; западнее — стоянка бродяг, восточнее — свалки.
+place("r_shanty_big", 33, 52)                           # закусочная
+place("t50_diner_sign", 38, 52)
+place("t50_pump", 42, 53)
+place("t50_pump", 43, 53)
+obox("crate", 32, 54, "ящик закусочной", {"консервы": 2, "энергетический батончик": 1, "крышки": 12})
+obox("r_dumpster", 29, 54, "мусорный бак", {"пружина": 1, "изолента": 1})
+place("t50_phone", 24, 52)
+place("t50_hydrant", 20, 44)
+place("t50_mailbox", 54, 44)
+place("t50_bench", 12, 44)
+for x in range(8, W - 6, 16):                           # фонари по северной обочине
+    place("t50_lamp", x, 44, allow_reserved=True)
+for x in (18, 34, 62, 78, 94):                          # и по южной — не на переходе
+    place("t50_lamp", x, 49)
+for name, x, y in ((CARS[0], 28, 45), (CARS[1], 60, 48)):   # брошенные машины на трассе
+    place(name, x, y, allow_reserved=True)
+for name, x, y in ((CARS[2], 46, 51), (CARS[3], 52, 51), (CARS[4], 30, 57)):
+    place(name, x, y)
+place("r_tent_beige", 12, 58)                           # стоянка бродяг через дорогу
+place("campfire", 16, 60)
+place("r_logs", 15, 61)
+place("barrel_wood", 12, 61)
+place("pile_rags", 17, 58)
+place("r_cabin", 8, 57)
+place("r_car_wreck", 58, 60)
+place("pile_tires", 62, 62)
+place("r_trash", 58, 62)
+place("r_shack", 70, 55)
+place("r_billboard", 78, 52)
+place("r_pickup", 84, 56)
+place("r_barrels", 89, 56)
+for x, y in ((6, 54), (22, 64), (44, 64), (68, 66), (92, 62), (95, 52)):
+    place("dead_tree", x, y)
+out.scatter(STONES + ["r_rocks", "r_trash"], 1, 51, W - 2, H - 2, 16)
+
+# ------------------------------------------------------------ что ещё во дворе
+# Двор не пустует: по бокам корпуса хозяйственный тыл (компост, ящики, бочки, мусор), на аллее —
+# скамьи, на газоне — забытый мяч, за полем и через дорогу — свалки и сухие деревья.
+place("bench_7", 41, 23)                                # скамьи у аллеи: ждут после уроков
+place("bench_7", 44, 23)
+place("pile_junk", 8, 12)                               # компостная куча у западной стены
+place("crate", 14, 10)
+place("barrel_wood", 16, 10)
+place("r_barrels", 18, 12)
+place("plank_block", 16, 14)
+place("ws_junk", 11, 17)
+place("bench_7", 9, 18)
+place("dead_tree", 5, 11)
+place("dead_tree", 22, 8)
+place("r_barrels", 76, 10)                              # тыл с востока: бочки, баки, ящики
+place("barrel_wood", 77, 10)
+place("r_dumpster", 84, 11)
+place("crate", 88, 14)
+place("crate_b", 89, 14)
+place("pile_scrap", 82, 17)
+place("ws_junk", 92, 12)
+place("dead_tree", 94, 10)
+place("dead_tree", 73, 16)
+place("ws_ball", 40, 34)                                # мяч на газоне внутри дорожки
+place("r_car_wreck", 50, 54)                            # разбитые машины через дорогу
+place("pile_tires", 54, 55)
+place("r_trash", 50, 56)
+place("r_barrels", 48, 56)
+place("crate_broken", 52, 57)
+place("pile_scrap", 57, 55)
+place("by_road_sign_a", 5, 44)                          # знак на подъезде к школе
+for x, y in ((14, 64), (28, 62), (40, 66), (52, 66), (62, 68), (74, 64), (86, 66), (2, 26), (98, 30)):
+    place("dead_tree", x, y)                            # сухие деревья по краям
+place("pile_tires", 46, 62)
+place("r_trash", 34, 64)
+place("r_bones", 60, 64)
+place("r_rocks", 66, 62)
+place("dead_tree", 1, 22)                               # бурьян у западного края
+place("r_barrels", 20, 18)                              # хлам у западного торца корпуса
+place("crate", 23, 19)
+place("pile_scrap", 90, 19)                             # и у восточного
+place("barrel_wood", 92, 18)
+place("ws_ball", 36, 35)                                # мяч на газоне внутри дорожки
+place("bench_7", 33, 38)                                # скамья на прямой дорожки
+place("pile_tires", 10, 52)                             # шины у стоянки бродяг
+place("r_trash", 14, 52)
+place("dead_tree", 2, 60)
+
+# ------------------------------------------------------------ кто где
+# Уолт, бывший сторож, — у калитки (и ходит вдоль ограды); радтараканы — в хламе за корпусом,
+# крысы — у закусочной, мутант-«физрук» — на матах спортивного угла (logic.md §2а).
+out.npcs += [["walt", 42, 40]]
+out.enemies += [["radroach", 13, 3], ["radroach", 19, 3], ["radroach", 25, 3], ["radroach", 33, 3],
+                ["rat", 31, 55], ["rat", 35, 57], ["mutant", 80, 28]]
+for _, x, y in out.npcs + out.enemies:
+    out.reserve(x, y, x, y)
+out.walk_zones = {"walt": [38, 39, 44, 41]}             # сторож у калитки, но не в самом проходе
+out.folk_spots = {"makar": [12, 31],                    # Макар с метлой — у грядок
+                  "raya": [57, 28],                     # Рая — на качелях
+                  "vlas": [51, 22],                     # Влас — у двери в завал, ищет глобус
+                  "critter:cat": [[23, 30]],            # кот у огорода
+                  "critter:dog": [[52, 41]]}            # пёс у калитки
 
 
 # ================================================================ здание школы
@@ -204,7 +454,7 @@ for x in (6, 17, 28, 39):
 for x in (6, 22, 39):
     sin.opening(x, 17, x + 1, 19, "F")
 sin.opening(45, 14, 45, 15, "F")
-sin.portal([(45, 14), (45, 15)], "fifteen_school", (30, 20), "Школьный двор")
+sin.portal([(45, 14), (45, 15)], "fifteen_school", (48, 21), "Школьный двор")
 sin.reserve(42, 14, 44, 16)
 
 sin.npcs += [["miss_lane", 23, 23], ["ghoul_kid_a", 21, 25], ["ghoul_kid_b", 25, 25], ["ghoul_kid_c", 23, 25]]

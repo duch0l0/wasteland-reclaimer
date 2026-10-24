@@ -754,7 +754,7 @@ scatter_out(STONES + FLOOR_BITS[:5], 50)
 
 
 # ------------------------------------------------------------ переходы
-m.portal([(W - 1, y) for y in range(ROAD, ROAD + 4)], "fifteen_school", (2, 30), "Старая школа")
+m.portal([(W - 1, y) for y in range(ROAD, ROAD + 4)], "fifteen_school", (2, 46), "Старая школа")
 
 
 def hatch(cands, to, at, label, requires):

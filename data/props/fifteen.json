@@ -347,6 +347,24 @@
 "block": true,
 "sight": false
 },
+"ws_gate": {
+"img": "pk:wschool/wschool_4_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"ws_entrance": {
+"img": "pk:wschool/p3/12,4,4,2",
+"block": false,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
