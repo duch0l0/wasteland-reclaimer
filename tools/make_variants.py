@@ -746,11 +746,25 @@ def make_turret():
     return out
 
 
+def lift(img, gamma):
+    """Осветлить кадр гаммой: средние тона светлеют, чёрный контур остаётся контуром.
+    Для тёмных жителей, которых в полутёмных помещениях не разглядеть (замечание автора 24.10)."""
+    out = img.copy()
+    w, h = out.get_size()
+    for y in range(h):
+        for x in range(w):
+            c = out.get_at((x, y))
+            if c.a:
+                out.set_at((x, y), (*(round(255 * (v / 255) ** gamma) for v in (c.r, c.g, c.b)), c.a))
+    return out
+
+
 def make_ghoul_kid():
-    """Ребёнок-гуль из школы: тот же дикий гуль, но на треть ниже."""
+    """Ребёнок-гуль из школы: тот же дикий гуль, но на треть ниже и светлее — в классе его должно быть видно."""
     out = {}
     for d, frames in load("feral").items():
-        out[d] = [pygame.transform.scale(f, (max(1, round(f.get_width() * 0.7)), max(1, round(f.get_height() * 0.7))))
+        out[d] = [lift(pygame.transform.scale(f, (max(1, round(f.get_width() * 0.7)),
+                                                  max(1, round(f.get_height() * 0.7)))), 0.6)
                   for f in frames]
     return out
 
@@ -781,7 +795,7 @@ def make_ghoul_lady():
                     elif lum < 110 and abs(c.r - c.g) < 30 and y < h * 0.4:      # тёмные волосы -> седые клочья
                         v = int(130 + lum * 0.6)
                         img.set_at((x, y), (v, v, int(v * 0.95), c.a))
-            out[d].append(img)
+            out[d].append(lift(img, 0.75))
     return out
 
 
