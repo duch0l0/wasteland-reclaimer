@@ -57,11 +57,16 @@ def main():
     if "--smoke" in sys.argv:
         smoke()
     try:
-        game = Game(intro="--iso" not in sys.argv)
+        game = Game(intro="--iso" not in sys.argv and "--loc" not in sys.argv)
         if "--iso" in sys.argv:   # сразу в изометрический Барстоу
             game.menu = None
             game.slides = None
             game.merc_start()     # за наёмника Дэкса, как по квесту «Контракт на Барстоу»
+        elif "--loc" in sys.argv:   # сразу в локацию для проверки карты: main.py --loc station
+            i = sys.argv.index("--loc")
+            game.menu = None
+            game.slides = None
+            game.enter_location(sys.argv[i + 1] if i + 1 < len(sys.argv) else "ruins")
         game.run()
     except Exception:
         # в exe без консоли ошибку не видно — пишем её в файл рядом с игрой
