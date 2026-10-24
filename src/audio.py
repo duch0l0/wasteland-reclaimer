@@ -20,6 +20,9 @@ amb_sewer_1/_2 — при входе берётся случайный), гор�
 поле "ambient" в data/locations.json, иначе по её музыке (MUSIC_AMBIENT); ночью на открытом воздухе
 ветер сменяется ночью. Петля живёт на своих зарезервированных каналах — эффекты их не занимают.
 
+Музыка и фон не звучат вместе (решение автора 24.10): пока играет трек, петля плавно уходит в ноль;
+трек кончился — 40–90 с слышен только мир, потом следующий вариант (MUSIC_GAP_S). В бою паузы нет.
+
 Громкость музыки, эффектов и фона — меню «Звук», хранится в saves/settings.json.
 Звук слева/справа от центра экрана слышен больше левым/правым ухом.
 Если звуковой карты нет (проверки без окна), всё молча работает без звука.
@@ -54,6 +57,7 @@ MUSIC_AMBIENT = {"desert": "wind", "world": "wind", "caves": "cave", "lab": "vau
 # каналы фона: два, чтобы старый затухал, пока новый набирает громкость; эффектам они недоступны
 AMBIENT_CHANNELS = 2
 AMBIENT_FADE_MS = 1500
+MUSIC_GAP_S = (40, 90)     # тишина музыки между треками: в это время слышен мир
 
 
 def ambient_key(loc_id, night=False, defs=None):
@@ -94,6 +98,8 @@ class Audio:
         self.amb_chs = []          # каналы фона: играют по очереди, старый затухает под новым
         self._amb_i = 0
         self._amb_snd = None       # держим Sound живым, пока петля звучит
+        self._amb_gain = 1.0       # 0 — под музыкой фона не слышно, 1 — музыки нет, слышен мир
+        self._music_gap_until = None   # до какого момента между треками звучит только мир
         self.f2 = None
         self._f2_loaded = False
         self._load_settings()
@@ -197,7 +203,7 @@ class Audio:
 
     # ------------------------------------------------------------ фоновые петли
     def _ambient_apply_volume(self):
-        v = self.volume["ambient"] * self.ambient_level
+        v = self.volume["ambient"] * self.ambient_level * self._amb_gain
         for ch in self.amb_chs:
             if ch.get_busy():
                 ch.set_volume(v)
@@ -236,7 +242,7 @@ class Audio:
             self._amb_i = (self._amb_i + 1) % len(self.amb_chs)
             self._amb_snd = _rng.choice(snds)   # ливнёвка 1/2 — при каждом входе другая
             ch = self.amb_chs[self._amb_i]
-            ch.set_volume(self.volume["ambient"] * self.ambient_level)
+            ch.set_volume(self.volume["ambient"] * self.ambient_level * self._amb_gain)
             ch.play(self._amb_snd, loops=-1, fade_ms=AMBIENT_FADE_MS)
         except pygame.error:
             pass
@@ -285,6 +291,7 @@ class Audio:
         else:
             path = self._music_fallback(key)   # один файл на все входы — просто играет заново
         self.music_key = key
+        self._music_gap_until = None
         if not path:
             self.music_path = None
             return
@@ -307,10 +314,32 @@ class Audio:
                 return
         except pygame.error:
             return
-        if time.monotonic() - self._music_started < 1.0:   # только что включили
+        now = time.monotonic()
+        if now - self._music_started < 1.0:   # только что включили
             return
+        if self.music_key != "combat":         # между треками — пауза, в ней слышен мир
+            if self._music_gap_until is None:
+                self._music_gap_until = now + _rng.uniform(*MUSIC_GAP_S)
+                return
+            if now < self._music_gap_until:
+                return
         key, self.music_key = self.music_key, None   # «ключ тот же» — play_music пустит дальше
         self.play_music(key)
+
+    def _ambient_duck(self, dt_ms):
+        """Фон под музыкой: пока трек звучит — плавно в ноль, в паузе между треками — обратно."""
+        if not self.ok or not self.amb_chs:
+            return
+        try:
+            target = 0.0 if pygame.mixer.music.get_busy() else 1.0
+        except pygame.error:
+            return
+        if target == self._amb_gain:
+            return
+        step = dt_ms / AMBIENT_FADE_MS
+        self._amb_gain = min(target, self._amb_gain + step) if target > self._amb_gain \
+            else max(target, self._amb_gain - step)
+        self._ambient_apply_volume()
 
     def play_combat_music(self):
         """Начало боя: запомнить музыку локации и включить combat (затухание ~1 с)."""
@@ -362,7 +391,8 @@ class Audio:
 
     def update(self, dt_ms):
         self.poll()
-        self._music_tick()   # трек кончился — следующий вариант того же ключа
+        self._music_tick()   # трек кончился — пауза с миром, потом следующий вариант того же ключа
+        self._ambient_duck(dt_ms)
         due = [p for p in self.pending if p[0] - dt_ms <= 0]
         self.pending = [p for p in self.pending if p[0] - dt_ms > 0]
         for p in self.pending:

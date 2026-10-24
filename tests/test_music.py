@@ -65,12 +65,27 @@ check(own("world") == ["world_1.ogg", "world_2.ogg", "world_3.ogg"], f"у world 
 a.play_music("world")
 check(name_of(a) == "world_1.ogg", f"вход 1 — {name_of(a)}")
 seen = []
-for _ in range(4):               # конец трека, ключ тот же -> следующий вариант
+for _ in range(4):               # конец трека, ключ тот же -> пауза с миром -> следующий вариант
     pygame.mixer.music.stop()
     a._music_started = time.monotonic() - 5   # «трек давно играет»
-    a.update(16)                 # обычный кадр игры двигает вариант
+    a.update(16)                 # кадр: трек кончился — началась пауза, музыки нет
+    check(not pygame.mixer.music.get_busy() and a._music_gap_until is not None, "между треками — пауза")
+    a._music_gap_until = time.monotonic() - 1  # «пауза прошла»
+    a.update(16)                 # следующий кадр двигает вариант
     seen.append(name_of(a))
 check(seen == ["world_2.ogg", "world_3.ogg", "world_1.ogg", "world_2.ogg"], f"конец трека -> {seen}")
+
+# 2а. музыка и фон не звучат вместе: под треком фон уходит в ноль, в паузе возвращается
+a._amb_gain = 1.0
+for _ in range(200):
+    a.update(16)
+check(not a.amb_chs or not pygame.mixer.music.get_busy() or a._amb_gain == 0.0,
+      f"под музыкой фон заглушён ({a._amb_gain})")
+pygame.mixer.music.stop()
+a._music_started = time.monotonic() - 5
+for _ in range(200):
+    a.update(16)
+check(not a.amb_chs or a._amb_gain == 1.0, f"в паузе между треками фон слышен ({a._amb_gain})")
 check(a.music_key == "world", "ключ остался world")
 
 # 3. вход в ключ заново (другая локация и обратно) — тоже следующий вариант
