@@ -507,7 +507,7 @@ REPLACED = {
     "x_portrait": ("pk:west/west_8_018", {"foot": [1, 1], "block": False}),
     "x_clock": ("pk:west/west_2_011", {"foot": [1, 1], "block": False}),
     "x_carpet": ("pk:bazaar/bazaar_1_089", {"foot": [2, 1], "block": False, "layer": "floor"}),
-    "x_register": ("pk:town50/town50_2_104", {"foot": [2, 1], "search": "drawer", "title": "касса"}),
+    "x_register": ("pk:town50/town50_2_104", {"foot": [1, 1], "scale": 0.4, "search": "drawer", "title": "касса"}),   # в наборе огромная — с продавца ростом
     "x_fireext": ("pk:fstation/fstation_1_047", {"foot": [1, 1]}),
     "x_cart": ("pk:bazaar/bazaar_1_023", {"foot": [2, 1], "search": "junk", "title": "тележка"}),
     "x_cauldron": ("pk:west/west_5_031", {"foot": [1, 1], "search": "junk", "title": "котелок",

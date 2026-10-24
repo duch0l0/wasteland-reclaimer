@@ -4537,9 +4537,10 @@
   "x_register": {
    "img": "pk:town50/town50_2_104",
    "foot": [
-    2,
+    1,
     1
    ],
+   "scale": 0.4,
    "search": "drawer",
    "title": "касса"
   },
