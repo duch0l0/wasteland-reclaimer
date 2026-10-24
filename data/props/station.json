@@ -1,30 +1,113 @@
 {
 "props": {
-"st_safe": {
-"img": "pk:west/west_2_105",
+"st_pump_red": {
+"img": "pk:town50/town50_1_102",
 "block": true,
-"sight": false,
-"search": "military",
-"title": "сейф заправщика"
-},
-"st_stash": {
-"img": "pk:ucamp/ucamp_2_030",
-"block": true,
-"sight": false,
-"search": "crate",
-"title": "тайник Панка"
-},
-"st_counter": {
-"img": "pk:pmall/pmall_2_017",
-"block": true,
-"sight": false,
+"sight": true,
 "foot": [
-4,
+1,
 1
 ]
 },
-"st_shelf": {
-"img": "pk:store/store_1_000",
+"st_pump_yellow": {
+"img": "pk:town50/town50_1_103",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"st_sign_gas": {
+"img": "pk:town50/town50_1_115",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+170,
+80
+],
+"at": [
+0.5,
+0.35
+],
+"flicker": 0.3
+}
+},
+"st_coke_box": {
+"img": "pk:town50/town50_1_114",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"st_phone": {
+"img": "pk:town50/town50_1_100",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"st_lamp": {
+"img": "pk:town50/town50_1_120",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 155,
+"color": [
+255,
+210,
+140
+],
+"at": [
+0.5,
+0.08
+]
+}
+},
+"st_bench": {
+"img": "pk:town50/town50_1_130",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"st_mailbox": {
+"img": "pk:town50/town50_1_118",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"st_hydrant": {
+"img": "pk:town50/town50_1_109",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"st_car0": {
+"img": "pk:town50/town50_1_029",
 "block": true,
 "sight": true,
 "foot": [
@@ -32,14 +115,164 @@
 1
 ]
 },
-"st_fridge": {
-"img": "pk:aoffice/aoffice_1_017",
+"st_car1": {
+"img": "pk:town50/town50_1_037",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_car2": {
+"img": "pk:town50/town50_1_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_car3": {
+"img": "pk:town50/town50_1_053",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_car4": {
+"img": "pk:town50/town50_1_041",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_car5": {
+"img": "pk:town50/town50_1_040",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_billboard": {
+"img": "pk:zcity/zcity_4_142",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_road_sign": {
+"img": "pk:zcity/zcity_3_035",
 "block": true,
 "sight": false,
-"search": "shelf",
-"title": "холодильник"
+"foot": [
+1,
+1
+],
+"keybg": true
 },
-"st_toolwall": {
+"st_spikes": {
+"img": "pk:gcave/p1/12,8,2,2",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"st_shelf_cereal": {
+"img": "pk:store/store_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка с товаром"
+},
+"st_shelf_cans": {
+"img": "pk:store/store_2_011",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка с товаром"
+},
+"st_shelf_mix": {
+"img": "pk:store/store_2_030",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка с товаром"
+},
+"st_shelf_drink": {
+"img": "pk:store/store_2_032",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка с напитками"
+},
+"st_cooler": {
+"img": "pk:store/store_2_005",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "холодильник с напитками"
+},
+"st_freezer": {
+"img": "pk:store/store_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "морозильный ларь"
+},
+"st_counter": {
+"img": "pk:store/store_2_036",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
+},
+"st_workbench": {
+"img": "pk:nbunk/nbunk_2_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_toolboard": {
 "img": "pk:nbunk/nbunk_2_007",
 "block": true,
 "sight": true,
@@ -48,14 +281,39 @@
 1
 ]
 },
-"st_lift": {
-"img": "pk:nbunk/nbunk_2_014",
+"st_lockers": {
+"img": "pk:nbunk/nbunk_2_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_g_crates": {
+"img": "pk:nbunk/nbunk_2_033",
 "block": true,
 "sight": false,
 "foot": [
 2,
 1
 ]
+},
+"st_bay_car": {
+"img": "pk:town50/town50_1_046",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"st_stash": {
+"img": "pk:ucamp/ucamp_2_030",
+"block": true,
+"sight": false,
+"search": "crate",
+"title": "тайник Панка"
 },
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
