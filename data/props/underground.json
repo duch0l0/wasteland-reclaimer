@@ -159,6 +159,374 @@
 1,
 1
 ]
+},
+"vb_bunk_bed": {
+"img": "pk:nbunk/nbunk_3_001",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_bed": {
+"img": "pk:nbunk/nbunk_3_000",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_nightstand": {
+"img": "pk:nbunk/nbunk_3_005",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"search": "drawer",
+"title": "тумбочка"
+},
+"vb_lockers": {
+"img": "pk:nbunk/nbunk_3_003",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "locker",
+"title": "ряд шкафчиков"
+},
+"vb_locker": {
+"img": "pk:nbunk/nbunk_3_008",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"search": "locker",
+"title": "шкафчик"
+},
+"vb_wardrobe": {
+"img": "pk:nbunk/nbunk_3_007",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"search": "drawer",
+"title": "шкаф"
+},
+"vb_rack": {
+"img": "pk:nbunk/nbunk_3_004",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_shelf": {
+"img": "pk:nbunk/nbunk_3_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка"
+},
+"vb_table": {
+"img": "pk:nbunk/nbunk_3_018",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_desk": {
+"img": "pk:nbunk/nbunk_3_019",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_workbench": {
+"img": "pk:nbunk/nbunk_3_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_safe": {
+"img": "pk:nbunk/nbunk_3_027",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vb_panel": {
+"img": "pk:nbunk/nbunk_3_032",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vb_sink": {
+"img": "pk:nbunk/nbunk_3_035",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vb_grille": {
+"img": "pk:nbunk/nbunk_3_036",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_tanks": {
+"img": "pk:nbunk/nbunk_2_021",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"vb_crates": {
+"img": "pk:nbunk/nbunk_3_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "crate",
+"title": "штабель ящиков"
+},
+"vb_milbox": {
+"img": "pk:nbunk/nbunk_3_030",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "military",
+"title": "армейский ящик"
+},
+"vb_supply": {
+"img": "pk:nbunk/nbunk_3_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_jerrycan": {
+"img": "pk:nbunk/nbunk_3_041",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vb_console": {
+"img": "pk:npower/npower_2_002",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 90,
+"color": [
+140,
+220,
+200
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.12
+}
+},
+"vb_server": {
+"img": "pk:npower/npower_2_042",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"vb_server_row": {
+"img": "pk:npower/npower_2_073",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_desk_mon": {
+"img": "pk:npower/npower_2_066",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_desk_paper": {
+"img": "pk:npower/npower_2_067",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_lab_bench": {
+"img": "pk:wlab/wlab_3_054",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_lab_bench_b": {
+"img": "pk:wlab/wlab_3_055",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_microscope": {
+"img": "pk:wlab/wlab_3_059",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vb_capsule": {
+"img": "pk:wlab/wlab_3_101",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 70,
+"color": [
+150,
+255,
+160
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.06
+}
+},
+"vb_capsule_b": {
+"img": "pk:wlab/wlab_3_103",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_glass_cab": {
+"img": "pk:wlab/wlab_2_012",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "стеклянный шкаф"
+},
+"vb_bottle_shelf": {
+"img": "pk:wlab/wlab_2_061",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "полка с реактивами"
+},
+"vb_docs_table": {
+"img": "pk:wlab/wlab_2_027",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"vb_chair": {
+"img": "pk:wlab/wlab_3_041",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vb_vial": {
+"img": "pk:wlab/wlab_3_084",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"vb_flask": {
+"img": "pk:wlab/wlab_3_090",
+"block": false,
+"sight": false,
+"foot": [
+1,
+1
+]
 }
 }
 }
