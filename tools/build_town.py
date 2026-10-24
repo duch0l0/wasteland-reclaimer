@@ -69,8 +69,8 @@ def wall_art(name, x, y0, dy=None, dx=0):
     m.props.append([name, x, y0 + 1, dx, -26 if dy is None else dy])
 
 
-def on_table(name, x, y, dx=0, dy=-32):
-    """Мелочь на столешнице (лампа, кружка, радио): на клетке стола, приподнята на его высоту."""
+def on_table(name, x, y, dx=0, dy=-42):
+    """Мелочь на столешнице (лампа, кружка, радио): на клетке стола, в глубине столешницы — не у переднего края."""
     assert (x, y) in m.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
     m.props.append([name, x, y, dx, dy, 1 - dy])     # рисуется сразу после стола, а не за ним
 

@@ -653,7 +653,6 @@
     "scale": 0.45,
     "keep_foot": true,
     "names": [
-      "x_cauldron",
       "vb_jerrycan",
       "cl_jerrycan",
       "cl_medbox"
@@ -664,7 +663,8 @@
     "keep_foot": true,
     "names": [
       "zz_lantern",
-      "ws_backpack"
+      "ws_backpack",
+      "ws_microscope"
     ]
   },
   "small_real_0.55": {
@@ -673,7 +673,8 @@
     "names": [
       "w_stool_grey",
       "w_stool_red",
-      "x_gramophone"
+      "x_gramophone",
+      "ws_folders"
     ]
   },
   "small_real_0.65": {
@@ -694,5 +695,14 @@
       "backpack"
     ]
   },
-  "_small_real": "мелочь в реальный рост рядом с героем (замечание автора 24.10: огнетушитель с человека): множитель уже включает прежний групповой; пятно на полу прежнее"
+  "_small_real": "мелочь в реальный рост рядом с героем (замечание автора 24.10: огнетушитель с человека): множитель уже включает прежний групповой; пятно на полу прежнее",
+  "small_real_0.7": {
+    "scale": 0.7,
+    "keep_foot": true,
+    "names": [
+      "x_cauldron",
+      "pile_bottles",
+      "pile_bottles_b"
+    ]
+  }
 }

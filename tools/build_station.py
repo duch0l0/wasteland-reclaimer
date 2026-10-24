@@ -393,7 +393,7 @@ swall(TOOLBOARD, 38, 3, dy=-44)                 # доска с инструме
 place(BAY_CAR, 45, 8)                           # машина в боксе
 oskin("x_vd_oil0", 44, 9)
 oskin("x_vd_oil1", 46, 10)
-place("toolbox_red", 50, 9)                     # ящик у машины — сбоку, она теперь в рост (4×2)
+place("toolbox_red", 47, 6)                     # ящик с инструментом у стеллажа с запчастями
 place("rack_parts", 48, 5)                      # стеллаж с запчастями у северной стены, у бокса
 place(LOCKERS, 52, 4)                           # шкафчики в северо-восточном углу
 place("ar_tires", 55, 4)                        # шины у стены — за ними тайник (не обыскиваются: иначе
@@ -552,9 +552,9 @@ for x, y in ((4, 10), (6, 12), (63, 12), (75, 10), (88, 12), (96, 6), (30, 5), (
 for rect, cnt_ in (((1, 1, 99, 3), 10), ((1, 3, 7, 13), 6), ((30, 1, 34, 13), 3),
                    ((59, 1, 99, 13), 14), ((1, 33, 13, 61), 10), ((87, 33, 99, 61), 9),
                    ((24, 50, 34, 58), 5), ((2, 59, 97, 61), 8)):
-    scatter_out(["r_dry_bush", "r_rocks", "r_bones"], cnt_, *rect)
+    scatter_out(["r_dry_bush", "r_rocks", "r_dry_bush"], cnt_, *rect)   # кости — только там, где была история, не по всей пустоши
 scatter_out(["r_dtree_a", "r_dtree_b", "r_dry_bush"], 8)
-scatter_out(["pile_junk", "r_trash", "r_bones"], 10)      # мусор кучками, не сеткой
+scatter_out(["pile_junk", "r_trash", "pile_tires"], 10)   # мусор кучками, не сеткой
 # Одинокие пустыри обживаем сценками (как в build_town.py): стоянка у костра, разбитая машина, билборд,
 # лачуга — маленькое цельное место вместо песка с кустом посередине.
 # Здания в резерв: dress_empty проверяет землю по участку 8×8, и сценка, зацепившая угол дома, ставила
@@ -612,7 +612,7 @@ for _ in range(6):
         rnd.shuffle(cells)
         for cx, cy in cells:
             try:
-                if m.put(rnd.choice(["r_dry_bush", "r_rocks", "r_bones"]), cx, cy):
+                if m.put(rnd.choice(["r_dry_bush", "r_rocks"]), cx, cy):
                     break
             except AssertionError:
                 continue
