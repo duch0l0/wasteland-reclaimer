@@ -64,7 +64,22 @@
       "bk_car2",
       "bk_car3",
       "bk_car4",
-      "bk_car5"
+      "bk_car5",
+      "st_car0",
+      "st_car1",
+      "st_car2",
+      "st_car3",
+      "st_car4",
+      "st_bay_car",
+      "pr_wreck2",
+      "pr_wreck3",
+      "vg_wreck2",
+      "vg_wreck3",
+      "vg_wreck5",
+      "vg_wreck6",
+      "nc_wreck3",
+      "nc_wreck6",
+      "nc_wreck7"
     ]
   },
   "cars_ruins": {
@@ -75,7 +90,9 @@
       "r_car_red",
       "r_taxi",
       "r_pickup",
-      "sl_humvee"
+      "sl_humvee",
+      "r_car_a",
+      "r_car_d"
     ]
   },
   "buildings": {
@@ -157,7 +174,8 @@
       "mp_barracks",
       "sl_barracks",
       "mp_hangar",
-      "sl_hangar"
+      "sl_hangar",
+      "x_outhouse"
     ]
   },
   "palms": {
@@ -251,7 +269,8 @@
       "nc_lamp",
       "nc_lamp_b",
       "pr_t50lamp",
-      "bk_lamp"
+      "bk_lamp",
+      "st_lamp"
     ],
     "keep_foot": true
   },
@@ -336,7 +355,8 @@
       "mp_humvee_a",
       "mp_humvee_b",
       "mp_truck_cargo",
-      "mp_truck_flat"
+      "mp_truck_flat",
+      "r_camper"
     ]
   },
   "machines": {
@@ -581,6 +601,25 @@
     "names": [
       "mp_moto_a",
       "mp_moto_b"
+    ]
+  },
+  "water_towers": {
+    "scale": 2,
+    "keep_foot": true,
+    "names": [
+      "r_water_tower_b"
+    ]
+  },
+  "buses": {
+    "scale": 1.5,
+    "names": [
+      "ws_bus"
+    ]
+  },
+  "boats": {
+    "scale": 3,
+    "names": [
+      "ct_shipwreck"
     ]
   }
 }

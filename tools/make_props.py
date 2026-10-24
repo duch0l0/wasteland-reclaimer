@@ -964,7 +964,7 @@ RUINS = {
     "r_junk_mound": ("r21_044", S, [4, 2], {"sight": True, "search": "junk", "title": "гора хлама"}),
     "r_dumpster": ("r21_045", S, [2, 1], {"search": "junk", "title": "мусорный бак"}),
     "r_dumpster_b": ("r21_050", S, [2, 1], {"search": "junk", "title": "мусорный бак"}),
-    "r_trash_can": ("r21_046", S, [1, 1], {"search": "junk", "title": "урна"}),
+    "r_trash_can": ("r21_046", 0.7, [1, 1], {"search": "junk", "title": "урна"}),   # при S урна была с человека
     "r_billboard": ("r21_040", S, [1, 1], {}), "r_pole_broken": ("r21_041", S, [1, 1], {}),
     "r_pole_wire": ("r21_049", S, [1, 1], {}),
     "r_trash": ("r21_024", S, [2, 1], {"block": False, "layer": "floor"}),

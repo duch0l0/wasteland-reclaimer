@@ -281,19 +281,18 @@ place("r_bones", 84, 32)
 
 # ================================================================ западный двор: парковка
 # Три машины клиентов у магазина, канистры и бак в углу, доска объявлений на столбе у дороги.
-place(CARS[0], 2, 18)
-place(CARS[1], 5, 21)
-place(CARS[2], 2, 21)
+place(CARS[0], 1, 18)                           # машины в масштабе героя (4×2): две в ряд вдоль запада
+place(CARS[1], 1, 21)
 place("canister", 7, 18)
 place("canister", 7, 19)
-place("r_dumpster", 2, 23)
+place("r_dumpster", 6, 23)
 place("x_board", 4, 16)
 place("barrel_wood", 3, 15)
-place("pile_tires", 6, 23)
+place("pile_tires", 6, 21)                       # шины у бака
 place("pr_trash_a", 1, 17)
 place("junk_small_2", 5, 19)
 place("pile_cans", 1, 15)
-place("canister", 1, 22)
+place("canister", 1, 24)                         # канистра за машинами
 
 # ================================================================ восточный двор: свалка заправки
 # Штабель шин, три остова в ряд, сортир-кабинка, бочки и канистры, билборд у дороги — у заправки всегда
@@ -394,7 +393,7 @@ swall(TOOLBOARD, 38, 3, dy=-44)                 # доска с инструме
 place(BAY_CAR, 45, 8)                           # машина в боксе
 oskin("x_vd_oil0", 44, 9)
 oskin("x_vd_oil1", 46, 10)
-place("toolbox_red", 47, 9)                     # ящик у машины
+place("toolbox_red", 50, 9)                     # ящик у машины — сбоку, она теперь в рост (4×2)
 place("rack_parts", 48, 5)                      # стеллаж с запчастями у северной стены, у бокса
 place(LOCKERS, 52, 4)                           # шкафчики в северо-восточном углу
 place("ar_tires", 55, 4)                        # шины у стены — за ними тайник (не обыскиваются: иначе
@@ -422,7 +421,7 @@ for name, x, y in (("r_car_wreck", 30, 34), ("r_pickup", 36, 35), ("r_car_a", 54
     place(name, x, y)
 for x, y in ((34, 34), (40, 35), (44, 34), (52, 34), (58, 35), (64, 34)):
     place("x_sandbags", x, y)
-for x, y in ((38, 34), (42, 35), (56, 35), (62, 34)):
+for x, y in ((38, 34), (42, 35), (56, 36), (62, 34)):   # (56, 36) — перед остовом, он теперь в рост
     place(SPIKES, x, y)
 place("x_board", 52, 37)                        # доска банды у ворот («проверяем всех»)
 place("barrel_wood", 51, 35)
@@ -566,7 +565,7 @@ print("обжито:", m.dress_empty([
     [("r_tent_beige", 0, 0), ("campfire", 3, 2), ("r_logs", 2, 3), ("barrel_wood", 0, 3), ("pile_rags", 4, 0)],
     [("r_car_wreck", 0, 0), ("pile_tires", 3, 2), ("r_trash", 0, 3), ("barrel_wood", 4, 1)],
     [("r_pickup", 0, 0), ("r_barrels", 3, 0), ("pile_scrap", 2, 3), ("crate_broken", 4, 2)],
-    [("r_camper", 0, 0), ("r_awning", 0, 2), ("crate", 3, 2), ("bucket", 5, 1)],
+    [("r_camper", 0, 0), ("r_awning", 1, 4), ("crate", 4, 4), ("bucket", 6, 3)],   # трейлер в рост (×1.5): навес — перед ним, не под ним
     [("r_billboard", 0, 0), ("r_dtree_a", 2, 1), ("r_bones", 3, 2), ("r_rocks", 4, 2)],
     [("r_shack", 0, 0), ("pile_junk", 5, 1), ("barrel_wood", 0, 3), ("x_fire_barrel", 3, 3)],
 ], ground=("s", "t", "q", "g"), block=8, margin=2, chance=0.9, max_uses=2))

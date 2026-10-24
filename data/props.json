@@ -2031,11 +2031,11 @@
   },
   "stool_round_55": {
    "img": "p5_055",
-   "scale": 0.65
+   "scale": 0.35
   },
   "stool_round_56": {
    "img": "p5_056",
-   "scale": 0.65
+   "scale": 0.35
   },
   "round_table_42": {
    "img": "p5_042",
@@ -2849,7 +2849,7 @@
   },
   "r_trash_can": {
    "img": "r21_046",
-   "scale": 1.2,
+   "scale": 0.7,
    "foot": [
     1,
     1

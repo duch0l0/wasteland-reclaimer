@@ -222,7 +222,7 @@ av.grow(1, 25, 16, 34, 8, names=PALMS + BUSHES)
 av.scatter(FLOWERS + ROCKS + ["r_logs"], 1, 25, 16, 34, 14)
 for x, y in ((9, 25), (3, 28)):
     av.maybe(TORCH, x, y, allow_reserved=True)
-av.maybe(SHIPWRECK, 22, 22)
+av.maybe(SHIPWRECK, 18, 41)                        # остов корабля выброшен на пляж у кромки воды, а не посреди травы
 for x, y in ((11, 3), (18, 20), (3, 14)):
     av.maybe("x_vd_blood0", x, y, check=False)
 
