@@ -30,7 +30,7 @@ T = S.TILE
 # на что можно ставить мелочь
 SURFACE = re.compile(r"table|desk|counter|bench|workbench|nightstand|stand|shelf|rack|cabinet|dresser|bar\b|"
                      r"barrel|crate|filecab|locker|sideboard|cupboard|stove|fridge|freezer|cooler|piano|chest|"
-                     r"box|stash|tanks|safe|lab|vb_|cl_|counter")
+                     r"box|stash|tanks|safe|lab|vb_|cl_|counter|scales")   # x_scales — прилавок с чашечными весами
 NOT_SURFACE = re.compile(r"terminal|chair|stool|sofa|armchair|bed|bunk|door|ladder|lamp|lantern")
 # ставится спиной к стене
 WALL_BACK = re.compile(r"workbench|bookcase|bookshelf|shelf|rack|locker|cabinet|cupboard|dresser|wardrobe|"
