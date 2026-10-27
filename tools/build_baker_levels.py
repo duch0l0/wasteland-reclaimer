@@ -443,8 +443,8 @@ def mbath(x0, mirror_x=None):
     for _x in range(x0 + 5, x0 + 8):                # тонкая перегородка (кромка + кафель) ровно над санузлом, без выступа влево
         mo.props.append(["x_part_h", _x, 9])
         mo.blocked.add((_x, 9))
-    for _y in (10, 12):                             # западная стенка санузла, проём — на (x0+4, 11)
-        mo.props.append(["x_part_v", x0 + 4, _y])
+    for _y, _n in ((10, "x_part_v"), (12, "x_part_v_low")):   # западная стенка санузла, проём — на (x0+4, 11);
+        mo.props.append([_n, x0 + 4, _y])                    # верхний кусок дотянут до угла, нижний — в клетку
         mo.blocked.add((x0 + 4, _y))
     mo._reach = None
     mo.paint("T", x0 + 5, 10, x0 + 7, 12)           # кафельный пол

@@ -5549,6 +5549,15 @@
   "rect": null,
   "size": [
    48,
+   88
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_part_v_low": {
+  "page": null,
+  "rect": null,
+  "size": [
+   48,
    48
   ],
   "made_by": "tools/make_props.py"

@@ -5414,6 +5414,14 @@
     1
    ],
    "sight": false
+  },
+  "x_part_v_low": {
+   "img": "x_part_v_low",
+   "foot": [
+    1,
+    1
+   ],
+   "sight": false
   }
  }
 }
