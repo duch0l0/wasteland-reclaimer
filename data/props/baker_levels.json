@@ -3,32 +3,117 @@
 "cu_candelabra": {
 "img": "pk:cult/cult_1_005",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 120,
+"color": [
+255,
+176,
+96
+],
+"at": [
+0.5,
+0.2
+],
+"flicker": 0.35
+}
 },
 "cu_candelabra_b": {
 "img": "pk:cult/cult_1_008",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+176,
+96
+],
+"at": [
+0.5,
+0.2
+],
+"flicker": 0.35
+}
+},
+"cu_candles_floor": {
+"img": "pk:cult/cult_2_068",
+"block": false,
+"sight": false,
+"light": {
+"r": 150,
+"color": [
+255,
+160,
+70
+],
+"at": [
+0.5,
+0.25
+],
+"flicker": 0.5
+}
 },
 "cu_altar": {
 "img": "pk:cult/cult_2_045",
 "block": true,
-"sight": true
+"sight": true,
+"foot": [
+2,
+1
+],
+"light": {
+"r": 100,
+"color": [
+255,
+170,
+90
+],
+"at": [
+0.5,
+0.35
+],
+"flicker": 0.3
+}
 },
 "cu_altar_b": {
 "img": "pk:cult/cult_2_046",
 "block": true,
-"sight": true
+"sight": true,
+"foot": [
+2,
+1
+]
 },
 "cu_bookshelf": {
 "img": "pk:cult/cult_2_006",
 "block": true,
-"sight": true
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "шкаф с писаниями"
 },
 "cu_bookshelf_b": {
 "img": "pk:cult/cult_2_040",
 "block": true,
-"sight": true
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "shelf",
+"title": "шкаф с писаниями"
 },
 "cu_banner": {
 "img": "pk:cult/cult_2_131",
@@ -55,12 +140,43 @@
 "cu_arch": {
 "img": "pk:cult/cult_2_033",
 "block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"cu_pew": {
+"img": "pk:cult/cult_3_044",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"cu_pillar": {
+"img": "pk:cult/cult_2_143",
+"block": true,
 "sight": true
+},
+"cu_slab": {
+"img": "pk:cult/cult_3_042",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
 },
 "cu_coffin": {
 "img": "pk:cult/cult_2_154",
 "block": true,
 "sight": false,
+"foot": [
+2,
+1
+],
 "search": "grave",
 "title": "каменный гроб"
 },
@@ -71,6 +187,11 @@
 "search": "crate",
 "title": "сундук"
 },
+"cu_cell_bars": {
+"img": "pk:cult/cult_3_020",
+"block": true,
+"sight": true
+},
 "lb_vat": {
 "img": "pk:wlab/wlab_1_000",
 "block": true,
@@ -79,7 +200,11 @@
 "lb_vats": {
 "img": "pk:wlab/wlab_1_002",
 "block": true,
-"sight": true
+"sight": true,
+"foot": [
+2,
+1
+]
 },
 "lb_tank": {
 "img": "pk:wlab/wlab_1_008",
@@ -94,22 +219,38 @@
 "lb_arm": {
 "img": "pk:wlab/wlab_1_029",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+2,
+1
+]
 },
 "lb_desk_pc": {
 "img": "pk:wlab/wlab_1_018",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+2,
+1
+]
 },
 "lb_desk_chem": {
 "img": "pk:wlab/wlab_1_012",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+2,
+1
+]
 },
 "lb_shelf": {
 "img": "pk:wlab/wlab_2_069",
 "block": true,
 "sight": true,
+"foot": [
+2,
+1
+],
 "search": "shelf",
 "title": "полка с реактивами"
 },
@@ -117,25 +258,33 @@
 "img": "pk:wlab/wlab_2_084",
 "block": true,
 "sight": false,
+"foot": [
+2,
+1
+],
 "search": "military",
 "title": "ящик"
 },
 "hp_bed": {
 "img": "pk:hosp/hosp_1_007",
 "block": true,
-"sight": false
+"sight": false,
+"foot": [
+3,
+1
+]
 },
 "hp_drip": {
 "img": "pk:hosp/hosp_1_010",
 "block": true,
 "sight": false
 },
-"bk_cage": {
-"img": "pk:wschool/p1/12,2,4,2",
+"cu_table": {
+"img": "pk:west/west_5_001",
 "block": true,
 "sight": false,
 "foot": [
-4,
+2,
 1
 ]
 },
@@ -166,15 +315,220 @@
 ],
 "layer": "floor"
 },
-"baker_levels_f_home_rug": {
-"img": "pk:west/west_2_060",
+"mo_bed_d": {
+"img": "pk:lhotel/lhotel_2_009",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mo_bed_d_b": {
+"img": "pk:lhotel/lhotel_2_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mo_bed_d_c": {
+"img": "pk:lhotel/lhotel_2_029",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"mo_bed_s": {
+"img": "pk:motel/motel_4_010",
+"block": true,
+"sight": true,
+"foot": [
+1,
+2
+]
+},
+"mo_bed_s_b": {
+"img": "pk:motel/motel_4_011",
+"block": true,
+"sight": true,
+"foot": [
+1,
+2
+]
+},
+"mo_stand": {
+"img": "pk:motel/motel_4_000",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "тумбочка"
+},
+"mo_stand_b": {
+"img": "pk:motel/motel_4_027",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "тумбочка"
+},
+"mo_chest": {
+"img": "pk:motel/motel_4_051",
+"block": true,
+"sight": false,
+"search": "drawer",
+"title": "комод"
+},
+"mo_wardrobe": {
+"img": "pk:motel/motel_4_004",
+"block": true,
+"sight": true,
+"search": "cloth",
+"title": "шкаф"
+},
+"mo_wardrobe_b": {
+"img": "pk:motel/motel_4_007",
+"block": true,
+"sight": true,
+"search": "cloth",
+"title": "шкаф"
+},
+"mo_tv": {
+"img": "pk:motel/motel_4_024",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mo_tv_b": {
+"img": "pk:motel/motel_4_075",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mo_desk": {
+"img": "pk:motel/motel_4_022",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"mo_side_table": {
+"img": "pk:motel/motel_4_088",
+"block": true,
+"sight": false
+},
+"mo_chair": {
+"img": "pk:motel/motel_4_017",
+"block": true,
+"sight": false
+},
+"mo_chair_b": {
+"img": "pk:motel/motel_4_041",
+"block": true,
+"sight": false
+},
+"mo_armchair": {
+"img": "pk:lhotel/lhotel_2_016",
+"block": true,
+"sight": false
+},
+"mo_armchair_b": {
+"img": "pk:lhotel/lhotel_2_017",
+"block": true,
+"sight": false
+},
+"mo_toilet": {
+"img": "pk:motel/motel_5_000",
+"block": true,
+"sight": true
+},
+"mo_sink": {
+"img": "pk:hotel/hotel_1_095",
+"block": true,
+"sight": false
+},
+"mo_bathtub": {
+"img": "pk:west/west_2_023",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"mo_mirror": {
+"img": "pk:west/west_2_028",
+"block": false,
+"sight": false
+},
+"mo_door": {
+"img": "pk:motel/motel_1_007",
 "block": false,
 "sight": false,
-"layer": "floor",
-"keybg": true
+"scale": 1.06
 },
-"baker_levels_f_home_table": {
-"img": "pk:west/west_2_000",
+"mo_door_b": {
+"img": "pk:motel/motel_1_010",
+"block": false,
+"sight": false,
+"scale": 1.06
+},
+"mo_mat": {
+"img": "pk:motel/motel_1_065",
+"block": false,
+"sight": false
+},
+"mo_cart": {
+"img": "pk:lhotel/lhotel_1_015",
+"block": true,
+"sight": false,
+"search": "shelf",
+"title": "тележка горничной"
+},
+"mo_luggage": {
+"img": "pk:lhotel/lhotel_1_008",
+"block": true,
+"sight": false,
+"search": "bag",
+"title": "чемодан"
+},
+"mo_radio": {
+"img": "pk:jtown/jtown_5_019",
+"block": true,
+"sight": false
+},
+"mo_tv_sm": {
+"img": "pk:jtown/jtown_5_040",
+"block": true,
+"sight": false
+},
+"mo_ac": {
+"img": "pk:motel/motel_1_032",
+"block": false,
+"sight": false
+},
+"mo_trash": {
+"img": "pk:motel/motel_1_023",
+"block": true,
+"sight": false
+},
+"mo_plant": {
+"img": "pk:motel/motel_1_063",
+"block": true,
+"sight": false
+},
+"mo_bench": {
+"img": "pk:west/west_2_015",
 "block": true,
 "sight": false,
 "foot": [
@@ -182,39 +536,23 @@
 1
 ]
 },
-"baker_levels_f_home_chair": {
-"img": "pk:west/west_2_001",
+"mo_shelf": {
+"img": "pk:west/west_2_106",
 "block": true,
-"sight": false
-},
-"baker_levels_f_home_poker": {
-"img": "pk:west/west_2_020",
-"block": true,
-"sight": false,
+"sight": true,
 "foot": [
 2,
 1
-]
+],
+"search": "cloth",
+"title": "полка с бельём"
 },
-"baker_levels_f_home_shelf": {
-"img": "pk:west/west_2_110",
+"mo_locker": {
+"img": "pk:west/west_5_007",
 "block": true,
-"sight": true
-},
-"baker_levels_f_home_books": {
-"img": "pk:west/west_2_116",
-"block": true,
-"sight": true
-},
-"baker_levels_f_home_clock": {
-"img": "pk:west/west_2_019",
-"block": true,
-"sight": true
-},
-"baker_levels_f_home_plant": {
-"img": "pk:bazaar/bazaar_3_206",
-"block": true,
-"sight": false
+"sight": false,
+"search": "locker",
+"title": "шкафчик горничной"
 }
 }
 }
