@@ -5398,6 +5398,22 @@
   "x_pendant": {
    "img": "x_pendant",
    "block": false
+  },
+  "x_part_h": {
+   "img": "x_part_h",
+   "foot": [
+    1,
+    1
+   ],
+   "sight": false
+  },
+  "x_part_v": {
+   "img": "x_part_v",
+   "foot": [
+    1,
+    1
+   ],
+   "sight": false
   }
  }
 }

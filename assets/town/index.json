@@ -5534,5 +5534,23 @@
    60
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_part_h": {
+  "page": null,
+  "rect": null,
+  "size": [
+   48,
+   40
+  ],
+  "made_by": "tools/make_props.py"
+ },
+ "x_part_v": {
+  "page": null,
+  "rect": null,
+  "size": [
+   48,
+   68
+  ],
+  "made_by": "tools/make_props.py"
  }
 }
