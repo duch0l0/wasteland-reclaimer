@@ -777,7 +777,7 @@ class TownMap(MapBase):
             self.objects.append({"name": name, "rect": rect, "sort_y": bottom + oy + z, "foot": foot,
                                  "container": None, "floor": inf["layer"] == "floor"})
 
-        self._hang_pendants()
+        self._hang_pendants(d)
 
         self.containers = []
         for c in d.get("containers", []):
@@ -944,7 +944,7 @@ class TownMap(MapBase):
     def is_exit(self, x, y):
         return (x, y) in self.exits
 
-    def _hang_pendants(self):
+    def _hang_pendants(self, d):
         """У «потолочного» света карты (lights без предмета) должен быть видимый источник: над пятном вешаем
         лампу на шнуре. Не вешаем, если в двух клетках уже есть светящийся предмет или клетка — стена.
         Лампы добавляются в конец objects, поэтому индексы ящиков и сохранений не сдвигаются."""
@@ -955,12 +955,18 @@ class TownMap(MapBase):
             if P.CATALOG.get(o["name"], {}).get("light"):
                 lit.append((o["rect"].centerx // T, o["rect"].bottom // T))
         inf = P.info("x_pendant")
+        interior = any("_" in row for row in d["ground"])        # интерьер: вокруг комнат — пустота «_»
         for L in self.lights:
             if len(L) > 7:                                    # свет с явным ореолом — от предмета карты
                 continue
             tx, ty = int(L[0]) // T, int(L[1]) // T
-            if (tx, ty) in self.blocked or any(abs(tx - a) <= 2 and abs(ty - b) <= 2 for a, b in lit):
+            indoor = d.get("dark") or interior or any(r["x0"] <= tx <= r["x1"] and r["y0"] <= ty <= r["y1"] for r in d.get("roofs", []))
+            if not indoor:
+                continue                                      # на улице лампа на шнуре висеть не может
+            if (tx, ty) in self.blocked or any(abs(tx - a) <= 1 and abs(ty - b) <= 1 for a, b in lit):
                 continue
+            if any(abs(tx - px) <= 1 and abs(ty - py) <= 1 for p in self.portals for px, py in p["tiles"]):
+                continue                                      # не над входом: лампа закрыла бы стрелку
             rect = pygame.Rect(0, 0, *inf["size"])
             rect.midbottom = (int(L[0]), int(L[1]) - T // 3)  # висит прямо над пятном, выше головы героя
             self.objects.append({"name": "x_pendant", "rect": rect, "sort_y": int(L[1]) + T, "foot": [(tx, ty)],
@@ -1584,7 +1590,7 @@ class TownMap(MapBase):
                 if (x in (0, self.width - 1) or y in (0, self.height - 1)) and x0 <= x < x1 and y0 <= y < y1:
                     surf.blit(self._exit_arrow(x, y, green=True), (x * T - cam_x, y * T - cam_y))
         # вход посреди карты (убежище, шахта, двор здания) — те же зелёные стрелки, что у переходов на краю:
-        # по одной на каждую клетку прохода, на клетке перед ним, смотрят внутрь. Люки и лестницы — без стрелок.
+        # по одной на каждую клетку прохода — на самой клетке, куда надо встать (замечание автора 27.10), смотрят внутрь. Люки и лестницы — без стрелок.
         for p in self.portals:
             if p.get("_door") is None:
                 p["_door"] = self._door_arrow_spots(p)
@@ -1600,8 +1606,13 @@ class TownMap(MapBase):
         hatch = {tuple(t) for o in self.objects if o["name"] in ("x_manhole", "x_ladder", "x_ladder_wall") for t in o["foot"]}
         if tiles & hatch:
             return []
+        # клетки под дверью/фасадом (не напольный предмет): стрелку там закроет картинка двери
+        covered = {tuple(t) for o in self.objects if not o["floor"] and o["name"] != "x_pendant" for t in o["foot"]}
         for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):        # сторона, откуда подходят
-            spots = [((x + dx, y + dy), (-dx, -dy)) for x, y in sorted(tiles)
+            # стрелка — там, куда надо встать: на самой клетке входа (бункер, лестница), а если вход врезан
+            # в стену фасада (дверь школы, гермодверь) и на него не встать — на клетке прямо перед ним
+            spots = [(((x, y) if not (self.is_wall(x, y) or (x, y) in covered) else (x + dx, y + dy)), (-dx, -dy))
+                     for x, y in sorted(tiles)
                      if (x + dx, y + dy) not in tiles and not self.is_wall(x + dx, y + dy)]
             if len(spots) == len(tiles):
                 return spots

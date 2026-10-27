@@ -23,7 +23,7 @@ from ..balance import roll_loot
 
 ZONES = ("baker", "baker_mission", "baker_outskirts")
 MISSION = (19, 17, 91, 61)          # двор и постройки миссии (клетки, включительно)
-BUNKER_SPOT = ("baker_outskirts", (67, 14))   # где дед ждёт у склада «Бейкер-7»
+BUNKER_SPOT = ("baker_outskirts", (95, 12))   # где дед ждёт у склада «Бейкер-7»: у бронедвери, сбоку от входа
 DEALS = ("deal_anselm", "deal_code", "deal_hollis_paid")
 
 # кто стоит в районе: (условие-флаг, флаг «ушёл», район, id NPC, клетка)

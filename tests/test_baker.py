@@ -175,7 +175,7 @@ def finale(g, path):
     say(g, "Идём вниз")
     end_talk(g)
     ok(g.flags.get("baker7_open") and g.stage("mq_grandpa") == 90, "дед открыл склад: глаз, голос, код")
-    goto(g, (66, 10))
+    goto(g, (97, 11))                        # вход в «Бейкер-7» — под бронедверью бункера
     fr(g, 3)
     ok(g.loc.id == "baker7", "спуск в «Бейкер-7»")
     for e in g.enemies:

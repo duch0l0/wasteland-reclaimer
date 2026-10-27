@@ -903,7 +903,7 @@ room(b, "m", 18, 3, 33, 16)           # хранилище
 room(b, "m", 22, 17, 23, 17)          # проход в хранилище
 
 put("x_ladder", 4, 16, check=False)
-b.portal([(4, 16)], "baker_outskirts", (66, 12), "Бейкер: окраина")
+b.portal([(4, 16)], "baker_outskirts", (97, 12), "Бейкер: окраина")   # выходишь прямо к бронедвери
 b.reserve(3, 17, 6, 20)
 put("x_vd_num7", 6, 16, check=False, allow_reserved=True)
 # караулка: шкафчики охраны
