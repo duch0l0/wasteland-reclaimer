@@ -86,13 +86,14 @@ def kill_all_in_combat(g):
 # ------------------------------------------------------------ слух: весь двор миссии сбегается
 g = new_game("baker")
 g.enter_location("baker_mission")
-victim = next(e for e in g.enemies if e.type_id == "cultist" and tile_of(e)[1] > 25)
+# бьём того, кто стоит в рабочем дворе у палаток (не в молельне и не в кельях — там шум за стенами)
+victim = next(e for e in g.enemies if e.type_id == "cultist" and tile_of(e)[0] > 50)
 stand_near(g, tile_of(victim))
 fr(g, 1)
 g.combat.target = victim
 g.combat.start(player_first=True)
 cult_in_fight = [e for e in g.combat.order if getattr(e, "faction", None) == "cult"]
-ok(len(cult_in_fight) >= 4, f"на шум сбежался весь двор, не только сосед ({len(cult_in_fight)})")
+ok(len(cult_in_fight) >= 4, f"на шум сбежался двор: сосед, караул у ворот и страж у кладбища ({len(cult_in_fight)})")
 
 # ------------------------------------------------------------ Shift + клик по жителю на трассе
 g = new_game("baker")

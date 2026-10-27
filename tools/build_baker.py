@@ -165,102 +165,101 @@ LIGHTS = []                           # потолочные лампы поме
 # ------------------------------------------------------------ помощники ручной расстановки
 # Те же, что в tools/build_station.py: явно поставленный предмет обязан встать и остаться там, куда
 # его поставили; не встал — ошибка с причиной («блок», «мягкий предмет», «резерв», «заслоняет»).
-def pwhy(name, x, y, blocked=None, soft=None, reserved=None):
-    """Почему предмет не встал — как why_not() в build_town.py."""
-    foot = t.footprint(name, x, y)
-    blocked = t.blocked if blocked is None else blocked
-    soft = t.soft_obj if soft is None else soft
-    reserved = t.reserved if reserved is None else reserved
-    why = []
-    if any(c in blocked for c in foot):
-        why.append("блок: " + str([c for c in foot if c in blocked]))
-    if any(c in soft for c in foot):
-        why.append("мягкий предмет: " + str([c for c in foot if c in soft]))
-    if any(c in reserved for c in foot):
-        why.append("резерв")
-    h = t.hides(name, x, y)
-    if h:
-        why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
-    why.append("земля: " + "".join(t.ground[b][a] for a, b in foot))
-    return f"«{name}» не встал в ({x}, {y}): " + "; ".join(why)
+# Фабрика на карту: у трассы и у миссии свои MapKit, а правила расстановки одни и те же.
+def helpers(mk, lights):
+    """place/pbox/oskin/ptable/swall/lamp/npc/enemy для конкретной карты (mk) и её списка света."""
+    def pwhy(name, x, y, blocked=None, soft=None, reserved=None):
+        """Почему предмет не встал — как why_not() в build_town.py."""
+        foot = mk.footprint(name, x, y)
+        blocked = mk.blocked if blocked is None else blocked
+        soft = mk.soft_obj if soft is None else soft
+        reserved = mk.reserved if reserved is None else reserved
+        why = []
+        if any(c in blocked for c in foot):
+            why.append("блок: " + str([c for c in foot if c in blocked]))
+        if any(c in soft for c in foot):
+            why.append("мягкий предмет: " + str([c for c in foot if c in soft]))
+        if any(c in reserved for c in foot):
+            why.append("резерв")
+        h = mk.hides(name, x, y)
+        if h:
+            why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
+        why.append("земля: " + "".join(mk.ground[b][a] for a, b in foot))
+        return f"«{name}» не встал в ({x}, {y}): " + "; ".join(why)
 
+    def _undo(snap):
+        """Неудачная попытка не оставляет следов: предмет, его клетки и контейнер убираются."""
+        n_props, n_conts, blocked, soft_obj, reserved = snap
+        del mk.props[n_props:], mk.containers[n_conts:]
+        mk.blocked, mk.soft_obj, mk.reserved = blocked, soft_obj, reserved
+        mk._reach = None
 
-def _undo(snap):
-    """Неудачная попытка не оставляет следов: предмет, его клетки и контейнер убираются."""
-    n_props, n_conts, blocked, soft_obj, reserved = snap
-    del t.props[n_props:], t.containers[n_conts:]
-    t.blocked, t.soft_obj, t.reserved = blocked, soft_obj, reserved
-    t._reach = None
-
-
-def place(name, x, y, **kw):
-    """Явная расстановка: предмет обязан встать и остаться там, куда его поставили (logic.md §2)."""
-    snap = (len(t.props), len(t.containers), set(t.blocked), set(t.soft_obj), set(t.reserved))
-    ok = t.put(name, x, y, **kw)
-    if ok and t.props[-1][1:3] == [x, y]:
-        return True
-    why = pwhy(name, x, y, blocked=snap[2], soft=snap[3], reserved=snap[4])
-    _undo(snap)
-    raise AssertionError(why)
-
-
-def pbox(name, x, y, title, loot, **kw):
-    """Ящик с нужной добычей — как place(): не встал, так с причиной."""
-    snap = (len(t.props), len(t.containers), set(t.blocked), set(t.soft_obj), set(t.reserved))
-    try:
-        t.box(name, x, y, title, loot, **kw)
-    except AssertionError:
+    def place(name, x, y, **kw):
+        """Явная расстановка: предмет обязан встать и остаться там, куда его поставили (logic.md §2)."""
+        snap = (len(mk.props), len(mk.containers), set(mk.blocked), set(mk.soft_obj), set(mk.reserved))
+        ok = mk.put(name, x, y, **kw)
+        if ok and mk.props[-1][1:3] == [x, y]:
+            return True
         why = pwhy(name, x, y, blocked=snap[2], soft=snap[3], reserved=snap[4])
         _undo(snap)
-        raise AssertionError(why) from None
-    if t.props[-1][1:3] == [x, y]:
-        return True
-    moved = t.props[-1][1:3]
-    _undo(snap)
-    raise AssertionError(pwhy(name, x, y, blocked=snap[2], soft=snap[3], reserved=snap[4])
-                         + f"; встал в ({moved[0]}, {moved[1]})")
+        raise AssertionError(why)
+
+    def pbox(name, x, y, title, loot, **kw):
+        """Ящик с нужной добычей — как place(): не встал, так с причиной."""
+        snap = (len(mk.props), len(mk.containers), set(mk.blocked), set(mk.soft_obj), set(mk.reserved))
+        try:
+            mk.box(name, x, y, title, loot, **kw)
+        except AssertionError:
+            why = pwhy(name, x, y, blocked=snap[2], soft=snap[3], reserved=snap[4])
+            _undo(snap)
+            raise AssertionError(why) from None
+        if mk.props[-1][1:3] == [x, y]:
+            return True
+        moved = mk.props[-1][1:3]
+        _undo(snap)
+        raise AssertionError(pwhy(name, x, y, blocked=snap[2], soft=snap[3], reserved=snap[4])
+                             + f"; встал в ({moved[0]}, {moved[1]})")
+
+    def oskin(name, x, y):
+        """Мелочь на полу (пятно масла, лопата): не блокирует, но и в стену не лезет."""
+        if not mk.put(name, x, y, check=False) or mk.props[-1][1:3] != [x, y]:
+            raise AssertionError(pwhy(name, x, y))
+
+    def ptable(name, x, y, dx=0, dy=-34):
+        """Мелочь на столешнице: на клетке мебели, поднята на её высоту и в глубину — не у переднего края
+        (замечание автора 24.10), рисуется сразу после стола (6-й элемент — порядок отрисовки)."""
+        assert (x, y) in mk.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
+        mk.props.append([name, x, y, dx, dy, 1 - dy])
+
+    def swall(name, x, y0, dx=0, dy=-40):
+        """Настенное — только на целой стене: ставится на ряд стены-пропа и поднимается так, чтобы висеть на
+        фасаде (logic.md §2а). Где стены нет (проём ворот) — падает со счётом."""
+        fw, fh = _props.info(name)["foot"]
+        cells = [(x + i, y0 + j) for i in range(fw) for j in range(fh)]
+        assert all(c in mk.blocked for c in cells), f"«{name}» в ({x}, {y0}): там нет целой стены"
+        mk.props.append([name, x, y0 + 1, dx, dy])
+        mk.soft_obj.add((x, y0 + 1))       # на клетке под настенным ничего не ставим
+        mk._reach = None
+
+    def lamp(x, y, r=130, color=(255, 176, 96), flick=0.03):
+        """Лампа под потолком (без картинки): пятно света на полу. Пока крыша на месте, снаружи не видно."""
+        lights.append([x * 48 + 24, y * 48 + 24, r, list(color), flick])
+
+    def npc(nid, x, y):
+        """Житель стоит там, где стоит: клетка свободна."""
+        assert (x, y) not in mk.blocked, f"NPC {nid} в ({x}, {y}) — клетка занята"
+        mk.npcs.append([nid, x, y])
+        mk.reserve(x, y, x, y)
+
+    def enemy(kind, x, y):
+        assert (x, y) not in mk.blocked, f"{kind} в ({x}, {y}) — клетка занята"
+        mk.enemies.append([kind, x, y])
+        mk.reserve(x, y, x, y)
+
+    return place, pbox, oskin, ptable, swall, lamp, npc, enemy
 
 
-def oskin(name, x, y):
-    """Мелочь на полу (пятно масла, лопата): не блокирует, но и в стену не лезет."""
-    if not t.put(name, x, y, check=False) or t.props[-1][1:3] != [x, y]:
-        raise AssertionError(pwhy(name, x, y))
-
-
-def ptable(name, x, y, dx=0, dy=-34):
-    """Мелочь на столешнице: на клетке мебели, поднята на её высоту и в глубину — не у переднего края
-    (замечание автора 24.10), рисуется сразу после стола (6-й элемент — порядок отрисовки)."""
-    assert (x, y) in t.blocked, f"«{name}» в ({x}, {y}): под ним нет стола"
-    t.props.append([name, x, y, dx, dy, 1 - dy])
-
-
-def swall(name, x, y0, dx=0, dy=-40):
-    """Настенное — только на целой стене: ставится на ряд стены-пропа и поднимается так, чтобы висеть на
-    фасаде (logic.md §2а). Где стены нет (проём ворот) — падает со счётом."""
-    fw, fh = _props.info(name)["foot"]
-    cells = [(x + i, y0 + j) for i in range(fw) for j in range(fh)]
-    assert all(c in t.blocked for c in cells), f"«{name}» в ({x}, {y0}): там нет целой стены"
-    t.props.append([name, x, y0 + 1, dx, dy])
-    t.soft_obj.add((x, y0 + 1))       # на клетке под настенным ничего не ставим
-    t._reach = None
-
-
-def lamp(x, y, r=130, color=(255, 176, 96), flick=0.03):
-    """Лампа под потолком (без картинки): пятно света на полу. Пока крыша на месте, снаружи не видно."""
-    LIGHTS.append([x * 48 + 24, y * 48 + 24, r, list(color), flick])
-
-
-def npc(nid, x, y):
-    """Житель стоит там, где стоит: клетка свободна."""
-    assert (x, y) not in t.blocked, f"NPC {nid} в ({x}, {y}) — клетка занята"
-    t.npcs.append([nid, x, y])
-    t.reserve(x, y, x, y)
-
-
-def enemy(kind, x, y):
-    assert (x, y) not in t.blocked, f"{kind} в ({x}, {y}) — клетка занята"
-    t.enemies.append([kind, x, y])
-    t.reserve(x, y, x, y)
+place, pbox, oskin, ptable, swall, lamp, npc, enemy = helpers(t, LIGHTS)
 
 
 def board(x, y):
@@ -297,7 +296,7 @@ t.reserve(0, ROAD[0] - 1, W - 1, ROAD[1] + 1)        # по трассе и тр
 t.reserve(NR[0] - 1, 0, NR[1] + 1, ROAD[0] - 2)      # и по дороге на север…
 t.reserve(NR[0] - 1, ROAD[1] + 2, NR[1] + 1, H - 1)   # …и на юг (перекрёсток уже в полосе трассы)
 
-t.portal([(x, 0) for x in range(NR[0], NR[1] + 1)], "baker_mission", (35, 46), "Миссия")
+t.portal([(x, 0) for x in range(NR[0], NR[1] + 1)], "baker_mission", (54, 74), "Миссия")
 t.portal([(x, H - 1) for x in range(NR[0], NR[1] + 1)], "baker_outskirts", (35, 2), "Окраина")
 
 # ------------------------------------------------------------ закусочная «Безумный грек»
@@ -645,122 +644,347 @@ save(t, "data/maps/baker.json", exempt=("nick", "tobias", "roy", "baker_kid"), f
 
 
 # ================================================================ 2. Миссия
-W, H = 70, 50
-m = MapKit(W, H, start=(35, 47), seed=31)
-put, box, terminal = m.put, m.box, m.terminal
-MX0, MY0, MX1, MY1 = 12, 10, 59, 39                  # ограда миссии
-m.npcs += [["anselm", 28, 15], ["amos", 52, 16], ["iskra", 45, 26], ["marla", 17, 32],
-           ["acolyte_a", 22, 33], ["acolyte_b", 31, 27]]
-m.enemies += [["cult_guard", 38, 41], ["cult_guard", 39, 26], ["cultist", 25, 30], ["cultist", 34, 20]]   # страж ворот — снаружи
-for _, x, y in m.enemies + m.npcs:
-    m.reserve(x, y, x, y)
+# «Бейкер: миссия» — двор «Детей Единства» за кирпичной оградой. Уличная карта выросла ×1.56 по стороне
+# (70×50 → 109×78, как трасса и Пятнадцатая); планировка не растянута, а перестроена по смыслу
+# (docs/furnish/logic.md §1), обстановка — поштучная: place / pbox / ptable / swall, никаких scatter и
+# случайных куч посреди участков. План зон, кто где и сценки — docs/furnish/baker.md, раздел 2.
+#
+# Чем живёт миссия (двор 73×45 внутри ограды):
+#   молятся  — молельня «Единство» (северо-запад): алтарь в апсиде, за алтарём каменная плита в крипту,
+#              у входа сканер-терминал, молитвенные коврики рядами, канделябры-черепа, знамёна;
+#   спят     — кельи за решёткой (северо-восток): четыре койки в нишах за прутьями, дед Эймос в восточной;
+#              послушники — на нарах у западной стены трапезной;
+#   едят     — трапезная (юго-запад): кухня в линию у северной стены, длинные столы с лавками и табуретами,
+#              бочка «святой воды», ящик с припасами, котёл;
+#   растят   — огород вдоль западной стены: четырнадцать грядок семи видов, дорожка, ведро, лопата, бочка;
+#   хранят   — кладовая в трапезной, дрова и бочки за домом, «книга даров» в сундуке Ансельма;
+#   хоронят  — кладбище «вознесённых» (песок, кресты, надгробия, доска с именами; свежие могилы — с лопатой);
+#   караулят — страж снаружи ворот (с ним договариваются о пропуске), страж изнутри у створок, страж у кладбища,
+#              послушник в молельне;
+#              ночью — огневые бочки у ворот, костёр с котелком в рабочем дворе, фонари на дорожках;
+#   выходы   — южные ворота на трассу (портал), калитка в северной стене в дюны (ломом), тропа вдоль
+#              западной стены: по ней обходят ограду и выходят к калитке с севера.
+W, H = 109, 78
+m = MapKit(W, H, start=(54, 74), seed=31)
+mput, mterminal = m.put, m.terminal
+MLIGHTS = []                          # потолочный свет помещений; уличный — от предметов с light
+mplace, mpbox, moskin, mptable, mswall, mlamp, mnpc, menemy = helpers(m, MLIGHTS)
+MX0, MY0, MX1, MY1 = 18, 16, 92, 62                  # кирпичная ограда миссии
 
-m.paint("a", 34, 40, 37, H - 1)                      # дорога от ворот к трассе
-m.paint_ragged("E", 13, 11, 58, 38, depth=2)         # двор миссии — утоптанная глина, а не дюнный песок
-for _x0, _y0, _x1, _y1 in ((35, 25, 36, 39), (18, 26, 49, 27), (26, 24, 27, 25), (18, 28, 19, 29), (42, 28, 43, 29), (48, 22, 49, 25)):
-    m.paint("q", _x0, _y0, _x1, _y1)                 # каменные дорожки: ворота — молельня, трапезная, дом Ансельма, кельи
-m.paint("u", 33, 40, 33, H - 1)
-m.paint("u", 38, 40, 38, H - 1)
-m.portal([(x, H - 1) for x in range(34, 38)], "baker", (54, 2), "Трасса")
-m.reserve(33, 40, 38, H - 1)
-m.reserve(2, 2, 10, 46)                              # тропа вдоль западной стены в дюны
-m.reserve(2, 1, 67, 8)                               # дюны за миссией: путь к калитке
-m.reserve(56, 11, 58, 24)                            # двор вдоль восточной стены: от калитки к кельям
+# ---- земля: дорога с трассы, двор, дорожки, огород, кладбище
+# Дорога на юг — та же, что на трассе (x 52..55), с тротуарами: за воротами она сужается до проёма.
+m.paint("a", 52, 63, 55, H - 1)
+m.paint("u", 51, 63, 51, H - 1)
+m.paint("u", 56, 63, 56, H - 1)
+for y in range(66, H - 1, 6):
+    m.ground[y][53] = "v"                            # пунктир по оси дороги
+m.reserve(51, 63, 56, H - 1)                         # по дороге и тротуарам ничего не ставим
+m.portal([(x, H - 1) for x in range(52, 56)], "baker", (54, 2), "Трасса")   # назад, на дорогу к трассе
+m.paint_ragged("E", 19, 17, 91, 61, depth=2)         # двор — утоптанная глина, а не дюнный песок
+m.paint("q", 53, 17, 54, 61)                         # от ворот в глубину двора и вокруг молельни
+m.paint("q", 25, 43, 88, 44)                         # поперечная: молельня — кельи — восточная стена
+m.paint("q", 40, 37, 41, 42)                         # к дверям молельни
+m.paint("q", 82, 34, 83, 42)                         # к решётке кельи
+m.paint("q", 64, 39, 65, 42)                         # к кладбищенской дорожке
+m.paint("q", 88, 17, 89, 42)                         # вдоль восточной стены, от калитки
+m.paint("q", 21, 19, 21, 41)                         # дорожка между грядками огорода
+m.paint_ragged("d", 55, 24, 72, 38, depth=1)         # кладбище — сухой песок
+m.paint("q", 64, 24, 65, 38)                         # дорожка между могилами
 
-m.wall_row(WALLS_INTACT["brick"], MX0, MX1, MY0, gaps={52, 53})        # северная стена, калитка
-m.wall_row(WALLS_INTACT["brick"], MX0, MX1, MY1, gaps={35, 36})        # южная стена, ворота
+# ---- ограда, ворота, калитка
+m.wall_row(WALLS_INTACT["brick"], MX0, MX1, MY0, gaps={89})            # северная стена, калитка
+m.wall_row(WALLS_INTACT["brick"], MX0, MX1, MY1, gaps={53, 54})        # южная стена, ворота
 m.side_wall("brick", "w", MX0, MY0 + 1, MY1 - 1)
 m.side_wall("brick", "e", MX1, MY0 + 1, MY1 - 1)
-put("bar_fence_c", 52, MY0, force=True)
+mput("pr_cell_bars", 89, MY0, force=True)            # калитка в дюны — кованая дверца в стене, ломом
 back_gate = len(m.props) - 1
-put("bar_fence_b", 35, MY1, force=True)
+mput("hb_sew_gate", 53, MY1, force=True)             # ворота на дорогу — створчатые, заперты изнутри
 front_gate = len(m.props) - 1
 
-# молельня
-m.building(18, 13, 20, 12, "brick", south=(8,), sign="ЕДИНСТВО")
-terminal(19, 14, "baker_scanner")
-put("display_case_b", 27, 14, check=False)           # алтарь
-for x in (25, 30):
-    put("candles", x, 14, check=False)
-for y in (17, 19, 21):
-    for x in (20, 22, 24, 30, 32, 34):
-        put(m.rnd.choice(BENCHES), x, y, check=False)
-for x in (19, 36):
-    put("lantern_lit", x, 22, check=False)
+# ---- объекты культа из набора cult-temple (регистрируются здесь, в карте миссии)
+MS_ALTAR = P("ms_altar", "pk:cult/cult_2_045", foot=[2, 1], sight=True)
+MS_CANDLE = P("ms_candelabra", "pk:cult/cult_1_005", foot=[1, 1])
+MS_STATUE = P("ms_statue", "pk:cult/cult_2_094", foot=[1, 1], sight=True)
+MS_SHELF = P("ms_bookshelf", "pk:cult/cult_2_006", foot=[2, 1], sight=True)
 
-# кельи: решётка, за ней дед
-m.building(46, 13, 10, 10, "concrete", south=(2,), sign="КЕЛЬИ")
-put("bar_fence_a", 48, 22, force=True)
-cell_gate = len(m.props) - 1
-put("bed_frame", 53, 14, check=False)
-put("bucket", 47, 14, check=False)
-put("pile_rags", 53, 19, check=False)
-put("candles", 50, 14, check=False)
-
-# дом Ансельма: сундук с книгой даров
-m.building(40, 28, 8, 7, "brick", north=(2,), sign=None)
-box("metal_chest", 45, 30, "сундук Ансельма", {"крышки": 80, "стимулятор": 1, "святая вода": 2,
-                                                "книга даров": 1, "ключ от крипты": 1}, owner="anselm")
-put("bed", 41, 32, check=False)
-put("table_2", 44, 33, check=False)
-put("candles", 46, 33, check=False)
-
-# трапезная: столы, нары, «святая вода»
-m.building(14, 28, 14, 8, "planks", north=(4,), sign="ТРАПЕЗНАЯ")
-for x in (16, 20, 24):
-    put("table_2", x, 30, check=False)
-    put("chair_wood", x + 1, 30, check=False)
-for x in (15, 19, 23):
-    put("bed", x, 33, check=False)
-box("barrel_wood", 26, 29, "бочка «святой воды»", {"святая вода": 3}, owner="anselm")
-box("crate", 15, 29, "ящик с припасами", {"чистая вода": 1, "крышки": 6})
-put("lantern_lit", 22, 31, check=False)
-
-# двор: шатры, костёр, бочки с огнём у ворот, кладбище «вознесённых»
-for name, x, y in [("r_tent_beige", 29, 30), ("r_tent_purple", 33, 33), ("r_tent_low", 38, 30)]:
-    put(name, x, y)
-put("campfire", 31, 30)
-for x in (33, 38):
-    put("x_fire_barrel", x, 37)
-for gy in (27, 30, 33):
-    for gx in (51, 53, 55):
-        put("x_cross", gx, gy - 1, check=False)
-        put("x_grave", gx, gy, check=False)
-        m.containers[-1]["requires"] = {"item": "лопата", "msg": "Свежая могила «вознесённого». Без лопаты — никак."}
-        m.containers[-1]["name"] = "могила «вознесённого»"
-put("x_board", 49, 36, check=False)
-m.terminals.append({"prop": len(m.props) - 1, "id": "doc:doc_ascended"})
-
-# двор живёт: колодец, знамёна вдоль дорожки, молитвенные коврики у костра, грядки послушников, скамьи, лампы, ящики
-put(WELL, 31, 36, check=False)
-for x in (26, 28, 33, 38, 44, 46):
-    put(BANNER[x % 2], x, 25, check=False)
-for x, y in ((29, 31), (33, 31), (30, 33)):
-    stamp(m, "bk_prayer_rug_%d_%d" % (x, y), PRAYER_RUG, x, y)
-for i, (x, y) in enumerate(((14, 37), (17, 37), (20, 37), (14, 13), (17, 13))):
-    put(GARDEN_BED[i % 2], x, y, check=False)
-for x, y in ((24, 27), (30, 27), (38, 27), (44, 27)):
-    put(BENCHES[x % len(BENCHES)], x, y, check=False)
-for x, y in ((27, 24), (43, 25), (36, 36)):
-    put("lantern_lit", x, y, check=False)
-put(LAUNDRY, 14, 25, check=False)
-put("crate", 28, 36, check=False)
-put("barrel_wood", 29, 38, check=False)
-# снаружи: дорога, дюны, фонарь у ворот
-put("r_streetlamp", 39, 41, allow_reserved=True, check=False)
-put("x_fire_barrel", 32, 42, allow_reserved=True, check=False)
-put("campfire", 57, 4, allow_reserved=True)          # костерок Панка в дюнах
-desert(m, 1, 1, W - 2, 8, trees=8, bushes=20)
-desert(m, 1, 9, 11, H - 2, trees=4, bushes=10, junk=6)
-desert(m, 60, 9, W - 2, H - 2, trees=6, bushes=14, junk=8)
-desert(m, 12, 41, 32, H - 2, trees=3, bushes=8)
-desert(m, 39, 41, 59, H - 2, trees=3, bushes=8)
-# плита за алтарём — спуск в крипту (tools/build_baker_levels.py); ключ — в сундуке Ансельма
-m.props.append(["x_manhole", 34, 15])
-m.portal([(34, 15)], "baker_crypt", (4, 5), "Крипта Единства",
+# ---- молельня «Единство»: 28×19, вход с юга по осевой дорожке от ворот
+# Апсида — каменная солея в три ряда; алтарь на ней, за алтарём плита в крипту (её не видно от двери —
+# только подойдя к алтарю сбоку). Скамей в зале нет: культ молится на ковриках, лицом к алтарю, коврики
+# лежат рядами по обе стороны осевого прохода. Свет — три подвесные лампы, у алтаря свечи и канделябры.
+m.building(24, 18, 28, 19, "brick", south=(16,), sign="ЕДИНСТВО")
+m.paint("q", 25, 19, 50, 35)                         # пол молельни — каменные плиты
+m.paint("Z", 37, 19, 45, 25)                         # солея/апсида — бетонные плиты
+for x in (40, 41):
+    m.props.append(["bk_door", x, 36])               # створки входных дверей
+mplace(MS_ALTAR, 40, 23)                             # алтарь с горящими свечами — на солее, лицом в зал
+mplace(MS_CANDLE, 36, 19)                            # черепа-канделябры по краям солеи
+mplace(MS_CANDLE, 46, 19)
+mplace(MS_STATUE, 43, 19)                            # «Совершенный» — у северной стены апсиды
+mplace(MS_SHELF, 25, 19)                             # книги и писания — у северной стены, в углу
+mplace("candles", 37, 24)                            # свечи на солее, по сторонам от алтаря
+mplace("candles", 44, 24)
+mterminal(46, 34, "baker_scanner")                   # сканер у входа: метка «вознесённого», журнал
+mplace("bk_banner_a", 38, 35)                        # знамёна по сторонам двери
+mplace("bk_banner_b", 43, 35)
+for rx in (26, 28, 30, 32, 43, 45, 47):              # коврики вплотную, рядами по обе стороны прохода
+    for ry in (27, 31):
+        stamp(m, f"bk_prayer_rug_{rx}_{ry}", PRAYER_RUG, rx, ry)
+mplace("bk_banner_a", 25, 25)                        # знамёна у солеи, на боковых стенах
+mplace("bk_banner_b", 50, 25)
+mplace("table_2", 36, 34)                            # свечная лавка у входа: свечи и ящик для даров
+mptable("candles", 36, 34, dx=-6, dy=-36)
+mptable("junk_small_1", 36, 34, dx=8, dy=-36)
+mplace("barrel_wood", 26, 34)                        # кадка для омовения у двери: руки и ноги перед молитвой
+mplace("bucket", 27, 34)
+mplace("bench_16", 30, 34)                           # скамьи, где разуваются перед ковриками, лицом в зал
+mplace("bench_16", 34, 34)
+mplace("candles", 25, 29)                            # обетные свечи вдоль боковых стен
+mplace("candles", 25, 33)
+mplace("candles", 50, 29)
+mplace("candles", 50, 33)
+mlamp(31, 24, 130)
+mlamp(45, 28, 130)
+mlamp(38, 33, 120)
+# плита в крипту — за алтарём: подход с боков, ключ у Ансельма
+m.props.append(["x_manhole", 40, 21])
+m.portal([(40, 21)], "baker_crypt", (4, 5), "Крипта Единства",
          requires={"item": "ключ от крипты",
                    "msg": "За алтарём — каменная плита с замочной скважиной в форме круга. Ключ — у брата Ансельма."})
-save(m, "data/maps/baker_mission.json", floors=FLOORS_TOWN,
+
+# ---- кельи за решёткой: 14×16, вход с юга, за прутьями — четыре койки в нишах
+# Решётка — на самом проёме: отпер её ключом (или выломал на штурме) — и ты внутри. В передней половине
+# стол ключника с фонарём, скамья для ожидающих; в задней — койки, ведра, тряпьё, свечи у изголовья.
+m.building(74, 18, 14, 16, "concrete", south=(8,), sign="КЕЛЬИ")
+m.paint("Z", 75, 19, 86, 32)                         # бетонный пол келий
+mput("ws_gate", 82, 33, force=True)                  # решётка на проёме — кованые створы в 2 клетки
+cell_gate = len(m.props) - 1
+for x in (76, 79, 82, 85):                           # койки вдоль северной стены, по одной в нише
+    mplace("bed", x, 19)
+for x in (78, 81, 84):                               # простенки-прутья между нишами
+    mplace("bar_fence_a", x, 20)
+mplace("bucket", 78, 22)                             # ведро в первой нише
+mplace("bucket", 84, 22)
+mplace("pile_rags", 76, 22)                          # тряпьё у стены
+mplace("candles", 75, 21)                            # свечи у изголовья — единственный свет в нишах
+mplace("candles", 86, 21)
+mplace("table_2", 77, 30)                            # стол ключника в передней половине
+mplace("chair_wood", 78, 30)
+mptable("w_table_lantern", 77, 30, dx=-4, dy=-34)
+mplace("bench_16", 84, 30)                           # скамья ожидающих у восточной стены
+mplace("bucket", 86, 31)                             # вода для узников
+mplace("candles", 75, 31)
+mlamp(78, 24, 110)
+mlamp(84, 30, 110)
+
+# ---- дом Ансельма: 14×11, вход с севера из двора
+# Не келья и не кабинет: кровать, тумбочка с лампой, шкаф с книгами, стол с лампой и стулом, шифоньер.
+# Сундук с книгой даров и ключом от крипты — в северо-восточном углу, за столом.
+m.building(60, 47, 14, 11, "brick", north=(6,), sign=None)
+m.paint("W", 61, 48, 72, 56)                         # доски
+for x in (66, 67):
+    m.props.append(["bk_door", x, 47])
+mplace("bed", 61, 48)
+mplace("nightstand", 63, 48)
+mptable("w_table_lantern", 63, 48, dx=-2, dy=-30)
+mpbox("metal_chest", 70, 48, "сундук Ансельма", {"крышки": 80, "стимулятор": 1, "святая вода": 2,
+                                                 "книга даров": 1, "ключ от крипты": 1}, owner="anselm")
+mplace(MS_SHELF, 61, 53)                             # писания — у западной стены
+mplace("table_2", 66, 51)                            # рабочий стол Ансельма
+mplace("chair_wood", 67, 51)
+mptable("w_table_lantern", 66, 51, dx=6, dy=-34)
+mplace("candles", 65, 49)
+mplace("wardrobe", 72, 50)                           # шифоньер у восточной стены
+mplace("bk_rug_a", 68, 53)
+mplace("stool_3", 69, 54)                            # табурет у стола
+mplace("candles", 71, 55)                            # свеча в углу у шифоньера
+mlamp(66, 52, 120)
+
+# ---- трапезная: 24×13, два входа с севера (общий зал и кухня)
+# Кухня — в линию у северной стены: холод, плита, мойка, разделочный стол, полка с посудой. Два длинных
+# стола: лавки в самом спрайте стола (лишние табуреты рядом читались кашей), между рядами проход. Спят послушники
+# в палатках рабочего двора, не в трапезной (в столовой не ночуют). Кладовая — у восточной: бочка «святой воды», припасы, котёл.
+m.building(22, 47, 24, 13, "planks", north=(8, 18), sign="ТРАПЕЗНАЯ")
+m.paint("W", 23, 48, 44, 58)                         # доски
+for x in (30, 31, 40, 41):
+    m.props.append(["bk_door", x, 47])
+mplace("jt_fridge", 34, 48)                          # холод
+mplace("jt_kitchen_stove", 36, 48)                   # плита
+mplace("jt_sink", 38, 48)                            # мойка
+mplace("counter", 42, 48)                            # разделочный стол
+mplace("shelf_goods", 44, 48)                        # полка с посудой в углу
+mptable("canteen", 42, 48, dx=-6, dy=-36)             # миска на разделочном столе
+for x in (26, 28, 30, 32):                           # длинные столы: лавки в спрайте, табуреты с ближней стороны
+    mplace("w_table_set", x, 51)
+    mplace("w_table_set", x, 55)
+mptable("canteen", 26, 51, dx=-8, dy=-38)            # миски на общем столе
+mptable("canteen", 30, 55, dx=6, dy=-38)
+mplace("bucket", 24, 57)                             # ведро с водой у западной стены
+mplace("glass_cabinet", 44, 50)                      # посуда в кладовой
+mplace("barrel_wood", 44, 53)
+mpbox("barrel_wood", 44, 54, "бочка «святой воды»", {"святая вода": 3}, owner="anselm")
+mplace("x_cauldron", 42, 57)                         # котёл на огне — обед и «причастие»
+mpbox("crate", 35, 57, "ящик с припасами", {"чистая вода": 1, "крышки": 6})   # сюжет: чистая вода
+mplace("w_sacks", 37, 57)
+mplace("bk_laundry", 49, 47)                         # бельё сушится во дворе, между трапезной и домом
+mlamp(30, 50, 130)
+mlamp(38, 55, 130)
+mplace("candles", 23, 49)                            # свечи у нар — ночник послушников
+
+# ---- огород вдоль западной стены: 14 грядок семи видов, дорожка посередине
+# Культ кормится сам: капуста, зелень, редис, рассада. Грядки разные, между ними протоптанная дорожка,
+# у дорожки ведро и лопата, у стены — бочка под воду.
+GARDEN = ((19, 21), (22, 22), (19, 24), (22, 25), (19, 27), (22, 28), (19, 30), (22, 31),
+          (19, 33), (22, 34), (19, 36), (22, 37), (19, 39), (22, 40))
+for _i, (_gx, _gy) in enumerate(GARDEN):
+    mplace(BEDS[_i % len(BEDS)], _gx, _gy)
+mplace("bucket", 21, 23)
+moskin("shovel", 21, 29)
+mplace("barrel_wood", 21, 42)                        # бочка под дождь — в конце дорожки
+mplace("r_logs", 19, 42)
+
+# ---- кладбище «вознесённых»: песок, кресты, надгробия; свежие могилы — только с лопатой
+# Ряд «вознесённых» этого года — кресты и разрытые могилы (9), дальше старые надгробия (6). Между ними
+# каменная дорожка, у входа — доска с именами (doc:doc_ascended).
+def grave(gx, gy):
+    mplace("x_cross", gx, gy - 1)
+    mplace("x_grave", gx, gy)
+    m.containers[-1].update({"name": "могила «вознесённого»",
+                             "requires": {"item": "лопата", "msg": "Свежая могила «вознесённого». Без лопаты — никак."}})
+
+
+for _gy in (27, 36):
+    for _gx in ((57, 60, 63, 66, 69, 72) if _gy == 27 else (57, 63, 69)):
+        grave(_gx, _gy)
+for _gx in (57, 60, 63, 66, 69, 72):                 # старые надгробия — второй ряд
+    mplace("x_tombstone", _gx, 32)
+mplace("x_board", 60, 39)                            # доска с именами «вознесённых» у входа
+m.terminals.append({"prop": len(m.props) - 1, "id": "doc:doc_ascended"})
+mplace("lantern_lit", 62, 39)                        # фонарь у доски: у могил и ночью кто-то сидит со светом
+moskin("shovel", 62, 30)                             # лопата у свежей могилы
+moskin("shovel", 58, 35)
+mplace("bucket", 66, 38)                             # ведро у дорожки
+
+# ---- склад урожая и утвари: 8×6 в пустом углу за кладбищем, дверь на поперечную дорожку
+# Урожай с огорода и утварь культа не лежат под открытым небом: дощатый сарай — мешки с зерном,
+# полка с банками, ящики, бочка под засол, ведро; дрова — в проулке между сараем и кельями.
+m.building(74, 37, 8, 6, "planks", south=(4,), sign=None)
+m.paint("W", 75, 38, 80, 41)                         # доски
+for x in (78, 79):
+    m.props.append(["bk_door", x, 42])
+mplace("w_crate_sacks", 75, 38)                      # мешки с зерном
+mplace("crate", 78, 38)
+mplace("shelf_goods", 80, 38)                        # полка с банками и посудой — у восточной стены
+mplace("bucket", 76, 40)
+mplace("crate_b", 80, 40)
+mplace("barrel_wood", 75, 40)                        # бочка под засол
+# (мешки убраны: не встают у стены)
+mlamp(77, 39, 110)
+mplace("firewood", 76, 35)                           # дрова в проулке под стеной келий
+mplace("r_logs", 79, 35)
+
+# ---- двор: колодец, знамёна вдоль дорожки, скамьи, фонари, огонь у ворот
+mplace(WELL, 47, 39)                                 # колодец — в развилке дорожек
+mplace("bucket", 46, 39)
+mplace("bench_16", 49, 41)
+mplace("bench_16", 44, 41)
+for _x, _y in ((51, 39), (56, 40), (52, 45), (56, 48)):   # знамёна вдоль осевой дорожки
+    mplace(BANNER[_x % 2], _x, _y)
+for _x, _y in ((52, 42), (55, 45), (52, 51), (55, 58)):   # фонари на дорожке — у каждого свой свет
+    mplace("lantern_lit", _x, _y)
+mplace("x_fire_barrel", 50, 59)                      # огонь у ворот изнутри — ночной караул видит въезд
+mplace("x_fire_barrel", 55, 59)
+mplace("table_2", 48, 59)                            # стол караульных у ворот: фонарь, кружки
+mptable("w_table_lantern", 48, 59, dx=-6, dy=-34)
+mplace("crate", 47, 60)
+mplace("w_sacks", 56, 59)
+# проход вдоль восточной стены молельни: припасы под рукой, фонарь на повороте
+mplace("barrel_wood", 52, 26)
+mplace("crate", 52, 29)
+mplace("r_logs", 52, 32)
+mplace("lantern_lit", 52, 35)
+
+# ---- рабочий двор (между трапезной и домом Ансельма): костёр, котелок, дрова, палатки богомольцев
+mplace("campfire", 49, 52)
+mplace("x_cauldron", 50, 53)
+mplace("r_logs", 48, 53)
+mplace("bench_16", 47, 51)
+mplace("bench_16", 51, 50)
+mplace("barrel_wood", 47, 55)
+mplace("crate", 47, 56)
+mplace("r_tent_beige", 56, 50)                       # палатки тех, кто ждёт «вознесения»
+mplace("r_tent_purple", 56, 55)
+mplace("x_outhouse", 57, 59)
+mplace("barrel_wood", 45, 45)
+mplace("r_logs", 44, 45)
+mplace("pile_rags", 20, 45)                          # за огородом: тряпьё, бочка, тележка
+mplace("barrel_wood", 20, 46)
+mplace("x_cart", 24, 45)
+# задворки: за трапезной — дрова и бочки, за домом Ансельма — хлам и поленница
+mplace("r_logs", 24, 60)
+mplace("barrel_wood", 27, 60)
+mplace("crate_b", 30, 60)
+mplace("crate", 33, 60)
+mplace("barrel_wood", 62, 59)
+mplace("r_logs", 64, 60)
+mplace("crate_b", 68, 59)
+mplace("w_sacks", 71, 60)
+# вдоль восточной стены: от калитки вниз к кельям — скамья караульного, фонарь, бочка
+mplace("bench_16", 90, 24)
+mplace("lantern_lit", 88, 30)
+mplace("barrel_wood", 90, 40)
+mplace("r_logs", 90, 19)
+
+# ---- дровяной двор в юго-восточном углу: культ топит плиту, котёл и огневые бочки — дрова под рукой.
+# Поленница сложена вплотную к восточной стене, рядом телега, на которой возят дрова и урожай, и бочка.
+mplace("r_logs", 90, 44)
+mplace("firewood", 89, 45)
+mplace("r_logs", 90, 46)
+mplace("x_cart", 86, 48)                             # телега
+mplace("barrel_wood", 89, 50)
+mplace("w_sacks", 87, 50)
+
+# ---- дюны снаружи: костёр Панка у калитки, тропа вдоль западной стены, огни на дороге
+mplace("campfire", 85, 11, allow_reserved=True)      # костерок Панка в дюнах
+mplace("r_logs", 86, 12, allow_reserved=True)
+mplace("w_sacks", 84, 10, allow_reserved=True)
+m.paint_ragged("E", 8, 9, 14, 73, depth=1)           # тропа вдоль западной стены
+m.paint_ragged("E", 10, 68, 50, 73, depth=1)         # от дороги — на западную тропу
+m.paint_ragged("E", 8, 8, 90, 11, depth=1)           # по дюнам — к калитке с севера
+m.paint_ragged("E", 87, 11, 91, 15, depth=1)         # последний поворот к калитке
+m.reserve(8, 7, 15, H - 2)                           # по тропам ничего не сеем…
+m.reserve(8, 7, 91, 12)
+m.reserve(87, 12, 91, 15)
+for _sx, _sy in ((44, 42), (48, 67), (86, 10), (85, 13)):   # …и держим свободными клетки сюжетных гостей
+    m.reserve(_sx, _sy, _sx, _sy)
+mplace("x_fire_barrel", 50, 66)                      # огни вдоль дороги к воротам
+mplace("x_fire_barrel", 57, 70)
+mplace("r_streetlamp", 58, 63, allow_reserved=True)  # фонарь у ворот снаружи
+
+# ---- кто где
+# Ансельм — перед алтарём, лицом к залу; Эймос — в восточной нише келий; Искра — у кладбища, где её и
+# ищет Панк; Марла — в трапезной у столов; послушники — один за столом, другой у колодца.
+mnpc("anselm", 33, 23)
+mnpc("amos", 86, 22)
+mnpc("iskra", 59, 41)
+mnpc("marla", 38, 54)
+mnpc("acolyte_a", 30, 49)
+mnpc("acolyte_b", 46, 41)
+# караул: страж снаружи ворот (с ним договариваются о пропуске), страж изнутри у створок (ворота заперты —
+# ключ у него), страж у кладбища, послушник в молельне, боец у палаток богомольцев. Кельи стерегут не ногами,
+# а замком и ключом у Ансельма: у решётки стража нет — потому по восточной стене и можно пройти тихо.
+menemy("cult_guard", 57, 66)
+menemy("cult_guard", 69, 44)
+menemy("cult_guard", 51, 58)
+menemy("cultist", 30, 29)
+menemy("cultist", 56, 52)
+
+# ---- пустыня вокруг: сухие деревья, кусты, камни, кости — только за оградой
+desert(m, 1, 1, 16, H - 2, trees=7, bushes=18, junk=6)
+desert(m, 18, 1, 91, 15, trees=8, bushes=22, junk=6)      # дюны за северной стеной
+desert(m, 93, 1, W - 2, H - 2, trees=9, bushes=22, junk=8)
+desert(m, 18, 63, 50, H - 2, trees=4, bushes=12, junk=5)  # западнее дороги
+desert(m, 58, 63, 92, H - 2, trees=4, bushes=11, junk=5)  # восточнее дороги
+save(m, "data/maps/baker_mission.json", floors=FLOORS_TOWN, lights=MLIGHTS,
      gates=[{"prop": front_gate, "flag": "mission_gate_open",
              "msg": "Ворота миссии заперты изнутри. За решёткой — шатры, костёр и белые балахоны."},
             {"prop": back_gate, "flag": "mission_back_open", "pry": True,   # лом у героя всегда при себе

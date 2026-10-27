@@ -1686,7 +1686,7 @@ def act1(b):
         b.talk("loner_baker")
         b.say("Скажу")
         b.end_talk()
-        g.player.rect.topleft = rect_pos_for_tile(g.player, (57, 14))
+        g.player.rect.topleft = rect_pos_for_tile(g.player, (88, 20))
         b.fr(2)
         if g.combat.active:
             b.fight()

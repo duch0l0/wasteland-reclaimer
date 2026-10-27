@@ -22,16 +22,16 @@ from ..combat import tile_of, chebyshev
 from ..balance import roll_loot
 
 ZONES = ("baker", "baker_mission", "baker_outskirts")
-MISSION = (13, 11, 58, 38)          # двор и постройки миссии (клетки, включительно)
+MISSION = (19, 17, 91, 61)          # двор и постройки миссии (клетки, включительно)
 BUNKER_SPOT = ("baker_outskirts", (67, 14))   # где дед ждёт у склада «Бейкер-7»
 DEALS = ("deal_anselm", "deal_code", "deal_hollis_paid")
 
 # кто стоит в районе: (условие-флаг, флаг «ушёл», район, id NPC, клетка)
 SPAWNS = [
     ("route_lira", "lira_baker_left", "baker", "lira_baker", (41, 52)),      # Лира — у костра караванщиков за трассой
-    ("route_loner", "loner_baker_left", "baker_mission", "loner_baker", (55, 4)),  # Панк — в дюнах у калитки
-    ("route_silas", "silas_baker_left", "baker_mission", "silas_baker", (30, 34)),  # Сайлас — во дворе миссии
-    ("gang_paid", "scar_baker_left", "baker_mission", "scar_baker", (40, 43)),  # Шрам — сторожит снаружи ворот
+    ("route_loner", "loner_baker_left", "baker_mission", "loner_baker", (86, 10)),  # Панк — в дюнах у калитки
+    ("route_silas", "silas_baker_left", "baker_mission", "silas_baker", (44, 42)),  # Сайлас — во дворе миссии
+    ("gang_paid", "scar_baker_left", "baker_mission", "scar_baker", (48, 67)),  # Шрам — сторожит снаружи ворот
     ("marla_home", "marla_home_left", "baker", "marla_home", (16, 57)),     # Марла вернулась к Рою, в его дом
 ]
 
@@ -47,7 +47,7 @@ class BakerMixin:
         if loc_id == zone and f.get("amos_free") and not f.get("baker_done"):
             self._spawn_npc(zone, "amos_b7", tile)
         if f.get("iskra_free") and not f.get("iskra_out_left"):
-            where = ("baker_mission", (56, 5)) if f.get("route_loner") else ("baker", (40, 20))
+            where = ("baker_mission", (85, 13)) if f.get("route_loner") else ("baker", (40, 20))
             if where[0] == loc_id:
                 self._spawn_npc(where[0], "iskra_out", where[1])
         if f.get("cult_hostile"):    # культ помнит: в любом районе балахоны нападают

@@ -218,7 +218,7 @@ print("— тревога во дворе миссии")
 g = arrive()
 go(g, "baker_mission")
 ok(use_gate(g, "mission_back_open"), "калитка в дюнах — ломом")
-goto(g, (40, 27))     # прямо к стражу во дворе
+goto(g, (67, 44))     # прямо к стражу во дворе
 fr(g, 2)
 ok(g.flags.get("baker_alarm") and g.flags.get("cult_hostile") and g.combat.active, "без пропуска во дворе — тревога и бой")
 
@@ -231,7 +231,7 @@ talk(g, "loner_baker")
 say(g, "Скажу")
 ok(g.flags.get("know_iskra") and g.stage("sq_iskra") == 10, "Панк просит найти Искру")
 ok(use_gate(g, "mission_back_open"), "калитка открыта")
-goto(g, (57, 14))     # вдоль восточной стены — вдали от стражи
+goto(g, (88, 20))     # вдоль восточной стены — вдали от стражи
 fr(g, 2)
 ok(not g.flags.get("baker_alarm"), "у восточной стены не заметили")
 talk(g, "iskra")
@@ -271,7 +271,7 @@ say(g, "Я загляну в миссию")
 say(g, "Отдам")
 ok(g.inventory.has("записка Роя") and g.stage("sq_roy") == 10, "Рой дал записку для Марлы")
 go(g, "baker_mission")
-guard = next(e for e in g.enemies if e.type_id == "cult_guard" and tile_of(e)[1] > 39)
+guard = next(e for e in g.enemies if e.type_id == "cult_guard" and tile_of(e)[1] > 62)
 talk_enemy(g, guard)
 say(g, "прислала Хэтти")
 say(g, "Свет с тобой")
@@ -293,7 +293,7 @@ say(g, "его голос на записи")
 say(g, "Договорились")
 fr(g, 2)
 ok(g.flags.get("cells_open") and g.flags.get("deal_anselm"), "Ансельм отпустил деда")
-goto(g, (49, 20))
+goto(g, (62, 41))
 fr(g, 2)
 ok(not g.flags.get("baker_alarm"), "с пропуском по двору можно ходить")
 talk(g, "amos")
@@ -322,8 +322,8 @@ ok(g.flags.get("baker_assault") and g.flags.get("cult_hostile"), "штурм н�
 if g.combat.active:
     fight(g)     # блокпост на трассе тоже вступил в бой
 go(g, "baker_mission")
-alive = [e for e in g.enemies if e.faction == "cult" and e.alive and tile_of(e)[1] <= 38]
-ok(len(alive) < 3, f"паладины сняли часть охраны во дворе (осталось {len(alive)} из 3)")
+alive = [e for e in g.enemies if e.faction == "cult" and e.alive and tile_of(e)[1] <= 61]
+ok(len(alive) == 2, f"паладины сняли половину охраны двора (осталось {len(alive)} из 4)")
 for _ in range(8):      # во двор: оставшиеся балахоны замечают и вступают в бой
     if g.combat.active:
         fight(g)
@@ -384,7 +384,7 @@ fr(g, 3)
 ok(g.loc.id == "baker_mission", "без ключа плита за алтарём не открывается")
 g.inventory.add("ключ от крипты", 1)
 end_talk(g)
-goto(g, (35, 16))
+goto(g, (40, 22))
 fr(g, 2)
 end_talk(g)
 goto(g, sorted(hatch["tiles"])[0])

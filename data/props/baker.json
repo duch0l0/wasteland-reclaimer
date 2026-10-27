@@ -537,7 +537,43 @@
 1
 ]
 },
-"bk_prayer_rug_29_31": {
+"ms_altar": {
+"img": "pk:cult/cult_2_045",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ms_candelabra": {
+"img": "pk:cult/cult_1_005",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"ms_statue": {
+"img": "pk:cult/cult_2_094",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"ms_bookshelf": {
+"img": "pk:cult/cult_2_006",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_prayer_rug_26_27": {
 "img": "pk:lhotel/p2/10,12,2,2",
 "block": false,
 "sight": false,
@@ -547,7 +583,7 @@
 ],
 "layer": "floor"
 },
-"bk_prayer_rug_33_31": {
+"bk_prayer_rug_26_31": {
 "img": "pk:lhotel/p2/10,12,2,2",
 "block": false,
 "sight": false,
@@ -557,7 +593,117 @@
 ],
 "layer": "floor"
 },
-"bk_prayer_rug_30_33": {
+"bk_prayer_rug_28_27": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_28_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_30_27": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_30_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_32_27": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_32_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_43_27": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_43_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_45_27": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_45_31": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_47_27": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"foot": [
+2,
+2
+],
+"layer": "floor"
+},
+"bk_prayer_rug_47_31": {
 "img": "pk:lhotel/p2/10,12,2,2",
 "block": false,
 "sight": false,
