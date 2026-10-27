@@ -5394,6 +5394,10 @@
    "img": "x_ladder_wall",
    "block": false,
    "layer": "floor"
+  },
+  "x_pendant": {
+   "img": "x_pendant",
+   "block": false
   }
  }
 }

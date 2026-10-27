@@ -216,6 +216,25 @@ def ladder(h=40):
     return s
 
 
+def pendant():
+    """Лампа под потолком на шнуре: эмалированный абажур и горящая лампочка. Ставится движком над каждым
+    пятном «потолочного» света (map lights), чтобы у света был видимый источник (замечание автора 27.10)."""
+    s = canvas(18, 30)
+    rect(s, 8, 0, 2, 17, (52, 48, 42))                       # шнур от потолка
+    rect(s, 7, 16, 4, 2, (90, 84, 74))                       # патрон
+    for y in range(7):                                       # конус абажура, светлая эмаль
+        half = 2 + y
+        c = (196 - y * 6, 186 - y * 6, 150 - y * 5)
+        rect(s, 9 - half, 18 + y, half * 2, 1, c)
+    rect(s, 1, 25, 16, 1, (120, 104, 70))                    # кромка
+    rect(s, 3, 24, 12, 1, (255, 230, 160))                   # отсвет изнутри
+    for r, a in ((6, 60), (4, 130), (2, 255)):               # лампочка
+        glow = canvas(18, 30)
+        pygame.draw.circle(glow, (255, 232, 160, a), (9, 26), r)
+        s.blit(glow, (0, 0))
+    return s
+
+
 def board():
     s = canvas(40, 30)
     rect(s, 4, 18, 2, 12, (90, 64, 40))
@@ -891,6 +910,7 @@ PROPS = {
     "x_vault_gear12": (lambda: vault_gear("12"), {"foot": [2, 1], "sight": True}),   # Убежище 12 (Некрополь)
     "x_manhole": (manhole, {"block": False, "layer": "floor"}),
     "x_ladder": (ladder, {"block": False, "layer": "floor"}),
+    "x_pendant": (pendant, {"block": False}),
     "x_ladder_wall": (lambda: ladder(64), {"block": False, "layer": "floor"}),   # во всю стену подвала, до люка
     "x_board": (board, {"foot": [2, 1]}),
     "x_sandbags": (sandbags, {"foot": [2, 1]}),

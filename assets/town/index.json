@@ -5525,5 +5525,14 @@
    128
   ],
   "made_by": "tools/make_props.py"
+ },
+ "x_pendant": {
+  "page": null,
+  "rect": null,
+  "size": [
+   36,
+   60
+  ],
+  "made_by": "tools/make_props.py"
  }
 }

@@ -94,28 +94,6 @@
 "flicker": 0.4
 }
 },
-"bk_sign_gas": {
-"img": "pk:town50/town50_1_117",
-"block": true,
-"sight": true,
-"foot": [
-1,
-1
-],
-"light": {
-"r": 120,
-"color": [
-255,
-170,
-80
-],
-"at": [
-0.5,
-0.4
-],
-"flicker": 0.3
-}
-},
 "bk_sign_motel_big": {
 "img": "pk:motel/motel_1_057",
 "block": true,
@@ -136,6 +114,28 @@
 0.4
 ],
 "flicker": 0.2
+}
+},
+"bk_sign_motel_arrow": {
+"img": "pk:town50/town50_1_117",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 130,
+"color": [
+255,
+120,
+110
+],
+"at": [
+0.5,
+0.4
+],
+"flicker": 0.3
 }
 },
 "bk_phone": {
@@ -280,6 +280,15 @@
 1
 ]
 },
+"bk_pot_c": {
+"img": "pk:bazaar/bazaar_3_206",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
 "bk_sofa_a": {
 "img": "pk:lhotel/lhotel_1_022",
 "block": true,
@@ -366,6 +375,167 @@
 1
 ],
 "keybg": true
+},
+"bk_desk": {
+"img": "pk:lhotel/lhotel_1_014",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"bk_keybox": {
+"img": "pk:lhotel/lhotel_1_031",
+"block": false,
+"sight": false
+},
+"bk_trolley": {
+"img": "pk:lhotel/lhotel_1_015",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_armchair_l": {
+"img": "pk:lhotel/lhotel_1_026",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_armchair_r": {
+"img": "pk:lhotel/lhotel_1_046",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_sofa_c": {
+"img": "pk:lhotel/lhotel_1_041",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_coffee_table": {
+"img": "pk:lhotel/lhotel_1_052",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_floor_lamp": {
+"img": "pk:lhotel/lhotel_1_043",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 110,
+"color": [
+255,
+214,
+150
+],
+"at": [
+0.5,
+0.12
+]
+}
+},
+"bk_bed_c": {
+"img": "pk:wfarm/wfarm_1_045",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_bed_d": {
+"img": "pk:wfarm/wfarm_1_046",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_bed_e": {
+"img": "pk:wfarm/wfarm_1_053",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_bed_f": {
+"img": "pk:wfarm/wfarm_1_080",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_bed_g": {
+"img": "pk:wfarm/wfarm_1_033",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_fence": {
+"img": "pk:west/west_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"bk_fence_v": {
+"img": "pk:west/west_1_015",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bk_fence_c": {
+"img": "pk:west/west_1_014",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"bc_bar": {
+"img": "pk:lhotel/lhotel_1_012",
+"block": true,
+"sight": true,
+"foot": [
+4,
+1
+]
 },
 "bk_prayer_rug_29_31": {
 "img": "pk:lhotel/p2/10,12,2,2",

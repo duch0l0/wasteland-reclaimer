@@ -777,6 +777,8 @@ class TownMap(MapBase):
             self.objects.append({"name": name, "rect": rect, "sort_y": bottom + oy + z, "foot": foot,
                                  "container": None, "floor": inf["layer"] == "floor"})
 
+        self._hang_pendants()
+
         self.containers = []
         for c in d.get("containers", []):
             obj = self.objects[c["prop"]]
@@ -941,6 +943,29 @@ class TownMap(MapBase):
 
     def is_exit(self, x, y):
         return (x, y) in self.exits
+
+    def _hang_pendants(self):
+        """У «потолочного» света карты (lights без предмета) должен быть видимый источник: над пятном вешаем
+        лампу на шнуре. Не вешаем, если в двух клетках уже есть светящийся предмет или клетка — стена.
+        Лампы добавляются в конец objects, поэтому индексы ящиков и сохранений не сдвигаются."""
+        if "x_pendant" not in P.CATALOG:
+            return
+        lit = []
+        for o in self.objects:
+            if P.CATALOG.get(o["name"], {}).get("light"):
+                lit.append((o["rect"].centerx // T, o["rect"].bottom // T))
+        inf = P.info("x_pendant")
+        for L in self.lights:
+            if len(L) > 7:                                    # свет с явным ореолом — от предмета карты
+                continue
+            tx, ty = int(L[0]) // T, int(L[1]) // T
+            if (tx, ty) in self.blocked or any(abs(tx - a) <= 2 and abs(ty - b) <= 2 for a, b in lit):
+                continue
+            rect = pygame.Rect(0, 0, *inf["size"])
+            rect.midbottom = (int(L[0]), int(L[1]) - T // 3)  # висит прямо над пятном, выше головы героя
+            self.objects.append({"name": "x_pendant", "rect": rect, "sort_y": int(L[1]) + T, "foot": [(tx, ty)],
+                                 "container": None, "floor": False})
+            lit.append((tx, ty))
 
     def roof_over(self, tile):
         """Крыша, под которой клетка (внутри здания, включая стены и проёмы)."""
