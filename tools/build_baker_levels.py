@@ -448,7 +448,6 @@ def mbath(x0, mirror_x=None):
         mo.blocked.add((x0 + 4, _y))
     mo._reach = None
     mo.paint("T", x0 + 5, 10, x0 + 7, 12)           # кафельный пол
-    mo.paint("T", x0 + 4, 11, x0 + 4, 11)           # порог
     mo.reserve(x0 + 4, 10, x0 + 4, 12)              # в дверях и на стенах ничего не ставить
     mo.ceiling(x0 + 6, 10, r=105, color=(255, 214, 168), flick=0.02)
 
