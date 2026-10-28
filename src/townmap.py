@@ -286,6 +286,8 @@ def _roof_image(r):
            "concrete": [(118, 116, 110), (124, 122, 116), (110, 108, 104), (130, 127, 120)],
            "metal": [(132, 96, 74), (142, 104, 80), (122, 88, 68), (152, 112, 86)],
            "planks": [(104, 78, 54), (112, 84, 58), (96, 72, 50), (120, 90, 62)]}[style]
+    if r.get("tint"):                         # крыша в цвет перекрашенных стен (roofs[i]["tint"], множитель)
+        pal = [tuple(c * k // 255 for c, k in zip(col, r["tint"])) for col in pal]
     img = pygame.Surface((w, h), pygame.SRCALPHA)
     tex = _roof_texture(style) if style in ("planks", "metal") else None      # плоские крыши — гудрон с гравием, без сетки плиток
     if tex is not None and style in ("planks", "metal"):

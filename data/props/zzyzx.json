@@ -1023,6 +1023,17 @@
 "flicker": 0.08
 }
 },
+"zz_chalice": {
+"img": "pk:destown/p3/8,9,1,1",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"keybg": true,
+"scale": 2.0
+},
 "zz_rail": {
 "img": "pk:west/west_1_013",
 "block": true,
@@ -1077,11 +1088,59 @@
 1
 ]
 },
+"zz_fountain_pool": {
+"img": "zz_fountain_pool",
+"block": true,
+"sight": false,
+"foot": [
+5,
+4
+],
+"layer": "floor"
+},
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
 "sight": false,
 "layer": "floor"
+},
+"vwall_sandstone_w": {
+"img": "p1_vwall_concrete_w",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"tint": [
+255,
+214,
+160
+]
+},
+"vwall_sandstone_e": {
+"img": "p1_vwall_concrete_e",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+],
+"tint": [
+255,
+214,
+160
+]
+},
+"wall_sandstone": {
+"img": "p1_wall_concrete",
+"block": true,
+"sight": true,
+"tint": [
+255,
+214,
+160
+]
 },
 "zz_room_rug0": {
 "img": "pk:lhotel/p2/10,12,2,2",

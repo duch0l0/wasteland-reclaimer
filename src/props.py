@@ -273,6 +273,9 @@ def image(name, darken=False):
                 pygame.transform.smoothscale(img, d["size"])     # увеличение — по пикселям, без мыла
         if name in _KEEP_FOOT and "palm" in name:
             img = strip_grey_base(img)
+        if d.get("tint"):               # перекраска умножением (песчаная стена из серой): альфа не трогается
+            img = img.copy()
+            img.fill(tuple(d["tint"]), special_flags=pygame.BLEND_RGB_MULT)
         if d.get("keybg"):              # скала/камень на квадрате песка — песок прозрачный
             img = key_background(img)
         if d.get("soft") == "pond":    # водоём на улице: свой берег, без прямоугольника

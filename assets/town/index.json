@@ -5561,5 +5561,12 @@
    48
   ],
   "made_by": "tools/make_props.py"
+ },
+ "zz_fountain_pool": {
+  "size": [
+   240,
+   192
+  ],
+  "made_by": "tools/make_fountain.py"
  }
 }
