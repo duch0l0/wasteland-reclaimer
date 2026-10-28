@@ -113,11 +113,14 @@ def inflow(seed):
         pygame.draw.rect(img, DARK, (c - 5, hy, W + 10, 4))
     pygame.draw.rect(img, (40, 42, 46), (c - 8, 0, W + 16, 10))          # обойма в перекрытии
     pygame.draw.rect(img, (88, 92, 98), (c - 8, 0, W + 16, 10), 2)
-    pygame.draw.rect(img, DARK, (c - 3, 198, W + 6, 10))                  # раструб на конце
-    pygame.draw.ellipse(img, (16, 18, 20), (c - 1, 202, W + 2, 8))
-    for x in range(c + 2, c + W - 1, 3):                                  # струя
-        for y in range(210, 222, 3):
-            img.set_at((x, y), (170, 215, 240))
+    pygame.draw.rect(img, DARK, (c - 3, 196, W + 6, 12))                  # раструб на конце
+    pygame.draw.ellipse(img, (16, 18, 20), (c + 1, 202, W - 2, 8))         # тёмное горло
+    for y in range(207, 226):                                             # струя: сплошная, от горла в воду
+        pygame.draw.rect(img, (170, 215, 240), (T // 2 - 4, y, 8, 1))
+        pygame.draw.rect(img, (216, 238, 250), (T // 2 - 2, y, 2, 1))
+    for _ in range(10):                                                   # брызги у поверхности воды
+        bx, by = T // 2 + rnd.randint(-13, 12), 214 + rnd.randint(0, 11)
+        pygame.draw.rect(img, (206, 234, 247), (bx, by, 2, 2))
     for r, a in ((16, 170), (11, 120)):                                   # круги на воде
         pygame.draw.ellipse(img, (225, 242, 250, a), (T // 2 - r, 220 - r // 3, 2 * r, r * 2 // 3 + 2), 1)
     return img
@@ -162,7 +165,9 @@ def settle_tank(seed):
 
 
 def pump(seed):
-    """Напорный насос: литая улитка на плите, мотор позади, патрубки влево и вверх, маховик задвижки."""
+    """Напорный насос: литая улитка на плите, мотор позади, патрубки влево и вверх, маховик задвижки.
+    Напорный патрубок стоит по оси напорной трубы, которая приходит на клетку сверху (канва 27..45 —
+    то же, что у zz_pipe_v в клетке), поэтому стык совпадает пиксель в пиксель и не читается вторым огрызком."""
     import random
     rnd = random.Random(seed)
     img = canvas(72, 72)
@@ -172,6 +177,11 @@ def pump(seed):
     pygame.draw.rect(img, (40, 44, 48), (4, 66, 64, 2))
     for x in (8, 60):                                                   # анкерные болты
         pygame.draw.rect(img, (150, 156, 160), (x, 60, 3, 3))
+    pygame.draw.rect(img, (72, 78, 84), (27, 6, 18, 24))                # напорный патрубок вверх — по оси трубы
+    pygame.draw.rect(img, (104, 110, 116), (29, 6, 14, 24))
+    pygame.draw.rect(img, (138, 144, 150), (31, 6, 3, 24))
+    pygame.draw.rect(img, (176, 182, 186), (32, 6, 1, 24))
+    pygame.draw.rect(img, (150, 156, 162), (24, 14, 24, 3))             # фланец-муфта на стыке с магистралью
     pygame.draw.rect(img, (96, 102, 108), (30, 24, 26, 34))             # мотор
     pygame.draw.rect(img, (118, 124, 130), (32, 26, 22, 4))
     pygame.draw.rect(img, (66, 70, 76), (30, 40, 26, 3))
@@ -185,12 +195,9 @@ def pump(seed):
     pygame.draw.rect(img, (72, 78, 84), (0, 39, 8, 12))                 # патрубок на запад
     pygame.draw.rect(img, (104, 110, 116), (0, 41, 8, 8))
     pygame.draw.rect(img, (150, 156, 162), (7, 37, 3, 16))              # фланец
-    pygame.draw.rect(img, (72, 78, 84), (14, 12, 12, 18))               # напорный патрубок вверх
-    pygame.draw.rect(img, (104, 110, 116), (16, 12, 8, 18))
-    pygame.draw.rect(img, (150, 156, 162), (12, 10, 16, 3))
-    pygame.draw.circle(img, (150, 40, 34), (24, 20), 6)                 # маховик
-    pygame.draw.circle(img, (200, 70, 56), (24, 20), 6, 2)
-    pygame.draw.line(img, (90, 20, 18), (18, 20), (30, 20), 2)
+    pygame.draw.circle(img, (150, 40, 34), (36, 7), 6)                  # маховик задвижки на напорной
+    pygame.draw.circle(img, (200, 70, 56), (36, 7), 6, 2)
+    pygame.draw.line(img, (90, 20, 18), (30, 7), (42, 7), 2)
     for _ in range(3):                                                  # ржавые пятна и подтёк
         rx, ry = rnd.randint(6, 56), rnd.randint(30, 54)
         pygame.draw.rect(img, RUST, (rx, ry, rnd.randint(3, 6), rnd.randint(2, 4)))
@@ -225,10 +232,13 @@ def thin(seed, arms):
         seg(False, 0 if "n" in arms else c, T if "s" in arms else c + w, c)
     if len(arms) == 2:                                                  # колено — литая муфта на стыке
         pygame.draw.rect(img, (74, 78, 84), (c - 1, c - 1, w + 2, w + 2), 2)
-    for at in (14, 34):                                                 # хомуты
-        if "e" in arms or "w" in arms:
+    # хомуты — только на тех плечах, которые есть: иначе на колене торчит хомут в воздухе (замечание автора)
+    hx0, hx1 = (0 if "w" in arms else c), (T if "e" in arms else c + w)
+    vy0, vy1 = (0 if "n" in arms else c), (T if "s" in arms else c + w)
+    for at in (14, 34):
+        if hx0 <= at and at + 3 <= hx1:
             pygame.draw.rect(img, (58, 62, 66), (at, c - 2, 3, w + 4))
-        if "n" in arms or "s" in arms:
+        if vy0 <= at and at + 3 <= vy1:
             pygame.draw.rect(img, (58, 62, 66), (c - 2, at, w + 4, 3))
     for _ in range(2):
         x, y = rnd.randint(6, 38), rnd.randint(6, 38)
