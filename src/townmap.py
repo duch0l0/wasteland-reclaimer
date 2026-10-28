@@ -1612,7 +1612,7 @@ class TownMap(MapBase):
         if any(x in (0, self.width - 1) or y in (0, self.height - 1) for x, y in tiles):
             return []
         hatch = {tuple(t) for o in self.objects if o["name"] in ("x_manhole", "x_ladder", "x_ladder_wall")
-                 or o["name"].endswith("_hatch") for t in o["foot"]}
+                 or o["name"].endswith(("_hatch", "_ladder_up")) for t in o["foot"]}
         if tiles & hatch:
             return []
         # клетки под дверью/фасадом (не напольный предмет): стрелку там закроет картинка двери

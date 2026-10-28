@@ -5705,14 +5705,7 @@
  "zz_pipe_riser": {
   "size": [
    48,
-   120
-  ],
-  "made_by": "tools/make_cistern.py"
- },
- "zz_pipe_drop": {
-  "size": [
-   48,
-   120
+   172
   ],
   "made_by": "tools/make_cistern.py"
  },
@@ -5818,6 +5811,34 @@
   "size": [
    72,
    60
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_inflow": {
+  "size": [
+   48,
+   228
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_ladder_up": {
+  "size": [
+   48,
+   150
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_clean_tanks": {
+  "size": [
+   97,
+   91
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_settle_tank": {
+  "size": [
+   72,
+   136
   ],
   "made_by": "tools/make_cistern.py"
  }

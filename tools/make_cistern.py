@@ -14,9 +14,11 @@
 """
 import json
 import os
+import sys
 
 import pygame
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 pygame.init()
 pygame.display.set_mode((1, 1))
 T = 48
@@ -78,41 +80,85 @@ def flange_v(img, at, c):
 
 
 def riser(seed):
-    """Труба входит в потолок: снизу вверх, два фланца, у верха — тёмная обойма в перекрытии."""
+    """Напорная труба уходит в потолок: снизу (от насоса) вверх по стене, верх — в перекрытии под
+    стальной обоймой. 48×172: ставится на клетку пола у стены (dy=0) — верх приходится на полосу
+    потолка (ряд 1), низ стыкуется с трубой на клетке ниже."""
     import random
     rnd = random.Random(seed)
-    img = canvas(T, 120)
+    img = canvas(T, 172)
     c = (T - W) // 2
-    pipe_v(img, 16, 120, c, rnd)
-    flange_v(img, 52, c)
-    flange_v(img, 92, c)
-    pygame.draw.rect(img, DARK, (c - 5, 60, W + 10, 4))                 # хомут крепления к стене
-    for bx in (c - 4, c + W + 2):
-        pygame.draw.rect(img, HI, (bx, 61, 2, 2))
-    pygame.draw.ellipse(img, (22, 22, 24), (c - 8, 2, W + 16, 16))      # перекрытие: обойма
-    pygame.draw.ellipse(img, (58, 62, 66), (c - 8, 2, W + 16, 16), 2)
-    pygame.draw.ellipse(img, (12, 12, 14), (c - 2, 5, W + 4, 9))
+    pipe_v(img, 6, 172, c, rnd)
+    flange_v(img, 60, c)
+    flange_v(img, 128, c)
+    for hy in (40, 96):                                                  # хомуты крепления к стене
+        pygame.draw.rect(img, DARK, (c - 5, hy, W + 10, 4))
+        for bx in (c - 4, c + W + 2):
+            pygame.draw.rect(img, HI, (bx, hy + 1, 2, 2))
+    pygame.draw.rect(img, (40, 42, 46), (c - 8, 0, W + 16, 10))          # обойма в перекрытии
+    pygame.draw.rect(img, (88, 92, 98), (c - 8, 0, W + 16, 10), 2)
     return img
 
 
-def drop(seed):
-    """Труба выходит из потолка и сливает воду: открытый раструб внизу, струя до пола."""
+def inflow(seed):
+    """Приток от источника: труба выходит из потолка, спускается по стене и по полу к каналу, открытый
+    конец над водой — струя падает в канал, по воде круги. 48×228: на клетку пола над каналом, dy=12."""
     import random
     rnd = random.Random(seed)
-    img = canvas(T, 120)
+    img = canvas(T, 228)
     c = (T - W) // 2
-    pipe_v(img, 12, 92, c, rnd)
-    flange_v(img, 44, c)
-    pygame.draw.ellipse(img, (22, 22, 24), (c - 8, 0, W + 16, 14))
-    pygame.draw.ellipse(img, (58, 62, 66), (c - 8, 0, W + 16, 14), 2)
-    pygame.draw.rect(img, DARK, (c - 4, 88, W + 8, 8))                  # раструб
-    pygame.draw.rect(img, MID, (c - 2, 90, W + 4, 5))
-    pygame.draw.ellipse(img, (16, 18, 20), (c - 2, 92, W + 4, 8))
-    for x in range(c + 1, c + W, 3):                                    # падающая струя
-        for y in range(98, 120, 4):
-            img.set_at((x, y), (150, 200, 235))
-            img.set_at((x + 1, y + 1), (210, 235, 250))
+    pipe_v(img, 6, 206, c, rnd)
+    for fy in (58, 140):
+        flange_v(img, fy, c)
+    for hy in (36, 100):
+        pygame.draw.rect(img, DARK, (c - 5, hy, W + 10, 4))
+    pygame.draw.rect(img, (40, 42, 46), (c - 8, 0, W + 16, 10))          # обойма в перекрытии
+    pygame.draw.rect(img, (88, 92, 98), (c - 8, 0, W + 16, 10), 2)
+    pygame.draw.rect(img, DARK, (c - 3, 198, W + 6, 10))                  # раструб на конце
+    pygame.draw.ellipse(img, (16, 18, 20), (c - 1, 202, W + 2, 8))
+    for x in range(c + 2, c + W - 1, 3):                                  # струя
+        for y in range(210, 222, 3):
+            img.set_at((x, y), (170, 215, 240))
+    for r, a in ((16, 170), (11, 120)):                                   # круги на воде
+        pygame.draw.ellipse(img, (225, 242, 250, a), (T // 2 - r, 220 - r // 3, 2 * r, r * 2 // 3 + 2), 1)
     return img
+
+
+def ladder(seed):
+    """Лестница наверх: стоит у стены на полу, поднимается по стене до потолка и уходит в люк. 48×150:
+    на клетку пола у стены, dy=-26 — ноги у основания стены, верх в полосе потолка (тёмный проём люка)."""
+    img = canvas(T, 150)
+    pygame.draw.rect(img, (18, 18, 20), (4, 0, 40, 22))                  # проём люка в перекрытии
+    pygame.draw.rect(img, (70, 74, 80), (4, 0, 40, 22), 2)
+    pygame.draw.rect(img, (0, 0, 0, 60), (16, 8, 22, 142))               # тень на стене
+    for x in (11, 33):                                                    # тетивы
+        pygame.draw.rect(img, (70, 74, 78), (x, 6, 5, 144))
+        pygame.draw.rect(img, (140, 146, 150), (x + 1, 6, 2, 144))
+    for y in range(18, 146, 14):                                          # ступени
+        pygame.draw.rect(img, (78, 82, 86), (14, y, 22, 4))
+        pygame.draw.rect(img, (156, 160, 164), (14, y, 22, 1))
+    return img
+
+
+def clean_tanks(seed):
+    """Баки чистой воды: два стальных бака из склейки nbunk_2_021 без пирамиды консервных банок слева."""
+    from src import props as P
+    return P.pack_image("pk:nbunk/nbunk_2_021").subsurface((46, 0, 97, 91)).copy()
+
+
+def settle_tank(seed):
+    """Приёмный бак сырой воды: один бак из той же склейки, в полтора раза крупнее и в ржавчине —
+    без своих патрубков: трубы к нему подводит карта (вход снизу, выход сбоку к колоннам)."""
+    from src import props as P
+    tank = P.pack_image("pk:nbunk/nbunk_2_021").subsurface((46, 0, 48, 91)).copy()
+    tank = pygame.transform.scale(tank, (72, 136))
+    tank.fill((200, 150, 112), special_flags=pygame.BLEND_RGB_MULT)
+    import random
+    rnd = random.Random(seed)
+    for _ in range(26):                                                   # подтёки ржавчины
+        x, y = rnd.randrange(8, 64), rnd.randrange(24, 110)
+        if tank.get_at((x, y)).a > 200:
+            pygame.draw.line(tank, (120, 64, 34), (x, y), (x, y + rnd.randint(4, 14)), 2)
+    return tank
 
 
 def pump(seed):
@@ -374,8 +420,11 @@ def toolboard(seed):
 
 PROPS = {
     "zz_pump": (pump, 72, 72),
-    "zz_pipe_riser": (riser, 48, 120),
-    "zz_pipe_drop": (drop, 48, 120),
+    "zz_clean_tanks": (clean_tanks, 97, 91),
+    "zz_settle_tank": (settle_tank, 72, 136),
+    "zz_pipe_riser": (riser, 48, 172),
+    "zz_pipe_inflow": (inflow, 48, 228),
+    "zz_ladder_up": (ladder, 48, 150),
     "zz_pipe_thin_h": (lambda s: thin(s, "ew"), 48, 48),
     "zz_pipe_thin_v": (lambda s: thin(s, "ns"), 48, 48),
     "zz_pipe_thin_ne": (lambda s: thin(s, "ne"), 48, 48),

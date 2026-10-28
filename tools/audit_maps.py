@@ -40,7 +40,7 @@ NOT_A_SIGN = ("x_vd_exitlight", "x_vd_exitlight_far")
 WALL_PROPS = ("wall_", "vwall_", "x_cliff", "roof_")
 # входы-здания: сам портал внутри такого пропа — норма, а не «предмет у портала»
 PORTAL_BUILDINGS = ("ar2_airlock", "p7_command", "r_bunker", "sl_bunker")
-PORTAL_SKIP = ("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_ladder_wall", "x_manhole", "x_door")
+PORTAL_SKIP = ("vwall_", "wall_", "x_cliff", "x_vault", "x_mesa", "x_ladder", "x_ladder_wall", "x_manhole", "x_door", "zz_ladder_up")
 # PORTAL_SKIP ниже используется как список префиксов; для аудита дверей есть отдельный точечный список:
 # задуманные преграды-решётки, которые стоят в проёме по логике места (перекрывают устье стока/канала).
 # Формат: (карта, проп, x, y) — как x_door/x_manhole/x_ladder, но не по всему проекту, а по одной клетке.

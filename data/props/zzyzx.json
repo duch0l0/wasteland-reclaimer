@@ -1538,8 +1538,32 @@
 "sight": false,
 "layer": "floor"
 },
-"zz_pipe_drop": {
-"img": "zz_pipe_drop",
+"zz_pipe_inflow": {
+"img": "zz_pipe_inflow",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_clean_tanks": {
+"img": "zz_clean_tanks",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"zz_settle_tank": {
+"img": "zz_settle_tank",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"zz_ladder_up": {
+"img": "zz_ladder_up",
 "block": false,
 "sight": false,
 "layer": "floor"
