@@ -5568,5 +5568,47 @@
    192
   ],
   "made_by": "tools/make_fountain.py"
+ },
+ "zz_pipe_h": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_v": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_ne": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_nw": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_intake": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_inlet": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
  }
 }

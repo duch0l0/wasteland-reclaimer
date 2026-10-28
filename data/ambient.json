@@ -708,7 +708,8 @@
    "critters": {
     "cat": 3,
     "dog": 1,
-    "chicken": 2
+    "chicken": 2,
+    "brahmin": 2
    }
   },
   "needles": {

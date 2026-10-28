@@ -154,7 +154,7 @@ LOCS = {
     "baker": {"people": 8, "jobs": ["trader", "drunk", "kid", "pilgrim", "scav", "cook"], "critters": {"dog": 1, "cat": 2, "chicken": 2}},
     "baker_outskirts": {"people": 6, "jobs": ["scav", "drunk", "kid", "pilgrim", "old"], "critters": {"dog": 2, "cat": 1}},
     # —— Зайзикс, Нидлс
-    "zzyzx": {"people": 10, "jobs": ["pilgrim", "nurse", "trader", "old", "laundry", "kid", "cook", "musician"], "critters": {"cat": 3, "dog": 1, "chicken": 2}},
+    "zzyzx": {"people": 10, "jobs": ["pilgrim", "nurse", "trader", "old", "laundry", "kid", "cook", "musician"], "critters": {"cat": 3, "dog": 1, "chicken": 2, "brahmin": 2}},
     "needles": {"people": 12, "jobs": ["trader", "scav", "courier", "drunk", "kid", "cook", "hunter", "laundry", "guard", "mechanic"],
                 "critters": {"dog": 2, "cat": 3, "chicken": 3, "brahmin": 1}},
     # —— Хаб, Джанктаун

@@ -1132,6 +1132,24 @@
 "sight": false,
 "layer": "floor"
 },
+"zz_pipe_v": {
+"img": "zz_pipe_v",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_intake": {
+"img": "zz_pipe_intake",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_inlet": {
+"img": "zz_pipe_inlet",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "vwall_sandstone_w": {
 "img": "p1_vwall_concrete_w",
 "block": true,
@@ -1188,6 +1206,22 @@
 0
 ]
 ]
+},
+"zz_wagon_c": {
+"img": "pk:west/west_1_011",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"zz_fresh_grave": {
+"img": "pk:grave/grave_2_026",
+"block": true,
+"sight": false,
+"search": "grave",
+"title": "свежая могила"
 },
 "zz_room_rug0": {
 "img": "pk:lhotel/p2/10,12,2,2",
