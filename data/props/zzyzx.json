@@ -646,6 +646,28 @@
 "block": true,
 "sight": false
 },
+"zz_jug_pitcher": {
+"img": "pk:destown/p3/4,7,1,1",
+"block": true,
+"sight": false
+},
+"zz_jug_slim": {
+"img": "pk:destown/p3/14,3,1,1",
+"block": true,
+"sight": false
+},
+"zz_jug_blue": {
+"img": "pk:destown/p3/3,5,1,1",
+"block": true,
+"sight": false
+},
+"zz_barrel_w": {
+"img": "pk:west/west_1_017",
+"block": true,
+"sight": false,
+"search": "junk",
+"title": "бочка"
+},
 "zz_jars": {
 "img": "pk:bazaar/bazaar_2_048",
 "block": true,
@@ -955,7 +977,7 @@
 "sight": false
 },
 "zz_jug_big": {
-"img": "pk:destown/p3/2,10,1,1",
+"img": "pk:destown/p3/1,10,1,1",
 "block": true,
 "sight": false
 },
@@ -1146,6 +1168,25 @@
 255,
 214,
 160
+]
+},
+"zz_garden_gate": {
+"img": "pk:west/west_1_020",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"holes": [
+[
+0,
+0
+],
+[
+1,
+0
+]
 ]
 },
 "zz_room_rug0": {

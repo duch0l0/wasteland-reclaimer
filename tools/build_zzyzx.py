@@ -109,6 +109,11 @@ PIPE_RUST = "nc_pipes"                                               # ржав�
 FLAG = "x_flag"                                                      # флажок на древке
 POT = P("zz_pot_palm", "pk:bazaar/bazaar_3_206", foot=[1, 1])        # пальма в кадке на бульваре
 JUG = P("zz_jug", "pk:destown/p3/3,6,1,1")                           # глиняный кувшин
+# разные сосуды и бочки: одинаковые кувшины в трёх размерах издалека читались кучами-близнецами
+JUGS = [JUG, P("zz_jug_pitcher", "pk:destown/p3/4,7,1,1"),           # кувшин-питчер с водой
+        P("zz_jug_slim", "pk:destown/p3/14,3,1,1"),                  # узкая ваза
+        P("zz_jug_blue", "pk:destown/p3/3,5,1,1")]                   # синяя глазурь — дорогая, с бульвара
+BARRELS = [BARREL, P("zz_barrel_w", "pk:west/west_1_017", search="junk", title="бочка")]   # окованная бочка
 JARS = P("zz_jars", "pk:bazaar/bazaar_2_048", search="shelf", title="кувшины")
 BASKET = P("zz_basket", "pk:fishv/p1/12,2,2,2", foot=[2, 1])
 HAY = P("zz_hay", "pk:west/west_1_004", block=False)                 # тюк сена
@@ -152,7 +157,7 @@ STONE_PLAZA = ["pk:apark/p2/8,0,1,1", "pk:apark/p2/9,0,1,1",
 SACK = P("zz_sack", "pk:destown/p3/2,8,1,1")                                  # мешок на земле
 BUCKET = "bucket"                                                                # ведро
 LANTERN = "lantern_lit"                                                          # фонарь со стеклом (свет у него самого)
-JUG_BIG = P("zz_jug_big", "pk:destown/p3/2,10,1,1")                             # большая амфора
+JUG_BIG = P("zz_jug_big", "pk:destown/p3/1,10,1,1")                             # большая амфора
 TANK_FILTER = "zz_tank"                                                         # корпус фильтра под навесом
 
 # ---- парадная часть: доски, огни, чаша, клумбы, вешала, шлагбаум (наборы west / cult / apark / wschool)
@@ -422,7 +427,7 @@ place(HOUSE_D, 5, 33)                             # будка караула у
 place("table_2", 8, 34)                           # стол, за которым записывают входящих
 place("chair_0", 7, 34)                           # караульный сидит сбоку стола, лицом к дороге
 place(FIRE_PIT, 3, 33)                            # огневая яма: ночи в пустыне холодные
-place(BARREL, 4, 35)
+place(BARRELS[(4 + 35) % 2], 4, 35)
 place(SACK, 8, 32)
 
 # ------------------------------------------------------------ Бульвар Мечты
@@ -472,7 +477,7 @@ place(STALL_B, 51, 35)
 place(STALL, 54, 35)
 place(SIGN_BOARD, 55, 34)                         # доска над прилавком: «ЦЕЛЕБНАЯ ВОДА»
 pbox(CRATE, 47, 32, "бутыли с «чудо-водой»", {"вода Зайзикса": 3}, owner="springer")   # ящик у калитки двора
-place(BARREL, 49, 32)
+place(BARRELS[(49 + 32) % 2], 49, 32)
 place(BENCH, 43, 41)                              # где ждут те, кому уже невмоготу стоять
 place(LAMP50, 56, 35)                             # фонарь у прилавков чудо-воды
 
@@ -499,7 +504,7 @@ place(STALL_B, 32, 24)                            # касса под навес
 place(SIGN_WOOD, 35, 24)                          # расписание купаний и цена — у кассы
 place(TROUGH_W, 36, 26)                           # колода с питьевой водой для ждущих
 place(BUCKET, 37, 26)
-place(JUG, 36, 27)
+place(JUGS[(36 + 2 * 27) % 4], 36, 27)
 place(BENCH, 34, 27)                              # где ждут, пока откроют
 for y in range(26, 31):                           # очередь к двери: два барьера вдоль дорожки
     place(RAIL, 26, y)
@@ -514,24 +519,24 @@ place(PALMS[0], 16, 32)                           # тень — живые па
 place(PALMS[2], 24, 32)
 # служба: тележка с бельём у западной стены; прачечная — на заднем дворе за купальнями (см. ниже)
 place(CART, 17, 24)
-place(BARREL, 17, 26)
+place(BARRELS[(17 + 26) % 2], 17, 26)
 place(CRATE, 37, 28)
-place(BARREL, 37, 30)
+place(BARRELS[(37 + 30) % 2], 37, 30)
 # задний служебный двор купален: тут сушат бельё на верёвке (Полина стирает и для купален, и для
 # «Замка») — не на парадной площади перед входом
 z.paint("k", 20, 6, 31, 8)                        # утоптанная земля за домом
 place(LAUNDRY, 23, 7)
 place(BUCKET, 22, 8)
-place(BARREL, 28, 8)
+place(BARRELS[(28 + 8) % 2], 28, 8)
 place(CRATE, 30, 8)
 place(LAMP50, 20, 7)
 # западный проулок купален — дровяной двор: печи греют воду, дрова завозят сюда
 for i, (x, y) in enumerate(((13, 14), (15, 14), (13, 15), (15, 15))):
     place(LOGS[i % 2], x, y)
 place(CART, 13, 17)
-place(BARREL, 16, 17)
+place(BARRELS[(16 + 17) % 2], 16, 17)
 place(CRATE, 13, 19)
-place(BARREL, 16, 19)
+place(BARRELS[(16 + 19) % 2], 16, 19)
 place(LAMP50, 18, 15)
 
 # ------------------------------------------------------------ источник «Сладкая вода»
@@ -571,8 +576,8 @@ place("vg_bottles", 55, 28)                       # стеллаж с готов
 place(CANOPY_S, 48, 30)                           # навес над розливом
 place("table_2", 49, 31)                          # стол розлива: воронка, бутыли
 place(JARS, 50, 31)                               # кувшины — при розливе, под навесом
-place(BARREL, 41, 28)                             # бочки в ряд у западного забора
-place(BARREL, 41, 30)
+place(BARRELS[(41 + 28) % 2], 41, 28)                             # бочки в ряд у западного забора
+place(BARRELS[(41 + 30) % 2], 41, 30)
 place(CRATE, 43, 32)                              # ящики — у южного
 place(CRATE, 44, 32)
 place(CART, 55, 31)                               # тележка — у восточного
@@ -642,7 +647,7 @@ place(PALMS[1], 81, 23)
 z.paint("k", 83, 23, 87, 32)                      # утоптанная земля хозяйственного двора
 place(COACH, 83, 25)
 place(CRATE, 85, 29)
-place(BARREL, 83, 29)
+place(BARRELS[(83 + 29) % 2], 83, 29)
 place(SACK, 85, 31)
 place("table_2", 84, 32)
 place(LAMP50, 87, 30)
@@ -661,23 +666,27 @@ place(LAMP50, 59, 42)
 # Северный ряд — прилавки с навесами (кто может платить Спрингеру за место). Товар — на прилавках и у
 # прилавков, по одной-две вещи; проход от арки к колодцу свободен, посреди площадки ничего не разбросано.
 # С земли торгует один — на своём коврике у западного края.
-for name, x in (("hb_stall_bread", 14), ("hb_stall_veg", 18), ("hb_stall_fruit", 22),
-                ("hb_stall_meat", 31), ("nd_fish_stall", 35), (STALL, 39), (STALL_B, 43), (STALL_C, 47)):
-    place(name, x, 45)
+# Не строй солдат: прилавки северного ряда стоят вразнобой (кто раньше занял место — ближе к стене,
+# кто позже — на шаг вперёд), промежутки разные; восточнее — второй, короткий ряд у южного края, между
+# рядами — торговый проход. Товар — у своего прилавка, на шаг впереди.
+for name, x, y in (("hb_stall_bread", 14, 45), ("hb_stall_veg", 18, 46), ("hb_stall_fruit", 21, 45),
+                   ("hb_stall_meat", 31, 46), ("nd_fish_stall", 35, 45), (STALL, 40, 46), (STALL_B, 45, 45),
+                   (STALL_C, 41, 50)):
+    place(name, x, y)
 place(SACK, 14, 46)                               # у каждого прилавка — его товар, по одной вещи
-place(CRATE, 18, 46)
-place(JUG, 22, 46)
-place(JUG, 31, 46)
-place(SCALES, 34, 46)                             # весы у рыбного прилавка: спорят о весе до хрипоты
-place(BASKET, 36, 46)
-place(CRATE, 39, 46)
-place(JARS, 43, 46)
-place(HIDE, 47, 46)
-place(RUG, 13, 49)                                # с земли: коврик и две вещи у западного края
-place(JUG, 13, 48)
-place(SACK, 15, 48)
+place(CRATE, 19, 47)
+place(JUGS[(21 + 2 * 46) % 4], 21, 46)
+place(JUGS[(32 + 2 * 47) % 4], 32, 47)
+place(SCALES, 37, 46)                             # весы у рыбного прилавка: спорят о весе до хрипоты
+place(BASKET, 35, 46)
+place(CRATE, 40, 47)
+place(JARS, 45, 46)
+place(HIDE, 42, 51)
+place(RUG, 46, 50)                                # с земли: коврик и две вещи у южного ряда
+place(JUGS[(47 + 2 * 49) % 4], 47, 49)
+place(SACK, 48, 50)
 place(HAY, 47, 52)
-place(BARREL, 12, 47)
+place(BARRELS[(12 + 47) % 2], 12, 47)
 place(CRATE, 51, 46)
 place(SIGN_MARKET, 45, 44)                        # неоновая вывеска рынка на стене
 place(LAMP50, 12, 45)
@@ -690,8 +699,8 @@ place(WELL, 33, 53)
 place(TROUGH, 30, 53)
 place(BUCKET, 32, 54)
 place(BENCH, 35, 54)
-place(JUG, 34, 55)
-place(JUG, 31, 55)
+place(JUGS[(34 + 2 * 55) % 4], 34, 55)
+place(JUGS[(31 + 2 * 55) % 4], 31, 55)
 place(LAMP50, 30, 51)
 place(LAMP50, 36, 56)
 
@@ -705,13 +714,13 @@ for name, x, y in ((TENT, 9, 54), (TENT_S, 13, 54), (TENT_BIG, 9, 58)):
     place(name, x, y)
 place(FIRE_PIT, 13, 57)                           # общий костёр западной кучки
 place(SACK, 12, 57)
-place(JUG, 12, 56)
+place(JUGS[(12 + 2 * 56) % 4], 12, 56)
 place(HIDE, 13, 60)
 # северная кучка — у самой торговой улицы
 for name, x, y in ((TENT, 20, 54), (TENT_AWN, 24, 54), (TENT_S, 20, 58)):
     place(name, x, y)
 place(FIRE_PIT, 25, 58)
-place(JUG, 23, 56)
+place(JUGS[(23 + 2 * 56) % 4], 23, 56)
 place(SACK, 24, 57)
 place(CAULDRON, 26, 57)                           # котёл над огнём второй кучки
 place(BENCH, 24, 59)
@@ -720,7 +729,7 @@ for name, x, y in ((TENT, 38, 54), (TENT_AWN, 42, 54), (TENT_S, 38, 58)):
     place(name, x, y)
 place(FIRE_PIT, 43, 57)
 place(SACK, 41, 56)
-place(JUG, 41, 57)
+place(JUGS[(41 + 2 * 57) % 4], 41, 57)
 place(LAUNDRY, 44, 61)                            # бельё на верёвке у шатров
 place(HAY, 46, 58)
 # южная кучка — у тропы к озеру
@@ -728,7 +737,7 @@ for name, x, y in ((TENT_BIG, 9, 62), (TENT, 14, 62), (TENT_S, 9, 66)):
     place(name, x, y)
 place(FIRE_PIT, 13, 65)
 place(HIDE, 13, 64)
-place(JUG, 12, 66)
+place(JUGS[(12 + 2 * 66) % 4], 12, 66)
 place(SACK, 17, 64)
 # общий котёл — в середине лагеря, у тропы: сюда сходятся все кучки
 place(FIRE_PIT, 30, 64)
@@ -736,7 +745,7 @@ place(CAULDRON, 31, 64)
 place(CANOPY_S, 27, 62)                           # навес над общим столом
 place("table_2", 28, 65)
 place(BENCH, 27, 66)
-place(JUG, 32, 65)
+place(JUGS[(32 + 2 * 65) % 4], 32, 65)
 place(SACK, 33, 65)
 # лазарет: отдельный шатёр с крестом у входа и флажком — видно издалека
 place(TENT_BIG, 25, 68)
@@ -744,7 +753,7 @@ place(CROSS, 24, 70)
 place(FLAG, 25, 67)
 place(RUG, 28, 70)
 place(CAULDRON, 23, 68)
-place(JUG, 30, 70)
+place(JUGS[(30 + 2 * 70) % 4], 30, 70)
 place(LAMP50, 22, 70)
 # отхожее место — на дальнем краю, за кучками, подальше от котла и колодца
 place(OUTHOUSE, 47, 71)
@@ -779,20 +788,23 @@ place(BENCH, 65, 56)
 place(FIRE_PIT, 68, 55)
 place(CAULDRON, 69, 55)
 place(CART, 74, 57)
-place(BARREL, 76, 58)
+place(BARRELS[(76 + 58) % 2], 76, 58)
 place(CRATE, 59, 58)
-place(JUG, 60, 55)
+place(JUGS[(60 + 2 * 55) % 4], 60, 55)
 place(LOGS[1], 70, 54)                            # дрова к котлу с отваром
 place(SACK, 66, 54)
 place(BUCKET, 71, 56)
 place(BOARD_SMALL, 60, 52)                        # доска целителей у входа в квартал
 # огород: разные грядки, тропинка, ограда одной породы со всех сторон, одна калитка с севера и
 # дорожка к ней от улицы (прежде с боков стояли «тонкие шесты» вместо забора — замечание Claude)
-rail_h(77, 86, 55, gaps=(82,))                    # северный забор с калиткой
+rail_h(77, 86, 55, gaps=(81, 82))                 # северный забор, в проёме — калитка
+GARDEN_GATE = P("zz_garden_gate", "pk:west/west_1_020", foot=[2, 1], sight=True,
+                holes=[[0, 0], [1, 0]])          # калитка на раме, двустворчатая: проходима, как арка
+place(GARDEN_GATE, 81, 55)
 rail_h(77, 86, 63)                                # южный
 rail_v(77, 56, 62)                                # западный
 rail_v(86, 56, 62)                                # восточный
-z.paint("p", 82, 56, 82, 62)                      # тропинка между грядками от калитки
+z.paint("p", 81, 56, 82, 62)                      # тропинка между грядками от калитки
 place(TOMATO, 79, 57)
 place(TOMATO_B, 79, 60)
 place(CABBAGE, 83, 57)
@@ -800,7 +812,7 @@ place(CABBAGE_B, 83, 60)
 place(HERB, 79, 62)
 place(BUCKET, 84, 62)
 place(SACK, 78, 64)
-place(BARREL, 85, 65)
+place(BARRELS[(85 + 65) % 2], 85, 65)
 
 # ------------------------------------------------------------ озеро Туэнде
 # Набережная, причал на сваях — мостки уходят от берега в воду на десять клеток (piers="w" — доски лежат
@@ -821,9 +833,9 @@ place(FISH_RACK, 78, 50)
 place(BOAT, 93, 42, force=True)                   # лодка у мостков, в воде
 place(ROWBOAT, 94, 39, force=True)                # вторая — у головы причала, борт к борту
 place(BOAT_B, 84, 49, force=True)                 # третья вытащена на берег у сарая
-place(BARREL, 84, 51)
+place(BARRELS[(84 + 51) % 2], 84, 51)
 place(CRATE, 82, 50)
-place(JUG, 85, 43)
+place(JUGS[(85 + 2 * 43) % 4], 85, 43)
 place(BENCH, 83, 43)                              # скамья на набережной, лицом к воде
 for x, y in ((80, 42), (80, 53), (79, 45), (85, 52)):
     place(PALMS[(x + y) % 4], x, y)
