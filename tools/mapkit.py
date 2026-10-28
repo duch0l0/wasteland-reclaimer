@@ -392,13 +392,14 @@ class MapKit:
                 return False
             if self.hides(name, x, y):
                 return False      # спрятал бы соседа за собой или сам спрятался бы за ним
+            holes = {(x + hx, y + hy) for hx, hy in inf.get("holes", ())}
             if check:
                 if self._reach is None:
                     self._reach = len(self.reachable())
-                n = len(self.reachable(foot))
-                if n < self._reach - len([t for t in foot if t not in self.blocked]):
+                n = len(self.reachable(set(foot) - holes))
+                if n < self._reach - len([t for t in foot if t not in self.blocked and t not in holes]):
                     return False  # отрезал бы кусок карты
-            self.blocked.update(foot)
+            self.blocked.update(set(foot) - holes)
             self._reach = None
         else:
             if getattr(self, "rugs_under", False):
@@ -629,10 +630,13 @@ class MapKit:
             if y not in gaps:
                 self.put(f"vwall_{style}_{side}", x, y, check=False, allow_reserved=True)
 
-    def building(self, x0, y0, w, h, style, south=(), west=(), east=(), north=(), roof=True, sign=None, worn=True):
+    def building(self, x0, y0, w, h, style, south=(), west=(), east=(), north=(), roof=True, sign=None, worn=True,
+                 facade=None):
         """Здание со всеми стенами: северная — целая (north — проёмы), южная — с проёмами
         дверей (смещения от x0, чётные, проём 2 клетки), боковые — с проёмами в строках
-        west/east (смещения от y0). Пол бетонный. w — чётное. Возвращает внутренность."""
+        west/east (смещения от y0). Пол бетонный. w — чётное. Возвращает внутренность.
+        facade — свой набор кусков фасада (южной стены) вместо WALLS_*[style]: у витрины курорта
+        не должно быть выбоин, которые генератор подмешивает в «целые» стены."""
         assert w % 2 == 0, "ширина здания — чётная (фасады по 2 клетки)"
         x1, y1 = x0 + w - 1, y0 + h - 1
         self.paint("c", x0, y0 + 1, x1, y1)
@@ -647,7 +651,7 @@ class MapKit:
         for off in south:
             assert off % 2 == 0, "дверь на южной стене — с чётного смещения"
             doors.update((x0 + off, x0 + off + 1))
-        self.wall_row((WALLS_WORN if worn else WALLS_INTACT)[style], x0, x1, y1, gaps=doors)   # worn=False — целый дом
+        self.wall_row(facade or (WALLS_WORN if worn else WALLS_INTACT)[style], x0, x1, y1, gaps=doors)   # worn=False — целый дом
         for side, x, gaps in (("w", x0, west), ("e", x1, east)):
             self.put(f"vwall_{style}_{side}", x, y0, force=True, allow_reserved=True)
             for y in range(y0 + 1, y1):

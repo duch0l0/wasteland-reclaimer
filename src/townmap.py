@@ -259,13 +259,16 @@ THEME_KINDS = {   # что чаще встречается на крыше та�
     "show": ("antenna", "antenna", "sky", "lights", "dish"), "works": ("sky", "sky", "vent", "pipe", "crates", "junk", "ac"),
     "hall": ("sky", "dish", "pots", "vent"),
     "home_a": ("laundry", "pots", "barrel", "dish", "chimney"), "home_b": ("dish", "ac", "pots", "tarp", "antenna"),
-    "home_c": ("barrel", "chimney", "crates", "laundry", "vent")}
+    "home_c": ("barrel", "chimney", "crates", "laundry", "vent"),
+    "castle": ("sky", "sky", "sky", "sky", "vent", "ac")}   # барская крыша: одна-две холодные машины, остальное пусто
 THEME_SIG = {   # фирменная деталь крыши, ставится один раз
     "clinic": ("cross",), "sheriff": ("flag",), "water": ("tank",), "tavern": ("chimney",), "motel": ("sign_frame",),
-    "shop": ("sign_frame",), "show": ("sign_frame",), "works": ("mast",), "hall": ("flag",)}
+    "shop": ("sign_frame",), "show": ("sign_frame",), "works": ("mast",), "hall": ("flag",), "castle": ("flag",)}
 
 
 def _roof_theme(r):
+    if r.get("theme"):                        # карта задаёт тему крыши сама (roofs[i]["theme"])
+        return r["theme"]
     text = (r.get("sign") or "").upper()
     for th, keys in ROOF_THEMES.items():
         if any(k in text for k in keys):
@@ -769,6 +772,9 @@ class TownMap(MapBase):
                 self.blocked.update(foot)
             if inf["sight"]:
                 self.sight.update(foot)
+            for hx, hy in inf.get("holes", ()):        # проём арки: пятно блокирует, а проход — нет
+                self.blocked.discard((x + hx, y + hy))
+                self.sight.discard((x + hx, y + hy))
             bottom = (y + fh) * T
             rect = pygame.Rect(0, 0, *inf["size"])
             rect.midbottom = ((x + fw / 2) * T + ox, bottom + oy)

@@ -413,7 +413,17 @@
 4,
 1
 ],
-"keybg": true
+"keybg": true,
+"holes": [
+[
+1,
+0
+],
+[
+2,
+0
+]
+]
 },
 "zz_rug_red": {
 "img": "pk:destown/p3/2,11,2,1",
@@ -811,7 +821,12 @@
 "img": "pk:bcyber/bcyber_2_013",
 "block": true,
 "sight": false,
+"foot": [
+1,
+1
+],
 "keybg": true,
+"scale": 2.0,
 "light": {
 "r": 80,
 "color": [
@@ -953,16 +968,69 @@
 "block": true,
 "sight": false
 },
-"zz_pool": {
-"img": "pk:pool/p1/4,4,4,2",
+"zz_torch": {
+"img": "pk:iresort/iresort_1_036",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+],
+"light": {
+"r": 130,
+"color": [
+255,
+180,
+90
+],
+"at": [
+0.5,
+0.2
+],
+"flicker": 0.35,
+"flame": true
+}
+},
+"zz_candles": {
+"img": "pk:cult/cult_2_068",
 "block": false,
 "sight": false,
 "foot": [
-4,
-2
+1,
+1
 ],
-"layer": "floor",
-"soft": "pond"
+"light": {
+"r": 70,
+"color": [
+255,
+205,
+130
+],
+"at": [
+0.5,
+0.35
+],
+"flicker": 0.3,
+"flame": true
+}
+},
+"zz_lights": {
+"img": "pk:apark/apark_3_063",
+"block": false,
+"sight": false,
+"light": {
+"r": 120,
+"color": [
+255,
+225,
+170
+],
+"at": [
+0.5,
+0.3
+],
+"flicker": 0.08
+}
 },
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
