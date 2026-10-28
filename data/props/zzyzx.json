@@ -1440,12 +1440,25 @@
 "ht_clock": {
 "img": "pk:hotel/hotel_4_227",
 "block": false,
-"sight": false
+"sight": false,
+"scale": 0.5
 },
 "ht_towels": {
 "img": "pk:hotel/hotel_4_199",
 "block": false,
 "sight": false
+},
+"ht_guestbook": {
+"img": "pk:hotel/hotel_4_146",
+"block": false,
+"sight": false,
+"scale": 0.45
+},
+"ht_ledger": {
+"img": "pk:hotel/hotel_4_147",
+"block": false,
+"sight": false,
+"scale": 0.6
 },
 "ht_bed0": {
 "img": "pk:hotel/hotel_1_008",

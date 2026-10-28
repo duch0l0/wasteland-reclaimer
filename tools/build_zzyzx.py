@@ -1217,8 +1217,10 @@ H_SAFE = P("ht_safe", "zz_safe", foot=[1, 1], sight=True)                      #
 H_RACK = P("ht_luggage_rack", "pk:hotel/hotel_4_160", foot=[1, 1])            # подставка под чемодан у кровати
 H_VASE = P("ht_vase", "pk:hotel/hotel_4_221", block=False)                     # вазочка с цветами — на стол
 H_TEA = P("ht_tea", "pk:hotel/hotel_4_132", block=False)                       # поднос с чайником и чашками
-H_CLOCK = P("ht_clock", "pk:hotel/hotel_4_227", block=False)                   # будильник
+H_CLOCK = P("ht_clock", "pk:hotel/hotel_4_227", block=False, scale=0.5)                   # будильник
 H_TOWELS = P("ht_towels", "pk:hotel/hotel_4_199", block=False)                 # стопка свежих полотенец
+H_GUESTBOOK = P("ht_guestbook", "pk:hotel/hotel_4_146", block=False, scale=0.45)  # книга гостей «HOTEL»
+H_LEDGER = P("ht_ledger", "pk:hotel/hotel_4_147", block=False, scale=0.6)        # тетрадь в коже
 BEDS_H = [P(f"ht_bed{i}", f"pk:hotel/hotel_1_{n:03d}", foot=[2, 2], sight=True) for i, n in enumerate((8, 21, 85, 73))]
 RUGS_H = ["w_rug_red", P("ht_rug_straw", "pk:iresort/iresort_1_056", block=False, layer="floor"),   # плетёная циновка
           P("ht_rug_blue", "pk:lhotel/p2/10,12,2,2", block=False, layer="floor")]                  # выцветший узорный
@@ -1299,10 +1301,10 @@ hon(H_CLOCK, 4, 4)                                    # будильник: то
 hput(WARDROBE, 7, 4)
 hwall(H_WINDOW, 5, 2)
 hput(RUGS_H[2], 2, 6)
-hput(DESK, 7, 8)
+hput("w_desk", 7, 8)                               # письменный стол (hotel_1_086 — со своим офисным креслом)
 hput(CHAIR_R, 6, 8)                                   # стул западнее стола — лицом вправо, к столу
-hon(BOOK, 7, 8, dx=-6, dy=-36)                        # счета: сколько бутылей «чудо-воды» везти в Нидлс
-hon(H_TEA, 7, 8, dx=14, dy=-30)                       # недопитый чай
+hon(H_LEDGER, 7, 8, dx=-14, dy=-40)                        # счета: сколько бутылей «чудо-воды» везти в Нидлс
+hon(H_TEA, 7, 8, dx=14, dy=-42)                       # недопитый чай
 hput(SINK, 2, 10)
 hput(H_RACK, 4, 6)                                    # чемодан на подставке у кровати, раскрыт
 ht.ceiling(5, 8, r=165, color=(255, 198, 138), flick=0.03)
@@ -1328,10 +1330,10 @@ hon(H_VASE, 20, 4, dy=-30)                            # свежие цветы 
 hput(WARDROBE, 23, 4)
 hwall(H_WINDOW, 22, 2)
 hput(RUGS_H[1], 18, 6)
-hput(DESK, 23, 8)
+hput("w_desk", 23, 8)                               # письменный стол (hotel_1_086 — со своим офисным креслом)
 hput(CHAIR_R, 22, 8)
-hon(H_TOWELS, 23, 8, dx=-12, dy=-34)                  # стопка свежих полотенец на столе — для гостя
-hon(H_JUG, 23, 8, dx=8, dy=-30)                       # кувшин «чудо-воды» на столе — входит в цену
+hon(H_TOWELS, 23, 8, dx=-14, dy=-44)                  # стопка свежих полотенец на столе — для гостя
+hon(H_JUG, 23, 8, dx=14, dy=-44)                       # кувшин «чудо-воды» на столе — входит в цену
 ht.ceiling(21, 8, r=165, color=(255, 198, 138), flick=0.03)
 
 # 4 — «лучший номер, гость на водах»: столик с цветами у окна, кресло с торшером, книга на столе.
@@ -1342,10 +1344,10 @@ hput(WARDROBE, 31, 4)
 hwall(H_WINDOW, 30, 2)
 
 hput(RUG, 26, 6)
-hput(DESK, 31, 8)
+hput("w_desk", 31, 8)                               # письменный стол (hotel_1_086 — со своим офисным креслом)
 hput(CHAIR_R, 30, 8)
-hon(BOOK, 31, 8, dx=-10, dy=-36)                      # раскрытая книга
-hon(H_VASE, 31, 8, dx=12, dy=-32)                     # вазочка с цветами на столе
+hon(H_LEDGER, 31, 8, dx=-14, dy=-40)                      # раскрытая книга
+hon(H_VASE, 31, 8, dx=16, dy=-44)                     # вазочка с цветами на столе
 hput(ARMCHAIR, 26, 10)
 hput(LAMP, 27, 10)                                    # торшер у кресла
 ht.ceiling(29, 7, r=165, color=(255, 198, 138), flick=0.03)
@@ -1362,8 +1364,8 @@ hwall(H_WINDOW, 38, 2)
 hput(RUG, 34, 6)
 hput(CRADLE, 37, 6)                                   # кроватка вплотную к её кровати, у тумбочки — на виду
 hput("w_dresser", 39, 9)                              # комод, где лежат детские вещи
-hflat(TOWELS[2], 39, 9, dx=0, dy=-30)                 # сложенное детское одеяльце на комоде
-hon(H_JUG, 39, 9, dx=18, dy=-26)                      # кувшин с водой Зайзикса
+hon(H_TOWELS, 39, 9, dx=-14, dy=-50)                  # сложенное детское одеяльце на комоде
+hon(H_JUG, 39, 9, dx=16, dy=-52)                      # кувшин с водой Зайзикса
 hput(T_PLAIN, 38, 8)                                  # столик у окна
 hput(CHAIR_R, 37, 8)                                  # стул лицом к столику
 hon(H_JUG, 38, 8, dx=-8, dy=-32)                      # второй кувшин — на столике
@@ -1377,9 +1379,9 @@ ht.npcs += [["guest_widow", 36, 8]]                   # у колыбели, н�
 # за стойкой портье, за его спиной на стене — доска с ключами номеров. Правее, на стене, портрет.
 hput(H_RECEPT, 14, 19)                                # стойка портье: звонок для гостей
 hput(H_DESK_PH, 16, 19)                               # вторая секция: телефон и касса
-hon(BOOK, 16, 19, dx=-14, dy=-40)                     # книга гостей — двадцать лет одна и та же фамилия в 5-м
-hwall(H_KEYBOX, 15, 16)                               # доска с ключами за спиной портье
-hwall("w_painting", 18, 16, dy=-40)                   # портрет Спрингера в золочёной раме
+hon(H_GUESTBOOK, 16, 19, dx=34, dy=-38)                     # книга гостей — двадцать лет одна и та же фамилия в 5-м
+hwall(H_KEYBOX, 15, 16, dy=-30)                               # доска с ключами за спиной портье
+hwall("w_painting", 18, 16, dy=-26)                   # портрет Спрингера в золочёной раме
 # lounge-уголок в восточной половине: диван спинкой к стене, ковёр перед ним, кресла по сторонам,
 # низкий столик у южного края ковра, торшер у дивана
 hput(H_SOFA, 25, 18)
