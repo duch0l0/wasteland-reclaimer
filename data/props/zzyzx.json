@@ -1522,6 +1522,135 @@
 "block": false,
 "sight": false,
 "scale": 0.45
+},
+"zz_pump": {
+"img": "zz_pump",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_pipe_riser": {
+"img": "zz_pipe_riser",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_drop": {
+"img": "zz_pipe_drop",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_thin_h": {
+"img": "zz_pipe_thin_h",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_thin_v": {
+"img": "zz_pipe_thin_v",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_thin_ne": {
+"img": "zz_pipe_thin_ne",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_thin_nw": {
+"img": "zz_pipe_thin_nw",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_thin_sw": {
+"img": "zz_pipe_thin_sw",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_thin_se": {
+"img": "zz_pipe_thin_se",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_mug": {
+"img": "zz_mug",
+"block": false,
+"sight": false
+},
+"zz_ashtray": {
+"img": "zz_ashtray",
+"block": false,
+"sight": false
+},
+"zz_sign_cs3": {
+"img": "zz_sign_cs3",
+"block": false,
+"sight": false
+},
+"zz_sign_step2": {
+"img": "zz_sign_step2",
+"block": false,
+"sight": false
+},
+"zz_poster_safety": {
+"img": "zz_poster_safety",
+"block": false,
+"sight": false
+},
+"zz_seal": {
+"img": "zz_seal",
+"block": false,
+"sight": false
+},
+"zz_fungus0": {
+"img": "pk:sewer/sewer_1_024",
+"block": false,
+"sight": false
+},
+"zz_fungus1": {
+"img": "pk:sewer/sewer_1_050",
+"block": false,
+"sight": false
+},
+"zz_vt_locker": {
+"img": "p2_013",
+"block": true,
+"sight": true,
+"scale": 0.75
+},
+"zz_spares": {
+"img": "p2_021",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+],
+"scale": 0.75
+},
+"zz_catwalk": {
+"img": "zz_catwalk",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_tally": {
+"img": "zz_tally",
+"block": false,
+"sight": false
+},
+"zz_toolboard": {
+"img": "zz_toolboard",
+"block": false,
+"sight": false
 }
 }
 }

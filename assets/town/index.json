@@ -5694,5 +5694,131 @@
    48
   ],
   "made_by": "tools/make_zzyzx_hotel.py"
+ },
+ "zz_pump": {
+  "size": [
+   72,
+   72
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_riser": {
+  "size": [
+   48,
+   120
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_drop": {
+  "size": [
+   48,
+   120
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_thin_h": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_thin_v": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_thin_ne": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_mug": {
+  "size": [
+   24,
+   26
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_ashtray": {
+  "size": [
+   30,
+   16
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_sign_cs3": {
+  "size": [
+   48,
+   72
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_sign_step2": {
+  "size": [
+   112,
+   26
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_poster_safety": {
+  "size": [
+   80,
+   84
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_seal": {
+  "size": [
+   20,
+   20
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_thin_nw": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_thin_sw": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_pipe_thin_se": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_catwalk": {
+  "size": [
+   96,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_tally": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_cistern.py"
+ },
+ "zz_toolboard": {
+  "size": [
+   72,
+   60
+  ],
+  "made_by": "tools/make_cistern.py"
  }
 }
