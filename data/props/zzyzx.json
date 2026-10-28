@@ -1345,6 +1345,12 @@
 "block": false,
 "sight": false
 },
+"ht_runner": {
+"img": "zz_runner",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "ht_sofa": {
 "img": "pk:hotel/hotel_2_064",
 "block": true,
@@ -1374,12 +1380,120 @@
 "block": true,
 "sight": false
 },
-"ht_suitcases": {
-"img": "pk:wrail/wrail_1_014",
+"ht_luggage": {
+"img": "pk:hotel/hotel_5_080",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+],
+"search": "bag",
+"title": "багаж"
+},
+"ht_reception": {
+"img": "pk:hotel/hotel_5_048",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ht_desk_phone": {
+"img": "pk:hotel/hotel_5_012",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"ht_safe": {
+"img": "zz_safe",
+"block": true,
+"sight": true,
+"foot": [
+1,
+1
+]
+},
+"ht_luggage_rack": {
+"img": "pk:hotel/hotel_4_160",
 "block": true,
 "sight": false,
-"search": "bag",
-"title": "чемоданы"
+"foot": [
+1,
+1
+]
+},
+"ht_vase": {
+"img": "pk:hotel/hotel_4_221",
+"block": false,
+"sight": false
+},
+"ht_tea": {
+"img": "pk:hotel/hotel_4_132",
+"block": false,
+"sight": false
+},
+"ht_clock": {
+"img": "pk:hotel/hotel_4_227",
+"block": false,
+"sight": false
+},
+"ht_towels": {
+"img": "pk:hotel/hotel_4_199",
+"block": false,
+"sight": false
+},
+"ht_bed0": {
+"img": "pk:hotel/hotel_1_008",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ht_bed1": {
+"img": "pk:hotel/hotel_1_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ht_bed2": {
+"img": "pk:hotel/hotel_1_085",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ht_bed3": {
+"img": "pk:hotel/hotel_1_073",
+"block": true,
+"sight": true,
+"foot": [
+2,
+2
+]
+},
+"ht_rug_straw": {
+"img": "pk:iresort/iresort_1_056",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"ht_rug_blue": {
+"img": "pk:lhotel/p2/10,12,2,2",
+"block": false,
+"sight": false,
+"layer": "floor"
 },
 "zz_cradle": {
 "img": "zz_cradle",

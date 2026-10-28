@@ -1179,9 +1179,8 @@ ht = CityMap(city, "zzyzx_hotel", "«Замок» Спрингера", 44, 26, s
 ht.night = [126, 112, 98]
 ht.floor_code("R", "pk:aoffice/p3/3,1,1,1")           # ковёр номеров
 ht.floor_code("C", "pk:hotel/hotel_f1_23")            # мрамор холла и покоев
-ht.floor_code("D", "pk:zcity/zcity_f1_00")            # доски коридора
+ht.floor_code("D", "pk:cult/cult_f2_21", "pk:cult/cult_f2_20")   # тёмные доски коридора (zcity_f1_00 — кирпичная кладка)
 ht.floor_code("W", "pk:hotel/hotel_f1_03")            # кафель столовой
-ht.floor_code("K", "pk:hotel/hotel_f1_10")            # ковровая дорожка коридора (тайл с узором)
 ht.wall_code("Y", "pk:hotel/hotel_w1_15")             # номера — кремовая штукатурка с панелью
 ht.wall_code("Q", "pk:hotel/hotel_w1_18")             # номер вдовы — выцветшие обои с розетками
 ht.wall_code("V", "pk:hotel/hotel_w1_23")             # холл, коридор, покои — панели с бордюром
@@ -1190,7 +1189,9 @@ X0 = (1, 9, 17, 25, 33)                               # левые стены п
 ROOMS = [ht.room(x0, 1, x0 + 8, 12, "Q" if x0 == 33 else "Y", "R") for x0 in X0]
 ht.paint("V", 1, 13, 41, 17)                          # стены коридора и северная стена парадного этажа
 ht.paint("D", 2, 13, 40, 15)                          # пол коридора — доски
-ht.paint("K", 2, 14, 40, 14)                          # по центру — ковровая дорожка
+RUNNER_T = P("ht_runner", "zz_runner", block=False, layer="floor")   # дорожка: клетки встык (tools/make_zzyzx_hotel.py)
+for _x in range(2, 41):
+    ht.props.append([RUNNER_T, _x, 14])                # по центру коридора — бордовая дорожка с золотой каймой
 ht.paint("V", 1, 16, 43, 25)                          # стены парадного этажа и фасад
 ht.paint("W", 2, 18, 11, 24)                          # столовая — белый кафель
 ht.paint("C", 13, 18, 30, 24)                         # холл — мрамор
@@ -1209,8 +1210,19 @@ H_WINDOW = P("ht_window", "pk:hotel/hotel_2_008", block=False)                # 
 H_KEYBOX = P("ht_keybox", "pk:lhotel/lhotel_1_031", block=False)              # доска с ключами номеров
 H_PHOTO = P("ht_photo", "pk:hotel/hotel_1_070", block=False)                  # фотография в рамке
 H_FLOWERS = P("ht_flowers", "pk:iresort/iresort_1_062")                       # цветы в горшке
-H_SUITCASES = P("ht_suitcases", "pk:wrail/wrail_1_014", search="bag", title="чемоданы")
-CRADLE = P("zz_cradle", "zz_cradle", foot=[1, 1], sight=False)                # детская колыбель вдовы
+H_SUITCASES = P("ht_luggage", "pk:hotel/hotel_5_080", foot=[2, 1], sight=True, search="bag", title="багаж")   # тележка с чемоданами
+H_RECEPT = P("ht_reception", "pk:hotel/hotel_5_048", foot=[2, 1], sight=True)  # стойка портье со звонками
+H_DESK_PH = P("ht_desk_phone", "pk:hotel/hotel_5_012", foot=[2, 1], sight=True)  # стойка с телефоном и кассой
+H_SAFE = P("ht_safe", "zz_safe", foot=[1, 1], sight=True)                      # стальной сейф (tools/make_zzyzx_hotel.py)
+H_RACK = P("ht_luggage_rack", "pk:hotel/hotel_4_160", foot=[1, 1])            # подставка под чемодан у кровати
+H_VASE = P("ht_vase", "pk:hotel/hotel_4_221", block=False)                     # вазочка с цветами — на стол
+H_TEA = P("ht_tea", "pk:hotel/hotel_4_132", block=False)                       # поднос с чайником и чашками
+H_CLOCK = P("ht_clock", "pk:hotel/hotel_4_227", block=False)                   # будильник
+H_TOWELS = P("ht_towels", "pk:hotel/hotel_4_199", block=False)                 # стопка свежих полотенец
+BEDS_H = [P(f"ht_bed{i}", f"pk:hotel/hotel_1_{n:03d}", foot=[2, 2], sight=True) for i, n in enumerate((8, 21, 85, 73))]
+RUGS_H = ["w_rug_red", P("ht_rug_straw", "pk:iresort/iresort_1_056", block=False, layer="floor"),   # плетёная циновка
+          P("ht_rug_blue", "pk:lhotel/p2/10,12,2,2", block=False, layer="floor")]                  # выцветший узорный
+CRADLE = P("zz_cradle", "zz_cradle", foot=[1, 1], sight=False)               # детская кроватка вдовы (40×60)                # детская колыбель вдовы
 H_JUG = P("ht_jug", "pk:destown/p3/4,7,1,1", block=False, scale=0.45)         # кувшин у постели (не амфора)
 COUNTER, REGISTER, BOOK = "counter", "x_register", "w_newspaper"
 CHAIR_R, CHAIR_L = "w_chair_r", "w_chair_l"                                   # стулья в профиль
@@ -1281,17 +1293,18 @@ for _lx in (7, 15, 23, 31, 39):
 # У всех: кровать изголовьем к северной стене, тумбочка с лампой, шкаф, окно на фасаде, ковёр у ног
 # кровати, письменный стол у восточной стены и стул в профиль лицом к столу. Дальше — своё у каждого.
 # 1 — «гость с деньгами»: двуспальная, чемодан у двери, раковина в углу, бумаги на столе.
-hput(BED, 2, 4)
+hput(BEDS_H[0], 2, 4)                                 # голубое покрывало
 hput(NIGHT, 4, 4)
-hon(T_LAMP, 4, 4)
+hon(H_CLOCK, 4, 4)                                    # будильник: торговец встаёт рано — к открытию рынка
 hput(WARDROBE, 7, 4)
 hwall(H_WINDOW, 5, 2)
-hput(RUG, 2, 6)
+hput(RUGS_H[2], 2, 6)
 hput(DESK, 7, 8)
 hput(CHAIR_R, 6, 8)                                   # стул западнее стола — лицом вправо, к столу
-hon(BOOK, 7, 8, dx=-6, dy=-36)                        # бумаги на столе
+hon(BOOK, 7, 8, dx=-6, dy=-36)                        # счета: сколько бутылей «чудо-воды» везти в Нидлс
+hon(H_TEA, 7, 8, dx=14, dy=-30)                       # недопитый чай
 hput(SINK, 2, 10)
-hput("bag", 6, 10)                                    # чемодан у двери
+hput(H_RACK, 4, 6)                                    # чемодан на подставке у кровати, раскрыт
 ht.ceiling(5, 8, r=165, color=(255, 198, 138), flick=0.03)
 
 # 2 — «одинокий путник»: койка, ширма отгораживает умывальник, сумка у двери, столик вместо стола.
@@ -1305,24 +1318,24 @@ hput(SINK, 10, 10)
 hput(T_PLAIN, 15, 8)
 hput(CHAIR_R, 14, 8)
 hon(H_JUG, 15, 8, dx=-10, dy=-30)                     # кувшин с водой на столике
-hput("bag", 13, 10)
+hput(H_RACK, 12, 6)                                   # сумка путника на подставке — так и не разобрана
 ht.ceiling(13, 7, r=165, color=(255, 198, 138), flick=0.03)
 
 # 3 — «приготовлен к гостю»: свежие полотенца стопкой на кровати, кувшин на тумбочке, ничего личного.
-hput(BED, 18, 4)
+hput(BEDS_H[2], 18, 4)                                # бежевое покрывало, заправлено без складки
 hput(NIGHT, 20, 4)
-hon(T_LAMP, 20, 4)
+hon(H_VASE, 20, 4, dy=-30)                            # свежие цветы — номер ждёт гостя
 hput(WARDROBE, 23, 4)
 hwall(H_WINDOW, 22, 2)
-hput(RUG, 18, 6)
+hput(RUGS_H[1], 18, 6)
 hput(DESK, 23, 8)
 hput(CHAIR_R, 22, 8)
-hflat(TOWELS[0], 18, 4, dx=14, dy=-46)                # стопка полотенец на кровати
-hon(H_JUG, 20, 4, dx=8, dy=-28)                       # кувшин на тумбочке
+hon(H_TOWELS, 23, 8, dx=-12, dy=-34)                  # стопка свежих полотенец на столе — для гостя
+hon(H_JUG, 23, 8, dx=8, dy=-30)                       # кувшин «чудо-воды» на столе — входит в цену
 ht.ceiling(21, 8, r=165, color=(255, 198, 138), flick=0.03)
 
 # 4 — «лучший номер, гость на водах»: столик с цветами у окна, кресло с торшером, книга на столе.
-hput(BED, 26, 4)
+hput(BEDS_H[3], 26, 4)                                # клетчатое шерстяное покрывало: гостю холодно и в пустыне
 hput(NIGHT, 28, 4)
 hon(T_LAMP, 28, 4)
 hput(WARDROBE, 31, 4)
@@ -1332,10 +1345,9 @@ hput(RUG, 26, 6)
 hput(DESK, 31, 8)
 hput(CHAIR_R, 30, 8)
 hon(BOOK, 31, 8, dx=-10, dy=-36)                      # раскрытая книга
-hon(H_FLOWERS, 31, 8, dx=8, dy=-34)                   # цветы на столе у окна
+hon(H_VASE, 31, 8, dx=12, dy=-32)                     # вазочка с цветами на столе
 hput(ARMCHAIR, 26, 10)
 hput(LAMP, 27, 10)                                    # торшер у кресла
-hput("bag", 32, 10)
 ht.ceiling(29, 7, r=165, color=(255, 198, 138), flick=0.03)
 
 # 5 — «вдова Харпер»: двадцать лет в одной комнате. Кровать заправлена с одной стороны, на второй
@@ -1348,7 +1360,7 @@ hon(T_LAMP, 37, 4)
 hput(WARDROBE, 39, 4)
 hwall(H_WINDOW, 38, 2)
 hput(RUG, 34, 6)
-hput(CRADLE, 35, 8)                                   # колыбель у кровати, с её стороны
+hput(CRADLE, 37, 6)                                   # кроватка вплотную к её кровати, у тумбочки — на виду
 hput("w_dresser", 39, 9)                              # комод, где лежат детские вещи
 hflat(TOWELS[2], 39, 9, dx=0, dy=-30)                 # сложенное детское одеяльце на комоде
 hon(H_JUG, 39, 9, dx=18, dy=-26)                      # кувшин с водой Зайзикса
@@ -1363,10 +1375,9 @@ ht.npcs += [["guest_widow", 36, 8]]                   # у колыбели, н�
 # ------------------------------------------------------------ холл
 # Стойка портье лицом ко входу: две секции по две клетки, на них касса и раскрытая книга гостей;
 # за стойкой портье, за его спиной на стене — доска с ключами номеров. Правее, на стене, портрет.
-hput(COUNTER, 14, 19)
-hput(COUNTER, 16, 19)
-hon(REGISTER, 14, 19, dx=-6, dy=-30)                  # касса
-hon(BOOK, 16, 19, dx=-4, dy=-36)                      # книга гостей
+hput(H_RECEPT, 14, 19)                                # стойка портье: звонок для гостей
+hput(H_DESK_PH, 16, 19)                               # вторая секция: телефон и касса
+hon(BOOK, 16, 19, dx=-14, dy=-40)                     # книга гостей — двадцать лет одна и та же фамилия в 5-м
 hwall(H_KEYBOX, 15, 16)                               # доска с ключами за спиной портье
 hwall("w_painting", 18, 16, dy=-40)                   # портрет Спрингера в золочёной раме
 # lounge-уголок в восточной половине: диван спинкой к стене, ковёр перед ним, кресла по сторонам,
@@ -1421,7 +1432,7 @@ hput(CHAIR_R, 41, 21)                                 # стул к столу �
 hput(ARMCHAIR, 32, 21)
 hput("stool_1", 32, 22)                               # столик у кресла
 hput(PLANT, 36, 23)
-ht.box("metal_chest", 41, 23, "сейф Спрингера",
+ht.box(H_SAFE, 41, 23, "сейф Спрингера",
        {"крышки": 220, "стимулятор": 2, "ключ от насосной": 1},
        requires={"flag": "springer_safe", "msg": "Сейф с кодом. Код Спрингер держит в голове — или в терминале."})
 ht.ceiling(34, 20, r=180, color=(255, 198, 138), flick=0.03)

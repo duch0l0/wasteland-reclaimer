@@ -5676,6 +5676,20 @@
  },
  "zz_cradle": {
   "size": [
+   40,
+   60
+  ],
+  "made_by": "tools/make_zzyzx_hotel.py"
+ },
+ "zz_safe": {
+  "size": [
+   48,
+   70
+  ],
+  "made_by": "tools/make_zzyzx_hotel.py"
+ },
+ "zz_runner": {
+  "size": [
    48,
    48
   ],
