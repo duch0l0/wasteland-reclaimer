@@ -1098,6 +1098,12 @@
 ],
 "layer": "floor"
 },
+"zz_statue_big": {
+"img": "pk:cult/cult_2_094",
+"block": true,
+"sight": true,
+"scale": 2.0
+},
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
 "block": false,
