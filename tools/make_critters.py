@@ -2,7 +2,7 @@
 Спрайты городских животных (assets/sprites/<имя>/{down,left,right,up}/0..3.png + файл native — без увеличения):
   cat_orange cat_grey cat_black cat_white   кошки (рисуются здесь)
   chicken_white chicken_brown chicken_black курицы
-  brahmin                                   двухголовая корова-брамин
+  brahmin                                   двухголовая корова-брамин (без native: в игре ×2, крупнее человека)
   dog_dark dog_pale dog_grey                перекраски нашего пса (assets/sprites/dog)
 Кадры: 0 и 2 — шаг, 1 и 3 — стоит (так их читает loader.load_directional_animations).
 
@@ -37,14 +37,17 @@ def shade(c, k):
     return tuple(max(0, min(255, int(v * k))) for v in c[:3]) + (255,)
 
 
-def save(name, frames):
+def save(name, frames, native=True):
+    """native — рисовать как есть; без него игра увеличит лист вдвое по пикселям, как людей (брамин —
+    корова: вдвое крупнее человека, а не с собаку)."""
     base = os.path.join(OUT, name)
     shutil.rmtree(base, ignore_errors=True)
     for d, imgs in frames.items():
         os.makedirs(os.path.join(base, d), exist_ok=True)
         for i, im in enumerate(imgs):
             pygame.image.save(im, os.path.join(base, d, f"{i}.png"))
-    open(os.path.join(base, "native"), "w").close()
+    if native:
+        open(os.path.join(base, "native"), "w").close()
 
 
 def flipped(imgs):
@@ -218,7 +221,7 @@ if __name__ == "__main__":
     for nm, col in (("chicken_white", (240, 236, 226, 255)), ("chicken_brown", (176, 112, 62, 255)),
                     ("chicken_black", (60, 58, 66, 255))):
         save(nm, chicken_frames(col))
-    save("brahmin", brahmin_frames())
+    save("brahmin", brahmin_frames(), native=False)
     recolor_dog("dog_dark", lambda c: (int(gray(c) * 0.42), int(gray(c) * 0.38), int(gray(c) * 0.36), c.a))
     recolor_dog("dog_pale", lambda c: (min(255, gray(c) + 70), min(255, gray(c) + 62), min(255, gray(c) + 44), c.a))
     recolor_dog("dog_grey", lambda c: (gray(c), gray(c), min(255, gray(c) + 8), c.a))

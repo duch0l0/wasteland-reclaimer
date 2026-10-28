@@ -1236,9 +1236,10 @@
 "block": true,
 "sight": true,
 "foot": [
-2,
-1
-]
+3,
+2
+],
+"scale": 2.0
 },
 "zz_fresh_grave": {
 "img": "pk:grave/grave_2_026",
