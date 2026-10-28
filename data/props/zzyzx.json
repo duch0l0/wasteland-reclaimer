@@ -689,15 +689,6 @@
 ],
 "keybg": true
 },
-"zz_wagon": {
-"img": "pk:west/west_1_011",
-"block": true,
-"sight": true,
-"foot": [
-2,
-1
-]
-},
 "zz_cart": {
 "img": "pk:bazaar/bazaar_1_023",
 "block": true,
@@ -1031,6 +1022,60 @@
 ],
 "flicker": 0.08
 }
+},
+"zz_rail": {
+"img": "pk:west/west_1_013",
+"block": true,
+"sight": false,
+"foot": [
+2,
+1
+]
+},
+"zz_rail_v": {
+"img": "pk:west/west_1_015",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_rail_c": {
+"img": "pk:west/west_1_014",
+"block": true,
+"sight": false,
+"foot": [
+1,
+1
+]
+},
+"zz_coach": {
+"img": "pk:west/west_1_012",
+"block": true,
+"sight": true,
+"foot": [
+6,
+2
+]
+},
+"zz_umbrella": {
+"img": "pk:iresort/iresort_1_009",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"zz_umbrella_b": {
+"img": "pk:iresort/iresort_1_010",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
 },
 "x_door": {
 "img": "pk:west/p2/12,6,1,2",
