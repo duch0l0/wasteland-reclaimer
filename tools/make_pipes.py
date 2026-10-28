@@ -1,11 +1,12 @@
 """
-Труба, лежащая на земле (вид сверху), — прямые куски и угол 48×48: в наборах есть только колена-обломки и
+Труба, лежащая на земле (вид сверху), — прямые куски, колена, кран 48×48: в наборах есть только колена-обломки и
 стояки. Серая сталь с ржавыми пятнами и фланцами на стыках, под трубой — тень. Первая — у Зайзикса: труба
 от пруда «Сладкая вода» к фильтру (tools/build_zzyzx.py).
 
-  zz_pipe_h — вдоль запад—восток, zz_pipe_v — вдоль север—юг, zz_pipe_ne / zz_pipe_nw — угол: труба
-  приходит с севера и уходит на восток / на запад; zz_pipe_intake — водозабор с раструбом и решёткой (конец
-  в воде), zz_pipe_inlet — колено у самой земли: с севера и на восток, в основание бака.
+  zz_pipe_h — вдоль запад—восток, zz_pipe_v — вдоль север—юг; zz_pipe_sw — колено юг—запад; zz_pipe_bury_w —
+  труба уходит в песок на запад (тает под засыпкой: дальше к воде идёт под землёй); zz_pipe_inlet — колено у
+  самой земли: с севера и на восток, в основание бака; zz_pipe_outlet — выход из-под бака на запад;
+  zz_pipe_tap — кран с вентилем и струёй на западном конце.
 
 Запуск из папки game_project:  .venv/bin/python tools/make_pipes.py
 """
@@ -65,6 +66,22 @@ def flange(img, horizontal, at):
             img.set_at((bx, at), HI)
 
 
+def elbow(img, arms, rnd, row=None):
+    """Колено: из центра — плечи в стороны arms (n/s/e/w); row — на какой высоте лежат плечи e/w
+    (у самой земли — чтобы войти в основание бака сбоку), плечо n тогда тянется до этой высоты."""
+    c = (T - W) // 2
+    r = c if row is None else row
+    if "n" in arms:
+        straight(img, False, rnd, 0, r + W)
+    if "s" in arms:
+        straight(img, False, rnd, r, T)
+    if "e" in arms:
+        straight(img, True, rnd, c, T, c=r)
+    if "w" in arms:
+        straight(img, True, rnd, 0, c + W, c=r)
+    pygame.draw.rect(img, DARK, (c - 2, r - 2, W + 4, W + 4), 2)          # литое колено
+
+
 def make(name, seed):
     rnd = random.Random(seed)
     img = pygame.Surface((T, T), pygame.SRCALPHA)
@@ -75,34 +92,18 @@ def make(name, seed):
     elif name == "zz_pipe_v":
         straight(img, False, rnd)
         flange(img, False, T - 3)
-    elif name == "zz_pipe_intake":          # водозабор: раструб с решёткой опущен в воду, вокруг — рябь
-        straight(img, False, rnd, 16, T)
-        flange(img, False, T - 3)
-        for r, col in ((15, (226, 240, 246, 150)), (12, (255, 255, 255, 110))):   # пена вокруг раструба
-            pygame.draw.ellipse(img, col, (T // 2 - r - 2, 14 - r // 2, 2 * r + 4, r + 6), 1)
-        pygame.draw.ellipse(img, DARK, (c - 5, 6, W + 10, 14))           # раструб шире трубы
-        pygame.draw.ellipse(img, MID, (c - 4, 7, W + 8, 11))
-        pygame.draw.ellipse(img, (30, 40, 48), (c - 1, 9, W + 2, 7))     # тёмный зев
-        for gx in range(c + 1, c + W, 4):                                 # решётка от мусора
-            pygame.draw.line(img, LIGHT, (gx, 9), (gx, 15))
     elif name == "zz_pipe_inlet":           # с севера и на восток у самой земли: входит в основание бака
         low = T - W - 6
         straight(img, False, rnd, 0, low + W)
         straight(img, True, rnd, c, T, c=low)
         pygame.draw.rect(img, DARK, (c - 2, low - 2, W + 4, W + 4), 2)   # литое колено
         flange(img, True, T - 6)
-    else:                                   # угол: с севера до центра, от центра на восток или запад
-        straight(img, False, rnd, 0, c + W)
-        if name == "zz_pipe_ne":
-            straight(img, True, rnd, c, T)
-        else:
-            straight(img, True, rnd, 0, c + W)
-        pygame.draw.rect(img, DARK, (c - 2, c - 2, W + 4, W + 4), 2)     # литое колено
     return img
 
 
 def main():
-    names = ("zz_pipe_h", "zz_pipe_v", "zz_pipe_ne", "zz_pipe_nw", "zz_pipe_intake", "zz_pipe_inlet")
+    names = ("zz_pipe_h", "zz_pipe_v", "zz_pipe_inlet",
+             "zz_pipe_bury_w", "zz_pipe_sw", "zz_pipe_outlet", "zz_pipe_tap")
     for i, n in enumerate(names):
         pygame.image.save(make(n, 31 + i), f"{OUT}/{n}.png")
     idx = "assets/town/index.json"                  # размер картинки — для каталога объектов (src/props.py)

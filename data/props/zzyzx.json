@@ -1138,14 +1138,38 @@
 "sight": false,
 "layer": "floor"
 },
-"zz_pipe_intake": {
-"img": "zz_pipe_intake",
+"zz_pipe_h": {
+"img": "zz_pipe_h",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_bury_w": {
+"img": "zz_pipe_bury_w",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_sw": {
+"img": "zz_pipe_sw",
 "block": false,
 "sight": false,
 "layer": "floor"
 },
 "zz_pipe_inlet": {
 "img": "zz_pipe_inlet",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_outlet": {
+"img": "zz_pipe_outlet",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_tap": {
+"img": "zz_pipe_tap",
 "block": false,
 "sight": false,
 "layer": "floor"

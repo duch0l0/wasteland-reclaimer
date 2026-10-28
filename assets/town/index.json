@@ -5583,28 +5583,35 @@
   ],
   "made_by": "tools/make_pipes.py"
  },
- "zz_pipe_ne": {
-  "size": [
-   48,
-   48
-  ],
-  "made_by": "tools/make_pipes.py"
- },
- "zz_pipe_nw": {
-  "size": [
-   48,
-   48
-  ],
-  "made_by": "tools/make_pipes.py"
- },
- "zz_pipe_intake": {
-  "size": [
-   48,
-   48
-  ],
-  "made_by": "tools/make_pipes.py"
- },
  "zz_pipe_inlet": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_outlet": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_tap": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_bury_w": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_sw": {
   "size": [
    48,
    48
