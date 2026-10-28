@@ -1334,6 +1334,11 @@
 1
 ]
 },
+"zz_pipe_v_up": {
+"img": "zz_pipe_v_up",
+"block": false,
+"sight": false
+},
 "zz_room_rug0": {
 "img": "pk:lhotel/p2/10,12,2,2",
 "block": false,

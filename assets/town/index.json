@@ -5659,5 +5659,12 @@
    48
   ],
   "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_v_up": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
  }
 }

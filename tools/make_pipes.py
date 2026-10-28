@@ -7,7 +7,7 @@
   север—восток, север—запад; zz_pipe_bury_w —
   труба уходит в песок на запад (тает под засыпкой: дальше к воде идёт под землёй); zz_pipe_inlet — колено у
   самой земли: с севера и на восток, в основание бака; zz_pipe_outlet — выход из-под бака на запад;
-  zz_pipe_tap — кран с вентилем и струёй на западном конце.
+  zz_pipe_v_up — короткий кусок от низа клетки до днища бака, наверху фланец; zz_pipe_tap — кран с вентилем и струёй на западном конце.
 
 Запуск из папки game_project:  .venv/bin/python tools/make_pipes.py
 """
@@ -135,7 +135,18 @@ def make(name, seed):
     return img
 
 
+def riser_up(seed):
+    """Кусок под баком: труба от низа клетки до днища бака (верхние 28 px пусты), наверху фланец — стык.
+    Ставится обычным слоем (не полом) на клетку бака: виден между ножек и упирается в корпус."""
+    img = make("zz_pipe_v", seed)
+    pygame.draw.rect(img, (0, 0, 0, 0), (0, 0, T, 28))
+    img.fill((0, 0, 0, 0), (0, 0, T, 28))
+    flange(img, False, 31)
+    return img
+
+
 def main():
+    pygame.image.save(riser_up(77), f"{OUT}/zz_pipe_v_up.png")
     names = ("zz_pipe_h", "zz_pipe_v", "zz_pipe_inlet", "zz_pipe_ne", "zz_pipe_nw",
              "zz_pipe_bury_w", "zz_pipe_sw", "zz_pipe_outlet", "zz_pipe_tap")
     for i, n in enumerate(names):
@@ -144,6 +155,7 @@ def main():
     d = json.load(open(idx, encoding="utf-8"))
     for n in names:
         d[n] = {"size": [T, T], "made_by": "tools/make_pipes.py"}
+    d["zz_pipe_v_up"] = {"size": [T, T], "made_by": "tools/make_pipes.py"}
     json.dump(d, open(idx, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("нарисовано:", ", ".join(names))
 
