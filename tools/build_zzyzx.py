@@ -456,7 +456,8 @@ FOUNTAIN_POOL = P("zz_fountain_pool", "zz_fountain_pool", foot=[5, 4], layer="fl
 place(FOUNTAIN_POOL, 44, 37)
 for _y in range(37, 41):
     for _x in range(44, 49):
-        z.blocked.add((_x, _y))
+        z.blocked.add((_x, _y))                    # для расстановки: сюда ничего не встанет
+        z.solid_cells = getattr(z, "solid_cells", set()) | {(_x, _y)}   # и в карту: по воде не ходят
 STATUE_BIG = P("zz_statue_big", "pk:cult/cult_2_094", sight=True, scale=2.0)   # та же статуя вдвое — по бассейну
 z.put(STATUE_BIG, 46, 39, force=True, allow_reserved=True)   # Спрингер в камне посреди воды
 place(BENCH, 44, 35)
@@ -569,6 +570,8 @@ PIPE_V = P("zz_pipe_v", "zz_pipe_v", block=False, layer="floor")
 PIPE_H = P("zz_pipe_h", "zz_pipe_h", block=False, layer="floor")
 PIPE_BURY = P("zz_pipe_bury_w", "zz_pipe_bury_w", block=False, layer="floor")
 PIPE_SW = P("zz_pipe_sw", "zz_pipe_sw", block=False, layer="floor")
+PIPE_NE = P("zz_pipe_ne", "zz_pipe_ne", block=False, layer="floor")   # колена для купален
+PIPE_NW = P("zz_pipe_nw", "zz_pipe_nw", block=False, layer="floor")
 PIPE_INLET = P("zz_pipe_inlet", "zz_pipe_inlet", block=False, layer="floor")
 PIPE_OUTLET = P("zz_pipe_outlet", "zz_pipe_outlet", block=False, layer="floor")
 PIPE_TAP = P("zz_pipe_tap", "zz_pipe_tap", block=False, layer="floor")
@@ -950,63 +953,216 @@ enemy("radroach", 80, 66)                          # радтаракан в т�
 
 
 # ================================================================ купальни
-bt = CityMap(city, "zzyzx_bath", "Купальни Зайзикса", 40, 26, start=(19, 23), seed=82, interior=True, music="caves")
-bt.floor_code("T", *TILE_W)
-bt.floor_code("B", *TILE_B)
+# Купальни (docs/furnish/zzyzx.md §2): приёмная у входа, по сторонам от неё две раздевалки, на севере зал
+# с бассейном, в восточном крыле кабинет целителя и насосная. Автообстановка выключена (furnish=False):
+# прежде движок доставлял сюда 22 случайных шкафа, стеллажа и тумбочки — «каша» из чужой мебели.
+# Свет ночной задан вручную, пятна — от настенных плафонов и двух ламп на шнуре над чашей (auto_ambient молчит).
+bt = CityMap(city, "zzyzx_bath", "Купальни Зайзикса", 40, 26, start=(19, 23), seed=82, interior=True,
+             music="caves", furnish=False)
+bt.night = [108, 100, 92]
+bt.floor_code("C", "pk:pool/p1/0,0,1,1")                 # светлый кафель приёмной и раздевалок
+bt.floor_code("D", "pk:cult/cult_f2_21", "pk:cult/cult_f2_20")   # доски кабинета целителя
+bt.floor_code("B", *TILE_B)                              # плиты зала с бассейном
+bt.floor_code("M", *METAL)                               # металл насосной
 bt.wall_code("W", "pk:bazaar/bazaar_w2_12")
 bt.wall_code("Q", "pk:bazaar/bazaar_w2_12")
-LOBBY = bt.room(10, 15, 29, 25, "W", "T")          # приёмная у входа
-CHANGE_L = bt.room(1, 15, 10, 25, "W", "T")         # мужская раздевалка
-CHANGE_R = bt.room(29, 15, 38, 25, "W", "T")        # женская раздевалка
-HALL = bt.room(1, 1, 30, 15, "Q", "B")             # зал с бассейном
-OFFICE = bt.room(30, 1, 38, 8, "W", "T")            # кабинет целителя
-PUMP = bt.room(30, 8, 38, 15, "W", "T")             # насосная
-bt.opening(19, 25, 20, 25, "T")
+LOBBY = bt.room(10, 15, 29, 25, "W", "C")                # приёмная у входа
+CHANGE_L = bt.room(1, 15, 10, 25, "W", "C")              # мужская раздевалка
+CHANGE_R = bt.room(29, 15, 38, 25, "W", "C")             # женская раздевалка
+HALL = bt.room(1, 1, 27, 15, "Q", "B")                   # зал с бассейном
+OFFICE = bt.room(27, 1, 38, 8, "W", "D")                 # кабинет целителя
+PUMP = bt.room(27, 8, 38, 15, "W", "M")                  # насосная (люк в цистерну)
+bt.opening(19, 25, 20, 25, "C")                          # вход с бульвара
 bt.portal([(19, 25), (20, 25)], "zzyzx", (27, 22), "На бульвар")
-bt.opening(10, 19, 10, 20, "T")
-bt.opening(29, 19, 29, 20, "T")
-bt.opening(19, 15, 20, 17, "B")
-bt.opening(30, 5, 30, 6, "T")
-bt.opening(34, 8, 35, 10, "T")
-# приёмная: стойка лицом к двери, скамьи для ждущих вдоль стен, растения в углах
-bt.put("counter", 17, 19)
-bt.put("counter", 21, 19)
-bt.put("bench_7", 12, 22)
-bt.put("bench_7", 25, 22)
-bt.put(PLANT, 12, 18)
-bt.put(PLANT, 27, 18)
-# раздевалки: шкафчики вдоль северной стены, скамья посредине
-for x in (2, 6):
-    bt.put(LOCKERS, x, 18)
-bt.put("bench_16", 4, 22)
-for x in (30, 35):
-    bt.put(LOCKERS, x, 18)
-bt.put("bench_16", 32, 22)
-bt.box("locker_1", 8, 23, "шкафчик паломника", {"крышки": 12, "бинт": 1})
-# зал: целебный бассейн в центре, по краям — лежаки (скамьи)
-bt.floor_code("~", "pk:mport/p1/8,4,1,1", "pk:mport/p1/9,4,1,1")
-bt.water_codes = ("~",)
-bt.paint("~", 8, 5, 21, 10)                           # чаша бассейна — настоящая вода с каменной кромкой
-for x in (6, 12, 17, 24):
-    bt.maybe(PLANT, x, 3)
-bt.put("bench_16", 4, 7)
-bt.put("bench_16", 22, 7)
-bt.put("bench_16", 4, 11)
-bt.put("bench_16", 22, 11)
-bt.put(PLANT, 2, 4)
-bt.put(PLANT, 28, 4)
-# кабинет целителя: стол с терминалом у стены, шкаф с «лекарствами»
-bt.terminal(31, 4, "zz_healer")
-bt.put(DESK_B, 34, 4)
-bt.box("glass_cabinet", 37, 4, "шкаф целителя", {"вода Зайзикса": 2, "антирадин": 1, "крышки": 40})
-# насосная: насосы и бак, люк в цистерну
-bt.put(TANKS_W, 36, 11)
-bt.put(GEN, 31, 13)
-bt.props.append(["x_manhole", 34, 12])
+bt.opening(10, 19, 10, 20, "C")                          # приёмная -> мужская раздевалка
+bt.opening(29, 19, 29, 20, "C")                          # приёмная -> женская раздевалка
+bt.opening(19, 15, 20, 17, "B")                          # приёмная -> зал
+bt.opening(27, 5, 27, 6, "D")                            # зал -> кабинет целителя
+bt.opening(27, 12, 27, 13, "M")                          # зал -> насосная
+
+# ---- предметы купален (наборы pool / west / bazaar / hosp / nbunk)
+POOL = P("zz_bath_pool", "zz_bath_pool", foot=[14, 6], block=False, layer="floor")   # чаша: кафель и вода
+DRAIN = P("zz_bath_drain", "zz_bath_drain", block=False, layer="floor")              # решётка слива
+HATCH = P("zz_hatch", "zz_hatch", block=False, layer="floor")                         # люк в цистерну
+HOOKS = P("zz_hooks", "zz_hooks", block=False)                                       # доска с крючками
+LOUNGER = P("zz_lounger", "pk:iresort/iresort_1_021", foot=[2, 1], sight=True)       # шезлонг у воды (pool_5_016 был буфетом с рыбой)
+TOWELS = [P(f"zz_towel_{i}", f"pk:pool/pool_7_{n:03d}", block=False) for i, n in enumerate((80, 81, 82, 83))]
+EXAM_BED = P("zz_exam_bed", "pk:hosp/hosp_1_007", foot=[3, 1], sight=True)           # кушетка для осмотра
+SHELF_WOOD = "shelf_wood"                                                            # полка (без обыска)
+TOWEL_SHELF = P("zz_towel_shelf", "pk:west/west_2_106", foot=[2, 1], sight=True)     # полка с бельём
+BASKET = "zz_basket"                                                                 # корзина с бельём
+
+
+def bput(name, x, y, **kw):
+    """Явная постановка в купальнях: не встал — ошибка с причиной (как place() на бульваре)."""
+    snap = (len(bt.props), len(bt.containers), set(bt.blocked), set(bt.soft), set(bt.soft_obj))
+    try:
+        ok = bt.put(name, x, y, **kw)
+    except AssertionError as e:
+        raise AssertionError(f"купальни: {e}") from None
+    if ok and bt.props[-1][1:3] == [x, y]:
+        return True
+    foot = bt.footprint(name, x, y)
+    why = []
+    if any(c in snap[2] for c in foot):
+        why.append("занято: " + str([c for c in foot if c in snap[2]]))
+    if any(c in snap[3] or c in snap[4] for c in foot):
+        why.append("мягкий предмет под ним")
+    if any(c in bt.reserved for c in foot):
+        why.append("резерв (проём)")
+    h = bt.hides(name, x, y) if _props.info(name)["block"] else None
+    if h:
+        why.append(f"заслоняет {h[0]} ({h[1]}, {h[2]})")
+    why.append("земля: " + "".join(bt.ground[b][a] for a, b in foot))
+    raise AssertionError(f"купальни: «{name}» не встал в ({x}, {y}): " + "; ".join(why))
+
+
+def bwall(name, x, y, dx=0, dy=-40):
+    """Настенное (крючки, часы): клетка стены, картинка висит над полом под ней."""
+    assert bt.ground[y][x] in bt.walls, f"купальни: «{name}» в ({x}, {y}) — там нет стены"
+    bt.props.append([name, x, y + 1, dx, dy])
+
+
+def bon(name, x, y, dx=0, dy=-34):
+    """Мелочь на столешнице: клетка мебели, поднята в глубину, рисуется сразу после неё."""
+    assert (x, y) in bt.blocked, f"купальни: «{name}» в ({x}, {y}) — под ним нет стола"
+    bt.props.append([name, x, y, dx, dy, 1 - dy])
+
+
+def bfp(name, x, y, dx=0, dy=0):
+    """Плоское на полу и поверх мебели (труба, полотенце, решётка): не блокирует, не двигает ничего."""
+    bt.props.append([name, x, y, dx, dy])
+
+# ------------------------------------------------------------ приёмная
+# Стойка лицом ко входу: за ней Ава, за её спиной — полки с чистыми полотенцами. Центр приёмной (x 17..22)
+# свободен от двери до двери зала: вошедший сразу видит и стойку, и проход к воде.
+bput("counter", 13, 20)
+bput("counter", 15, 20)
+bon("x_register", 13, 20, dx=-6, dy=-30)                  # касса на стойке
+bon("w_newspaper", 15, 20, dx=-4, dy=-36)                 # книга записи
+bput(TOWEL_SHELF, 13, 18)                                 # полка с полотенцами за спиной Авы
+bput(TOWEL_SHELF, 16, 18)
+for _x, _k in ((13, 0), (14, 2), (16, 1), (17, 3)):       # стопки чистых полотенец на полках
+    bon(TOWELS[_k], _x, 18, dx=0, dy=-26)
+    bon(TOWELS[(_k + 1) % 4], _x, 18, dx=0, dy=-50)
+bwall("w_wall_clock", 24, 16)                             # часы над стойкой
+bput("bench_7", 26, 19)                                   # где ждут, у восточной стены
+bput("bench_24", 26, 21)
+bput("stool_1", 27, 20)                                   # столик между скамьями
+bput(PLANT, 27, 23)
+bfp("x_carpet", 19, 24)                                   # дорожка у входа
+LM.lamp(bt, "warm", 12, 17)                               # плафоны на северной стене приёмной
+LM.lamp(bt, "warm", 22, 17)
+bt.ceiling(18, 21, r=180, color=(255, 198, 138), flick=0.03)   # лампа на шнуре над стойкой
+
+# ------------------------------------------------------------ раздевалки
+# Шкафчики в ряд у северной стены (разные, один распахнут), крючки над скамьёй, скамья для разувания,
+# корзина с бельём у стены. Сюжетный «шкафчик паломника» — в мужской.
+for _x, _n in ((2, "locker_1"), (3, "locker_2"), (4, "locker_open_a")):
+    bput(_n, _x, 18)
+bput("bench_16", 3, 21)
+bwall(HOOKS, 7, 17)                                       # крючки с полотенцем на стене
+bput("bucket", 6, 23)
+bfp("rag", 5, 22)
+for _x, _n in ((33, "locker_3"), (34, "locker_4"), (35, "locker_open_b")):
+    bput(_n, _x, 18)
+bput("bench_24", 33, 21)
+bwall(HOOKS, 31, 17)
+bput("x_screen", 31, 22)                                  # ширма для переодевания
+bput(PLANT, 37, 23)
+bput("bucket", 30, 23)
+LM.lamp(bt, "warm", 8, 17)                                # плафон в мужской
+LM.lamp(bt, "warm", 30, 17)                               # плафон в женской
+bt.ceiling(4, 21, r=165, color=(255, 198, 138), flick=0.05)   # лампочка на шнуре в раздевалках
+bt.ceiling(34, 21, r=165, color=(255, 198, 138), flick=0.05)
+
+# ------------------------------------------------------------ зал с бассейном
+# Чаша — картинка из клеток пака pool (tools/make_bath.py): кафельный бортик, вода с рябью, ступени входа
+# в южном борту, вход трубы в восточный борт, слив на дне. Вода непроходима, южная полоса бортика — нет:
+# по ней ходят и с неё входят в воду. Прежде бассейн был прямоугольником воды кодом «~» — на снимке
+# плоское синее пятно с тонкой каймой, то есть лужа посреди комнаты.
+bput(POOL, 6, 6)
+for _y in range(6, 11):                                   # вода чаши (нижняя полоса — проходимый бортик)
+    for _x in range(6, 20):
+        bt.blocked.add((_x, _y))                          # для расстановки: сюда ничего не встанет
+        bt.solid_cells = getattr(bt, "solid_cells", set()) | {(_x, _y)}   # и в карту: вода непроходима
+bt._reach = None
+# скамьи с полотенцами у северной стены, лежаки на южной стороне, скамья у западной
+bput("bench_16", 7, 4)
+bput("bench_24", 13, 4)
+for _x in (5, 8, 14, 17):                                 # шезлонги вдоль южного бортика, между ними — ступени
+    bput(LOUNGER, _x, 13)
+bput("bench_7", 2, 9)
+bput(PLANT, 2, 4)
+bput(PLANT, 26, 4)
+bput("bucket", 13, 12)
+bput("bench_16", 23, 6)                                   # скамья у восточной стороны зала
+bfp(TOWELS[0], 23, 6, dx=8, dy=-20)
+bput(PLANT, 26, 7)                                        # кадка у стены кабинета
+bfp(TOWELS[0], 7, 4, dx=8, dy=-20)                        # полотенца на скамьях и лежаках
+bfp(TOWELS[2], 13, 4, dx=8, dy=-20)
+# мокро там, где выходят из воды: у ступеней и по бортику
+bfp("x_vd_wet0", 10, 12)                                  # мокро там, где вышли из воды
+bfp("x_vd_wet1", 14, 12)
+# труба от насосной: по восточной стене зала, коленом на запад, к восточному борту чаши (y=9)
+bfp(PIPE_NE, 26, 13)                                      # пришла из насосной через проём — и вверх
+for _y in range(10, 13):
+    bfp(PIPE_V, 26, _y)
+bfp(PIPE_SW, 26, 9)
+for _x in range(20, 26):
+    bfp(PIPE_H, _x, 9)
+for _x in (5, 11, 17, 23):                                # плафоны на северной стене зала
+    LM.lamp(bt, "warm", _x, 3)
+for _y in (7, 12):                                        # и два на западной
+    LM.lamp(bt, "warm", 1, _y)
+bt.ceiling(9, 12, r=200, color=(255, 200, 140), flick=0.03)    # лампы на шнуре над кромкой чаши
+bt.ceiling(16, 12, r=200, color=(255, 200, 140), flick=0.03)
+
+# ------------------------------------------------------------ кабинет целителя
+# Стол с терминалом (журнал целителя, data/terminals.json) у северной стены, шкаф-аптека за стеклом,
+# полка с журналами приёма, кушетка для осмотра, раковина. Антирадин из шкафа нужен, чтобы спасти Тимми.
+bt.terminal(33, 4, "zz_healer")
+bput("w_desk", 31, 4)
+bon("w_newspaper", 31, 4, dx=-10, dy=-34)
+bon("w_table_lamp", 31, 4, dx=14, dy=-30)
+bput(SHELF_WOOD, 28, 4)                                  # журналы приёма
+bput("w_chair_r", 30, 5)                                 # стул к столу, в профиль
+bput(EXAM_BED, 32, 6)                                    # кушетка для осмотра
+bput("sink", 37, 5)
+bwall("w_wall_clock", 30, 3)
+LM.lamp(bt, "warm", 34, 3)
+
+# ------------------------------------------------------------ насосная
+# Баки, насос, стояк, трубы по полу — от них вода и уходит в зал. Люк в полу (34,12) под замком,
+# подход к нему (34,13) держим свободным.
+bput(TANKS_W, 28, 11)                                    # баки с водой у северной стены
+bput("x_pipe", 37, 13)                                   # стояк: вода поднимается из цистерны
+bput("bucket", 37, 11)
+# вода идёт одной цепочкой: стояк из цистерны -> вдоль южной стены -> снизу в баки; из баков -> через
+# проём в зал -> к восточному борту чаши (см. зал). Ничего не висит и не обрывается.
+bfp(PIPE_NW, 37, 14)                                     # от стояка — на запад
+for _x in range(32, 37):
+    bfp(PIPE_H, _x, 14)
+bfp(PIPE_NE, 31, 14)                                     # и вверх, снизу в правый бак
+for _y in (12, 13):
+    bfp(PIPE_V, 31, _y)
+bfp(PIPE_V, 29, 12)                                      # из левого бака — вниз
+bfp(PIPE_NW, 29, 13)                                     # и на запад, через проём в зал
+for _x in (27, 28):
+    bfp(PIPE_H, _x, 13)
+bt.props.append([HATCH, 34, 12])                      # люк с замком — на клетке портала
 bt.portal([(34, 12)], "zzyzx_cistern", (4, 5), "Цистерна",
           requires={"item": "ключ от насосной",
                     "msg": "Люк в полу насосной, на нём замок. Ключ — у смотрителя источника Гаса."})
-bt.npcs += [["bath_pilgrim", 6, 10], ["bath_pilgrim_b", 25, 10], ["nurse_ava", 17, 18]]   # Ава — за стойкой
+LM.lamp(bt, "warm", 31, 10)
+LM.lamp(bt, "warm", 36, 10)
+
+# ------------------------------------------------------------ ящики и люди
+bt.box("glass_cabinet", 35, 4, "шкаф целителя", {"вода Зайзикса": 2, "антирадин": 1, "крышки": 40})
+bt.box("locker_1", 5, 18, "шкафчик паломника", {"крышки": 12, "бинт": 1})
+bt.npcs += [["nurse_ava", 15, 19],                       # за стойкой приёмной, лицом ко входу
+            ["bath_pilgrim", 11, 11],                    # на ступенях бассейна, у воды
+            ["bath_pilgrim_b", 5, 20]]                   # в мужской раздевалке, у шкафчиков
 
 
 # ================================================================ «Замок» Спрингера

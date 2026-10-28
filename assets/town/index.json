@@ -5617,5 +5617,47 @@
    48
   ],
   "made_by": "tools/make_pipes.py"
+ },
+ "zz_bath_pool": {
+  "size": [
+   672,
+   288
+  ],
+  "made_by": "tools/make_bath.py"
+ },
+ "zz_bath_drain": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_bath.py"
+ },
+ "zz_hooks": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_bath.py"
+ },
+ "zz_hatch": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_bath.py"
+ },
+ "zz_pipe_ne": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_nw": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
  }
 }

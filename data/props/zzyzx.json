@@ -1156,6 +1156,18 @@
 "sight": false,
 "layer": "floor"
 },
+"zz_pipe_ne": {
+"img": "zz_pipe_ne",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_pipe_nw": {
+"img": "zz_pipe_nw",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "zz_pipe_inlet": {
 "img": "zz_pipe_inlet",
 "block": false,
@@ -1247,6 +1259,80 @@
 "sight": false,
 "search": "grave",
 "title": "свежая могила"
+},
+"zz_bath_pool": {
+"img": "zz_bath_pool",
+"block": false,
+"sight": false,
+"foot": [
+14,
+6
+],
+"layer": "floor"
+},
+"zz_bath_drain": {
+"img": "zz_bath_drain",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_hatch": {
+"img": "zz_hatch",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
+"zz_hooks": {
+"img": "zz_hooks",
+"block": false,
+"sight": false
+},
+"zz_lounger": {
+"img": "pk:iresort/iresort_1_021",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
+},
+"zz_towel_0": {
+"img": "pk:pool/pool_7_080",
+"block": false,
+"sight": false
+},
+"zz_towel_1": {
+"img": "pk:pool/pool_7_081",
+"block": false,
+"sight": false
+},
+"zz_towel_2": {
+"img": "pk:pool/pool_7_082",
+"block": false,
+"sight": false
+},
+"zz_towel_3": {
+"img": "pk:pool/pool_7_083",
+"block": false,
+"sight": false
+},
+"zz_exam_bed": {
+"img": "pk:hosp/hosp_1_007",
+"block": true,
+"sight": true,
+"foot": [
+3,
+1
+]
+},
+"zz_towel_shelf": {
+"img": "pk:west/west_2_106",
+"block": true,
+"sight": true,
+"foot": [
+2,
+1
+]
 },
 "zz_room_rug0": {
 "img": "pk:lhotel/p2/10,12,2,2",

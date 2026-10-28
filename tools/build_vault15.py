@@ -149,6 +149,7 @@ sf.put(CAMPFIRE, 41, 32)
 sf.put(CAGE, 33, 34)
 sf.put(CAGE, 35, 34)
 sf.blocked.update({(35, 34)})
+sf.solid_cells = getattr(sf, "solid_cells", set()) | {(35, 34)}   # и в карту: blocked держит только расстановку
 sf.put(HANG_CAGE, 45, 27)
 sf.put(SPIKES, 30, 30)
 sf.put(SPIKES, 52, 28)

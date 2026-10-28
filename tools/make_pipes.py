@@ -3,7 +3,8 @@
 стояки. Серая сталь с ржавыми пятнами и фланцами на стыках, под трубой — тень. Первая — у Зайзикса: труба
 от пруда «Сладкая вода» к фильтру (tools/build_zzyzx.py).
 
-  zz_pipe_h — вдоль запад—восток, zz_pipe_v — вдоль север—юг; zz_pipe_sw — колено юг—запад; zz_pipe_bury_w —
+  zz_pipe_h — вдоль запад—восток, zz_pipe_v — вдоль север—юг; zz_pipe_sw / _ne / _nw — колена юг—запад,
+  север—восток, север—запад; zz_pipe_bury_w —
   труба уходит в песок на запад (тает под засыпкой: дальше к воде идёт под землёй); zz_pipe_inlet — колено у
   самой земли: с севера и на восток, в основание бака; zz_pipe_outlet — выход из-под бака на запад;
   zz_pipe_tap — кран с вентилем и струёй на западном конце.
@@ -98,11 +99,44 @@ def make(name, seed):
         straight(img, True, rnd, c, T, c=low)
         pygame.draw.rect(img, DARK, (c - 2, low - 2, W + 4, W + 4), 2)   # литое колено
         flange(img, True, T - 6)
+    elif name == "zz_pipe_bury_w":          # труба плавно уходит в песок на запад: тело тает, над концом — засыпка
+        body = pygame.Surface((T, T), pygame.SRCALPHA)
+        straight(body, True, rnd)
+        for x in range(T):                                   # к западу всё глубже в песке — прозрачнее
+            a = int(255 * max(0.0, min(1.0, (x - 4) / 30)))
+            for y in range(T):
+                px = body.get_at((x, y))
+                if px.a:
+                    body.set_at((x, y), (px.r, px.g, px.b, px.a * a // 255))
+        img.blit(body, (0, 0))
+        for r, col in ((0, (180, 146, 98, 60)), (3, (196, 160, 110, 70)), (6, (170, 134, 90, 60))):   # засыпанная траншея
+            pygame.draw.ellipse(img, col, (4 + r, c - 6 + r, 16 - r, W + 12 - 2 * r))
+        for k in range(6):                                   # редкие комья
+            pygame.draw.rect(img, (160, 126, 84, 160), (7 + rnd.randrange(8), c - 2 + rnd.randrange(W + 4), 2, 2))
+    elif name in ("zz_pipe_sw", "zz_pipe_ne", "zz_pipe_nw"):
+        elbow(img, name[-2:], rnd)
+    elif name == "zz_pipe_outlet":          # из-под основания бака (сверху) и на запад: чистая вода
+        elbow(img, "nw", rnd)
+        flange(img, False, 6)
+    elif name == "zz_pipe_tap":             # кран на конце: вентиль и носик, струя вниз
+        straight(img, True, rnd, 20, T)
+        flange(img, True, 22)
+        pygame.draw.circle(img, (150, 40, 34), (30, c - 4), 6)                # вентиль
+        pygame.draw.circle(img, (200, 70, 56), (30, c - 4), 6, 2)
+        pygame.draw.line(img, (90, 20, 18), (24, c - 4), (36, c - 4), 2)
+        pygame.draw.rect(img, DARK, (10, c + 2, 12, W - 4))                   # носик
+        pygame.draw.rect(img, MID, (10, c + 4, 12, W - 8))
+        pygame.draw.rect(img, DARK, (10, c + W - 6, 6, 10))
+        for y in range(c + W + 4, T - 2, 3):                                  # струя
+            img.set_at((12, y), (150, 200, 235))
+            img.set_at((13, y + 1), (210, 235, 250))
+    else:
+        raise ValueError(f"нет рисунка для {name}")
     return img
 
 
 def main():
-    names = ("zz_pipe_h", "zz_pipe_v", "zz_pipe_inlet",
+    names = ("zz_pipe_h", "zz_pipe_v", "zz_pipe_inlet", "zz_pipe_ne", "zz_pipe_nw",
              "zz_pipe_bury_w", "zz_pipe_sw", "zz_pipe_outlet", "zz_pipe_tap")
     for i, n in enumerate(names):
         pygame.image.save(make(n, 31 + i), f"{OUT}/{n}.png")
