@@ -1345,125 +1345,56 @@
 "block": false,
 "sight": false
 },
-"zz_room_rug0": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zz_room_rug1": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zz_room_rug2": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zz_room_rug3": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zz_room_rug4": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zz_lobby_rug": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zz_suite_rug": {
-"img": "pk:lhotel/p2/10,12,2,2",
-"block": false,
-"sight": false,
-"foot": [
-2,
-2
-],
-"layer": "floor"
-},
-"zzyzx_f_home_rug": {
-"img": "pk:west/west_2_060",
-"block": false,
-"sight": false,
-"layer": "floor",
-"keybg": true
-},
-"zzyzx_f_home_table": {
-"img": "pk:west/west_2_000",
+"ht_sofa": {
+"img": "pk:hotel/hotel_2_064",
 "block": true,
-"sight": false,
+"sight": true,
 "foot": [
 2,
 1
 ]
 },
-"zzyzx_f_home_chair": {
-"img": "pk:west/west_2_001",
+"ht_window": {
+"img": "pk:hotel/hotel_2_008",
+"block": false,
+"sight": false
+},
+"ht_keybox": {
+"img": "pk:lhotel/lhotel_1_031",
+"block": false,
+"sight": false
+},
+"ht_photo": {
+"img": "pk:hotel/hotel_1_070",
+"block": false,
+"sight": false
+},
+"ht_flowers": {
+"img": "pk:iresort/iresort_1_062",
 "block": true,
 "sight": false
 },
-"zzyzx_f_home_poker": {
-"img": "pk:west/west_2_020",
+"ht_suitcases": {
+"img": "pk:wrail/wrail_1_014",
+"block": true,
+"sight": false,
+"search": "bag",
+"title": "чемоданы"
+},
+"zz_cradle": {
+"img": "zz_cradle",
 "block": true,
 "sight": false,
 "foot": [
-2,
+1,
 1
 ]
 },
-"zzyzx_f_home_shelf": {
-"img": "pk:west/west_2_110",
-"block": true,
-"sight": true
-},
-"zzyzx_f_home_books": {
-"img": "pk:west/west_2_116",
-"block": true,
-"sight": true
-},
-"zzyzx_f_home_clock": {
-"img": "pk:west/west_2_019",
-"block": true,
-"sight": true
-},
-"zzyzx_f_home_plant": {
-"img": "pk:bazaar/bazaar_3_206",
-"block": true,
-"sight": false
+"ht_jug": {
+"img": "pk:destown/p3/4,7,1,1",
+"block": false,
+"sight": false,
+"scale": 0.45
 }
 }
 }

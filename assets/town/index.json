@@ -5673,5 +5673,12 @@
    48
   ],
   "made_by": "tools/make_pipes.py"
+ },
+ "zz_cradle": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_zzyzx_hotel.py"
  }
 }
