@@ -1334,6 +1334,12 @@
 1
 ]
 },
+"zz_pipe_floor_w": {
+"img": "zz_pipe_floor_w",
+"block": false,
+"sight": false,
+"layer": "floor"
+},
 "zz_pipe_v_up": {
 "img": "zz_pipe_v_up",
 "block": false,

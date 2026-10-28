@@ -5666,5 +5666,12 @@
    48
   ],
   "made_by": "tools/make_pipes.py"
+ },
+ "zz_pipe_floor_w": {
+  "size": [
+   48,
+   48
+  ],
+  "made_by": "tools/make_pipes.py"
  }
 }

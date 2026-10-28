@@ -7,7 +7,7 @@
   север—восток, север—запад; zz_pipe_bury_w —
   труба уходит в песок на запад (тает под засыпкой: дальше к воде идёт под землёй); zz_pipe_inlet — колено у
   самой земли: с севера и на восток, в основание бака; zz_pipe_outlet — выход из-под бака на запад;
-  zz_pipe_v_up — короткий кусок от низа клетки до днища бака, наверху фланец; zz_pipe_tap — кран с вентилем и струёй на западном конце.
+  zz_pipe_v_up — короткий кусок от низа клетки до днища бака, наверху фланец; zz_pipe_floor_w — выход из пола (фланцевая плита) на запад; zz_pipe_tap — кран с вентилем и струёй на западном конце.
 
 Запуск из папки game_project:  .venv/bin/python tools/make_pipes.py
 """
@@ -130,6 +130,18 @@ def make(name, seed):
         for y in range(c + W + 4, T - 2, 3):                                  # струя
             img.set_at((12, y), (150, 200, 235))
             img.set_at((13, y + 1), (210, 235, 250))
+    elif name == "zz_pipe_floor_w":         # труба выходит из пола (снизу, из цистерны) и уходит на запад
+        straight(img, True, rnd, 0, T // 2 + 4)
+        pl = pygame.Rect(T // 2 - 10, c - 6, 24, W + 12)                    # фланцевая плита на полу
+        pygame.draw.rect(img, SHADOW, pl.move(3, 3))
+        pygame.draw.rect(img, DARK, pl)
+        pygame.draw.rect(img, MID, pl.inflate(-4, -4))
+        pygame.draw.circle(img, (40, 44, 50), pl.center, 7)                 # колено уходит вниз, в пол
+        pygame.draw.circle(img, LIGHT, pl.center, 7, 2)
+        for bx, by in ((pl.left + 3, pl.top + 3), (pl.right - 4, pl.top + 3),
+                       (pl.left + 3, pl.bottom - 4), (pl.right - 4, pl.bottom - 4)):
+            img.set_at((bx, by), HI)
+            img.set_at((bx + 1, by), HI)
     else:
         raise ValueError(f"нет рисунка для {name}")
     return img
@@ -148,7 +160,7 @@ def riser_up(seed):
 def main():
     pygame.image.save(riser_up(77), f"{OUT}/zz_pipe_v_up.png")
     names = ("zz_pipe_h", "zz_pipe_v", "zz_pipe_inlet", "zz_pipe_ne", "zz_pipe_nw",
-             "zz_pipe_bury_w", "zz_pipe_sw", "zz_pipe_outlet", "zz_pipe_tap")
+             "zz_pipe_bury_w", "zz_pipe_sw", "zz_pipe_outlet", "zz_pipe_tap", "zz_pipe_floor_w")
     for i, n in enumerate(names):
         pygame.image.save(make(n, 31 + i), f"{OUT}/{n}.png")
     idx = "assets/town/index.json"                  # размер картинки — для каталога объектов (src/props.py)
